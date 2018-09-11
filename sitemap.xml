@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://erichunn.github.io/2018/09/11/Hadoop%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/</loc>
+    
+    <lastmod>2018-09-11T03:04:15.202Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://erichunn.github.io/about/index.html</loc>
+    
+    <lastmod>2018-09-11T01:33:03.173Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://erichunn.github.io/tags/index.html</loc>
     
     <lastmod>2018-08-27T13:20:49.003Z</lastmod>
@@ -12,20 +26,6 @@
     <loc>http://erichunn.github.io/address/index.html</loc>
     
     <lastmod>2018-08-26T09:15:46.328Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://erichunn.github.io/about/index.html</loc>
-    
-    <lastmod>2018-08-26T08:52:13.468Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://erichunn.github.io/2018/08/26/boke2/</loc>
-    
-    <lastmod>2018-08-26T08:44:09.477Z</lastmod>
     
   </url>
   
