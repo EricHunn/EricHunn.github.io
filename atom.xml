@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://erichunn.github.io/"/>
-  <updated>2018-09-11T03:04:15.202Z</updated>
+  <updated>2018-09-12T13:36:43.726Z</updated>
   <id>http://erichunn.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java中的总结合集（1）</title>
+    <link href="http://erichunn.github.io/2018/09/12/Java%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%E5%90%88%E9%9B%86%EF%BC%881%EF%BC%89/"/>
+    <id>http://erichunn.github.io/2018/09/12/Java中的总结合集（1）/</id>
+    <published>2018-09-12T13:31:06.000Z</published>
+    <updated>2018-09-12T13:36:43.726Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="关于构造函数"><a href="#关于构造函数" class="headerlink" title="关于构造函数"></a>关于构造函数</h1><p>构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。</p><pre><code>public class sadf {    public static void main(String[] args) {        Cat cat = new Cat();        cat.cry();    }}abstract class Animal{    public String name;    public abstract void cry();    public void Animal() {        System.out.println(&quot;new Animal&quot;);    }}class Cat extends Animal{     public void cry() {        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">这样的函数运行之后是</span><br><span class="line"></span><br><span class="line">喵喵</span><br></pre></td></tr></table></figure></code></pre><p>因为Animal有void变成了一个函数。还有一个默认的空构造。</p><p>应该去掉void。</p><pre><code>public class sadf {    public static void main(String[] args) {        Cat cat = new Cat();        cat.cry();    }}abstract class Animal{    public String name;    public abstract void cry();    public Animal() {        System.out.println(&quot;new Animal&quot;);    }}class Cat extends Animal{     public void cry() {        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">***</span><br><span class="line">结果是：</span><br><span class="line"></span><br><span class="line">new Animal</span><br><span class="line">喵喵</span><br></pre></td></tr></table></figure></code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;关于构造函数&quot;&gt;&lt;a href=&quot;#关于构造函数&quot; class=&quot;headerlink&quot; title=&quot;关于构造函数&quot;&gt;&lt;/a&gt;关于构造函数&lt;/h1&gt;&lt;p&gt;构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。&lt;/p&gt;
+&lt;pre&gt;&lt;co
+      
+    
+    </summary>
+    
+    
+      <category term="Java基础问题" scheme="http://erichunn.github.io/tags/Java%E5%9F%BA%E7%A1%80%E9%97%AE%E9%A2%98/"/>
+    
+  </entry>
   
   <entry>
     <title>Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数</title>
