@@ -369,7 +369,51 @@
       
         
           
-            
+            <p>先熟悉一下Hive的基本语句：</p>
+<p><img src="https://i.imgur.com/m3EGeNB.png" alt=""></p>
+<p>首先里面的库有这么几个表，</p>
+<pre><code>desc formatted ods_order;
+</code></pre><hr>
+<p>看到表有几个信息</p>
+<p><img src="https://i.imgur.com/QySpeml.png" alt=""></p>
+<hr>
+<p>可以看到表的字段的信息。</p>
+<p><img src="https://i.imgur.com/LKLlYkH.png" alt=""></p>
+<p>同时可以看见表的是否是分区表partition information</p>
+<p>Location:可以看见路径，数据是在哪里的。</p>
+<hr>
+<p>table Type: 是否是内部表</p>
+<hr>
+<p><img src="https://i.imgur.com/xeLyY3a.png" alt=""><br>可以通过Hive看到进入到dfs里面的路径</p>
+<hr>
+<p><img src="https://i.imgur.com/xygHp2A.png" alt=""><br>可以看见里面文件的大小</p>
+<hr>
+<p>通过explain 来看他的hive是怎么走的，看他的执行计划。<br><img src="https://i.imgur.com/tSBmrzT.png" alt=""></p>
+<hr>
+<p>观察一个表的分区信息：</p>
+<p><img src="https://i.imgur.com/aqBMFwV.png" alt=""></p>
+<hr>
+<p>查看hadoop正在运行的任务</p>
+<pre><code>yarn application -list 
+</code></pre><p><img src="https://i.imgur.com/MVAygd5.png" alt=""></p>
+<p><img src="https://i.imgur.com/tFau3p3.png" alt=""></p>
+<hr>
+<p>show functions;//显示hive里所有函数<br>desc function extended add_months//显示里面具体的函数的用法</p>
+<hr>
+<p> 有时候desc formatted ods_order;里面显示的路径可能会是假的路径。在hadoop搭建的时候配置出问题，就会出现假的路径。</p>
+<p>通过命令</p>
+<pre><code>desc extended ods_order partition(dt=20151010);
+
+//通过这个命令可以找到库表的实际路径。其中的dt是通过
+show partition ado_order;来找到的。
+</code></pre><hr>
+<p><img src="https://i.imgur.com/1dogCNC.png" alt=""></p>
+<hr>
+<p><img src="https://i.imgur.com/9UA2P7t.png" alt=""></p>
+<hr>
+<p><img src="https://i.imgur.com/hrtak5b.png" alt=""><br>以前的0.1之前有些扫描数据的时候默认是不开启mapreduce的。<br>在select的时候是不开启mapreduce的。如果是少量的数据可以直接扫描出来的。但是表的数据非常大，如果不主动开启reduce执行，那么需要手动执行。通过上图来操作。设置是否开启mapreduce来执行。</p>
+<hr>
+
           
         
       
@@ -1042,7 +1086,7 @@ parseInt(&quot;010&quot;);        //未定：返回 10 或 8
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
