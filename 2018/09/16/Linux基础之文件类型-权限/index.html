@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Linux基础,文件类型权限," />
 
 
 
@@ -81,16 +81,27 @@
 
 
 
-<meta name="description" content="大数据|动漫迷|科技控">
-<meta property="og:type" content="website">
-<meta property="og:title" content="无心是一首歌">
-<meta property="og:url" content="http://erichunn.github.io/tags/Hadoop权威指南/index.html">
+<meta name="description" content="目录和权限 [windows] 以磁盘分区物理结构作为文件系统结构 每个用户在/home下面都有一个自己的家目录比如centos的家目录在/home/centos但是root是管理员比较特殊root的目录在/root下~是home的子一级 ‘ [centos] 逻辑结构./                    //文件系统的根.  /bin                //最初的命令(祖先)，">
+<meta name="keywords" content="Linux基础,文件类型权限">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux基础之文件类型-权限">
+<meta property="og:url" content="http://erichunn.github.io/2018/09/16/Linux基础之文件类型-权限/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="大数据|动漫迷|科技控">
+<meta property="og:description" content="目录和权限 [windows] 以磁盘分区物理结构作为文件系统结构 每个用户在/home下面都有一个自己的家目录比如centos的家目录在/home/centos但是root是管理员比较特殊root的目录在/root下~是home的子一级 ‘ [centos] 逻辑结构./                    //文件系统的根.  /bin                //最初的命令(祖先)，">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.imgur.com/9EibNGJ.png">
+<meta property="og:image" content="https://i.imgur.com/YW7Kf85.png">
+<meta property="og:image" content="https://i.imgur.com/d1kfpNH.png">
+<meta property="og:image" content="https://i.imgur.com/vBRQgXA.png">
+<meta property="og:image" content="https://i.imgur.com/1ldCqdL.png">
+<meta property="og:image" content="https://i.imgur.com/pgdqTkV.png">
+<meta property="og:image" content="https://i.imgur.com/U1ggRNv.png">
+<meta property="og:image" content="https://i.imgur.com/XQSLfvz.png">
+<meta property="og:updated_time" content="2018-09-16T12:28:02.574Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="无心是一首歌">
-<meta name="twitter:description" content="大数据|动漫迷|科技控">
+<meta name="twitter:title" content="Linux基础之文件类型-权限">
+<meta name="twitter:description" content="目录和权限 [windows] 以磁盘分区物理结构作为文件系统结构 每个用户在/home下面都有一个自己的家目录比如centos的家目录在/home/centos但是root是管理员比较特殊root的目录在/root下~是home的子一级 ‘ [centos] 逻辑结构./                    //文件系统的根.  /bin                //最初的命令(祖先)，">
+<meta name="twitter:image" content="https://i.imgur.com/9EibNGJ.png">
 
 
 
@@ -120,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://erichunn.github.io/tags/Hadoop权威指南/"/>
+  <link rel="canonical" href="http://erichunn.github.io/2018/09/16/Linux基础之文件类型-权限/"/>
 
 
 
 
 
-  <title>Tag: Hadoop权威指南 | 无心是一首歌</title>
+  <title>Linux基础之文件类型-权限 | 无心是一首歌</title>
   
 
 
@@ -155,7 +166,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -283,54 +294,240 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Hadoop权威指南<small>Tag</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/16/Linux基础之文件类型-权限/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/09/11/Hadoop权威指南学习笔记（1）/" itemprop="url">
-              
-                <span itemprop="name">Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Linux基础之文件类型-权限</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-11T09:25:39+08:00"
-              content="2018-09-11" >
-          09-11
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-16T18:47:50+08:00">
+                2018-09-16
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="目录和权限"><a href="#目录和权限" class="headerlink" title="目录和权限"></a>目录和权限</h1><hr>
+<pre><code>[windows]
+以磁盘分区物理结构作为文件系统结构
+</code></pre><p>每个用户在/home下面都有一个自己的家目录比如centos的家目录在<br>/home/centos但是root是管理员比较特殊root的目录在/root下<br>~是home的子一级</p>
+<p><img src="https://i.imgur.com/9EibNGJ.png" alt="">‘</p>
+<p>[centos]</p>
+<h2 id="逻辑结构"><a href="#逻辑结构" class="headerlink" title="逻辑结构."></a>逻辑结构.</h2><pre><code>/                    //文件系统的根.
+
+/bin                //最初的命令(祖先)，binary文件,可执行文件
+/sbin                //super binary(重要性高)
+
+/usr/bin            //厂商相关的命令,ubuntu
+/usr/sbin            //厂商相关的命令,ubuntu
+
+/usr/local/bin        //用户级别。
+/usr/local/sbin
+
+[Linux文件类型]
+-        //文件
+d        //目录
+l        //链接,类似于windows快捷方式.
+b        //block,块文件。
+c        //字符文件
+</code></pre><p><img src="https://i.imgur.com/YW7Kf85.png" alt=""></p>
+<hr>
+<p><img src="https://i.imgur.com/d1kfpNH.png" alt=""></p>
+<p>第一个字母是L的意思是link连接类的。</p>
+<hr>
+<p><img src="https://i.imgur.com/vBRQgXA.png" alt=""></p>
+<p>ifconfig的命令的目录在/sbin/ifconfig这里，但是实际上/sbin已经链接到了/usr/bin里面了。所以CentOS是没有bin和、usr/bin之分的，因为已经link过去了</p>
+<hr>
+<h2 id="linux的权限"><a href="#linux的权限" class="headerlink" title="[linux的权限]"></a>[linux的权限]</h2><p><img src="https://i.imgur.com/1ldCqdL.png" alt=""><br>一共有9个位，每个成分是从0-7如果是777就是全部权限都付给他了</p>
+<p><img src="https://i.imgur.com/pgdqTkV.png" alt=""><br>看这段截图。里面的-rw-rw-r–<br>第一个-是文件类型第rw后面的-是代表0</p>
+<pre><code>$&gt;chmod                //修改文件(夹)权限
+$&gt;chmod    g-w            //去除group中write权.
+
+chmod                //不受文件权限控制,只有owner和root才具有文件权限的修改权。
+
+
+【read权限】
+    文件    :文件内容
+    文件夹    :文件夹的内容    
+【write权限】
+------------
+
+【execute权限】
+-------------
+    文件    :执行
+    文件夹    :进入目录
+</code></pre><p>看下面这个例子：<br> <img src="https://i.imgur.com/U1ggRNv.png" alt=""><br>看最下面的这个chmode 644 a.txt</p>
+<p>6是用户的成分。4是组的成分，最后4，是others的成分。<br>所以chmode 644最后是 -rw-r–r–</p>
+<p><img src="https://i.imgur.com/XQSLfvz.png" alt=""></p>
+<p>这里面的小细节格式 ：<br>    chmode 655 a.txt</p>
+<pre><code>chmode g+w a.txt
+</code></pre><hr>
 
       
     </div>
+    
+    
+    
 
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux基础/" rel="tag"># Linux基础</a>
+          
+            <a href="/tags/文件类型权限/" rel="tag"># 文件类型权限</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/16/Linux基础之CentOS命令基础/" rel="next" title="Linux基础">
+                <i class="fa fa-chevron-left"></i> Linux基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -338,6 +535,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -358,8 +564,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -452,6 +667,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#目录和权限"><span class="nav-number">1.</span> <span class="nav-text">目录和权限</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑结构"><span class="nav-number">1.1.</span> <span class="nav-text">逻辑结构.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux的权限"><span class="nav-number">1.2.</span> <span class="nav-text">[linux的权限]</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -599,6 +830,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -627,6 +862,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 

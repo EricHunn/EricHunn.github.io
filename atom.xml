@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://erichunn.github.io/"/>
-  <updated>2018-09-16T09:40:41.110Z</updated>
+  <updated>2018-09-16T12:28:02.574Z</updated>
   <id>http://erichunn.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux基础之文件类型-权限</title>
+    <link href="http://erichunn.github.io/2018/09/16/Linux%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B-%E6%9D%83%E9%99%90/"/>
+    <id>http://erichunn.github.io/2018/09/16/Linux基础之文件类型-权限/</id>
+    <published>2018-09-16T10:47:50.000Z</published>
+    <updated>2018-09-16T12:28:02.574Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="目录和权限"><a href="#目录和权限" class="headerlink" title="目录和权限"></a>目录和权限</h1><hr><pre><code>[windows]以磁盘分区物理结构作为文件系统结构</code></pre><p>每个用户在/home下面都有一个自己的家目录比如centos的家目录在<br>/home/centos但是root是管理员比较特殊root的目录在/root下<br>~是home的子一级</p><p><img src="https://i.imgur.com/9EibNGJ.png" alt="">‘</p><p>[centos]</p><h2 id="逻辑结构"><a href="#逻辑结构" class="headerlink" title="逻辑结构."></a>逻辑结构.</h2><pre><code>/                    //文件系统的根./bin                //最初的命令(祖先)，binary文件,可执行文件/sbin                //super binary(重要性高)/usr/bin            //厂商相关的命令,ubuntu/usr/sbin            //厂商相关的命令,ubuntu/usr/local/bin        //用户级别。/usr/local/sbin[Linux文件类型]-        //文件d        //目录l        //链接,类似于windows快捷方式.b        //block,块文件。c        //字符文件</code></pre><p><img src="https://i.imgur.com/YW7Kf85.png" alt=""></p><hr><p><img src="https://i.imgur.com/d1kfpNH.png" alt=""></p><p>第一个字母是L的意思是link连接类的。</p><hr><p><img src="https://i.imgur.com/vBRQgXA.png" alt=""></p><p>ifconfig的命令的目录在/sbin/ifconfig这里，但是实际上/sbin已经链接到了/usr/bin里面了。所以CentOS是没有bin和、usr/bin之分的，因为已经link过去了</p><hr><h2 id="linux的权限"><a href="#linux的权限" class="headerlink" title="[linux的权限]"></a>[linux的权限]</h2><p><img src="https://i.imgur.com/1ldCqdL.png" alt=""><br>一共有9个位，每个成分是从0-7如果是777就是全部权限都付给他了</p><p><img src="https://i.imgur.com/pgdqTkV.png" alt=""><br>看这段截图。里面的-rw-rw-r–<br>第一个-是文件类型第rw后面的-是代表0</p><pre><code>$&gt;chmod                //修改文件(夹)权限$&gt;chmod    g-w            //去除group中write权.chmod                //不受文件权限控制,只有owner和root才具有文件权限的修改权。【read权限】    文件    :文件内容    文件夹    :文件夹的内容    【write权限】------------【execute权限】-------------    文件    :执行    文件夹    :进入目录</code></pre><p>看下面这个例子：<br> <img src="https://i.imgur.com/U1ggRNv.png" alt=""><br>看最下面的这个chmode 644 a.txt</p><p>6是用户的成分。4是组的成分，最后4，是others的成分。<br>所以chmode 644最后是 -rw-r–r–</p><p><img src="https://i.imgur.com/XQSLfvz.png" alt=""></p><p>这里面的小细节格式 ：<br>    chmode 655 a.txt</p><pre><code>chmode g+w a.txt</code></pre><hr>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;目录和权限&quot;&gt;&lt;a href=&quot;#目录和权限&quot; class=&quot;headerlink&quot; title=&quot;目录和权限&quot;&gt;&lt;/a&gt;目录和权限&lt;/h1&gt;&lt;hr&gt;
+&lt;pre&gt;&lt;code&gt;[windows]
+以磁盘分区物理结构作为文件系统结构
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;每
+      
+    
+    </summary>
+    
+    
+      <category term="Linux基础" scheme="http://erichunn.github.io/tags/Linux%E5%9F%BA%E7%A1%80/"/>
+    
+      <category term="文件类型权限" scheme="http://erichunn.github.io/tags/%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E6%9D%83%E9%99%90/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux基础</title>
