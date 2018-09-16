@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://erichunn.github.io/"/>
-  <updated>2018-09-14T13:29:47.288Z</updated>
+  <updated>2018-09-16T09:40:41.110Z</updated>
   <id>http://erichunn.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux基础</title>
+    <link href="http://erichunn.github.io/2018/09/16/Linux%E5%9F%BA%E7%A1%80%E4%B9%8BCentOS%E5%91%BD%E4%BB%A4%E5%9F%BA%E7%A1%80/"/>
+    <id>http://erichunn.github.io/2018/09/16/Linux基础之CentOS命令基础/</id>
+    <published>2018-09-16T02:02:53.000Z</published>
+    <updated>2018-09-16T09:40:41.110Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>CentOS                        Windows$&gt;ls                        cmd&gt;dir                //$&gt;ls --help                                        //查看命令帮助$&gt;man ls                                        //查看命令帮助$&gt;clear                        cmd&gt;cls                //清屏$&gt;cd /home                    cmd&gt;cd d:/            //切换目录$&gt;cd .                        cmd&gt;cd .            //进入当前目录$&gt;cd ..                        cmd&gt;cd ..            //进入上级目录$&gt;cd /home/centos            cmd&gt;cd d:/xx/x/x    //进入绝对路径</code></pre><hr><pre><code>$&gt;pwd                                            //显式当前目录$&gt;whoami                                        //显式当前用户名$&gt;su root                                        //切换用户,输入密码,swith user$&gt;passwd                                        //修改当前用户的密码$&gt;ifconfig                    cmd&gt;ipconfig            //查看ip地址$&gt;ping localhost            cmd&gt;ping localhost        //查看网络连通情况$&gt;ping www.baidu.com        cmd&gt;ping www.baidu.com    //查看网络连通情况$&gt;启动桌面版的网卡    on.$&gt;su centos                                            //$&gt;cd /home/centos                                    //$&gt;cd ~                                                //回到主目录$&gt;cd -                                                //回到上次的目录$&gt;ll                                                //别名,ls -l --autocolor...$&gt;alias                                                //查看所有的别名$&gt;ls -a -l -h                                        //查看当前目录-h:人性化 -l:列表 -a:显式.开头$&gt;mkdir ~/Downloads/a                                //创建目录$&gt;touch ~/Downloads/a/1.txt                            //创建文件$&gt;echo helloworld &gt; 1.txt                            //重定向输出(覆盖)$&gt;echo helloworld &gt;&gt; 1.txt                            //重定向输出(追加模式)$&gt;cat 1.txt                    cmd&gt;type a.txt            //查看文件$&gt;cp 1.txt 2.txt                                    //复制文件$&gt;rm 1.txt                                            //删除文件$&gt;rm -rf /                                            //强行递归删除$&gt;mv a.txt tmp/                                        //强行递归删除[centos client中切换模式]ctrl + alt + f6                                        //切换到文本模式ctrl + alt                                            //切换鼠标ctrl + alt + f1                                        //切换桌面模式.ctrl + alt + f5                                        //切换到新的文本模式[nano文本编辑器,命令行模式]$&gt;nano a.txt                                        //打开nano编辑器，编辑a.txt文件$&gt;....$&gt;ctrl + o                                            //保存文件,提示后直接回车$&gt;ctrl + x                                            //退出文件$&gt;ctrl + k                                            //cut 文本$&gt;ctrl + u                                            //cut 文本$&gt;more a.txt                                        //分屏显式  q:退出  h:帮助$&gt;more -5 a.txt                                        //显式前5行内容$&gt;tail a.txt                                        //最后10行内容$&gt;find . | more                                        // | 是管道符，前面的命令的输出作为后面命令输入。$&gt;find ~                                            $&gt;ls -aR ~                                            //递归显式主目录所有的文件.(a表示包含.开头的文件)$&gt;head a.txt                                        //显式前10行$&gt;head -n 10 a.txt                                    //显式前10行$&gt;head -10 a.txt                                    //显式前10行$&gt;tail a.txt$&gt;tail -n 20 a.txt$&gt;tail -20 a.txt$&gt;tail --lines=20 a.txt$&gt;wc -c -l -w a.txt                                    //统计文本信息,                                                    //显式统计信息-c:字节 -l:line -w:word$&gt;hostname        //查看主机名称$&gt;uname -r        //查看系统内核$&gt;uname -a        //查看系统内核$&gt;uname -p        //查看系统内核$&gt;uname -m        //查看系统内核$&gt;file xxx.xx        //查看文件类型$&gt;gzip a.txt        //原地压缩$&gt;gzip -d a.txt        //原地压缩$&gt;gzip -dr tmp        //递归操纵文件夹下的文件$&gt;gunzip a.txt.gz    //等价于gzip -d a.txt$&gt;tar -cvf my.tar 1.txt tmp        //创建归档文件$&gt;tar -vxf my.tar                //解档文件</code></pre><p>把多个文件保存到一个文件，也可以从归档文件恢复到单个文件</p><pre><code>-c create创建-f 归档文件名-vf 列出所有文件在。。里面-xf 从。。里面抽取所有文件。—r 追加-cf 创建</code></pre><p>例子</p><pre><code>tar -cf my.tar a.txt ：将a.txt归档压缩到my.tartar -xvf my.tar a.txt: 抽取my.tar里面的a.txttar -cf my.tar a.txt tmp/ :将a.txt和tmp/都压缩到my.tar里面</code></pre><hr><p><img src="https://i.imgur.com/USxFESR.png" alt=""></p><p>xargs</p><pre><code>在&apos;xargs&apos;加单引号把他识别为一个命令。$&gt;find . | grep txt | cp `xargs` temp    //xargs是多行变单行，使用空格替换回车换行符.                                        //`` : 是强制命令解析。</code></pre><p><img src="https://i.imgur.com/DEbAcEb.png" alt=""></p><p>反引号’’问题</p><p><img src="https://i.imgur.com/lqhkxfD.png" alt=""></p><pre><code>$&gt;ping `cat a.txt`                        //命令嵌套</code></pre><p><img src="https://i.imgur.com/MLzjLoQ.png" alt=""></p><pre><code>$&gt;which echo                            //查看命令的文件路径</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;CentOS                        Windows
+$&amp;gt;ls                        cmd&amp;gt;dir                //
+$&amp;gt;ls --help                 
+      
+    
+    </summary>
+    
+    
+      <category term="linux" scheme="http://erichunn.github.io/tags/linux/"/>
+    
+      <category term="基础" scheme="http://erichunn.github.io/tags/%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
   
   <entry>
     <title>京东实战项目之hive实战（1）</title>
