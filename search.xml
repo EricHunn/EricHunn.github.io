@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Linux基础之网络连接模式]]></title>
+    <url>%2F2018%2F09%2F16%2FLinux%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E6%A8%A1%E5%BC%8F%2F</url>
+    <content type="text"></content>
+  </entry>
+  <entry>
     <title><![CDATA[Linux基础之文件类型-权限]]></title>
     <url>%2F2018%2F09%2F16%2FLinux%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B-%E6%9D%83%E9%99%90%2F</url>
     <content type="text"><![CDATA[目录和权限 [windows] 以磁盘分区物理结构作为文件系统结构 每个用户在/home下面都有一个自己的家目录比如centos的家目录在/home/centos但是root是管理员比较特殊root的目录在/root下~是home的子一级 ‘ [centos] 逻辑结构./ //文件系统的根. /bin //最初的命令(祖先)，binary文件,可执行文件 /sbin //super binary(重要性高) /usr/bin //厂商相关的命令,ubuntu /usr/sbin //厂商相关的命令,ubuntu /usr/local/bin //用户级别。 /usr/local/sbin [Linux文件类型] - //文件 d //目录 l //链接,类似于windows快捷方式. b //block,块文件。 c //字符文件 第一个字母是L的意思是link连接类的。 ifconfig的命令的目录在/sbin/ifconfig这里，但是实际上/sbin已经链接到了/usr/bin里面了。所以CentOS是没有bin和、usr/bin之分的，因为已经link过去了 [linux的权限]一共有9个位，每个成分是从0-7如果是777就是全部权限都付给他了 看这段截图。里面的-rw-rw-r–第一个-是文件类型第rw后面的-是代表0 $&gt;chmod //修改文件(夹)权限 $&gt;chmod g-w //去除group中write权. chmod //不受文件权限控制,只有owner和root才具有文件权限的修改权。 【read权限】 文件 :文件内容 文件夹 :文件夹的内容 【write权限】 ------------ 【execute权限】 ------------- 文件 :执行 文件夹 :进入目录 看下面这个例子： 看最下面的这个chmode 644 a.txt 6是用户的成分。4是组的成分，最后4，是others的成分。所以chmode 644最后是 -rw-r–r– 这里面的小细节格式 ： chmode 655 a.txt chmode g+w a.txt]]></content>
