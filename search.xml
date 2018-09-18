@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Linux基础之虚拟机增强工具的安装-文本模式的安装]]></title>
+    <url>%2F2018%2F09%2F18%2FLinux%E5%9F%BA%E7%A1%80%E4%B9%8B%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85-%E6%96%87%E6%9C%AC%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%89%E8%A3%85%2F</url>
+    <content type="text"><![CDATA[虚拟机增强工具 1.原理 插入iso(C:\myprograms\vmwar11.0.4-x86_64\linux.iso)文件到光盘中。 2.vmware虚拟机菜单 -&gt; 重新安装vmware-tools 3.自动会将C:\myprograms\vmwar11.0.4-x86_64\linux.iso镜像文件插入光驱中，并直接打开。 4.复制VMwareTools-9.9.3-2759765.tar.gz文件到centos的桌面下。 5.tar开该文件. 鼠标右键点击桌面的tar.gz文件，选择 extract here. 6.进入桌面的vmware-tools-distrib目录下. $&gt;su root $&gt;cd /home/centos/Desktop/vmware-tools-distrib 7.执行安装脚本 $&gt;./vmware-install.pl 一路回车。 只到遇到Enjoy!!... 图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux基础基础—————踩过的大坑]]></title>
+    <url>%2F2018%2F09%2F18%2FLinux%E5%9F%BA%E7%A1%80%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E2%80%94%E8%B8%A9%E8%BF%87%E7%9A%84%E5%A4%A7%E5%9D%91%2F</url>
+    <content type="text"><![CDATA[问题：图形界面浏览器能访问外网，但是ping不通很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。 解决：将网络中心里面改成这样子就行了。 具体的网站解释：https://blog.csdn.net/Arnold_lee_yc/article/details/74785995 不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。所以本教程使用的是7.1也就是1503版本的centos]]></content>
+      <tags>
+        <tag>Linux基础</tag>
+        <tag>大坑</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux基础之网络配置-域名解析-光驱挂载]]></title>
+    <url>%2F2018%2F09%2F17%2FLinux%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE-%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90-%E5%85%89%E9%A9%B1%E6%8C%82%E8%BD%BD%2F</url>
+    <content type="text"><![CDATA[[客户端与宿主机之间的网络连通方式]1.桥接桥接(client完全等价于一台物理主机) 2.NAT(最多,默认模式)a.Net Address transform,网络地址转换. b.客户机能访问外网，可以访问局域网内的其他物理主机。 c.其他的局域网内物理主机不能访问客户机。 3.only host.a.和NAT非常像。 b.不能访问外网。 4.查看client机的网络连接模式a.右键选择Centos客户机。 b.点击&quot;设置&quot; c.网络适配器. 5.查看DHCP的分配网段a.vmware--&gt;编辑--&gt;虚拟网络编辑器 b.选中V8条目 c.下方显示的V8的详细信息。 d.点击DHCP的设置. e.查看分配网段. [修改静态IP]1.切换root用户$&gt;su root 2.编辑/etc/sysconfig/network-scripts/ifcfg-eno16777736a.备份文件 $&gt;cd /etc/sysconfig/network-scripts $&gt;cp ifcfg-eno16777736 ifcfg-eno16777736.bak b.进入/etc/sysconfig/network-scripts $&gt;cd /etc/sysconfig/network-scripts c.编辑ifcfg-eno16777736文件 $&gt;nano ifcfg-eno16777736 TYPE=Ethernet BOOTPROTO=none DEFROUTE=yes IPV4_FAILURE_FATAL=no IPV6INIT=no IPV6_AUTOCONF=no IPV6_DEFROUTE=no IPV6_PEERDNS=no IPV6_PEERROUTES=no IPV6_FAILURE_FATAL=no NAME=eno16777736 UUID=33f3ce5f-8b5c-41af-90ed-863736e09c29 DEVICE=eno16777736 ONBOOT=yes IPADDR=192.168.231.200 PREFIX=24 GATEWAY=192.168.231.2 DNS=192.168.231.2 注意:查看NAT网络的网关地址。 0)Client机的网卡的DNS和GATEWAY设置为虚拟网卡NAT的网关值。 1)vmware--&gt;编辑--&gt;虚拟网路编辑器 2)v8条目 3)点击&quot;NAT设置&quot;按钮 4)查看网关地址:192.168.231.2(通常为xxx.xxx.xxx.2) e.重启网络服务 $&gt;su root $&gt;service network restart f.解决通过ip能够访问网络，通过域名无法访问的问题。 1)编辑/etc/resolv.conf,添加名称服务器，内容是网关地址。 nameserver 192.168.231.2 2)保存退出 3)重启服务 $&gt;su root $&gt;service network restart 4)测试www.baidu.com $&gt;ping www.baidu.com service管理命令 1.查看服务的状态$&gt;service server_name status //语法 $&gt;service network status $&gt;service network start //启动 $&gt;service network stop //停止 $&gt;service network restart //重启 里面的lo网卡是自回环网络lopback（音似）还有一个就是局域网网卡 其中的ifcfg-lo就是自回环网络 打开里面的内容查看 mount挂载外设 1.右键client右下角的光盘图标 -&gt;设置 2.iso文件 选择一个iso镜像文件。 3.右键client右下角的光盘图标 -&gt;连接. 4.创建文件夹/mnt/cdrom $&gt;su root $&gt;mkdir cdrom 5.挂载光驱/dev/cdrom到/mnt/cdrom $&gt;mount /dev/cdrom /mnt/cdrom $&gt;find . /mnt/cdrom 卸载外设 1.从挂载的目录中出来,否则出现设备繁忙 $&gt;cd .. 2.使用umount进行卸载 $&gt;umount /mnt/cdrom 启用client和host之间共享目录的功能 1.右键点击vmware中的client机，选择设置 2.找到”选项” -&gt; “共享文件夹” 3.选择”总是启用” 4.在文件夹区域中添加要共享的目录 d:/downloads 5.确定. 6.重启客户机.]]></content>
+  </entry>
+  <entry>
     <title><![CDATA[Linux基础之网络连接模式]]></title>
     <url>%2F2018%2F09%2F16%2FLinux%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E6%A8%A1%E5%BC%8F%2F</url>
     <content type="text"></content>
