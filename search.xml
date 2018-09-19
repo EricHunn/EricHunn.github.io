@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Linux基础之hostname]]></title>
+    <url>%2F2018%2F09%2F19%2FLinux%E5%9F%BA%E7%A1%80%E4%B9%8Bhostname%2F</url>
+    <content type="text"><![CDATA[命令嵌套使用$&gt;echo `cat b.txt` //命令解析,无法嵌套 $&gt;$(... $()) //支持命令的嵌套 创建用户0.用户和组之间，一个用户可以属于多个组。 但是有一个首要组。 1.adduser,等同于useradd 符号链接。 /usr/sbin/adduser --&gt; /usr/sbin/useradd. 2.useradd 输入新密码. 重复输入 $&gt;su root $&gt;useradd -m centos2 -m, --create-home create the user&apos;s home directory -p, --password PASSWORD encrypted password of the new account 3.使用方法 $&gt;su root $&gt;userdel -r centos2 //用户所在组目录也会被删除]]></content>
+      <tags>
+        <tag>Linux基础</tag>
+        <tag>基础命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux基础之进程查看]]></title>
+    <url>%2F2018%2F09%2F18%2FLinux%E5%9F%BA%E7%A1%80%E4%B9%8B%E8%BF%9B%E7%A8%8B%E6%9F%A5%E7%9C%8B%2F</url>
+    <content type="text"><![CDATA[job 放到后台运行的进程.1.将程序放到后台运行,以&amp;结尾. $&gt;nano b.txt &amp; 2.查看后台运行的jobs数 $&gt;jobs 3.切换后台作业到前台来. $&gt;fg %n //n是job编号. 4.前台正在的进程，放到后台。 ctrl + z 5.让后作业运行 $&gt;bg %1 // 6.杀死作业 $&gt;kill %1 // man + 命令 ：查看该命令详细帮助 进程查看,prcess show $&gt;ps -Af |grep gnome //-A:所有进程 -f:所有列格式. $&gt;top //动态显示进程信息。含有cpu、内存的使用情况. //q,按照q退出。 cut剪切显示文件的每一行。 $&gt;cut -c 1-5 a.txt //从第一个字符开始,下标从1开始。 $&gt;ps -Af | cut -c 45-80 | more //吧PS里面获得的内容剪切显示，显示没一行的45-80，翻页查看 查看帮助$&gt;help //查看os内置的命令 $&gt;man ifcon fig //查看特定命令 $&gt;ifconfig --help $&gt;ifconfig -h $&gt;info ifconfig // 磁盘分区使用$&gt;fdisk -l /dev/sda 里面的中括号是可选的，尖括号是必须要写的 里面sad是磁盘，sda1是分区。sd1，sd2，sd3是磁盘的三个分区。 查看磁盘使用情况(disk free)$&gt;df -ah /home/centos //查看 dirname取出指定地址的上级目录. $&gt;dirname /a/b/c/d $&gt;/a/b/c basename取出当前地址的上级目录. $&gt;dirname /a/b/c/d $&gt;d 主机名$&gt;hostname //显式主机名 $&gt;修改主机名(sudo) [/etc/hostname] s200 关机重启命令$&gt;reboot //重启 $&gt;halt //停止,黑屏 //halt -p === poweroff //halt -r === reboot $&gt;poweroff //关机 $&gt;shutdown //shutdown now, 命令嵌套1.使用 $&gt;echo `cat b.txt` //命令解析,无法嵌套 $&gt;$(... $()) //支持命令的嵌套 2.]]></content>
+      <tags>
+        <tag>Linux基础</tag>
+        <tag>进程查看</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux基础之符号连接]]></title>
+    <url>%2F2018%2F09%2F18%2FLinux%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%AC%A6%E5%8F%B7%E8%BF%9E%E6%8E%A5%2F</url>
+    <content type="text"><![CDATA[权限 r //100 = 4 //文件 :读取内容， //文件夹:是查看文件夹的内容 w //文件 :写数据到文件 //文件夹:增删文件. //10 = 2 x //文件 : 运行程序 //文件夹: 进入该目录. // 1 = 1 权限控制涉及范围 U:user ,rwx r-x --- G:group , O:other , 修改文件的owner,change owner chown -R root:root a.txt //递归修改owner chmod -R 777 xxx //递归修改权限. -R :递归显示 -l :列表显示 通过递归改变整个文件夹里面的文件的权限和所有者和所在组 chown -R root:root tmp Linux文件夹 / //根目录 /bin //祖先 /sbin //祖先 /usr/bin //厂商 /usr/sbin //厂商 /usr/local/bin //用户 /usr/local/sbin //用户 /etc //配置目录 /mnt //挂载目录 /boot //引导目录 /dev //设备目录 /lib[64] //库目录 -:文件 d:目录 l:link 等价于windows快捷方式 b:block,块设备 c:charactor,字符文件 创建连接文件 1.硬链接两个完全相同文件，类似于实时备份。两个文件之间完全同步。删除时，只删一个。 目录不能使用硬链接。 ln a.txt alink //a.txt:目标文件, alink:连接名称. ln b.txt b_lnk //硬链接，修改连接文件，源文件也改变，但是删除连接文件源文件不被删除。 硬链接用的很少，大多使用符号连接 mv b_link b.txt 同一目录下改名字就用移动命令即可 2.符号连接-软连接相当于快捷方式. 可以对文件，也可以对文件夹创建符号连接。 符号连接存在的时候，可以删除目标文件。 $&gt;ln -s a.txt alink //a.txt: 目标文件 alink:连接名称(symbolic) blk存放的是路径的字节数大小。开始的时候只想本目录下的b.txt所以是5个字节，后来只想一个绝对路径就变成了28个字符。例子如下图所示 删除掉了链接指向的文件，就会变成红色。删除后在加上就回复正常变成了浅蓝色。 sudo 临时借用root的权限执行命令,只在当前命令下有效。命令结束后，还是原来用户。 1.配置当前用户具有sudo的执行权利 [/etc/sudoers] ... root ALL=(ALL) ALL centos ALL=(ALL) ALL ... $&gt;sudo chown -R centos:centos . 临时切换超级管理员权限 sudo 切换到另外一个用户 su]]></content>
+      <tags>
+        <tag>linux基础</tag>
+        <tag>符号连接</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Linux基础之虚拟机增强工具的安装-文本模式的安装]]></title>
     <url>%2F2018%2F09%2F18%2FLinux%E5%9F%BA%E7%A1%80%E4%B9%8B%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85-%E6%96%87%E6%9C%AC%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%89%E8%A3%85%2F</url>
     <content type="text"><![CDATA[虚拟机增强工具 1.原理 插入iso(C:\myprograms\vmwar11.0.4-x86_64\linux.iso)文件到光盘中。 2.vmware虚拟机菜单 -&gt; 重新安装vmware-tools 3.自动会将C:\myprograms\vmwar11.0.4-x86_64\linux.iso镜像文件插入光驱中，并直接打开。 4.复制VMwareTools-9.9.3-2759765.tar.gz文件到centos的桌面下。 5.tar开该文件. 鼠标右键点击桌面的tar.gz文件，选择 extract here. 6.进入桌面的vmware-tools-distrib目录下. $&gt;su root $&gt;cd /home/centos/Desktop/vmware-tools-distrib 7.执行安装脚本 $&gt;./vmware-install.pl 一路回车。 只到遇到Enjoy!!... 图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：]]></content>
@@ -8,7 +35,7 @@
   <entry>
     <title><![CDATA[Linux基础基础—————踩过的大坑]]></title>
     <url>%2F2018%2F09%2F18%2FLinux%E5%9F%BA%E7%A1%80%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E2%80%94%E8%B8%A9%E8%BF%87%E7%9A%84%E5%A4%A7%E5%9D%91%2F</url>
-    <content type="text"><![CDATA[问题：图形界面浏览器能访问外网，但是ping不通很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。 解决：将网络中心里面改成这样子就行了。 具体的网站解释：https://blog.csdn.net/Arnold_lee_yc/article/details/74785995 不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。所以本教程使用的是7.1也就是1503版本的centos]]></content>
+    <content type="text"><![CDATA[问题：图形界面浏览器能访问外网，但是ping不通很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。 解决：将网络中心里面改成这样子就行了。 具体的网站解释：https://blog.csdn.net/Arnold_lee_yc/article/details/74785995 不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。所以本教程使用的是7.1也就是1503版本的centos 切换用户之后出现这种情况： 解决办法：是在设置centos用户的权限的时候配置错了。修改回来即可 su root vi sudoers 视频里面的人他的ALL写成了小写的l。配置错误]]></content>
       <tags>
         <tag>Linux基础</tag>
         <tag>大坑</tag>

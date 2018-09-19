@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="linux基础,符号连接," />
 
 
 
@@ -81,16 +81,22 @@
 
 
 
-<meta name="description" content="大数据|动漫迷|科技控">
-<meta property="og:type" content="website">
-<meta property="og:title" content="无心是一首歌">
-<meta property="og:url" content="http://erichunn.github.io/archives/2018/09/index.html">
+<meta name="description" content="权限 r        //100 = 4         //文件  :读取内容，         //文件夹:是查看文件夹的内容 w        //文件  :写数据到文件         //文件夹:增删文件.         //10 = 2  x        //文件  : 运行程序         //文件夹: 进入该目录.         // 1 = 1 权限控制涉及范围 U:">
+<meta name="keywords" content="linux基础,符号连接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux基础之符号连接">
+<meta property="og:url" content="http://erichunn.github.io/2018/09/18/Linux基础之符号连接/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="大数据|动漫迷|科技控">
+<meta property="og:description" content="权限 r        //100 = 4         //文件  :读取内容，         //文件夹:是查看文件夹的内容 w        //文件  :写数据到文件         //文件夹:增删文件.         //10 = 2  x        //文件  : 运行程序         //文件夹: 进入该目录.         // 1 = 1 权限控制涉及范围 U:">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.imgur.com/PBw1m7U.png">
+<meta property="og:image" content="https://i.imgur.com/Mfril9n.png">
+<meta property="og:image" content="https://i.imgur.com/OpwzbVW.png">
+<meta property="og:updated_time" content="2018-09-18T12:03:03.532Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="无心是一首歌">
-<meta name="twitter:description" content="大数据|动漫迷|科技控">
+<meta name="twitter:title" content="Linux基础之符号连接">
+<meta name="twitter:description" content="权限 r        //100 = 4         //文件  :读取内容，         //文件夹:是查看文件夹的内容 w        //文件  :写数据到文件         //文件夹:增删文件.         //10 = 2  x        //文件  : 运行程序         //文件夹: 进入该目录.         // 1 = 1 权限控制涉及范围 U:">
+<meta name="twitter:image" content="https://i.imgur.com/PBw1m7U.png">
 
 
 
@@ -120,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://erichunn.github.io/archives/2018/09/"/>
+  <link rel="canonical" href="http://erichunn.github.io/2018/09/18/Linux基础之符号连接/"/>
 
 
 
 
 
-  <title>Archive | 无心是一首歌</title>
+  <title>Linux基础之符号连接 | 无心是一首歌</title>
   
 
 
@@ -155,7 +161,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -293,411 +299,266 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之符号连接/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">Linux基础之符号连接</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T19:04:09+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        Um..! 13 posts in total. Keep on posting.
-      </span>
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
+            
+          
 
-        
+          
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/19/Linux基础之hostname/" itemprop="url">
-              
-                <span itemprop="name">Linux基础之hostname</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-19T15:46:12+08:00"
-              content="2018-09-19" >
-          09-19
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+        </div>
+      </header>
+    
 
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/18/Linux基础之进程查看/" itemprop="url">
-              
-                <span itemprop="name">Linux基础之进程查看</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-18T20:10:44+08:00"
-              content="2018-09-18" >
-          09-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/18/Linux基础之符号连接/" itemprop="url">
-              
-                <span itemprop="name">Linux基础之符号连接</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-18T19:04:09+08:00"
-              content="2018-09-18" >
-          09-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
+        <h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><hr>
+<pre><code>r        //100 = 4
+        //文件  :读取内容，
+        //文件夹:是查看文件夹的内容
+w        //文件  :写数据到文件
+        //文件夹:增删文件.
+        //10 = 2
 
-        
-        
-        
+x        //文件  : 运行程序
+        //文件夹: 进入该目录.
+        // 1 = 1
+</code></pre><h2 id="权限控制涉及范围"><a href="#权限控制涉及范围" class="headerlink" title="权限控制涉及范围"></a>权限控制涉及范围</h2><hr>
+<pre><code>U:user    ,rwx r-x ---
+G:group ,
+O:other , 
+</code></pre><h2 id="修改文件的owner-change-owner"><a href="#修改文件的owner-change-owner" class="headerlink" title="修改文件的owner,change owner"></a>修改文件的owner,change owner</h2><hr>
+<pre><code>chown -R root:root a.txt        //递归修改owner
+chmod -R 777 xxx                //递归修改权限.
+</code></pre><p>-R :递归显示</p>
+<p>-l :列表显示</p>
+<p>通过递归改变整个文件夹里面的文件的权限和所有者和所在组</p>
+<pre><code>chown -R root:root tmp
+</code></pre><h2 id="Linux文件夹"><a href="#Linux文件夹" class="headerlink" title="Linux文件夹"></a>Linux文件夹</h2><hr>
+<pre><code>/                //根目录
 
-        
-        
+/bin            //祖先
+/sbin            //祖先
+/usr/bin        //厂商
+/usr/sbin        //厂商
+/usr/local/bin    //用户
+/usr/local/sbin    //用户
 
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/18/Linux基础之虚拟机增强工具的安装-文本模式的安装/" itemprop="url">
-              
-                <span itemprop="name">Linux基础之虚拟机增强工具的安装-文本模式的安装</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-18T16:49:44+08:00"
-              content="2018-09-18" >
-          09-18
-        </time>
-      </div>
-
-    </header>
-  </article>
+/etc            //配置目录
+/mnt            //挂载目录
+/boot            //引导目录
+/dev            //设备目录
+/lib[64]        //库目录
 
 
-
+-:文件
+d:目录
+l:link 等价于windows快捷方式
+b:block,块设备
+c:charactor,字符文件
+</code></pre><h2 id="创建连接文件"><a href="#创建连接文件" class="headerlink" title="创建连接文件"></a>创建连接文件</h2><hr>
+<h3 id="1-硬链接"><a href="#1-硬链接" class="headerlink" title="1.硬链接"></a>1.硬链接</h3><p>两个完全相同文件，类似于实时备份。两个文件之间完全同步。删除时，只删一个。</p>
+<p>目录不能使用硬链接。</p>
+<pre><code>ln a.txt alink            
+</code></pre><p>//a.txt:目标文件, alink:连接名称.</p>
+<pre><code>ln b.txt b_lnk
+</code></pre><p>//硬链接，修改连接文件，源文件也改变，但是删除连接文件源文件不被删除。</p>
+<p>硬链接用的很少，大多使用符号连接</p>
+<pre><code>mv b_link b.txt
+</code></pre><p>同一目录下改名字就用移动命令即可</p>
+<h3 id="2-符号连接-软连接"><a href="#2-符号连接-软连接" class="headerlink" title="2.符号连接-软连接"></a>2.符号连接-软连接</h3><p>相当于快捷方式.</p>
+<p>可以对文件，也可以对文件夹创建符号连接。</p>
+<p>符号连接存在的时候，可以删除目标文件。</p>
+<pre><code>$&gt;ln -s a.txt alink        
+</code></pre><p>//a.txt: 目标文件  alink:连接名称(symbolic)</p>
+<p><img src="https://i.imgur.com/PBw1m7U.png" alt=""></p>
+<p>blk存放的是路径的字节数大小。开始的时候只想本目录下的b.txt所以是5个字节，后来只想一个绝对路径就变成了28个字符。例子如下图所示</p>
+<p><img src="https://i.imgur.com/Mfril9n.png" alt=""></p>
+<p>删除掉了链接指向的文件，就会变成红色。删除后在加上就回复正常变成了浅蓝色。</p>
+<p><img src="https://i.imgur.com/OpwzbVW.png" alt=""></p>
+<hr>
+<h2 id="sudo"><a href="#sudo" class="headerlink" title="sudo"></a>sudo</h2><hr>
+<p>临时借用root的权限执行命令,只在当前命令下有效。命令结束后，还是原来用户。</p>
+<h3 id="1-配置当前用户具有sudo的执行权利"><a href="#1-配置当前用户具有sudo的执行权利" class="headerlink" title="1.配置当前用户具有sudo的执行权利"></a>1.配置当前用户具有sudo的执行权利</h3><pre><code>    [/etc/sudoers]
+    ...
+    root ALL=(ALL) ALL
+    centos ALL=(ALL) ALL
+    ...
+$&gt;sudo chown -R centos:centos .
+</code></pre><p>临时切换超级管理员权限</p>
+<pre><code>sudo
+</code></pre><p>切换到另外一个用户</p>
+<pre><code>su
+</code></pre>
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/18/Linux基础基础———踩过的大坑/" itemprop="url">
-              
-                <span itemprop="name">Linux基础基础—————踩过的大坑</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-18T15:55:21+08:00"
-              content="2018-09-18" >
-          09-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/17/Linux基础之网络配置-域名解析-光驱挂载/" itemprop="url">
-              
-                <span itemprop="name">Linux基础之网络配置-域名解析-光驱挂载</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-17T16:20:16+08:00"
-              content="2018-09-17" >
-          09-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/16/Linux基础之网络连接模式/" itemprop="url">
-              
-                <span itemprop="name">Linux基础之网络连接模式</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-16T22:24:42+08:00"
-              content="2018-09-16" >
-          09-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/16/Linux基础之文件类型-权限/" itemprop="url">
-              
-                <span itemprop="name">Linux基础之文件类型-权限</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-16T18:47:50+08:00"
-              content="2018-09-16" >
-          09-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/16/Linux基础之CentOS命令基础/" itemprop="url">
-              
-                <span itemprop="name">Linux基础</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-16T10:02:53+08:00"
-              content="2018-09-16" >
-          09-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/14/京东实战项目之hive实战（1）/" itemprop="url">
-              
-                <span itemprop="name">京东实战项目之hive实战（1）</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-14T20:56:23+08:00"
-              content="2018-09-14" >
-          09-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux基础/" rel="tag"># linux基础</a>
+          
+            <a href="/tags/符号连接/" rel="tag"># 符号连接</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/18/Linux基础之虚拟机增强工具的安装-文本模式的安装/" rel="next" title="Linux基础之虚拟机增强工具的安装-文本模式的安装">
+                <i class="fa fa-chevron-left"></i> Linux基础之虚拟机增强工具的安装-文本模式的安装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/18/Linux基础之进程查看/" rel="prev" title="Linux基础之进程查看">
+                Linux基础之进程查看 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2018/09/page/2/">2</a><a class="extend next" rel="next" href="/archives/2018/09/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -705,6 +566,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -725,8 +595,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -819,6 +698,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#权限"><span class="nav-number">1.</span> <span class="nav-text">权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#权限控制涉及范围"><span class="nav-number">2.</span> <span class="nav-text">权限控制涉及范围</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改文件的owner-change-owner"><span class="nav-number">3.</span> <span class="nav-text">修改文件的owner,change owner</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux文件夹"><span class="nav-number">4.</span> <span class="nav-text">Linux文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建连接文件"><span class="nav-number">5.</span> <span class="nav-text">创建连接文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-硬链接"><span class="nav-number">5.1.</span> <span class="nav-text">1.硬链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-符号连接-软连接"><span class="nav-number">5.2.</span> <span class="nav-text">2.符号连接-软连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sudo"><span class="nav-number">6.</span> <span class="nav-text">sudo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-配置当前用户具有sudo的执行权利"><span class="nav-number">6.1.</span> <span class="nav-text">1.配置当前用户具有sudo的执行权利</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -966,6 +861,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -994,6 +893,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 

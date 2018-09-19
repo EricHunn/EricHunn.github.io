@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://erichunn.github.io/"/>
-  <updated>2018-09-18T10:53:17.287Z</updated>
+  <updated>2018-09-19T09:04:29.498Z</updated>
   <id>http://erichunn.github.io/</id>
   
   <author>
@@ -15,6 +15,86 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux基础之hostname</title>
+    <link href="http://erichunn.github.io/2018/09/19/Linux%E5%9F%BA%E7%A1%80%E4%B9%8Bhostname/"/>
+    <id>http://erichunn.github.io/2018/09/19/Linux基础之hostname/</id>
+    <published>2018-09-19T07:46:12.000Z</published>
+    <updated>2018-09-19T09:04:29.498Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="命令嵌套"><a href="#命令嵌套" class="headerlink" title="命令嵌套"></a>命令嵌套</h2><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用<code></code></h3><pre><code>$&gt;echo `cat b.txt`    //命令解析,无法嵌套$&gt;$(... $())        //支持命令的嵌套</code></pre><p><img src="https://i.imgur.com/wlI357k.png" alt=""></p><h2 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h2><p>0.用户和组之间，一个用户可以属于多个组。</p><pre><code>但是有一个首要组。</code></pre><p>1.adduser,等同于useradd</p><p>符号链接。</p><pre><code>/usr/sbin/adduser --&gt; /usr/sbin/useradd.</code></pre><p>2.useradd</p><p>输入新密码.</p><p>重复输入</p><pre><code>$&gt;su root$&gt;useradd -m centos2-m, --create-home             create the user&apos;s home directory-p, --password PASSWORD       encrypted password of the new account</code></pre><p>3.使用方法</p><pre><code>$&gt;su root$&gt;userdel -r centos2        //用户所在组目录也会被删除</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;命令嵌套&quot;&gt;&lt;a href=&quot;#命令嵌套&quot; class=&quot;headerlink&quot; title=&quot;命令嵌套&quot;&gt;&lt;/a&gt;命令嵌套&lt;/h2&gt;&lt;h3 id=&quot;使用&quot;&gt;&lt;a href=&quot;#使用&quot; class=&quot;headerlink&quot; title=&quot;使用&quot;&gt;&lt;/a&gt;使用&lt;co
+      
+    
+    </summary>
+    
+    
+      <category term="Linux基础" scheme="http://erichunn.github.io/tags/Linux%E5%9F%BA%E7%A1%80/"/>
+    
+      <category term="基础命令" scheme="http://erichunn.github.io/tags/%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux基础之进程查看</title>
+    <link href="http://erichunn.github.io/2018/09/18/Linux%E5%9F%BA%E7%A1%80%E4%B9%8B%E8%BF%9B%E7%A8%8B%E6%9F%A5%E7%9C%8B/"/>
+    <id>http://erichunn.github.io/2018/09/18/Linux基础之进程查看/</id>
+    <published>2018-09-18T12:10:44.000Z</published>
+    <updated>2018-09-18T13:34:40.187Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="job"><a href="#job" class="headerlink" title="job"></a>job</h2><hr><p>放到后台运行的进程.<br>1.将程序放到后台运行,以&amp;结尾.</p><pre><code>$&gt;nano b.txt &amp;</code></pre><p>2.查看后台运行的jobs数</p><pre><code>$&gt;jobs</code></pre><p>3.切换后台作业到前台来.</p><pre><code>$&gt;fg %n                //n是job编号.</code></pre><p>4.前台正在的进程，放到后台。</p><pre><code>ctrl + z</code></pre><p>5.让后作业运行</p><pre><code>$&gt;bg %1        //</code></pre><p>6.杀死作业</p><pre><code>$&gt;kill %1    //</code></pre><hr><pre><code>man + 命令    ：查看该命令详细帮助</code></pre><hr><h2 id="进程查看-prcess-show"><a href="#进程查看-prcess-show" class="headerlink" title="进程查看,prcess show"></a>进程查看,prcess show</h2><hr><pre><code>$&gt;ps -Af |grep gnome        //-A:所有进程  -f:所有列格式.$&gt;top                        //动态显示进程信息。含有cpu、内存的使用情况.                            //q,按照q退出。</code></pre><h2 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h2><pre><code>剪切显示文件的每一行。$&gt;cut -c 1-5 a.txt                    //从第一个字符开始,下标从1开始。$&gt;ps -Af | cut -c 45-80 | more        //吧PS里面获得的内容剪切显示，显示没一行的45-80，翻页查看</code></pre><h2 id="查看帮助"><a href="#查看帮助" class="headerlink" title="查看帮助"></a>查看帮助</h2><pre><code>$&gt;help            //查看os内置的命令$&gt;man ifcon fig    //查看特定命令$&gt;ifconfig --help$&gt;ifconfig -h$&gt;info ifconfig    //</code></pre><h2 id="磁盘分区使用"><a href="#磁盘分区使用" class="headerlink" title="磁盘分区使用"></a>磁盘分区使用</h2><pre><code>$&gt;fdisk -l /dev/sda</code></pre><p>里面的中括号是可选的，尖括号是必须要写的</p><p><img src="https://i.imgur.com/kxOQiFw.png" alt=""></p><p>里面sad是磁盘，sda1是分区。sd1，sd2，sd3是磁盘的三个分区。</p><p><img src="https://i.imgur.com/OuJzwf1.png" alt=""></p><p><img src="https://i.imgur.com/dfgfkKL.png" alt=""></p><h2 id="查看磁盘使用情况-disk-free"><a href="#查看磁盘使用情况-disk-free" class="headerlink" title="查看磁盘使用情况(disk free)"></a>查看磁盘使用情况(disk free)</h2><pre><code>$&gt;df -ah /home/centos        //查看</code></pre><p><img src="https://i.imgur.com/JcXk8Fl.png" alt=""></p><p><img src="https://i.imgur.com/KuqoyN5.png" alt=""></p><p><img src="https://i.imgur.com/aibzJWn.png" alt=""></p><h2 id="dirname"><a href="#dirname" class="headerlink" title="dirname"></a>dirname</h2><p>取出指定地址的上级目录.</p><pre><code>$&gt;dirname /a/b/c/d$&gt;/a/b/c</code></pre><h2 id="basename"><a href="#basename" class="headerlink" title="basename"></a>basename</h2><p>取出当前地址的上级目录.</p><pre><code>$&gt;dirname /a/b/c/d$&gt;d</code></pre><h2 id="主机名"><a href="#主机名" class="headerlink" title="主机名"></a>主机名</h2><pre><code>$&gt;hostname        //显式主机名$&gt;修改主机名(sudo)    [/etc/hostname]    s200</code></pre><h2 id="关机重启命令"><a href="#关机重启命令" class="headerlink" title="关机重启命令"></a>关机重启命令</h2><pre><code>$&gt;reboot        //重启$&gt;halt            //停止,黑屏                //halt -p  === poweroff                //halt -r  === reboot$&gt;poweroff        //关机$&gt;shutdown        //shutdown now,    </code></pre><h2 id="命令嵌套"><a href="#命令嵌套" class="headerlink" title="命令嵌套"></a>命令嵌套</h2><p>1.使用<code></code></p><pre><code>$&gt;echo `cat b.txt`    //命令解析,无法嵌套$&gt;$(... $())        //支持命令的嵌套</code></pre><p>2.</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;job&quot;&gt;&lt;a href=&quot;#job&quot; class=&quot;headerlink&quot; title=&quot;job&quot;&gt;&lt;/a&gt;job&lt;/h2&gt;&lt;hr&gt;
+&lt;p&gt;放到后台运行的进程.&lt;br&gt;1.将程序放到后台运行,以&amp;amp;结尾.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$&amp;gt;nano 
+      
+    
+    </summary>
+    
+    
+      <category term="Linux基础" scheme="http://erichunn.github.io/tags/Linux%E5%9F%BA%E7%A1%80/"/>
+    
+      <category term="进程查看" scheme="http://erichunn.github.io/tags/%E8%BF%9B%E7%A8%8B%E6%9F%A5%E7%9C%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux基础之符号连接</title>
+    <link href="http://erichunn.github.io/2018/09/18/Linux%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%AC%A6%E5%8F%B7%E8%BF%9E%E6%8E%A5/"/>
+    <id>http://erichunn.github.io/2018/09/18/Linux基础之符号连接/</id>
+    <published>2018-09-18T11:04:09.000Z</published>
+    <updated>2018-09-18T12:03:03.532Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><hr><pre><code>r        //100 = 4        //文件  :读取内容，        //文件夹:是查看文件夹的内容w        //文件  :写数据到文件        //文件夹:增删文件.        //10 = 2x        //文件  : 运行程序        //文件夹: 进入该目录.        // 1 = 1</code></pre><h2 id="权限控制涉及范围"><a href="#权限控制涉及范围" class="headerlink" title="权限控制涉及范围"></a>权限控制涉及范围</h2><hr><pre><code>U:user    ,rwx r-x ---G:group ,O:other , </code></pre><h2 id="修改文件的owner-change-owner"><a href="#修改文件的owner-change-owner" class="headerlink" title="修改文件的owner,change owner"></a>修改文件的owner,change owner</h2><hr><pre><code>chown -R root:root a.txt        //递归修改ownerchmod -R 777 xxx                //递归修改权限.</code></pre><p>-R :递归显示</p><p>-l :列表显示</p><p>通过递归改变整个文件夹里面的文件的权限和所有者和所在组</p><pre><code>chown -R root:root tmp</code></pre><h2 id="Linux文件夹"><a href="#Linux文件夹" class="headerlink" title="Linux文件夹"></a>Linux文件夹</h2><hr><pre><code>/                //根目录/bin            //祖先/sbin            //祖先/usr/bin        //厂商/usr/sbin        //厂商/usr/local/bin    //用户/usr/local/sbin    //用户/etc            //配置目录/mnt            //挂载目录/boot            //引导目录/dev            //设备目录/lib[64]        //库目录-:文件d:目录l:link 等价于windows快捷方式b:block,块设备c:charactor,字符文件</code></pre><h2 id="创建连接文件"><a href="#创建连接文件" class="headerlink" title="创建连接文件"></a>创建连接文件</h2><hr><h3 id="1-硬链接"><a href="#1-硬链接" class="headerlink" title="1.硬链接"></a>1.硬链接</h3><p>两个完全相同文件，类似于实时备份。两个文件之间完全同步。删除时，只删一个。</p><p>目录不能使用硬链接。</p><pre><code>ln a.txt alink            </code></pre><p>//a.txt:目标文件, alink:连接名称.</p><pre><code>ln b.txt b_lnk</code></pre><p>//硬链接，修改连接文件，源文件也改变，但是删除连接文件源文件不被删除。</p><p>硬链接用的很少，大多使用符号连接</p><pre><code>mv b_link b.txt</code></pre><p>同一目录下改名字就用移动命令即可</p><h3 id="2-符号连接-软连接"><a href="#2-符号连接-软连接" class="headerlink" title="2.符号连接-软连接"></a>2.符号连接-软连接</h3><p>相当于快捷方式.</p><p>可以对文件，也可以对文件夹创建符号连接。</p><p>符号连接存在的时候，可以删除目标文件。</p><pre><code>$&gt;ln -s a.txt alink        </code></pre><p>//a.txt: 目标文件  alink:连接名称(symbolic)</p><p><img src="https://i.imgur.com/PBw1m7U.png" alt=""></p><p>blk存放的是路径的字节数大小。开始的时候只想本目录下的b.txt所以是5个字节，后来只想一个绝对路径就变成了28个字符。例子如下图所示</p><p><img src="https://i.imgur.com/Mfril9n.png" alt=""></p><p>删除掉了链接指向的文件，就会变成红色。删除后在加上就回复正常变成了浅蓝色。</p><p><img src="https://i.imgur.com/OpwzbVW.png" alt=""></p><hr><h2 id="sudo"><a href="#sudo" class="headerlink" title="sudo"></a>sudo</h2><hr><p>临时借用root的权限执行命令,只在当前命令下有效。命令结束后，还是原来用户。</p><h3 id="1-配置当前用户具有sudo的执行权利"><a href="#1-配置当前用户具有sudo的执行权利" class="headerlink" title="1.配置当前用户具有sudo的执行权利"></a>1.配置当前用户具有sudo的执行权利</h3><pre><code>    [/etc/sudoers]    ...    root ALL=(ALL) ALL    centos ALL=(ALL) ALL    ...$&gt;sudo chown -R centos:centos .</code></pre><p>临时切换超级管理员权限</p><pre><code>sudo</code></pre><p>切换到另外一个用户</p><pre><code>su</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;权限&quot;&gt;&lt;a href=&quot;#权限&quot; class=&quot;headerlink&quot; title=&quot;权限&quot;&gt;&lt;/a&gt;权限&lt;/h2&gt;&lt;hr&gt;
+&lt;pre&gt;&lt;code&gt;r        //100 = 4
+        //文件  :读取内容，
+        //文件夹:是查看
+      
+    
+    </summary>
+    
+    
+      <category term="linux基础" scheme="http://erichunn.github.io/tags/linux%E5%9F%BA%E7%A1%80/"/>
+    
+      <category term="符号连接" scheme="http://erichunn.github.io/tags/%E7%AC%A6%E5%8F%B7%E8%BF%9E%E6%8E%A5/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux基础之虚拟机增强工具的安装-文本模式的安装</title>
@@ -44,9 +124,9 @@
     <link href="http://erichunn.github.io/2018/09/18/Linux%E5%9F%BA%E7%A1%80%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E2%80%94%E8%B8%A9%E8%BF%87%E7%9A%84%E5%A4%A7%E5%9D%91/"/>
     <id>http://erichunn.github.io/2018/09/18/Linux基础基础———踩过的大坑/</id>
     <published>2018-09-18T07:55:21.000Z</published>
-    <updated>2018-09-18T09:22:05.551Z</updated>
+    <updated>2018-09-18T13:34:37.020Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="问题：图形界面浏览器能访问外网，但是ping不通"><a href="#问题：图形界面浏览器能访问外网，但是ping不通" class="headerlink" title="问题：图形界面浏览器能访问外网，但是ping不通"></a>问题：图形界面浏览器能访问外网，但是ping不通</h2><p>很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。</p><p>解决：将网络中心里面改成这样子就行了。<br><img src="https://i.imgur.com/LcqHaRR.png" alt=""></p><p>具体的网站解释：<a href="https://blog.csdn.net/Arnold_lee_yc/article/details/74785995" target="_blank" rel="noopener">https://blog.csdn.net/Arnold_lee_yc/article/details/74785995</a></p><hr><p>不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。<br>所以本教程使用的是7.1也就是1503版本的centos</p><hr>]]></content>
+    <content type="html"><![CDATA[<h2 id="问题：图形界面浏览器能访问外网，但是ping不通"><a href="#问题：图形界面浏览器能访问外网，但是ping不通" class="headerlink" title="问题：图形界面浏览器能访问外网，但是ping不通"></a>问题：图形界面浏览器能访问外网，但是ping不通</h2><p>很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。</p><p>解决：将网络中心里面改成这样子就行了。<br><img src="https://i.imgur.com/LcqHaRR.png" alt=""></p><p>具体的网站解释：<a href="https://blog.csdn.net/Arnold_lee_yc/article/details/74785995" target="_blank" rel="noopener">https://blog.csdn.net/Arnold_lee_yc/article/details/74785995</a></p><hr><p>不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。<br>所以本教程使用的是7.1也就是1503版本的centos</p><hr><p>切换用户之后出现这种情况：</p><p><img src="https://i.imgur.com/vSqES9b.png" alt=""></p><p>解决办法：是在设置centos用户的权限的时候配置错了。修改回来即可<br>    su root<br>    vi sudoers</p><p>视频里面的人他的ALL写成了小写的l。配置错误</p><p><img src="https://i.imgur.com/hfgjE60.png" alt=""></p>]]></content>
     
     <summary type="html">
     
