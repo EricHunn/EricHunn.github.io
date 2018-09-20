@@ -90,7 +90,7 @@
 <meta property="og:description" content="命令嵌套使用$&amp;gt;echo `cat b.txt`    //命令解析,无法嵌套 $&amp;gt;$(... $())        //支持命令的嵌套  创建用户0.用户和组之间，一个用户可以属于多个组。 但是有一个首要组。 1.adduser,等同于useradd 符号链接。 /usr/sbin/adduser --&amp;gt; /usr/sbin/useradd. 2.useradd 输入新密码.">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://i.imgur.com/wlI357k.png">
-<meta property="og:updated_time" content="2018-09-19T09:04:29.498Z">
+<meta property="og:updated_time" content="2018-09-19T10:30:18.303Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux基础之hostname">
 <meta name="twitter:description" content="命令嵌套使用$&amp;gt;echo `cat b.txt`    //命令解析,无法嵌套 $&amp;gt;$(... $())        //支持命令的嵌套  创建用户0.用户和组之间，一个用户可以属于多个组。 但是有一个首要组。 1.adduser,等同于useradd 符号链接。 /usr/sbin/adduser --&amp;gt; /usr/sbin/useradd. 2.useradd 输入新密码.">
@@ -215,12 +215,32 @@
         </li>
       
         
-        <li class="menu-item menu-item-时光机">
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
           <a href="/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            时光机
+            归档
           </a>
         </li>
       
@@ -391,11 +411,15 @@ $&gt;$(... $())        //支持命令的嵌套
 <p>重复输入</p>
 <pre><code>$&gt;su root
 $&gt;useradd -m centos2
+$&gt;su root
+$&gt;passwd centos2
+
+
 -m, --create-home             create the user&apos;s home directory
 -p, --password PASSWORD       encrypted password of the new account
 </code></pre><p>3.使用方法</p>
 <pre><code>$&gt;su root
-$&gt;userdel -r centos2        //用户所在组目录也会被删除
+$&gt;userdel -r centos2        //用户所在组目录也会被删除.在删除用户时候要用exit退出要删除的用户,删除的时候可能会exit好多次，因为会来回su。
 </code></pre>
       
     </div>
@@ -474,6 +498,10 @@ $&gt;userdel -r centos2        //用户所在组目录也会被删除
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/19/Linux基础第之循环命令/" rel="prev" title="Linux基础第之循环命令">
+                Linux基础第之循环命令 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -559,7 +587,7 @@ $&gt;userdel -r centos2        //用户所在组目录也会被删除
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -569,10 +597,10 @@ $&gt;userdel -r centos2        //用户所在组目录也会被删除
               
               
               <div class="site-state-item site-state-categories">
-                
+                <a href="/categories/index.html">
                   <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">categories</span>
-                
+                </a>
               </div>
             
 
@@ -580,10 +608,10 @@ $&gt;userdel -r centos2        //用户所在组目录也会被删除
               
               
               <div class="site-state-item site-state-tags">
-                
-                  <span class="site-state-item-count">16</span>
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">tags</span>
-                
+                </a>
               </div>
             
 
@@ -626,6 +654,20 @@ $&gt;userdel -r centos2        //用户所在组目录也会被删除
           
 
           
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://https://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
           
 
           

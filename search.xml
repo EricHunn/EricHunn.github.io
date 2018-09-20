@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Linux基础第之循环命令]]></title>
+    <url>%2F2018%2F09%2F19%2FLinux%E5%9F%BA%E7%A1%80%E7%AC%AC%E4%B9%8B%E5%BE%AA%E7%8E%AF%E5%91%BD%E4%BB%A4%2F</url>
+    <content type="text"><![CDATA[访问文件(夹)物理位置pwd命令是显示当前的逻辑位置。 物理位置是针对符号连接也是针对软连接的。 //进入/t的物理位置 $&gt;cd -P /t //显式当前目录的物理位置 $&gt;pwd -P 访问环境变量echo ${PATH} //ok echo $PATH //ok echo &quot;$PATH&quot; //ok echo &apos;$PATH&apos; //&apos;&apos;原样输出这个不行，显示“PATH” export定义环境变量,只在session中有效 (当前会话)$&gt;export name=${PATH}:tom 设置name为${Var1}的值，Var1没有设置为${Var2}的值。 $&gt;export name=${Var1:-${Var2}} 命令执行过程$? //命令的返回值存储变量,0:成功 1:失败。 $# //参数个数 $1 //第几个参数 $0 //当前脚本(命令)名称 $@ //取出所有参数 shift //参数左移 ${a/b/c} // 下面一个例子 向左移位解释： if 命令讲解语法: 中括号是可以选择的： if COMMANDS; then COMMANDS; [ elif COMMANDS; then COMMANDS; ]... [ else COMMANDS; ] fi if [ $# -lt 3 ]; then xx ; fi 3,5 使用for循环输出1 - 100个数看一下for的帮助文档，注意从冒号之后是开始的： for NAME [in WORDS ... ] ; do COMMANDS; done for x in a b c d ; do echo $x ; done ; 通过for循环打印一个三角形：首先看一下 然后这段是命令： while语法for: for NAME [in WORDS ... ] ; do COMMANDS; done for ((: for (( exp1; exp2; exp3 )); do COMMANDS; done 一个例子： #!/bin/bash ((i=0)) while ((i&lt;100)) ; do echo $i; i=$((i+1)) done]]></content>
+      <tags>
+        <tag>linux</tag>
+        <tag>循环命令</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Linux基础之hostname]]></title>
     <url>%2F2018%2F09%2F19%2FLinux%E5%9F%BA%E7%A1%80%E4%B9%8Bhostname%2F</url>
-    <content type="text"><![CDATA[命令嵌套使用$&gt;echo `cat b.txt` //命令解析,无法嵌套 $&gt;$(... $()) //支持命令的嵌套 创建用户0.用户和组之间，一个用户可以属于多个组。 但是有一个首要组。 1.adduser,等同于useradd 符号链接。 /usr/sbin/adduser --&gt; /usr/sbin/useradd. 2.useradd 输入新密码. 重复输入 $&gt;su root $&gt;useradd -m centos2 -m, --create-home create the user&apos;s home directory -p, --password PASSWORD encrypted password of the new account 3.使用方法 $&gt;su root $&gt;userdel -r centos2 //用户所在组目录也会被删除]]></content>
+    <content type="text"><![CDATA[命令嵌套使用$&gt;echo `cat b.txt` //命令解析,无法嵌套 $&gt;$(... $()) //支持命令的嵌套 创建用户0.用户和组之间，一个用户可以属于多个组。 但是有一个首要组。 1.adduser,等同于useradd 符号链接。 /usr/sbin/adduser --&gt; /usr/sbin/useradd. 2.useradd 输入新密码. 重复输入 $&gt;su root $&gt;useradd -m centos2 $&gt;su root $&gt;passwd centos2 -m, --create-home create the user&apos;s home directory -p, --password PASSWORD encrypted password of the new account 3.使用方法 $&gt;su root $&gt;userdel -r centos2 //用户所在组目录也会被删除.在删除用户时候要用exit退出要删除的用户,删除的时候可能会exit好多次，因为会来回su。]]></content>
       <tags>
         <tag>Linux基础</tag>
         <tag>基础命令</tag>
