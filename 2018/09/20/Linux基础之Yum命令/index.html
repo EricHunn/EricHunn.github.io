@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="linux,循环命令," />
+  <meta name="keywords" content="Linux基础,Yum," />
 
 
 
@@ -81,35 +81,18 @@
 
 
 
-<meta name="description" content="访问文件(夹)物理位置pwd命令是显示当前的逻辑位置。 物理位置是针对符号连接也是针对软连接的。 //进入/t的物理位置 $&amp;gt;cd -P /t     //显式当前目录的物理位置 $&amp;gt;pwd -P              访问环境变量echo ${PATH}                //ok echo $PATH                    //ok echo &amp;qu">
-<meta name="keywords" content="linux,循环命令">
+<meta name="description" content="软件源Repository        //仓库. URL                //http://   .d                //directory目录 xxxd            //daemon 查看仓库文件/etc/yum.repos.d/xxx.repo curl传输url上的数据的。 [下载文件到指定目录] curl -o /etc/yum.repos.d/">
+<meta name="keywords" content="Linux基础,Yum">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux基础第之循环命令">
-<meta property="og:url" content="http://erichunn.github.io/2018/09/19/Linux基础第之循环命令/index.html">
+<meta property="og:title" content="Linux基础之Yum命令">
+<meta property="og:url" content="http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="访问文件(夹)物理位置pwd命令是显示当前的逻辑位置。 物理位置是针对符号连接也是针对软连接的。 //进入/t的物理位置 $&amp;gt;cd -P /t     //显式当前目录的物理位置 $&amp;gt;pwd -P              访问环境变量echo ${PATH}                //ok echo $PATH                    //ok echo &amp;qu">
+<meta property="og:description" content="软件源Repository        //仓库. URL                //http://   .d                //directory目录 xxxd            //daemon 查看仓库文件/etc/yum.repos.d/xxx.repo curl传输url上的数据的。 [下载文件到指定目录] curl -o /etc/yum.repos.d/">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://i.imgur.com/uCWAgEF.png">
-<meta property="og:image" content="https://i.imgur.com/l1hKqkn.png">
-<meta property="og:image" content="https://i.imgur.com/jhsCOo7.png">
-<meta property="og:image" content="https://i.imgur.com/v4zjND7.png">
-<meta property="og:image" content="https://i.imgur.com/qkZ4UhX.png">
-<meta property="og:image" content="https://i.imgur.com/i9F9fEr.png">
-<meta property="og:image" content="https://i.imgur.com/6u7sNQx.png">
-<meta property="og:image" content="https://i.imgur.com/erlgoWB.png">
-<meta property="og:image" content="https://i.imgur.com/oUNME5o.png">
-<meta property="og:image" content="https://i.imgur.com/zj0NX7K.png">
-<meta property="og:image" content="https://i.imgur.com/eRyv4Iw.png">
-<meta property="og:image" content="https://i.imgur.com/drXeDUE.png">
-<meta property="og:image" content="https://i.imgur.com/wrIcUZI.png">
-<meta property="og:image" content="https://i.imgur.com/2ayzuZl.png">
-<meta property="og:image" content="https://i.imgur.com/IKLm90v.png">
-<meta property="og:image" content="https://i.imgur.com/qewzeuC.png">
-<meta property="og:updated_time" content="2018-09-19T15:39:46.393Z">
+<meta property="og:updated_time" content="2018-09-20T13:29:44.156Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux基础第之循环命令">
-<meta name="twitter:description" content="访问文件(夹)物理位置pwd命令是显示当前的逻辑位置。 物理位置是针对符号连接也是针对软连接的。 //进入/t的物理位置 $&amp;gt;cd -P /t     //显式当前目录的物理位置 $&amp;gt;pwd -P              访问环境变量echo ${PATH}                //ok echo $PATH                    //ok echo &amp;qu">
-<meta name="twitter:image" content="https://i.imgur.com/uCWAgEF.png">
+<meta name="twitter:title" content="Linux基础之Yum命令">
+<meta name="twitter:description" content="软件源Repository        //仓库. URL                //http://   .d                //directory目录 xxxd            //daemon 查看仓库文件/etc/yum.repos.d/xxx.repo curl传输url上的数据的。 [下载文件到指定目录] curl -o /etc/yum.repos.d/">
 
 
 
@@ -139,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://erichunn.github.io/2018/09/19/Linux基础第之循环命令/"/>
+  <link rel="canonical" href="http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/"/>
 
 
 
 
 
-  <title>Linux基础第之循环命令 | 无心是一首歌</title>
+  <title>Linux基础之Yum命令 | 无心是一首歌</title>
   
 
 
@@ -346,7 +329,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/19/Linux基础第之循环命令/">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Eric Hunn">
@@ -363,7 +346,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Linux基础第之循环命令</h1>
+          <h1 class="post-title" itemprop="name headline">Linux基础之Yum命令</h1>
         
 
         <div class="post-meta">
@@ -375,8 +358,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-19T18:03:21+08:00">
-                2018-09-19
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-20T18:17:43+08:00">
+                2018-09-20
               </time>
             
 
@@ -413,66 +396,79 @@
       
 
       
-        <h2 id="访问文件-夹-物理位置"><a href="#访问文件-夹-物理位置" class="headerlink" title="访问文件(夹)物理位置"></a>访问文件(夹)物理位置</h2><p>pwd命令是显示当前的逻辑位置。</p>
-<p>物理位置是针对符号连接也是针对软连接的。</p>
-<p>//进入/t的物理位置</p>
-<pre><code>$&gt;cd -P /t    
-</code></pre><p>//显式当前目录的物理位置</p>
-<pre><code>$&gt;pwd -P            
-</code></pre><p><img src="https://i.imgur.com/uCWAgEF.png" alt=""></p>
-<h2 id="访问环境变量"><a href="#访问环境变量" class="headerlink" title="访问环境变量"></a>访问环境变量</h2><pre><code>echo ${PATH}                //ok
-echo $PATH                    //ok
-echo &quot;$PATH&quot;                //ok
-echo &apos;$PATH&apos;                //&apos;&apos;原样输出这个不行，显示“PATH”
-</code></pre><h2 id="export定义环境变量-只在session中有效-当前会话"><a href="#export定义环境变量-只在session中有效-当前会话" class="headerlink" title="export定义环境变量,只在session中有效 (当前会话)"></a>export定义环境变量,只在session中有效 (当前会话)</h2><pre><code>$&gt;export name=${PATH}:tom
-</code></pre><p>设置name为${Var1}的值，Var1没有设置为${Var2}的值。</p>
-<pre><code>$&gt;export name=${Var1:-${Var2}}    
-</code></pre><p><img src="https://i.imgur.com/l1hKqkn.png" alt=""></p>
-<h2 id="命令执行过程"><a href="#命令执行过程" class="headerlink" title="命令执行过程"></a>命令执行过程</h2><pre><code>$?        //命令的返回值存储变量,0:成功 1:失败。
-$#        //参数个数
-$1        //第几个参数
-$0        //当前脚本(命令)名称
-$@        //取出所有参数
-shift    //参数左移
-${a/b/c}    //
-</code></pre><p><img src="https://i.imgur.com/jhsCOo7.png" alt=""></p>
-<p><img src="https://i.imgur.com/v4zjND7.png" alt=""></p>
-<p><img src="https://i.imgur.com/qkZ4UhX.png" alt=""></p>
-<p>下面一个例子</p>
-<p><img src="https://i.imgur.com/i9F9fEr.png" alt=""></p>
-<p><img src="https://i.imgur.com/6u7sNQx.png" alt=""></p>
-<p>向左移位解释：</p>
-<p><img src="https://i.imgur.com/erlgoWB.png" alt=""></p>
-<h2 id="if-命令讲解"><a href="#if-命令讲解" class="headerlink" title="if 命令讲解"></a>if 命令讲解</h2><p>语法:</p>
-<p>中括号是可以选择的：</p>
-<pre><code>if COMMANDS; then COMMANDS; [ elif COMMANDS; then COMMANDS; ]... [ else COMMANDS; ] fi
+        <h2 id="软件源"><a href="#软件源" class="headerlink" title="软件源"></a>软件源</h2><pre><code>Repository        //仓库.
+URL                //http:// 
+
+.d                //directory目录
+xxxd            //daemon
+</code></pre><h2 id="查看仓库文件"><a href="#查看仓库文件" class="headerlink" title="查看仓库文件"></a>查看仓库文件</h2><pre><code>/etc/yum.repos.d/xxx.repo
+</code></pre><h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>传输url上的数据的。</p>
+<p>[下载文件到指定目录]</p>
+<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+</code></pre><h2 id="更换centos的软件源"><a href="#更换centos的软件源" class="headerlink" title="更换centos的软件源"></a>更换centos的软件源</h2><p>1.下载源仓库文件,xxx.repo</p>
+<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+</code></pre><p>2.将repo文件保存到/etc/yum.repos.d/目录中。</p>
+<h2 id="屏蔽软件仓库"><a href="#屏蔽软件仓库" class="headerlink" title="屏蔽软件仓库"></a>屏蔽软件仓库</h2><p>1.将/etc/yum.repos.d/xxx.repo文件删除或者更换扩展名即可。</p>
+<h2 id="修改centos能够使用sudo命令"><a href="#修改centos能够使用sudo命令" class="headerlink" title="修改centos能够使用sudo命令"></a>修改centos能够使用sudo命令</h2><pre><code>[/etc/sudoers]
+$&gt;su root
+$&gt;nano /etc/sudoers
+    ...
+    centos ALL
+</code></pre><h2 id="使用yum进行软件包安装卸载"><a href="#使用yum进行软件包安装卸载" class="headerlink" title="使用yum进行软件包安装卸载"></a>使用yum进行软件包安装卸载</h2><pre><code>$&gt;yum list                            //列出所有软件包
+$&gt;yum list installed                //列出已经安装的软件包
+$&gt;yum list installed | grep nano    //列出已经安装的软件包
+$&gt;yum search nano                    //在yum的软件源中搜索软件 
+$&gt;yum remove nano                    //卸载软件
+$&gt;yum -y install nano                //直接安装，不需要yes确认.
+$&gt;yum list installed | grep nano    //查看是否安装了Nano
+
+$&gt;mkdir /home/centos/rpms
+
+$echo 以下命令只下载软件，不安装软件
+$&gt;sudo yum install --downloadonly                //只下载
+              --downloaddir=/home/centos/rpms    //指定下载目录
+              wget
+
+//下载已经安装的软件
+$&gt;sudo yum reinstall --downloadonly    
+                     --downloaddir=/home/centos/rpms
+                     wget
+
+$&gt;sudo yum localinstall xxx.rpm    //从本地rpm文件直接安装软件
 
 
-if [ $# -lt 3 ]; then xx ; fi
 
-3,5
-</code></pre><p><img src="https://i.imgur.com/oUNME5o.png" alt=""></p>
-<p><img src="https://i.imgur.com/zj0NX7K.png" alt=""></p>
-<p><img src="https://i.imgur.com/eRyv4Iw.png" alt=""></p>
-<h2 id="使用for循环输出1-100个数"><a href="#使用for循环输出1-100个数" class="headerlink" title="使用for循环输出1 - 100个数"></a>使用for循环输出1 - 100个数</h2><p>看一下for的帮助文档，注意从冒号之后是开始的：</p>
-<p><img src="https://i.imgur.com/drXeDUE.png" alt=""></p>
-<pre><code>for NAME [in WORDS ... ] ; do COMMANDS; done
-for x in a b c d ; do echo $x ; done ;
-</code></pre><p><img src="https://i.imgur.com/wrIcUZI.png" alt=""></p>
-<p>通过for循环打印一个三角形：<br>首先看一下<br><img src="https://i.imgur.com/2ayzuZl.png" alt=""></p>
-<p>然后这段是命令：</p>
-<p><img src="https://i.imgur.com/IKLm90v.png" alt=""></p>
-<h2 id="while语法"><a href="#while语法" class="headerlink" title="while语法"></a>while语法</h2><pre><code>for: for NAME [in WORDS ... ] ; do COMMANDS; done
+$&gt;su root
+$&gt;yum search ifconfig
+$&gt;yum -y install net-tools        //安装网络工具
 
-for ((: for (( exp1; exp2; exp3 )); do COMMANDS; done
-</code></pre><p><img src="https://i.imgur.com/qewzeuC.png" alt=""></p>
-<p>一个例子：</p>
-<pre><code>#!/bin/bash
-((i=0))
-while ((i&lt;100)) ; do
-    echo $i;
-    i=$((i+1))
-done
+
+#==========修改网络地址======================    //需要重启network服务
+$&gt;sudo nano /etc/sysconfig/network-scripts/ifcfg-eth1677736
+    [/etc/sysconfig/network-scripts/ifcfg-eth1677736]
+    ...
+    IPADDR=192.168.231.201
+    GATEWAY=192.168.231.2
+    DNS=192.168.231.2
+
+$&gt;service network restart                        //重启网络服务。
+
+$&gt;sudo nano /etc/resolv.conf                    //修改该文件不需要重启network服务
+    [/etc/resolv.conf]
+    nameserver 192.168.231.2
+</code></pre><h2 id="在没有nano时，使用自带的vi文本编辑器"><a href="#在没有nano时，使用自带的vi文本编辑器" class="headerlink" title="在没有nano时，使用自带的vi文本编辑器"></a>在没有nano时，使用自带的vi文本编辑器</h2><pre><code>1.vi xx.txt
+</code></pre><p>2.模式切换</p>
+<pre><code>esc                //切换到命令模式,退出编辑模式
+                //:q!  不保存退出
+                //:wq  保存退出
+                //x        删除一个字符
+                //dd    删除一行
+
+insert            //切换到编辑模式,退出命令模式
+                //del backspace
+</code></pre><h2 id="Which命令"><a href="#Which命令" class="headerlink" title="Which命令"></a>Which命令</h2><p>which命令用于查找并显示给定命令的绝对路径，环境变量PATH中保存了查找命令时需要遍历的目录。</p>
+<p>which指令会在环境变量$PATH设置的目录里查找符合条件的文件。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre><code>which(选项)(参数)
 </code></pre>
       
     </div>
@@ -527,9 +523,9 @@ done
       
         <div class="post-tags">
           
-            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/Linux基础/" rel="tag"># Linux基础</a>
           
-            <a href="/tags/循环命令/" rel="tag"># 循环命令</a>
+            <a href="/tags/Yum/" rel="tag"># Yum</a>
           
         </div>
       
@@ -542,8 +538,8 @@ done
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/19/Linux基础之hostname/" rel="next" title="Linux基础之hostname">
-                <i class="fa fa-chevron-left"></i> Linux基础之hostname
+              <a href="/2018/09/19/Linux基础第之循环命令/" rel="next" title="Linux基础第之循环命令">
+                <i class="fa fa-chevron-left"></i> Linux基础第之循环命令
               </a>
             
           </div>
@@ -552,8 +548,8 @@ done
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/09/20/Linux基础之Yum命令/" rel="prev" title="Linux基础之Yum命令">
-                Linux基础之Yum命令 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/21/Linux基础之iso的制作/" rel="prev" title="Linux基础之iso的制作">
+                Linux基础之iso的制作 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -738,7 +734,7 @@ done
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#访问文件-夹-物理位置"><span class="nav-number">1.</span> <span class="nav-text">访问文件(夹)物理位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问环境变量"><span class="nav-number">2.</span> <span class="nav-text">访问环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#export定义环境变量-只在session中有效-当前会话"><span class="nav-number">3.</span> <span class="nav-text">export定义环境变量,只在session中有效 (当前会话)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令执行过程"><span class="nav-number">4.</span> <span class="nav-text">命令执行过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#if-命令讲解"><span class="nav-number">5.</span> <span class="nav-text">if 命令讲解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用for循环输出1-100个数"><span class="nav-number">6.</span> <span class="nav-text">使用for循环输出1 - 100个数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#while语法"><span class="nav-number">7.</span> <span class="nav-text">while语法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#软件源"><span class="nav-number">1.</span> <span class="nav-text">软件源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看仓库文件"><span class="nav-number">2.</span> <span class="nav-text">查看仓库文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#curl"><span class="nav-number">3.</span> <span class="nav-text">curl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更换centos的软件源"><span class="nav-number">4.</span> <span class="nav-text">更换centos的软件源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#屏蔽软件仓库"><span class="nav-number">5.</span> <span class="nav-text">屏蔽软件仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改centos能够使用sudo命令"><span class="nav-number">6.</span> <span class="nav-text">修改centos能够使用sudo命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用yum进行软件包安装卸载"><span class="nav-number">7.</span> <span class="nav-text">使用yum进行软件包安装卸载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在没有nano时，使用自带的vi文本编辑器"><span class="nav-number">8.</span> <span class="nav-text">在没有nano时，使用自带的vi文本编辑器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Which命令"><span class="nav-number">9.</span> <span class="nav-text">Which命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#语法"><span class="nav-number">9.1.</span> <span class="nav-text">语法</span></a></li></ol></li></ol></div>
             
 
           </div>

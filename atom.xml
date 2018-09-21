@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://erichunn.github.io/"/>
-  <updated>2018-09-19T15:39:46.393Z</updated>
+  <updated>2018-09-21T01:54:31.823Z</updated>
   <id>http://erichunn.github.io/</id>
   
   <author>
@@ -15,6 +15,48 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux基础之iso的制作</title>
+    <link href="http://erichunn.github.io/2018/09/21/Linux%E5%9F%BA%E7%A1%80%E4%B9%8Biso%E7%9A%84%E5%88%B6%E4%BD%9C/"/>
+    <id>http://erichunn.github.io/2018/09/21/Linux基础之iso的制作/</id>
+    <published>2018-09-21T01:54:31.000Z</published>
+    <updated>2018-09-21T01:54:31.823Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Linux基础之Yum命令</title>
+    <link href="http://erichunn.github.io/2018/09/20/Linux%E5%9F%BA%E7%A1%80%E4%B9%8BYum%E5%91%BD%E4%BB%A4/"/>
+    <id>http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/</id>
+    <published>2018-09-20T10:17:43.000Z</published>
+    <updated>2018-09-20T13:29:44.156Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="软件源"><a href="#软件源" class="headerlink" title="软件源"></a>软件源</h2><pre><code>Repository        //仓库.URL                //http:// .d                //directory目录xxxd            //daemon</code></pre><h2 id="查看仓库文件"><a href="#查看仓库文件" class="headerlink" title="查看仓库文件"></a>查看仓库文件</h2><pre><code>/etc/yum.repos.d/xxx.repo</code></pre><h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>传输url上的数据的。</p><p>[下载文件到指定目录]</p><pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo</code></pre><h2 id="更换centos的软件源"><a href="#更换centos的软件源" class="headerlink" title="更换centos的软件源"></a>更换centos的软件源</h2><p>1.下载源仓库文件,xxx.repo</p><pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo</code></pre><p>2.将repo文件保存到/etc/yum.repos.d/目录中。</p><h2 id="屏蔽软件仓库"><a href="#屏蔽软件仓库" class="headerlink" title="屏蔽软件仓库"></a>屏蔽软件仓库</h2><p>1.将/etc/yum.repos.d/xxx.repo文件删除或者更换扩展名即可。</p><h2 id="修改centos能够使用sudo命令"><a href="#修改centos能够使用sudo命令" class="headerlink" title="修改centos能够使用sudo命令"></a>修改centos能够使用sudo命令</h2><pre><code>[/etc/sudoers]$&gt;su root$&gt;nano /etc/sudoers    ...    centos ALL</code></pre><h2 id="使用yum进行软件包安装卸载"><a href="#使用yum进行软件包安装卸载" class="headerlink" title="使用yum进行软件包安装卸载"></a>使用yum进行软件包安装卸载</h2><pre><code>$&gt;yum list                            //列出所有软件包$&gt;yum list installed                //列出已经安装的软件包$&gt;yum list installed | grep nano    //列出已经安装的软件包$&gt;yum search nano                    //在yum的软件源中搜索软件 $&gt;yum remove nano                    //卸载软件$&gt;yum -y install nano                //直接安装，不需要yes确认.$&gt;yum list installed | grep nano    //查看是否安装了Nano$&gt;mkdir /home/centos/rpms$echo 以下命令只下载软件，不安装软件$&gt;sudo yum install --downloadonly                //只下载              --downloaddir=/home/centos/rpms    //指定下载目录              wget//下载已经安装的软件$&gt;sudo yum reinstall --downloadonly                         --downloaddir=/home/centos/rpms                     wget$&gt;sudo yum localinstall xxx.rpm    //从本地rpm文件直接安装软件$&gt;su root$&gt;yum search ifconfig$&gt;yum -y install net-tools        //安装网络工具#==========修改网络地址======================    //需要重启network服务$&gt;sudo nano /etc/sysconfig/network-scripts/ifcfg-eth1677736    [/etc/sysconfig/network-scripts/ifcfg-eth1677736]    ...    IPADDR=192.168.231.201    GATEWAY=192.168.231.2    DNS=192.168.231.2$&gt;service network restart                        //重启网络服务。$&gt;sudo nano /etc/resolv.conf                    //修改该文件不需要重启network服务    [/etc/resolv.conf]    nameserver 192.168.231.2</code></pre><h2 id="在没有nano时，使用自带的vi文本编辑器"><a href="#在没有nano时，使用自带的vi文本编辑器" class="headerlink" title="在没有nano时，使用自带的vi文本编辑器"></a>在没有nano时，使用自带的vi文本编辑器</h2><pre><code>1.vi xx.txt</code></pre><p>2.模式切换</p><pre><code>esc                //切换到命令模式,退出编辑模式                //:q!  不保存退出                //:wq  保存退出                //x        删除一个字符                //dd    删除一行insert            //切换到编辑模式,退出命令模式                //del backspace</code></pre><h2 id="Which命令"><a href="#Which命令" class="headerlink" title="Which命令"></a>Which命令</h2><p>which命令用于查找并显示给定命令的绝对路径，环境变量PATH中保存了查找命令时需要遍历的目录。</p><p>which指令会在环境变量$PATH设置的目录里查找符合条件的文件。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。</p><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre><code>which(选项)(参数)</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;软件源&quot;&gt;&lt;a href=&quot;#软件源&quot; class=&quot;headerlink&quot; title=&quot;软件源&quot;&gt;&lt;/a&gt;软件源&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;Repository        //仓库.
+URL                //http:// 
+
+.d 
+      
+    
+    </summary>
+    
+    
+      <category term="Linux基础" scheme="http://erichunn.github.io/tags/Linux%E5%9F%BA%E7%A1%80/"/>
+    
+      <category term="Yum" scheme="http://erichunn.github.io/tags/Yum/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux基础第之循环命令</title>
