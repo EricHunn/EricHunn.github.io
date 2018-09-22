@@ -328,125 +328,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/21/Linux基础之iso的制作/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/21/Linux基础之iso的制作/" itemprop="url">Linux基础之iso的制作</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-21T09:54:31+08:00">
-                2018-09-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1427,6 +1308,18 @@ $&gt;cd /home/centos/Desktop/vmware-tools-distrib
 </code></pre><h2 id="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："><a href="#图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：" class="headerlink" title="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："></a>图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：</h2><p><img src="https://i.imgur.com/AYS6NwH.png" alt=""></p>
 <p><img src="https://i.imgur.com/Tqry0O7.png" alt=""></p>
 <p><img src="https://i.imgur.com/BtRDRbm.png" alt=""></p>
+<hr>
+<p>在mini版的centos7下遇到了很多问题。又在大坑系列中也有这一部分。其实这部分遇到了很多问题，除了视频中的问题，按照如下所示可以完美解决：</p>
+<p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。</p>
+<p>然后按照视频上讲解的来安装不上。最后先是</p>
+<p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p>
+<p>这样子，然后</p>
+<p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p>
+<p>之后按照如图所示挂载即可</p>
+<p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p>
+<hr>
+<p>本视频还有一个while循环实现99乘法表的例子（我没细看）：</p>
+<p><img src="https://i.imgur.com/eEbodXt.png" alt=""></p>
 
           
         
@@ -1557,6 +1450,14 @@ $&gt;cd /home/centos/Desktop/vmware-tools-distrib
 <p>解决办法：是在设置centos用户的权限的时候配置错了。修改回来即可<br>    su root<br>    vi sudoers</p>
 <p>视频里面的人他的ALL写成了小写的l。配置错误</p>
 <p><img src="https://i.imgur.com/hfgjE60.png" alt=""></p>
+<hr>
+<h2 id="安装VMtools工具"><a href="#安装VMtools工具" class="headerlink" title="安装VMtools工具"></a>安装VMtools工具</h2><p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。</p>
+<p>然后按照视频上讲解的来安装不上。最后先是</p>
+<p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p>
+<p>这样子，然后</p>
+<p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p>
+<p>之后按照如图所示挂载即可</p>
+<p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p>
 
           
         
@@ -1926,6 +1827,180 @@ $&gt;find . /mnt/cdrom
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/16/Linux基础之文件类型-权限/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/16/Linux基础之文件类型-权限/" itemprop="url">Linux基础之文件类型-权限</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-16T18:47:50+08:00">
+                2018-09-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="目录和权限"><a href="#目录和权限" class="headerlink" title="目录和权限"></a>目录和权限</h1><hr>
+<pre><code>[windows]
+以磁盘分区物理结构作为文件系统结构
+</code></pre><p>每个用户在/home下面都有一个自己的家目录比如centos的家目录在<br>/home/centos但是root是管理员比较特殊root的目录在/root下<br>~是home的子一级</p>
+<p><img src="https://i.imgur.com/9EibNGJ.png" alt="">‘</p>
+<p>[centos]</p>
+<h2 id="逻辑结构"><a href="#逻辑结构" class="headerlink" title="逻辑结构."></a>逻辑结构.</h2><pre><code>/                    //文件系统的根.
+
+/bin                //最初的命令(祖先)，binary文件,可执行文件
+/sbin                //super binary(重要性高)
+
+/usr/bin            //厂商相关的命令,ubuntu
+/usr/sbin            //厂商相关的命令,ubuntu
+
+/usr/local/bin        //用户级别。
+/usr/local/sbin
+
+[Linux文件类型]
+-        //文件
+d        //目录
+l        //链接,类似于windows快捷方式.
+b        //block,块文件。
+c        //字符文件
+</code></pre><p><img src="https://i.imgur.com/YW7Kf85.png" alt=""></p>
+<hr>
+<p><img src="https://i.imgur.com/d1kfpNH.png" alt=""></p>
+<p>第一个字母是L的意思是link连接类的。</p>
+<hr>
+<p><img src="https://i.imgur.com/vBRQgXA.png" alt=""></p>
+<p>ifconfig的命令的目录在/sbin/ifconfig这里，但是实际上/sbin已经链接到了/usr/bin里面了。所以CentOS是没有bin和、usr/bin之分的，因为已经link过去了</p>
+<hr>
+<h2 id="linux的权限"><a href="#linux的权限" class="headerlink" title="[linux的权限]"></a>[linux的权限]</h2><p><img src="https://i.imgur.com/1ldCqdL.png" alt=""><br>一共有9个位，每个成分是从0-7如果是777就是全部权限都付给他了</p>
+<p><img src="https://i.imgur.com/pgdqTkV.png" alt=""><br>看这段截图。里面的-rw-rw-r–<br>第一个-是文件类型第rw后面的-是代表0</p>
+<pre><code>$&gt;chmod                //修改文件(夹)权限
+$&gt;chmod    g-w            //去除group中write权.
+
+chmod                //不受文件权限控制,只有owner和root才具有文件权限的修改权。
+
+
+【read权限】
+    文件    :文件内容
+    文件夹    :文件夹的内容    
+【write权限】
+------------
+
+【execute权限】
+-------------
+    文件    :执行
+    文件夹    :进入目录
+</code></pre><p>看下面这个例子：<br> <img src="https://i.imgur.com/U1ggRNv.png" alt=""><br>看最下面的这个chmode 644 a.txt</p>
+<p>6是用户的成分。4是组的成分，最后4，是others的成分。<br>所以chmode 644最后是 -rw-r–r–</p>
+<p><img src="https://i.imgur.com/XQSLfvz.png" alt=""></p>
+<p>这里面的小细节格式 ：<br>    chmode 655 a.txt</p>
+<pre><code>chmode g+w a.txt
+</code></pre><hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -1980,7 +2055,7 @@ $&gt;find . /mnt/cdrom
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2072,9 +2147,7 @@ $&gt;find . /mnt/cdrom
 
       
 	  
-<div id="music163player">
-    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311150183&auto=1&height=66"></iframe>
-</div>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
 
     </div>
   </aside>

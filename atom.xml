@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://erichunn.github.io/"/>
-  <updated>2018-09-21T01:54:31.823Z</updated>
+  <updated>2018-09-20T13:29:44.156Z</updated>
   <id>http://erichunn.github.io/</id>
   
   <author>
@@ -15,20 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>Linux基础之iso的制作</title>
-    <link href="http://erichunn.github.io/2018/09/21/Linux%E5%9F%BA%E7%A1%80%E4%B9%8Biso%E7%9A%84%E5%88%B6%E4%BD%9C/"/>
-    <id>http://erichunn.github.io/2018/09/21/Linux基础之iso的制作/</id>
-    <published>2018-09-21T01:54:31.000Z</published>
-    <updated>2018-09-21T01:54:31.823Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>Linux基础之Yum命令</title>
@@ -169,9 +155,9 @@ URL                //http://
     <link href="http://erichunn.github.io/2018/09/18/Linux%E5%9F%BA%E7%A1%80%E4%B9%8B%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85-%E6%96%87%E6%9C%AC%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%89%E8%A3%85/"/>
     <id>http://erichunn.github.io/2018/09/18/Linux基础之虚拟机增强工具的安装-文本模式的安装/</id>
     <published>2018-09-18T08:49:44.000Z</published>
-    <updated>2018-09-18T10:53:17.287Z</updated>
+    <updated>2018-09-22T13:41:06.482Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="虚拟机增强工具"><a href="#虚拟机增强工具" class="headerlink" title="虚拟机增强工具"></a>虚拟机增强工具</h2><hr><p>1.原理</p><pre><code>插入iso(C:\myprograms\vmwar11.0.4-x86_64\linux.iso)文件到光盘中。</code></pre><p>2.vmware虚拟机菜单 -&gt; 重新安装vmware-tools</p><p>3.自动会将C:\myprograms\vmwar11.0.4-x86_64\linux.iso镜像文件插入光驱中，并直接打开。</p><p>4.复制VMwareTools-9.9.3-2759765.tar.gz文件到centos的桌面下。</p><p>5.tar开该文件.</p><pre><code>鼠标右键点击桌面的tar.gz文件，选择 extract here.</code></pre><p>6.进入桌面的vmware-tools-distrib目录下.</p><pre><code>$&gt;su root$&gt;cd /home/centos/Desktop/vmware-tools-distrib</code></pre><p>7.执行安装脚本</p><pre><code>$&gt;./vmware-install.pl    一路回车。    只到遇到Enjoy!!...</code></pre><h2 id="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："><a href="#图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：" class="headerlink" title="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："></a>图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：</h2><p><img src="https://i.imgur.com/AYS6NwH.png" alt=""></p><p><img src="https://i.imgur.com/Tqry0O7.png" alt=""></p><p><img src="https://i.imgur.com/BtRDRbm.png" alt=""></p>]]></content>
+    <content type="html"><![CDATA[<h2 id="虚拟机增强工具"><a href="#虚拟机增强工具" class="headerlink" title="虚拟机增强工具"></a>虚拟机增强工具</h2><hr><p>1.原理</p><pre><code>插入iso(C:\myprograms\vmwar11.0.4-x86_64\linux.iso)文件到光盘中。</code></pre><p>2.vmware虚拟机菜单 -&gt; 重新安装vmware-tools</p><p>3.自动会将C:\myprograms\vmwar11.0.4-x86_64\linux.iso镜像文件插入光驱中，并直接打开。</p><p>4.复制VMwareTools-9.9.3-2759765.tar.gz文件到centos的桌面下。</p><p>5.tar开该文件.</p><pre><code>鼠标右键点击桌面的tar.gz文件，选择 extract here.</code></pre><p>6.进入桌面的vmware-tools-distrib目录下.</p><pre><code>$&gt;su root$&gt;cd /home/centos/Desktop/vmware-tools-distrib</code></pre><p>7.执行安装脚本</p><pre><code>$&gt;./vmware-install.pl    一路回车。    只到遇到Enjoy!!...</code></pre><h2 id="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："><a href="#图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：" class="headerlink" title="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："></a>图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：</h2><p><img src="https://i.imgur.com/AYS6NwH.png" alt=""></p><p><img src="https://i.imgur.com/Tqry0O7.png" alt=""></p><p><img src="https://i.imgur.com/BtRDRbm.png" alt=""></p><hr><p>在mini版的centos7下遇到了很多问题。又在大坑系列中也有这一部分。其实这部分遇到了很多问题，除了视频中的问题，按照如下所示可以完美解决：</p><p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。</p><p>然后按照视频上讲解的来安装不上。最后先是</p><p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p><p>这样子，然后</p><p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p><p>之后按照如图所示挂载即可</p><p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p><hr><p>本视频还有一个while循环实现99乘法表的例子（我没细看）：</p><p><img src="https://i.imgur.com/eEbodXt.png" alt=""></p>]]></content>
     
     <summary type="html">
     
@@ -192,9 +178,9 @@ URL                //http://
     <link href="http://erichunn.github.io/2018/09/18/Linux%E5%9F%BA%E7%A1%80%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E2%80%94%E8%B8%A9%E8%BF%87%E7%9A%84%E5%A4%A7%E5%9D%91/"/>
     <id>http://erichunn.github.io/2018/09/18/Linux基础基础———踩过的大坑/</id>
     <published>2018-09-18T07:55:21.000Z</published>
-    <updated>2018-09-18T13:34:37.020Z</updated>
+    <updated>2018-09-22T13:26:16.797Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="问题：图形界面浏览器能访问外网，但是ping不通"><a href="#问题：图形界面浏览器能访问外网，但是ping不通" class="headerlink" title="问题：图形界面浏览器能访问外网，但是ping不通"></a>问题：图形界面浏览器能访问外网，但是ping不通</h2><p>很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。</p><p>解决：将网络中心里面改成这样子就行了。<br><img src="https://i.imgur.com/LcqHaRR.png" alt=""></p><p>具体的网站解释：<a href="https://blog.csdn.net/Arnold_lee_yc/article/details/74785995" target="_blank" rel="noopener">https://blog.csdn.net/Arnold_lee_yc/article/details/74785995</a></p><hr><p>不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。<br>所以本教程使用的是7.1也就是1503版本的centos</p><hr><p>切换用户之后出现这种情况：</p><p><img src="https://i.imgur.com/vSqES9b.png" alt=""></p><p>解决办法：是在设置centos用户的权限的时候配置错了。修改回来即可<br>    su root<br>    vi sudoers</p><p>视频里面的人他的ALL写成了小写的l。配置错误</p><p><img src="https://i.imgur.com/hfgjE60.png" alt=""></p>]]></content>
+    <content type="html"><![CDATA[<h2 id="问题：图形界面浏览器能访问外网，但是ping不通"><a href="#问题：图形界面浏览器能访问外网，但是ping不通" class="headerlink" title="问题：图形界面浏览器能访问外网，但是ping不通"></a>问题：图形界面浏览器能访问外网，但是ping不通</h2><p>很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。</p><p>解决：将网络中心里面改成这样子就行了。<br><img src="https://i.imgur.com/LcqHaRR.png" alt=""></p><p>具体的网站解释：<a href="https://blog.csdn.net/Arnold_lee_yc/article/details/74785995" target="_blank" rel="noopener">https://blog.csdn.net/Arnold_lee_yc/article/details/74785995</a></p><hr><p>不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。<br>所以本教程使用的是7.1也就是1503版本的centos</p><hr><p>切换用户之后出现这种情况：</p><p><img src="https://i.imgur.com/vSqES9b.png" alt=""></p><p>解决办法：是在设置centos用户的权限的时候配置错了。修改回来即可<br>    su root<br>    vi sudoers</p><p>视频里面的人他的ALL写成了小写的l。配置错误</p><p><img src="https://i.imgur.com/hfgjE60.png" alt=""></p><hr><h2 id="安装VMtools工具"><a href="#安装VMtools工具" class="headerlink" title="安装VMtools工具"></a>安装VMtools工具</h2><p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。</p><p>然后按照视频上讲解的来安装不上。最后先是</p><p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p><p>这样子，然后</p><p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p><p>之后按照如图所示挂载即可</p><p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p>]]></content>
     
     <summary type="html">
     
