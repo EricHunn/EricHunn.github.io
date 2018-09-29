@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://erichunn.github.io/"/>
-  <updated>2018-09-20T13:29:44.156Z</updated>
+  <updated>2018-09-24T08:17:33.785Z</updated>
   <id>http://erichunn.github.io/</id>
   
   <author>
@@ -15,6 +15,24 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hadoop安装配置</title>
+    <link href="http://erichunn.github.io/2018/09/24/Hadoop%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/"/>
+    <id>http://erichunn.github.io/2018/09/24/Hadoop安装配置/</id>
+    <published>2018-09-24T08:10:47.000Z</published>
+    <updated>2018-09-24T08:17:33.785Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="-hadoop" scheme="http://erichunn.github.io/categories/hadoop/"/>
+    
+    
+      <category term="-hadoop" scheme="http://erichunn.github.io/tags/hadoop/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux基础之Yum命令</title>
@@ -178,9 +196,9 @@ URL                //http://
     <link href="http://erichunn.github.io/2018/09/18/Linux%E5%9F%BA%E7%A1%80%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E2%80%94%E8%B8%A9%E8%BF%87%E7%9A%84%E5%A4%A7%E5%9D%91/"/>
     <id>http://erichunn.github.io/2018/09/18/Linux基础基础———踩过的大坑/</id>
     <published>2018-09-18T07:55:21.000Z</published>
-    <updated>2018-09-22T13:26:16.797Z</updated>
+    <updated>2018-09-29T06:48:41.395Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="问题：图形界面浏览器能访问外网，但是ping不通"><a href="#问题：图形界面浏览器能访问外网，但是ping不通" class="headerlink" title="问题：图形界面浏览器能访问外网，但是ping不通"></a>问题：图形界面浏览器能访问外网，但是ping不通</h2><p>很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。</p><p>解决：将网络中心里面改成这样子就行了。<br><img src="https://i.imgur.com/LcqHaRR.png" alt=""></p><p>具体的网站解释：<a href="https://blog.csdn.net/Arnold_lee_yc/article/details/74785995" target="_blank" rel="noopener">https://blog.csdn.net/Arnold_lee_yc/article/details/74785995</a></p><hr><p>不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。<br>所以本教程使用的是7.1也就是1503版本的centos</p><hr><p>切换用户之后出现这种情况：</p><p><img src="https://i.imgur.com/vSqES9b.png" alt=""></p><p>解决办法：是在设置centos用户的权限的时候配置错了。修改回来即可<br>    su root<br>    vi sudoers</p><p>视频里面的人他的ALL写成了小写的l。配置错误</p><p><img src="https://i.imgur.com/hfgjE60.png" alt=""></p><hr><h2 id="安装VMtools工具"><a href="#安装VMtools工具" class="headerlink" title="安装VMtools工具"></a>安装VMtools工具</h2><p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。</p><p>然后按照视频上讲解的来安装不上。最后先是</p><p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p><p>这样子，然后</p><p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p><p>之后按照如图所示挂载即可</p><p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p>]]></content>
+    <content type="html"><![CDATA[<h2 id="问题：图形界面浏览器能访问外网，但是ping不通"><a href="#问题：图形界面浏览器能访问外网，但是ping不通" class="headerlink" title="问题：图形界面浏览器能访问外网，但是ping不通"></a>问题：图形界面浏览器能访问外网，但是ping不通</h2><p>很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。</p><p>解决：将网络中心里面改成这样子就行了。<br><img src="https://i.imgur.com/LcqHaRR.png" alt=""></p><p>具体的网站解释：<a href="https://blog.csdn.net/Arnold_lee_yc/article/details/74785995" target="_blank" rel="noopener">https://blog.csdn.net/Arnold_lee_yc/article/details/74785995</a></p><hr><p>不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。<br>所以本教程使用的是7.1也就是1503版本的centos</p><hr><p>切换用户之后出现这种情况：</p><p><img src="https://i.imgur.com/vSqES9b.png" alt=""></p><p>解决办法：是在设置centos用户的权限的时候配置错了。修改回来即可<br>    su root<br>    vi sudoers</p><p>视频里面的人他的ALL写成了小写的l。配置错误</p><p><img src="https://i.imgur.com/hfgjE60.png" alt=""></p><hr><h2 id="安装VMtools工具"><a href="#安装VMtools工具" class="headerlink" title="安装VMtools工具"></a>安装VMtools工具</h2><p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。我的理解是需要将那个文件夹挂载到虚拟机上。才能实现共享，可能和VMware的版本有关。网上说vmware14可以直接挂载不需要设置，这里我使用的是vmware11</p><p>然后按照视频上讲解的来安装不上。最后先是</p><p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p><p>这样子，然后</p><p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p><p>之后按照如图所示挂载即可</p><p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p><hr><h2 id="克隆机器后网卡设置"><a href="#克隆机器后网卡设置" class="headerlink" title="克隆机器后网卡设置"></a>克隆机器后网卡设置</h2><p>克隆机器后会出现设置ifg-eno123142这个文件但是设置之后Ip还是没有修改的问题。实际上是因为克隆机器后ifg-eno123123的网卡名字变成了ifcfg-ens33这个这个名字，所以需要把ifg-eno12312这个网卡改名ifg-ens33然后把里面的name和device两个都改成ens33即可。</p><p>看这张图下面的网卡名字是ens33，在网卡配置中就要在name和device中写ens33</p><p><img src="https://i.imgur.com/Nl7H9O2.png" alt=""></p><p><img src="https://i.imgur.com/2p1OzOd.png" alt=""></p><hr><h2 id="配置无密登陆"><a href="#配置无密登陆" class="headerlink" title="配置无密登陆"></a>配置无密登陆</h2><p>在按照视频生成秘钥和公钥的时候，开始的时候删掉的其他机器的.ssh文件。所以导致传输公钥的时候，传输完了之后仍然需要密码。这是由于其他机器的.ssh文件的权限有问题，因为是删除了之后自己重新建立的。所以默认的权限是不对的。<br>这里的网站讲解的非常详细</p><p>将ssh文件夹配置成700的属性即可。</p><p><a href="https://blog.csdn.net/qq_26442553/article/details/79357498" target="_blank" rel="noopener">https://blog.csdn.net/qq_26442553/article/details/79357498</a></p>]]></content>
     
     <summary type="html">
     
