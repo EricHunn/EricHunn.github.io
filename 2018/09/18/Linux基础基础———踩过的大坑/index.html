@@ -97,7 +97,7 @@
 <meta property="og:image" content="https://i.imgur.com/Na02G1A.png">
 <meta property="og:image" content="https://i.imgur.com/Nl7H9O2.png">
 <meta property="og:image" content="https://i.imgur.com/2p1OzOd.png">
-<meta property="og:updated_time" content="2018-09-29T06:48:41.395Z">
+<meta property="og:updated_time" content="2018-09-30T01:25:12.282Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux基础基础—————踩过的大坑">
 <meta name="twitter:description" content="问题：图形界面浏览器能访问外网，但是ping不通很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。 解决：将网络中心里面改成这样子就行了。 具体的网站解释：https://blog.csdn.net/Arnold_lee_yc/article/details/74785995  不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。所以本">
@@ -433,6 +433,9 @@
 <h2 id="配置无密登陆"><a href="#配置无密登陆" class="headerlink" title="配置无密登陆"></a>配置无密登陆</h2><p>在按照视频生成秘钥和公钥的时候，开始的时候删掉的其他机器的.ssh文件。所以导致传输公钥的时候，传输完了之后仍然需要密码。这是由于其他机器的.ssh文件的权限有问题，因为是删除了之后自己重新建立的。所以默认的权限是不对的。<br>这里的网站讲解的非常详细</p>
 <p>将ssh文件夹配置成700的属性即可。</p>
 <p><a href="https://blog.csdn.net/qq_26442553/article/details/79357498" target="_blank" rel="noopener">https://blog.csdn.net/qq_26442553/article/details/79357498</a></p>
+<hr>
+<h2 id="多次format"><a href="#多次format" class="headerlink" title="多次format"></a>多次format</h2><p> namenode会导致namenode的id和datanode的id有变化，需要重新格式化/tmp文件夹</p>
+<hr>
 
       
     </div>
@@ -600,7 +603,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -611,7 +614,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -622,7 +625,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -698,7 +701,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题：图形界面浏览器能访问外网，但是ping不通"><span class="nav-number">1.</span> <span class="nav-text">问题：图形界面浏览器能访问外网，但是ping不通</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装VMtools工具"><span class="nav-number">2.</span> <span class="nav-text">安装VMtools工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#克隆机器后网卡设置"><span class="nav-number">3.</span> <span class="nav-text">克隆机器后网卡设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置无密登陆"><span class="nav-number">4.</span> <span class="nav-text">配置无密登陆</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题：图形界面浏览器能访问外网，但是ping不通"><span class="nav-number">1.</span> <span class="nav-text">问题：图形界面浏览器能访问外网，但是ping不通</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装VMtools工具"><span class="nav-number">2.</span> <span class="nav-text">安装VMtools工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#克隆机器后网卡设置"><span class="nav-number">3.</span> <span class="nav-text">克隆机器后网卡设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置无密登陆"><span class="nav-number">4.</span> <span class="nav-text">配置无密登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多次format"><span class="nav-number">5.</span> <span class="nav-text">多次format</span></a></li></ol></div>
             
 
           </div>
