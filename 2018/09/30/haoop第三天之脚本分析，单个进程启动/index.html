@@ -81,16 +81,17 @@
 
 
 
-<meta name="description" content="大数据|动漫迷|科技控">
-<meta property="og:type" content="website">
-<meta property="og:title" content="无心是一首歌">
-<meta property="og:url" content="http://erichunn.github.io/tags/Java基础问题/index.html">
+<meta name="description" content="ssh权限问题1.~/.ssh/authorized_keys     644 2.$/.ssh     700 3.root 配置SSH生成密钥对$&amp;gt;ssh-keygen -t rsa -P &amp;apos;&amp;apos; -f ~/.ssh/id_rsa 添加认证文件$&amp;gt;cat ~/.ssh/id_rsa.pub &amp;gt; ~/.ssh/authorized_keys 权限设置,文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="haoop第三天之脚本分析，单个进程启动">
+<meta property="og:url" content="http://erichunn.github.io/2018/09/30/haoop第三天之脚本分析，单个进程启动/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="大数据|动漫迷|科技控">
+<meta property="og:description" content="ssh权限问题1.~/.ssh/authorized_keys     644 2.$/.ssh     700 3.root 配置SSH生成密钥对$&amp;gt;ssh-keygen -t rsa -P &amp;apos;&amp;apos; -f ~/.ssh/id_rsa 添加认证文件$&amp;gt;cat ~/.ssh/id_rsa.pub &amp;gt; ~/.ssh/authorized_keys 权限设置,文件">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-09-30T15:55:11.671Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="无心是一首歌">
-<meta name="twitter:description" content="大数据|动漫迷|科技控">
+<meta name="twitter:title" content="haoop第三天之脚本分析，单个进程启动">
+<meta name="twitter:description" content="ssh权限问题1.~/.ssh/authorized_keys     644 2.$/.ssh     700 3.root 配置SSH生成密钥对$&amp;gt;ssh-keygen -t rsa -P &amp;apos;&amp;apos; -f ~/.ssh/id_rsa 添加认证文件$&amp;gt;cat ~/.ssh/id_rsa.pub &amp;gt; ~/.ssh/authorized_keys 权限设置,文件">
 
 
 
@@ -120,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://erichunn.github.io/tags/Java基础问题/"/>
+  <link rel="canonical" href="http://erichunn.github.io/2018/09/30/haoop第三天之脚本分析，单个进程启动/"/>
 
 
 
 
 
-  <title>Tag: Java基础问题 | 无心是一首歌</title>
+  <title>haoop第三天之脚本分析，单个进程启动 | 无心是一首歌</title>
   
 
 
@@ -155,7 +156,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -313,54 +314,448 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Java基础问题<small>Tag</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/30/haoop第三天之脚本分析，单个进程启动/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/09/12/Java中的总结合集（1）/" itemprop="url">
-              
-                <span itemprop="name">Java中的总结合集（1）</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">haoop第三天之脚本分析，单个进程启动</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-12T21:31:06+08:00"
-              content="2018-09-12" >
-          09-12
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-30T09:33:38+08:00">
+                2018-09-30
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    </div>
+      
 
+      
+        <h2 id="ssh权限问题"><a href="#ssh权限问题" class="headerlink" title="ssh权限问题"></a>ssh权限问题</h2><pre><code>1.~/.ssh/authorized_keys
+    644
+2.$/.ssh
+    700
+3.root
+</code></pre><h2 id="配置SSH"><a href="#配置SSH" class="headerlink" title="配置SSH"></a>配置SSH</h2><pre><code>生成密钥对$&gt;ssh-keygen -t rsa -P &apos;&apos; -f ~/.ssh/id_rsa
+添加认证文件$&gt;cat ~/.ssh/id_rsa.pub &gt; ~/.ssh/authorized_keys
+权限设置,文件和文件夹权限除了自己之外，别人不可写。$&gt;chmod 700 ~/.ssh$&gt;chmod 644 ~/.ssh/authorized_keys
+</code></pre><h2 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h2><pre><code>远程复制.
+</code></pre><h2 id="rsync"><a href="#rsync" class="headerlink" title="rsync"></a>rsync</h2><pre><code>远程同步,支持符号链接。
+rsync -lr xxx xxx
+</code></pre><h2 id="完全分布式"><a href="#完全分布式" class="headerlink" title="完全分布式"></a>完全分布式</h2><pre><code>1.配置文件
+[core-site.xml]
+fs.defaultFS=hdfs://s201:8020/
+
+[hdfs-site.xml]
+replication=1        //伪分布
+replication=3        //完全分布
+
+
+[mapred-site.xml]
+mapreduce.framework.name=yarn
+
+[yarn-site.xml]
+rm.name=s201
+
+[slaves]
+s202
+s203
+s204
+
+2.分发文件
+    a)ssh
+    openssh-server        //sshd
+    openssh-clients        //ssh
+    openssh                //ssh-keygen
+
+    b)scp/rsync
+
+3.格式化文件系统
+    $&gt;hadoop namenode -format
+
+4.启动hadoop所有进程
+    //start-dfs.sh + start-yarn.sh
+    $&gt;start-all.sh
+
+5.xcall.sh jps
+    /usr/local/bin/jps 
+    /usr/local/bin/java
+
+6.查看jps进程
+    $&gt;xcall.sh jps
+
+7.关闭centos的防火墙
+    $&gt;sudo service firewalld stop        // &lt;=6.5    start/stop/status/restart
+    $&gt;sudo systemctl stop firewalld        // 7.0 停止    start/stop/status/restart
+
+    $&gt;sudo systemctl disable firewalld    //关闭
+    $&gt;sudo systemctl enable firewalld    //启用
+
+
+7.最终通过webui
+    http://s201:50070/
+</code></pre><h2 id="符号连接"><a href="#符号连接" class="headerlink" title="符号连接"></a>符号连接</h2><pre><code>1.修改符号连接的owner
+    $&gt;chown -h centos:centos xxx        //-h:针对连接本身，而不是所指文件.
+
+2.修改符号链接
+    $&gt;ln -sfT index.html index            //覆盖原有的连接。
+</code></pre><h2 id="hadoop模块"><a href="#hadoop模块" class="headerlink" title="hadoop模块"></a>hadoop模块</h2><pre><code>common        //
+hdfs        //
+mapreduce    //
+yarn        //
+</code></pre><h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><pre><code>[hdfs]start-dfs.sh
+NameNode            NN
+DataNode            DN
+SecondaryNamenode    2NN
+
+[yarn]start-yarn.sh
+ResourceMananger    RM
+NodeManager            NM
+</code></pre><h2 id="脚本分析"><a href="#脚本分析" class="headerlink" title="脚本分析"></a>脚本分析</h2><pre><code>sbin/start-all.sh
+--------------
+    libexec/hadoop-config.sh
+    start-dfs.sh
+    start-yarn.sh
+
+sbin/start-dfs.sh
+--------------
+    libexec/hadoop-config.sh
+    sbin/hadoop-daemons.sh --config .. --hostname .. start namenode ...
+    sbin/hadoop-daemons.sh --config .. --hostname .. start datanode ...
+    sbin/hadoop-daemons.sh --config .. --hostname .. start sescondarynamenode ...
+    sbin/hadoop-daemons.sh --config .. --hostname .. start zkfc ...            //
+
+
+sbin/start-yarn.sh
+--------------    
+    libexec/yarn-config.sh
+    bin/yarn-daemon.sh start resourcemanager
+    bin/yarn-daemons.sh start nodemanager
+
+
+sbin/hadoop-daemons.sh
+----------------------
+    libexec/hadoop-config.sh
+
+    slaves
+
+    hadoop-daemon.sh
+
+sbin/hadoop-daemon.sh
+-----------------------
+    libexec/hadoop-config.sh
+    bin/hdfs ....
+
+
+sbin/yarn-daemon.sh
+-----------------------
+    libexec/yarn-config.sh
+    bin/yarn
+
+
+bin/hadoop
+------------------------
+    hadoop verion        //版本
+    hadoop fs            //文件系统客户端.
+    hadoop jar            //
+    hadoop classpath
+    hadoop checknative
+
+
+bin/hdfs
+------------------------
+    dfs                        // === hadoop fs
+    classpath          
+    namenode -format   
+    secondarynamenode  
+    namenode           
+    journalnode        
+    zkfc               
+    datanode           
+    dfsadmin           
+    haadmin            
+    fsck               
+    balancer           
+    jmxget             
+    mover              
+
+    oiv                
+    oiv_legacy         
+    oev                
+    fetchdt            
+    getconf            
+    groups             
+    snapshotDiff       
+
+    lsSnapshottableDir 
+
+    portmap            
+    nfs3               
+    cacheadmin         
+    crypto             
+    storagepolicies    
+    version 
+</code></pre><h2 id="hdfs常用命令"><a href="#hdfs常用命令" class="headerlink" title="hdfs常用命令"></a>hdfs常用命令</h2><pre><code>$&gt;hdfs dfs -mkdir /user/centos/hadoop
+$&gt;hdfs dfs -ls -r /user/centos/hadoop
+$&gt;hdfs dfs -lsr /user/centos/hadoop
+$&gt;hdfs dfs -put index.html /user/centos/hadoop
+$&gt;hdfs dfs -get /user/centos/hadoop/index.html a.html
+$&gt;hdfs dfs -rm -r -f /user/centos/hadoop
+</code></pre><h2 id="no-route"><a href="#no-route" class="headerlink" title="no route "></a>no route </h2><pre><code>关闭防火墙。
+$&gt;su root
+$&gt;xcall.sh &quot;service firewalld stop&quot;
+$&gt;xcall.sh &quot;systemctl disable firewalld&quot;
+</code></pre><h2 id="hdfs"><a href="#hdfs" class="headerlink" title="hdfs"></a>hdfs</h2><pre><code>500G
+1024G = 2T/4T
+切割。
+
+
+寻址时间:10ms左右
+磁盘速率 : 100M /s
+
+64M
+128M            //让寻址时间占用读取时间的1%.
+
+1ms
+1 / 100
+
+
+size = 181260798
+block-0 : 134217728
+block-1 :  47043070 
+--------------------
+
+b0.no : 1073741829
+b1.no : 1073741830
+</code></pre><h2 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h2><pre><code>high availability,高可用性。通常用几个9衡量。
+99.999%
+</code></pre><h2 id="SPOF"><a href="#SPOF" class="headerlink" title="SPOF:"></a>SPOF:</h2><pre><code>single point of failure,单点故障。
+</code></pre><h2 id="secondarynamenode"><a href="#secondarynamenode" class="headerlink" title="secondarynamenode"></a>secondarynamenode</h2><h2 id="找到所有的配置文件"><a href="#找到所有的配置文件" class="headerlink" title="找到所有的配置文件"></a>找到所有的配置文件</h2><pre><code>1.tar开hadoop-2.7.3.tar.gz
+hadoop-2.7.3\share\hadoop\common\hadoop-common-2.7.3.jar\core-default.xml
+hadoop-2.7.3\share\hadoop\hdfs\hadoop-hdfs-2.7.3.jar\hdfs-default.xml
+hadoop-2.7.3\share\hadoop\mapreduce\hadoop-mapreduce-client-core-2.7.3.jar\mapred-default.xml
+hadoop-2.7.3\share\hadoop\yarn\hadoop-yarn-common-2.7.3.jar\yarn-site.xml
+</code></pre><h2 id="本地模式"><a href="#本地模式" class="headerlink" title="本地模式"></a>本地模式</h2><pre><code>[core-site.xml]
+fs.defaultFS=file:///            //默认值
+</code></pre><h2 id="配置hadoop临时目录"><a href="#配置hadoop临时目录" class="headerlink" title="配置hadoop临时目录"></a>配置hadoop临时目录</h2><pre><code>1.配置[core-site.xml]文件
+&lt;configuration&gt;
+        &lt;property&gt;
+                &lt;name&gt;fs.defaultFS&lt;/name&gt;
+                &lt;value&gt;hdfs://s201/&lt;/value&gt;
+        &lt;/property&gt;
+        &lt;!--- 配置新的本地目录 --&gt;
+        &lt;property&gt;
+                &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;
+                &lt;value&gt;/home/centos/hadoop&lt;/value&gt;
+        &lt;/property&gt;
+&lt;/configuration&gt;
+
+
+//以下属性均由hadoop.tmp.dir决定,在hdfs-site.xml文件中配置。
+dfs.namenode.name.dir=file://${hadoop.tmp.dir}/dfs/name
+dfs.datanode.data.dir=file://${hadoop.tmp.dir}/dfs/data
+dfs.datanode.data.dir=file://${hadoop.tmp.dir}/dfs/data
+
+dfs.namenode.checkpoint.dir=file://${hadoop.tmp.dir}/dfs/namesecondary
+dfs.namenode.checkpoint.dir=file://${hadoop.tmp.dir}/dfs/namesecondary
+
+
+2.分发core-site.xml文件
+    $&gt;xsync core-site.xml
+
+3.格式化文件系统,只对namenode的本地目录进行初始化。
+    $&gt;hadoop namenode -format        //hdfs namenode -format
+
+4.启动hadoop
+    $&gt;start-dfs.sh
+</code></pre><h2 id="使用xcall-sh在所有节点上创建jps符号连接，指向-soft-jdk-bin-jps"><a href="#使用xcall-sh在所有节点上创建jps符号连接，指向-soft-jdk-bin-jps" class="headerlink" title="使用xcall.sh在所有节点上创建jps符号连接，指向/soft/jdk/bin/jps"></a>使用xcall.sh在所有节点上创建jps符号连接，指向/soft/jdk/bin/jps</h2><pre><code>1.切换到root用户
+    $&gt;su root
+2.创建符号连接
+    $&gt;xcall.sh &quot;ln -sfT /soft/jdk/bin/jps /usr/local/bin/jps&quot;
+3.修改jps符号连接的owner
+    $&gt;xcall.sh &quot;chown -h centos:centos /usr/local/bin/jps&quot;
+4.查看所有主机上的java进程
+    $&gt;xcall.sh jps
+</code></pre><h2 id="在centos桌面版中安装eclipse"><a href="#在centos桌面版中安装eclipse" class="headerlink" title="在centos桌面版中安装eclipse"></a>在centos桌面版中安装eclipse</h2><pre><code>1.下载eclipse linux版
+    eclipse-jee-mars-R-linux-gtk-x86_64.tar.gz
+2.tar开到/soft下,
+    $&gt;tar -xzvf eclipse-jee-mars-R-linux-gtk-x86_64.tar.gz -C /soft
+3.启动eclipse
+    $&gt;cd /soft/eclipse
+    $&gt;./eclipse &amp;            //后台启动
+4.创建桌面快捷方式
+    $&gt;ln -s /soft/eclipse/eclipse ~/Desktop/eclipse
+5.
+</code></pre><h2 id="收集hadoop的所有jar包"><a href="#收集hadoop的所有jar包" class="headerlink" title="收集hadoop的所有jar包"></a>收集hadoop的所有jar包</h2><h2 id="使用hadoop客户端api访问hdfs"><a href="#使用hadoop客户端api访问hdfs" class="headerlink" title="使用hadoop客户端api访问hdfs"></a>使用hadoop客户端api访问hdfs</h2><pre><code>1.创建java项目
+2.导入hadoop类库
+
+3.
+4.
+5.
+</code></pre><h2 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h2><pre><code>1.
+2.
+3.
+4.
+</code></pre><h2 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h2><pre><code>1.使用hadoop API递归输出整个文件系统
+2.
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/29/Hadoop第二天之搭建/" rel="next" title="Hadoop第二天之搭建">
+                <i class="fa fa-chevron-left"></i> Hadoop第二天之搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/01/遇到未解决的问题/" rel="prev" title="遇到未解决的问题">
+                遇到未解决的问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -368,6 +763,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -388,8 +792,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -496,6 +909,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ssh权限问题"><span class="nav-number">1.</span> <span class="nav-text">ssh权限问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置SSH"><span class="nav-number">2.</span> <span class="nav-text">配置SSH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scp"><span class="nav-number">3.</span> <span class="nav-text">scp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsync"><span class="nav-number">4.</span> <span class="nav-text">rsync</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完全分布式"><span class="nav-number">5.</span> <span class="nav-text">完全分布式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#符号连接"><span class="nav-number">6.</span> <span class="nav-text">符号连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hadoop模块"><span class="nav-number">7.</span> <span class="nav-text">hadoop模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程"><span class="nav-number">8.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本分析"><span class="nav-number">9.</span> <span class="nav-text">脚本分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hdfs常用命令"><span class="nav-number">10.</span> <span class="nav-text">hdfs常用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#no-route"><span class="nav-number">11.</span> <span class="nav-text">no route </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hdfs"><span class="nav-number">12.</span> <span class="nav-text">hdfs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HA"><span class="nav-number">13.</span> <span class="nav-text">HA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SPOF"><span class="nav-number">14.</span> <span class="nav-text">SPOF:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#secondarynamenode"><span class="nav-number">15.</span> <span class="nav-text">secondarynamenode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#找到所有的配置文件"><span class="nav-number">16.</span> <span class="nav-text">找到所有的配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地模式"><span class="nav-number">17.</span> <span class="nav-text">本地模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置hadoop临时目录"><span class="nav-number">18.</span> <span class="nav-text">配置hadoop临时目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用xcall-sh在所有节点上创建jps符号连接，指向-soft-jdk-bin-jps"><span class="nav-number">19.</span> <span class="nav-text">使用xcall.sh在所有节点上创建jps符号连接，指向/soft/jdk/bin/jps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在centos桌面版中安装eclipse"><span class="nav-number">20.</span> <span class="nav-text">在centos桌面版中安装eclipse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#收集hadoop的所有jar包"><span class="nav-number">21.</span> <span class="nav-text">收集hadoop的所有jar包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用hadoop客户端api访问hdfs"><span class="nav-number">22.</span> <span class="nav-text">使用hadoop客户端api访问hdfs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络拓扑"><span class="nav-number">23.</span> <span class="nav-text">网络拓扑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作业"><span class="nav-number">24.</span> <span class="nav-text">作业</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -645,6 +1074,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -673,6 +1106,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 

@@ -328,6 +328,371 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础基础———踩过的大坑/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/18/Linux基础基础———踩过的大坑/" itemprop="url">Linux基础基础—————踩过的大坑</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T15:55:21+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="问题：图形界面浏览器能访问外网，但是ping不通"><a href="#问题：图形界面浏览器能访问外网，但是ping不通" class="headerlink" title="问题：图形界面浏览器能访问外网，但是ping不通"></a>问题：图形界面浏览器能访问外网，但是ping不通</h2><p>很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。</p>
+<p>解决：将网络中心里面改成这样子就行了。<br><img src="https://i.imgur.com/LcqHaRR.png" alt=""></p>
+<p>具体的网站解释：<a href="https://blog.csdn.net/Arnold_lee_yc/article/details/74785995" target="_blank" rel="noopener">https://blog.csdn.net/Arnold_lee_yc/article/details/74785995</a></p>
+<hr>
+<p>不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。<br>所以本教程使用的是7.1也就是1503版本的centos</p>
+<hr>
+<p>切换用户之后出现这种情况：</p>
+<p><img src="https://i.imgur.com/vSqES9b.png" alt=""></p>
+<p>解决办法：是在设置centos用户的权限的时候配置错了。修改回来即可<br>    su root<br>    vi sudoers</p>
+<p>视频里面的人他的ALL写成了小写的l。配置错误</p>
+<p><img src="https://i.imgur.com/hfgjE60.png" alt=""></p>
+<hr>
+<h2 id="安装VMtools工具"><a href="#安装VMtools工具" class="headerlink" title="安装VMtools工具"></a>安装VMtools工具</h2><p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。我的理解是需要将那个文件夹挂载到虚拟机上。才能实现共享，可能和VMware的版本有关。网上说vmware14可以直接挂载不需要设置，这里我使用的是vmware11</p>
+<p>然后按照视频上讲解的来安装不上。最后先是</p>
+<p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p>
+<p>这样子，然后</p>
+<p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p>
+<p>之后按照如图所示挂载即可</p>
+<p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p>
+<hr>
+<h2 id="克隆机器后网卡设置"><a href="#克隆机器后网卡设置" class="headerlink" title="克隆机器后网卡设置"></a>克隆机器后网卡设置</h2><p>克隆机器后会出现设置ifg-eno123142这个文件但是设置之后Ip还是没有修改的问题。实际上是因为克隆机器后ifg-eno123123的网卡名字变成了ifcfg-ens33这个这个名字，所以需要把ifg-eno12312这个网卡改名ifg-ens33然后把里面的name和device两个都改成ens33即可。</p>
+<p>看这张图下面的网卡名字是ens33，在网卡配置中就要在name和device中写ens33</p>
+<p><img src="https://i.imgur.com/Nl7H9O2.png" alt=""></p>
+<p><img src="https://i.imgur.com/2p1OzOd.png" alt=""></p>
+<hr>
+<h2 id="配置无密登陆"><a href="#配置无密登陆" class="headerlink" title="配置无密登陆"></a>配置无密登陆</h2><p>在按照视频生成秘钥和公钥的时候，开始的时候删掉的其他机器的.ssh文件。所以导致传输公钥的时候，传输完了之后仍然需要密码。这是由于其他机器的.ssh文件的权限有问题，因为是删除了之后自己重新建立的。所以默认的权限是不对的。<br>这里的网站讲解的非常详细</p>
+<p>将ssh文件夹配置成700的属性即可。</p>
+<p><a href="https://blog.csdn.net/qq_26442553/article/details/79357498" target="_blank" rel="noopener">https://blog.csdn.net/qq_26442553/article/details/79357498</a></p>
+<hr>
+<h2 id="多次format"><a href="#多次format" class="headerlink" title="多次format"></a>多次format</h2><p> namenode会导致namenode的id和datanode的id有变化，需要重新格式化/tmp文件夹</p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/17/Linux基础之网络配置-域名解析-光驱挂载/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/17/Linux基础之网络配置-域名解析-光驱挂载/" itemprop="url">Linux基础之网络配置-域名解析-光驱挂载</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-17T16:20:16+08:00">
+                2018-09-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="客户端与宿主机之间的网络连通方式"><a href="#客户端与宿主机之间的网络连通方式" class="headerlink" title="[客户端与宿主机之间的网络连通方式]"></a>[客户端与宿主机之间的网络连通方式]</h2><h3 id="1-桥接"><a href="#1-桥接" class="headerlink" title="1.桥接"></a>1.桥接</h3><pre><code>桥接(client完全等价于一台物理主机)
+</code></pre><h3 id="2-NAT-最多-默认模式"><a href="#2-NAT-最多-默认模式" class="headerlink" title="2.NAT(最多,默认模式)"></a>2.NAT(最多,默认模式)</h3><pre><code>a.Net Address transform,网络地址转换.
+b.客户机能访问外网，可以访问局域网内的其他物理主机。
+c.其他的局域网内物理主机不能访问客户机。
+</code></pre><h3 id="3-only-host"><a href="#3-only-host" class="headerlink" title="3.only host."></a>3.only host.</h3><pre><code>a.和NAT非常像。
+b.不能访问外网。
+</code></pre><h3 id="4-查看client机的网络连接模式"><a href="#4-查看client机的网络连接模式" class="headerlink" title="4.查看client机的网络连接模式"></a>4.查看client机的网络连接模式</h3><pre><code>a.右键选择Centos客户机。
+b.点击&quot;设置&quot;
+c.网络适配器.
+</code></pre><h3 id="5-查看DHCP的分配网段"><a href="#5-查看DHCP的分配网段" class="headerlink" title="5.查看DHCP的分配网段"></a>5.查看DHCP的分配网段</h3><pre><code>a.vmware--&gt;编辑--&gt;虚拟网络编辑器
+b.选中V8条目
+c.下方显示的V8的详细信息。
+d.点击DHCP的设置.
+e.查看分配网段.
+</code></pre><hr>
+<h2 id="修改静态IP"><a href="#修改静态IP" class="headerlink" title="[修改静态IP]"></a>[修改静态IP]</h2><h4 id="1-切换root用户"><a href="#1-切换root用户" class="headerlink" title="1.切换root用户"></a>1.切换root用户</h4><pre><code>$&gt;su root
+</code></pre><h4 id="2-编辑-etc-sysconfig-network-scripts-ifcfg-eno16777736"><a href="#2-编辑-etc-sysconfig-network-scripts-ifcfg-eno16777736" class="headerlink" title="2.编辑/etc/sysconfig/network-scripts/ifcfg-eno16777736"></a>2.编辑/etc/sysconfig/network-scripts/ifcfg-eno16777736</h4><p>a.备份文件</p>
+<pre><code>$&gt;cd /etc/sysconfig/network-scripts
+$&gt;cp ifcfg-eno16777736 ifcfg-eno16777736.bak
+</code></pre><p>b.进入/etc/sysconfig/network-scripts</p>
+<pre><code>$&gt;cd /etc/sysconfig/network-scripts
+</code></pre><p>c.编辑ifcfg-eno16777736文件</p>
+<pre><code>$&gt;nano ifcfg-eno16777736
+    TYPE=Ethernet                    
+    BOOTPROTO=none                    
+    DEFROUTE=yes                    
+    IPV4_FAILURE_FATAL=no            
+    IPV6INIT=no
+    IPV6_AUTOCONF=no
+    IPV6_DEFROUTE=no
+    IPV6_PEERDNS=no
+    IPV6_PEERROUTES=no
+    IPV6_FAILURE_FATAL=no
+    NAME=eno16777736
+    UUID=33f3ce5f-8b5c-41af-90ed-863736e09c29
+    DEVICE=eno16777736
+    ONBOOT=yes
+    IPADDR=192.168.231.200
+    PREFIX=24
+    GATEWAY=192.168.231.2
+    DNS=192.168.231.2
+</code></pre><p>注意:查看NAT网络的网关地址。</p>
+<pre><code>0)Client机的网卡的DNS和GATEWAY设置为虚拟网卡NAT的网关值。
+1)vmware--&gt;编辑--&gt;虚拟网路编辑器
+2)v8条目
+3)点击&quot;NAT设置&quot;按钮
+4)查看网关地址:192.168.231.2(通常为xxx.xxx.xxx.2)
+</code></pre><p>e.重启网络服务</p>
+<pre><code>$&gt;su root
+$&gt;service network restart
+</code></pre><p>f.解决通过ip能够访问网络，通过域名无法访问的问题。</p>
+<pre><code>1)编辑/etc/resolv.conf,添加名称服务器，内容是网关地址。
+    nameserver 192.168.231.2
+2)保存退出
+
+3)重启服务
+    $&gt;su root
+    $&gt;service network restart
+4)测试www.baidu.com
+    $&gt;ping www.baidu.com
+</code></pre><hr>
+<h2 id="service管理命令"><a href="#service管理命令" class="headerlink" title="service管理命令"></a>service管理命令</h2><hr>
+<h3 id="1-查看服务的状态"><a href="#1-查看服务的状态" class="headerlink" title="1.查看服务的状态"></a>1.查看服务的状态</h3><pre><code>$&gt;service server_name status        //语法
+$&gt;service network status
+$&gt;service network start                //启动
+$&gt;service network stop                //停止
+$&gt;service network restart            //重启
+</code></pre><p><img src="https://i.imgur.com/hkJBwdp.png" alt=""><br>里面的lo网卡是自回环网络lopback（音似）还有一个就是局域网网卡</p>
+<p><img src="https://i.imgur.com/JmjUAAA.png" alt=""></p>
+<p>其中的ifcfg-lo就是自回环网络</p>
+<p>打开里面的内容查看</p>
+<hr>
+<h2 id="mount挂载外设"><a href="#mount挂载外设" class="headerlink" title="mount挂载外设"></a>mount挂载外设</h2><hr>
+<p>1.右键client右下角的光盘图标 -&gt;设置</p>
+<p>2.iso文件</p>
+<pre><code>选择一个iso镜像文件。
+</code></pre><p>3.右键client右下角的光盘图标 -&gt;连接. </p>
+<p>4.创建文件夹/mnt/cdrom</p>
+<pre><code>$&gt;su root
+$&gt;mkdir cdrom
+</code></pre><p>5.挂载光驱/dev/cdrom到/mnt/cdrom</p>
+<pre><code>$&gt;mount /dev/cdrom /mnt/cdrom
+$&gt;find . /mnt/cdrom                
+</code></pre><h2 id="卸载外设"><a href="#卸载外设" class="headerlink" title="卸载外设"></a>卸载外设</h2><hr>
+<p>1.从挂载的目录中出来,否则出现设备繁忙</p>
+<pre><code>$&gt;cd ..
+</code></pre><p>2.使用umount进行卸载</p>
+<pre><code>$&gt;umount /mnt/cdrom
+</code></pre><h2 id="启用client和host之间共享目录的功能"><a href="#启用client和host之间共享目录的功能" class="headerlink" title="启用client和host之间共享目录的功能"></a>启用client和host之间共享目录的功能</h2><hr>
+<p>1.右键点击vmware中的client机，选择设置</p>
+<p>2.找到”选项” -&gt; “共享文件夹” </p>
+<p>3.选择”总是启用”</p>
+<p>4.在文件夹区域中添加要共享的目录</p>
+<pre><code>d:/downloads
+</code></pre><p>5.确定.</p>
+<p>6.重启客户机.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/16/Linux基础之网络连接模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1626,7 +1991,7 @@ parseInt(&quot;010&quot;);        //未定：返回 10 或 8
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1637,7 +2002,7 @@ parseInt(&quot;010&quot;);        //未定：返回 10 或 8
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -1648,7 +2013,7 @@ parseInt(&quot;010&quot;);        //未定：返回 10 或 8
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
