@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://erichunn.github.io/"/>
-  <updated>2018-10-01T03:18:22.369Z</updated>
+  <updated>2018-10-05T08:31:19.635Z</updated>
   <id>http://erichunn.github.io/</id>
   
   <author>
@@ -17,13 +17,64 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Hadoop第五天01之hdfs写入剖析</title>
+    <link href="http://erichunn.github.io/2018/10/05/Hadoop%E7%AC%AC%E4%BA%94%E5%A4%A901%E4%B9%8Bhdfs%E5%86%99%E5%85%A5%E5%89%96%E6%9E%90/"/>
+    <id>http://erichunn.github.io/2018/10/05/Hadoop第五天01之hdfs写入剖析/</id>
+    <published>2018-10-05T08:31:19.000Z</published>
+    <updated>2018-10-05T08:31:19.635Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hadoop第四天之滚动日志-安全模式</title>
+    <link href="http://erichunn.github.io/2018/10/04/Hadoop%E7%AC%AC%E5%9B%9B%E5%A4%A9%E4%B9%8B%E6%BB%9A%E5%8A%A8%E6%97%A5%E5%BF%97-%E5%AE%89%E5%85%A8%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://erichunn.github.io/2018/10/04/Hadoop第四天之滚动日志-安全模式/</id>
+    <published>2018-10-04T00:56:35.000Z</published>
+    <updated>2018-10-04T00:56:35.958Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hadoop第四天之最小块设置-指定副本数</title>
+    <link href="http://erichunn.github.io/2018/10/04/Hadoop%E7%AC%AC%E5%9B%9B%E5%A4%A9%E4%B9%8B%E6%9C%80%E5%B0%8F%E5%9D%97%E8%AE%BE%E7%BD%AE-%E6%8C%87%E5%AE%9A%E5%89%AF%E6%9C%AC%E6%95%B0/"/>
+    <id>http://erichunn.github.io/2018/10/04/Hadoop第四天之最小块设置-指定副本数/</id>
+    <published>2018-10-04T00:21:11.000Z</published>
+    <updated>2018-10-04T00:21:11.458Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>遇到未解决的问题</title>
     <link href="http://erichunn.github.io/2018/10/01/%E9%81%87%E5%88%B0%E6%9C%AA%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98/"/>
     <id>http://erichunn.github.io/2018/10/01/遇到未解决的问题/</id>
     <published>2018-10-01T03:15:11.000Z</published>
-    <updated>2018-10-01T03:18:22.369Z</updated>
+    <updated>2018-10-02T12:53:38.985Z</updated>
+    
+    <content type="html"><![CDATA[<p>在eclipse中，ctrl+左键找到源码，为什么旁边在pakage explore中有有轮廓啊？</p><p><img src="https://i.imgur.com/oYjJ6In.png" alt=""></p><p><img src="https://i.imgur.com/IZVxlow.png" alt=""></p><p>点击两个箭头即可转换。</p><p>这个东西是在IDEA中怎么调出来的。</p><p><img src="https://i.imgur.com/fz08Y7d.png" alt=""></p><hr><p>克隆centos之后有时候出现这种情况</p><p><img src="https://i.imgur.com/G7CLxft.png" alt=""></p>]]></content>
     
     <summary type="html">
+    
+      
+      
+        &lt;p&gt;在eclipse中，ctrl+左键找到源码，为什么旁边在pakage explore中有有轮廓啊？&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/oYjJ6In.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.im
+      
     
     </summary>
     
@@ -421,65 +472,6 @@ $&amp;gt;ls --help
     
     </summary>
     
-    
-  </entry>
-  
-  <entry>
-    <title>Java中的总结合集（1）</title>
-    <link href="http://erichunn.github.io/2018/09/12/Java%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%E5%90%88%E9%9B%86%EF%BC%881%EF%BC%89/"/>
-    <id>http://erichunn.github.io/2018/09/12/Java中的总结合集（1）/</id>
-    <published>2018-09-12T13:31:06.000Z</published>
-    <updated>2018-09-12T14:59:16.702Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="关于构造函数"><a href="#关于构造函数" class="headerlink" title="关于构造函数"></a>关于构造函数</h1><p>构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。</p><pre><code>public class sadf {    public static void main(String[] args) {        Cat cat = new Cat();        cat.cry();    }}abstract class Animal{    public String name;    public abstract void cry();    public void Animal() {        System.out.println(&quot;new Animal&quot;);    }}class Cat extends Animal{     public void cry() {        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">这样的函数运行之后是</span><br><span class="line"></span><br><span class="line">喵喵</span><br></pre></td></tr></table></figure></code></pre><p>因为Animal有void变成了一个函数。还有一个默认的空构造。</p><p>应该去掉void。</p><pre><code>public class sadf {    public static void main(String[] args) {        Cat cat = new Cat();        cat.cry();    }}abstract class Animal{    public String name;    public abstract void cry();    public Animal() {        System.out.println(&quot;new Animal&quot;);    }}class Cat extends Animal{     public void cry() {        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">***</span><br><span class="line">结果是：</span><br><span class="line"></span><br><span class="line">new Animal</span><br><span class="line">喵喵</span><br></pre></td></tr></table></figure></code></pre><hr><h1 id="关于抽象abstract"><a href="#关于抽象abstract" class="headerlink" title="关于抽象abstract"></a>关于抽象abstract</h1><pre><code>class ABSTACT {    public static void main(String[] args) {        JiaFeiCat j = new JiaFeiCat();    }}abstract class Animal {    abstract void cry();    public Animal() {        System.out.println(&quot;我是动物&quot;);    }}abstract class Cat extends Animal {    public Cat() {        System.out.println(&quot;我是猫&quot;);    }    final void catchMouse() {        System.out.println(&quot;猫能抓老鼠&quot;);    }}final class JiaFeiCat extends Cat {    public JiaFeiCat() {        System.out.println(&quot;我是加菲猫&quot;);    }    @Override    void cry() {        System.out.println(&quot;加菲猫会哭&quot;);    }}class BosiCat extends Cat {    public BosiCat() {        System.out.println(&quot;我叫波斯猫&quot;);    }    @Override    void cry() {        System.out.println(&quot;波斯猫会叫&quot;);    }}</code></pre><p>打印结果：</p><pre><code>我是动物我是猫我是加菲猫</code></pre><p>运行成功<br>abstact抽象类方法可以在子类的子类中继承即可，不用一定在第一代子类中继承。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;关于构造函数&quot;&gt;&lt;a href=&quot;#关于构造函数&quot; class=&quot;headerlink&quot; title=&quot;关于构造函数&quot;&gt;&lt;/a&gt;关于构造函数&lt;/h1&gt;&lt;p&gt;构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。&lt;/p&gt;
-&lt;pre&gt;&lt;co
-      
-    
-    </summary>
-    
-    
-      <category term="Java基础问题" scheme="http://erichunn.github.io/tags/Java%E5%9F%BA%E7%A1%80%E9%97%AE%E9%A2%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数</title>
-    <link href="http://erichunn.github.io/2018/09/11/Hadoop%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/"/>
-    <id>http://erichunn.github.io/2018/09/11/Hadoop权威指南学习笔记（1）/</id>
-    <published>2018-09-11T01:25:39.000Z</published>
-    <updated>2018-09-18T08:03:33.450Z</updated>
-    
-    <content type="html"><![CDATA[<p><strong>先看一段代码</strong></p><pre><code>package lianxi;import java.io.IOException;import org.apache.hadoop.io.IntWritable;import org.apache.hadoop.io.LongWritable;import org.apache.hadoop.io.Text;import org.apache.hadoop.mapred.MapReduceBase;import org.apache.hadoop.mapred.OutputCollector;import org.apache.hadoop.mapred.Reporter;import org.apache.hadoop.mapreduce.Mapper;import org.apache.hadoop.mapreduce.lib.map.WrappedMapper.Context;public class MaxTemperatureMapper extends MapReduceBase        implements org.apache.hadoop.mapred.Mapper&lt;LongWritable, Text, Text, IntWritable&gt; {    private static final int MISSING = 9999;    public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {        String line = value.toString();        String year = line.substring(15, 19);        int airTemperature;        if (line.charAt(87) == &apos;+&apos;) {// parseInt doesn&apos;t like leading plus signs            airTemperature = Integer.parseInt(line.substring(88, 92));        } else {            airTemperature = Integer.parseInt(line.substring(87, 92));        }        String quality = line.substring(92, 93);        if (airTemperature != MISSING &amp;&amp; quality.matches(&quot;[01459]&quot;)) {            context.write(new Text(year), new IntWritable(airTemperature));        }    }    @Override    public void map(LongWritable arg0, Text arg1, OutputCollector&lt;Text, IntWritable&gt; arg2, Reporter arg3)            throws IOException {        // TODO Auto-generated method stub    }}</code></pre><h2 id="这个里面的涉及到的JS的函数："><a href="#这个里面的涉及到的JS的函数：" class="headerlink" title="这个里面的涉及到的JS的函数："></a>这个里面的涉及到的JS的函数：</h2><hr><p><strong><em>toString:toString()</em></strong> 方法可把一个逻辑值转换为字符串，并返回结果。</p><hr><p><strong><em>substring:substring()</em></strong> 方法用于提取字符串中介于两个指定下标之间的字符。</p><p><strong>语法</strong><br>stringObject.substring(start,stop)<br><strong>返回值</strong><br>一个新的字符串，该字符串值包含 stringObject 的一个子字符串，其内容是从 start 处到 stop-1 处的所有字符，其长度为 stop 减 start。</p><p><strong>说明</strong><br>substring() 方法返回的子串包括 start 处的字符，但不包括 stop 处的字符。</p><p>如果参数 start 与 stop 相等，那么该方法返回的就是一个空串（即长度为 0 的字符串）。如果 start 比 stop 大，那么该方法在提取子串之前会先交换这两个参数。</p><hr><p><strong><em>chartAt</em></strong>:<br>charAt() 方法可返回指定位置的字符。</p><p>请注意，JavaScript 并没有一种有别于字符串类型的字符数据类型，所以返回的字符是长度为 1 的字符串</p><p><strong>语法</strong><br>stringObject.charAt(index)</p><p><strong>注释</strong>：字符串中第一个字符的下标是 0。如果参数 index 不在 0 与 string.length 之间，该方法将返回一个空字符串。</p><hr><h3 id="关于Integer-方法摘要"><a href="#关于Integer-方法摘要" class="headerlink" title="关于Integer 方法摘要"></a>关于Integer 方法摘要</h3><p><img src="https://i.imgur.com/9fKYBCw.png" alt=""><br><img src="https://i.imgur.com/BfDoR8R.png" alt=""><br><img src="https://i.imgur.com/gmadVGN.png" alt=""><br><img src="https://i.imgur.com/yEFgKbR.png" alt=""></p><p>这里使用的函数是：<strong><em>paresInt(String int)</em></strong>:将字符串参数作为有符号的十进制整数进行分析。</p><p>语法： parseInt(string, radix)</p><p><img src="https://i.imgur.com/Onn9O0h.png" alt=""></p><pre><code>parseInt(&quot;10&quot;);            //返回 10parseInt(&quot;19&quot;,10);        //返回 19 (10+9)parseInt(&quot;11&quot;,2);        //返回 3 (2+1)parseInt(&quot;17&quot;,8);        //返回 15 (8+7)parseInt(&quot;1f&quot;,16);        //返回 31 (16+15)parseInt(&quot;010&quot;);        //未定：返回 10 或 8</code></pre><hr><p><strong><em>matches()</em></strong> 方法用于检测字符串是否匹配给定的正则表达式。</p><p>调用此方法的 str.matches(regex) 形式与以下表达式产生的结果完全相同：</p><p>在字符串匹配给定的正则表达式时，返回 true。</p><pre><code>public class Test {    public static void main(String args[]) {        String Str = new String(&quot;www.runoob.com&quot;);        System.out.print(&quot;返回值 :&quot; );        System.out.println(Str.matches(&quot;(.*)runoob(.*)&quot;));        System.out.print(&quot;返回值 :&quot; );        System.out.println(Str.matches(&quot;(.*)google(.*)&quot;));        System.out.print(&quot;返回值 :&quot; );        System.out.println(Str.matches(&quot;www(.*)&quot;));    }}以上程序执行结果为：返回值 :true返回值 :false返回值 :true</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;strong&gt;先看一段代码&lt;/strong&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;package lianxi;
-
-import java.io.IOException;
-
-import org.apache.hadoop.io.IntWritable;
-import org.
-      
-    
-    </summary>
-    
-      <category term="Hadoop" scheme="http://erichunn.github.io/categories/Hadoop/"/>
-    
-    
-      <category term="Hadoop权威指南" scheme="http://erichunn.github.io/tags/Hadoop%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/"/>
-    
-      <category term="MapReduce学习" scheme="http://erichunn.github.io/tags/MapReduce%E5%AD%A6%E4%B9%A0/"/>
-    
-      <category term="JS函数学习" scheme="http://erichunn.github.io/tags/JS%E5%87%BD%E6%95%B0%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   

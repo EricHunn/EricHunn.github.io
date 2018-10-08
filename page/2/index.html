@@ -328,6 +328,534 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之进程查看/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/18/Linux基础之进程查看/" itemprop="url">Linux基础之进程查看</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T20:10:44+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="job"><a href="#job" class="headerlink" title="job"></a>job</h2><hr>
+<p>放到后台运行的进程.<br>1.将程序放到后台运行,以&amp;结尾.</p>
+<pre><code>$&gt;nano b.txt &amp;
+</code></pre><p>2.查看后台运行的jobs数</p>
+<pre><code>$&gt;jobs
+</code></pre><p>3.切换后台作业到前台来.</p>
+<pre><code>$&gt;fg %n                //n是job编号.
+</code></pre><p>4.前台正在的进程，放到后台。</p>
+<pre><code>ctrl + z
+</code></pre><p>5.让后作业运行</p>
+<pre><code>$&gt;bg %1        //
+</code></pre><p>6.杀死作业</p>
+<pre><code>$&gt;kill %1    //
+</code></pre><hr>
+<pre><code>man + 命令    ：查看该命令详细帮助
+</code></pre><hr>
+<h2 id="进程查看-prcess-show"><a href="#进程查看-prcess-show" class="headerlink" title="进程查看,prcess show"></a>进程查看,prcess show</h2><hr>
+<pre><code>$&gt;ps -Af |grep gnome        //-A:所有进程  -f:所有列格式.
+
+$&gt;top                        //动态显示进程信息。含有cpu、内存的使用情况.
+                            //q,按照q退出。
+</code></pre><h2 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h2><pre><code>剪切显示文件的每一行。
+$&gt;cut -c 1-5 a.txt                    //从第一个字符开始,下标从1开始。
+$&gt;ps -Af | cut -c 45-80 | more        //吧PS里面获得的内容剪切显示，显示没一行的45-80，翻页查看
+</code></pre><h2 id="查看帮助"><a href="#查看帮助" class="headerlink" title="查看帮助"></a>查看帮助</h2><pre><code>$&gt;help            //查看os内置的命令
+
+$&gt;man ifcon fig    //查看特定命令
+
+$&gt;ifconfig --help
+$&gt;ifconfig -h
+
+$&gt;info ifconfig    //
+</code></pre><h2 id="磁盘分区使用"><a href="#磁盘分区使用" class="headerlink" title="磁盘分区使用"></a>磁盘分区使用</h2><pre><code>$&gt;fdisk -l /dev/sda
+</code></pre><p>里面的中括号是可选的，尖括号是必须要写的</p>
+<p><img src="https://i.imgur.com/kxOQiFw.png" alt=""></p>
+<p>里面sad是磁盘，sda1是分区。sd1，sd2，sd3是磁盘的三个分区。</p>
+<p><img src="https://i.imgur.com/OuJzwf1.png" alt=""></p>
+<p><img src="https://i.imgur.com/dfgfkKL.png" alt=""></p>
+<h2 id="查看磁盘使用情况-disk-free"><a href="#查看磁盘使用情况-disk-free" class="headerlink" title="查看磁盘使用情况(disk free)"></a>查看磁盘使用情况(disk free)</h2><pre><code>$&gt;df -ah /home/centos        //查看
+</code></pre><p><img src="https://i.imgur.com/JcXk8Fl.png" alt=""></p>
+<p><img src="https://i.imgur.com/KuqoyN5.png" alt=""></p>
+<p><img src="https://i.imgur.com/aibzJWn.png" alt=""></p>
+<h2 id="dirname"><a href="#dirname" class="headerlink" title="dirname"></a>dirname</h2><p>取出指定地址的上级目录.</p>
+<pre><code>$&gt;dirname /a/b/c/d
+$&gt;/a/b/c
+</code></pre><h2 id="basename"><a href="#basename" class="headerlink" title="basename"></a>basename</h2><p>取出当前地址的上级目录.</p>
+<pre><code>$&gt;dirname /a/b/c/d
+$&gt;d
+</code></pre><h2 id="主机名"><a href="#主机名" class="headerlink" title="主机名"></a>主机名</h2><pre><code>$&gt;hostname        //显式主机名
+
+$&gt;修改主机名(sudo)
+    [/etc/hostname]
+    s200
+</code></pre><h2 id="关机重启命令"><a href="#关机重启命令" class="headerlink" title="关机重启命令"></a>关机重启命令</h2><pre><code>$&gt;reboot        //重启
+$&gt;halt            //停止,黑屏
+                //halt -p  === poweroff
+                //halt -r  === reboot
+
+$&gt;poweroff        //关机
+$&gt;shutdown        //shutdown now,    
+</code></pre><h2 id="命令嵌套"><a href="#命令嵌套" class="headerlink" title="命令嵌套"></a>命令嵌套</h2><p>1.使用<code></code></p>
+<pre><code>$&gt;echo `cat b.txt`    //命令解析,无法嵌套
+$&gt;$(... $())        //支持命令的嵌套
+</code></pre><p>2.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之符号连接/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/18/Linux基础之符号连接/" itemprop="url">Linux基础之符号连接</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T19:04:09+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><hr>
+<pre><code>r        //100 = 4
+        //文件  :读取内容，
+        //文件夹:是查看文件夹的内容
+w        //文件  :写数据到文件
+        //文件夹:增删文件.
+        //10 = 2
+
+x        //文件  : 运行程序
+        //文件夹: 进入该目录.
+        // 1 = 1
+</code></pre><h2 id="权限控制涉及范围"><a href="#权限控制涉及范围" class="headerlink" title="权限控制涉及范围"></a>权限控制涉及范围</h2><hr>
+<pre><code>U:user    ,rwx r-x ---
+G:group ,
+O:other , 
+</code></pre><h2 id="修改文件的owner-change-owner"><a href="#修改文件的owner-change-owner" class="headerlink" title="修改文件的owner,change owner"></a>修改文件的owner,change owner</h2><hr>
+<pre><code>chown -R root:root a.txt        //递归修改owner
+chmod -R 777 xxx                //递归修改权限.
+</code></pre><p>-R :递归显示</p>
+<p>-l :列表显示</p>
+<p>通过递归改变整个文件夹里面的文件的权限和所有者和所在组</p>
+<pre><code>chown -R root:root tmp
+</code></pre><h2 id="Linux文件夹"><a href="#Linux文件夹" class="headerlink" title="Linux文件夹"></a>Linux文件夹</h2><hr>
+<pre><code>/                //根目录
+
+/bin            //祖先
+/sbin            //祖先
+/usr/bin        //厂商
+/usr/sbin        //厂商
+/usr/local/bin    //用户
+/usr/local/sbin    //用户
+
+/etc            //配置目录
+/mnt            //挂载目录
+/boot            //引导目录
+/dev            //设备目录
+/lib[64]        //库目录
+
+
+-:文件
+d:目录
+l:link 等价于windows快捷方式
+b:block,块设备
+c:charactor,字符文件
+</code></pre><h2 id="创建连接文件"><a href="#创建连接文件" class="headerlink" title="创建连接文件"></a>创建连接文件</h2><hr>
+<h3 id="1-硬链接"><a href="#1-硬链接" class="headerlink" title="1.硬链接"></a>1.硬链接</h3><p>两个完全相同文件，类似于实时备份。两个文件之间完全同步。删除时，只删一个。</p>
+<p>目录不能使用硬链接。</p>
+<pre><code>ln a.txt alink            
+</code></pre><p>//a.txt:目标文件, alink:连接名称.</p>
+<pre><code>ln b.txt b_lnk
+</code></pre><p>//硬链接，修改连接文件，源文件也改变，但是删除连接文件源文件不被删除。</p>
+<p>硬链接用的很少，大多使用符号连接</p>
+<pre><code>mv b_link b.txt
+</code></pre><p>同一目录下改名字就用移动命令即可</p>
+<h3 id="2-符号连接-软连接"><a href="#2-符号连接-软连接" class="headerlink" title="2.符号连接-软连接"></a>2.符号连接-软连接</h3><p>相当于快捷方式.</p>
+<p>可以对文件，也可以对文件夹创建符号连接。</p>
+<p>符号连接存在的时候，可以删除目标文件。</p>
+<pre><code>$&gt;ln -s a.txt alink        
+</code></pre><p>//a.txt: 目标文件  alink:连接名称(symbolic)</p>
+<p><img src="https://i.imgur.com/PBw1m7U.png" alt=""></p>
+<p>blk存放的是路径的字节数大小。开始的时候只想本目录下的b.txt所以是5个字节，后来只想一个绝对路径就变成了28个字符。例子如下图所示</p>
+<p><img src="https://i.imgur.com/Mfril9n.png" alt=""></p>
+<p>删除掉了链接指向的文件，就会变成红色。删除后在加上就回复正常变成了浅蓝色。</p>
+<p><img src="https://i.imgur.com/OpwzbVW.png" alt=""></p>
+<hr>
+<h2 id="sudo"><a href="#sudo" class="headerlink" title="sudo"></a>sudo</h2><hr>
+<p>临时借用root的权限执行命令,只在当前命令下有效。命令结束后，还是原来用户。</p>
+<h3 id="1-配置当前用户具有sudo的执行权利"><a href="#1-配置当前用户具有sudo的执行权利" class="headerlink" title="1.配置当前用户具有sudo的执行权利"></a>1.配置当前用户具有sudo的执行权利</h3><pre><code>    [/etc/sudoers]
+    ...
+    root ALL=(ALL) ALL
+    centos ALL=(ALL) ALL
+    ...
+$&gt;sudo chown -R centos:centos .
+</code></pre><p>临时切换超级管理员权限</p>
+<pre><code>sudo
+</code></pre><p>切换到另外一个用户</p>
+<pre><code>su
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之虚拟机增强工具的安装-文本模式的安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/18/Linux基础之虚拟机增强工具的安装-文本模式的安装/" itemprop="url">Linux基础之虚拟机增强工具的安装-文本模式的安装</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T16:49:44+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="虚拟机增强工具"><a href="#虚拟机增强工具" class="headerlink" title="虚拟机增强工具"></a>虚拟机增强工具</h2><hr>
+<p>1.原理</p>
+<pre><code>插入iso(C:\myprograms\vmwar11.0.4-x86_64\linux.iso)文件到光盘中。
+</code></pre><p>2.vmware虚拟机菜单 -&gt; 重新安装vmware-tools</p>
+<p>3.自动会将C:\myprograms\vmwar11.0.4-x86_64\linux.iso镜像文件插入光驱中，并直接打开。</p>
+<p>4.复制VMwareTools-9.9.3-2759765.tar.gz文件到centos的桌面下。</p>
+<p>5.tar开该文件.</p>
+<pre><code>鼠标右键点击桌面的tar.gz文件，选择 extract here.
+</code></pre><p>6.进入桌面的vmware-tools-distrib目录下.</p>
+<pre><code>$&gt;su root
+$&gt;cd /home/centos/Desktop/vmware-tools-distrib
+</code></pre><p>7.执行安装脚本</p>
+<pre><code>$&gt;./vmware-install.pl
+    一路回车。
+    只到遇到Enjoy!!...
+</code></pre><h2 id="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："><a href="#图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：" class="headerlink" title="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："></a>图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：</h2><p><img src="https://i.imgur.com/AYS6NwH.png" alt=""></p>
+<p><img src="https://i.imgur.com/Tqry0O7.png" alt=""></p>
+<p><img src="https://i.imgur.com/BtRDRbm.png" alt=""></p>
+<hr>
+<p>在mini版的centos7下遇到了很多问题。又在大坑系列中也有这一部分。其实这部分遇到了很多问题，除了视频中的问题，按照如下所示可以完美解决：</p>
+<p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。</p>
+<p>然后按照视频上讲解的来安装不上。最后先是</p>
+<p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p>
+<p>这样子，然后</p>
+<p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p>
+<p>之后按照如图所示挂载即可</p>
+<p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p>
+<hr>
+<p>本视频还有一个while循环实现99乘法表的例子（我没细看）：</p>
+<p><img src="https://i.imgur.com/eEbodXt.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础基础———踩过的大坑/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1490,458 +2018,11 @@ show partition ado_order;来找到的。
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/12/Java中的总结合集（1）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/12/Java中的总结合集（1）/" itemprop="url">Java中的总结合集（1）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-12T21:31:06+08:00">
-                2018-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="关于构造函数"><a href="#关于构造函数" class="headerlink" title="关于构造函数"></a>关于构造函数</h1><p>构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。</p>
-<pre><code>public class sadf {
-    public static void main(String[] args) {
-        Cat cat = new Cat();
-        cat.cry();
-    }
-
-}
-
-abstract class Animal{
-    public String name;
-    public abstract void cry();
-    public void Animal() {
-        System.out.println(&quot;new Animal&quot;);
-    }
-}
-
-class Cat extends Animal{ 
-    public void cry() {
-        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">这样的函数运行之后是</span><br><span class="line"></span><br><span class="line">	喵喵</span><br></pre></td></tr></table></figure>
-</code></pre><p>因为Animal有void变成了一个函数。还有一个默认的空构造。</p>
-<p>应该去掉void。</p>
-<pre><code>public class sadf {
-    public static void main(String[] args) {
-        Cat cat = new Cat();
-        cat.cry();
-    }
-
-}
-
-abstract class Animal{
-    public String name;
-    public abstract void cry();
-    public Animal() {
-        System.out.println(&quot;new Animal&quot;);
-    }
-}
-
-class Cat extends Animal{ 
-    public void cry() {
-        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">***</span><br><span class="line">结果是：</span><br><span class="line"></span><br><span class="line">	new Animal</span><br><span class="line">	喵喵</span><br></pre></td></tr></table></figure>
-</code></pre><hr>
-<h1 id="关于抽象abstract"><a href="#关于抽象abstract" class="headerlink" title="关于抽象abstract"></a>关于抽象abstract</h1><pre><code>class ABSTACT {
-    public static void main(String[] args) {
-        JiaFeiCat j = new JiaFeiCat();
-
-    }
-}
-
-abstract class Animal {
-    abstract void cry();
-
-    public Animal() {
-        System.out.println(&quot;我是动物&quot;);
-    }
-
-}
-
-abstract class Cat extends Animal {
-    public Cat() {
-        System.out.println(&quot;我是猫&quot;);
-    }
-
-    final void catchMouse() {
-        System.out.println(&quot;猫能抓老鼠&quot;);
-    }
-
-}
-
-final class JiaFeiCat extends Cat {
-    public JiaFeiCat() {
-        System.out.println(&quot;我是加菲猫&quot;);
-    }
-
-    @Override
-    void cry() {
-        System.out.println(&quot;加菲猫会哭&quot;);
-
-    }
-
-}
-
-class BosiCat extends Cat {
-    public BosiCat() {
-        System.out.println(&quot;我叫波斯猫&quot;);
-    }
-
-    @Override
-    void cry() {
-        System.out.println(&quot;波斯猫会叫&quot;);
-
-    }
-
-}
-</code></pre><p>打印结果：</p>
-<pre><code>我是动物
-我是猫
-我是加菲猫
-</code></pre><p>运行成功<br>abstact抽象类方法可以在子类的子类中继承即可，不用一定在第一代子类中继承。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/11/Hadoop权威指南学习笔记（1）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/11/Hadoop权威指南学习笔记（1）/" itemprop="url">Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-11T09:25:39+08:00">
-                2018-09-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>先看一段代码</strong></p>
-<pre><code>package lianxi;
-
-import java.io.IOException;
-
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.MapReduceBase;
-import org.apache.hadoop.mapred.OutputCollector;
-import org.apache.hadoop.mapred.Reporter;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.map.WrappedMapper.Context;
-
-public class MaxTemperatureMapper extends MapReduceBase
-        implements org.apache.hadoop.mapred.Mapper&lt;LongWritable, Text, Text, IntWritable&gt; {
-    private static final int MISSING = 9999;
-
-    public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-
-        String line = value.toString();
-        String year = line.substring(15, 19);
-        int airTemperature;
-
-        if (line.charAt(87) == &apos;+&apos;) {// parseInt doesn&apos;t like leading plus signs
-            airTemperature = Integer.parseInt(line.substring(88, 92));
-        } else {
-            airTemperature = Integer.parseInt(line.substring(87, 92));
-        }
-        String quality = line.substring(92, 93);
-        if (airTemperature != MISSING &amp;&amp; quality.matches(&quot;[01459]&quot;)) {
-            context.write(new Text(year), new IntWritable(airTemperature));
-        }
-    }
-
-    @Override
-    public void map(LongWritable arg0, Text arg1, OutputCollector&lt;Text, IntWritable&gt; arg2, Reporter arg3)
-            throws IOException {
-        // TODO Auto-generated method stub
-
-    }
-}
-</code></pre><h2 id="这个里面的涉及到的JS的函数："><a href="#这个里面的涉及到的JS的函数：" class="headerlink" title="这个里面的涉及到的JS的函数："></a>这个里面的涉及到的JS的函数：</h2><hr>
-<p><strong><em>toString:toString()</em></strong> 方法可把一个逻辑值转换为字符串，并返回结果。</p>
-<hr>
-<p><strong><em>substring:substring()</em></strong> 方法用于提取字符串中介于两个指定下标之间的字符。</p>
-<p><strong>语法</strong><br>stringObject.substring(start,stop)<br><strong>返回值</strong><br>一个新的字符串，该字符串值包含 stringObject 的一个子字符串，其内容是从 start 处到 stop-1 处的所有字符，其长度为 stop 减 start。</p>
-<p><strong>说明</strong><br>substring() 方法返回的子串包括 start 处的字符，但不包括 stop 处的字符。</p>
-<p>如果参数 start 与 stop 相等，那么该方法返回的就是一个空串（即长度为 0 的字符串）。如果 start 比 stop 大，那么该方法在提取子串之前会先交换这两个参数。</p>
-<hr>
-<p><strong><em>chartAt</em></strong>:<br>charAt() 方法可返回指定位置的字符。</p>
-<p>请注意，JavaScript 并没有一种有别于字符串类型的字符数据类型，所以返回的字符是长度为 1 的字符串</p>
-<p><strong>语法</strong><br>stringObject.charAt(index)</p>
-<p><strong>注释</strong>：字符串中第一个字符的下标是 0。如果参数 index 不在 0 与 string.length 之间，该方法将返回一个空字符串。</p>
-<hr>
-<h3 id="关于Integer-方法摘要"><a href="#关于Integer-方法摘要" class="headerlink" title="关于Integer 方法摘要"></a>关于Integer 方法摘要</h3><p><img src="https://i.imgur.com/9fKYBCw.png" alt=""><br><img src="https://i.imgur.com/BfDoR8R.png" alt=""><br><img src="https://i.imgur.com/gmadVGN.png" alt=""><br><img src="https://i.imgur.com/yEFgKbR.png" alt=""></p>
-<p>这里使用的函数是：<strong><em>paresInt(String int)</em></strong>:将字符串参数作为有符号的十进制整数进行分析。</p>
-<p>语法： parseInt(string, radix)</p>
-<p><img src="https://i.imgur.com/Onn9O0h.png" alt=""></p>
-<pre><code>parseInt(&quot;10&quot;);            //返回 10
-parseInt(&quot;19&quot;,10);        //返回 19 (10+9)
-parseInt(&quot;11&quot;,2);        //返回 3 (2+1)
-parseInt(&quot;17&quot;,8);        //返回 15 (8+7)
-parseInt(&quot;1f&quot;,16);        //返回 31 (16+15)
-parseInt(&quot;010&quot;);        //未定：返回 10 或 8
-</code></pre><hr>
-<p><strong><em>matches()</em></strong> 方法用于检测字符串是否匹配给定的正则表达式。</p>
-<p>调用此方法的 str.matches(regex) 形式与以下表达式产生的结果完全相同：</p>
-<p>在字符串匹配给定的正则表达式时，返回 true。</p>
-<pre><code>public class Test {
-    public static void main(String args[]) {
-        String Str = new String(&quot;www.runoob.com&quot;);
-
-        System.out.print(&quot;返回值 :&quot; );
-        System.out.println(Str.matches(&quot;(.*)runoob(.*)&quot;));
-
-        System.out.print(&quot;返回值 :&quot; );
-        System.out.println(Str.matches(&quot;(.*)google(.*)&quot;));
-
-        System.out.print(&quot;返回值 :&quot; );
-        System.out.println(Str.matches(&quot;www(.*)&quot;));
-    }
-}
-以上程序执行结果为：
-
-返回值 :true
-返回值 :false
-返回值 :true
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1991,7 +2072,7 @@ parseInt(&quot;010&quot;);        //未定：返回 10 或 8
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2067,7 +2148,7 @@ parseInt(&quot;010&quot;);        //未定：返回 10 或 8
               <ul class="links-of-blogroll-list">
                 
                   <li class="links-of-blogroll-item">
-                    <a href="http://https://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                    <a href="http://github.com/drakeet" title="Drakeet" target="_blank">Drakeet</a>
                   </li>
                 
               </ul>
