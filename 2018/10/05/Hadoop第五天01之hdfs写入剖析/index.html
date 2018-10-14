@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Hadoop,hdfs写入," />
 
 
 
@@ -81,17 +81,59 @@
 
 
 
-<meta name="description" content="大数据|动漫迷|科技控">
+<meta name="description" content="一段HDFS写入流源码分析。  首先这个得到了一个抽象类，这个FileSystemm是一个抽象类。  这个抽象类有子类，左边有一个箭头，点击得到了一个这个抽象类的所有的子类，简单看下，因为Hadoop包类的hadfs这个，得到的子类是DistributedFileSystem这个分布式文件系统。  也可以吧鼠标放到fs上会显示返回的类  也可以在IDEA的右下角的类标签里面找到：  也就是说返回了">
+<meta name="keywords" content="Hadoop,hdfs写入">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop第五天01之hdfs写入剖析">
 <meta property="og:url" content="http://erichunn.github.io/2018/10/05/Hadoop第五天01之hdfs写入剖析/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="大数据|动漫迷|科技控">
+<meta property="og:description" content="一段HDFS写入流源码分析。  首先这个得到了一个抽象类，这个FileSystemm是一个抽象类。  这个抽象类有子类，左边有一个箭头，点击得到了一个这个抽象类的所有的子类，简单看下，因为Hadoop包类的hadfs这个，得到的子类是DistributedFileSystem这个分布式文件系统。  也可以吧鼠标放到fs上会显示返回的类  也可以在IDEA的右下角的类标签里面找到：  也就是说返回了">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-10-05T08:31:19.635Z">
+<meta property="og:image" content="https://i.imgur.com/17cBkFO.png">
+<meta property="og:image" content="https://i.imgur.com/Rlbd5VC.png">
+<meta property="og:image" content="https://i.imgur.com/bzQ91XF.png">
+<meta property="og:image" content="https://i.imgur.com/JOfPZvk.png">
+<meta property="og:image" content="https://i.imgur.com/WSz2duV.png">
+<meta property="og:image" content="https://i.imgur.com/SKFBqkH.png">
+<meta property="og:image" content="https://i.imgur.com/0aIVTzf.png">
+<meta property="og:image" content="https://i.imgur.com/nnxWOri.png">
+<meta property="og:image" content="https://i.imgur.com/f434RJR.png">
+<meta property="og:image" content="https://i.imgur.com/4Cf1ljy.png">
+<meta property="og:image" content="https://i.imgur.com/lHPzWs4.png">
+<meta property="og:image" content="https://i.imgur.com/8CsurDw.png">
+<meta property="og:image" content="https://i.imgur.com/0f1RcbV.png">
+<meta property="og:image" content="https://i.imgur.com/MTsauqO.png">
+<meta property="og:image" content="https://i.imgur.com/nAIKdn5.png">
+<meta property="og:image" content="https://i.imgur.com/aLCcnkl.png">
+<meta property="og:image" content="https://i.imgur.com/pAFducf.png">
+<meta property="og:image" content="https://i.imgur.com/E8qEJy0.png">
+<meta property="og:image" content="https://i.imgur.com/RJ1vXHv.png">
+<meta property="og:image" content="https://i.imgur.com/RKkQGry.png">
+<meta property="og:image" content="https://i.imgur.com/qfwP1Yn.png">
+<meta property="og:image" content="https://i.imgur.com/rk8wX6W.png">
+<meta property="og:image" content="https://i.imgur.com/PjqlOXa.png">
+<meta property="og:image" content="https://i.imgur.com/97VYh5X.png">
+<meta property="og:image" content="https://i.imgur.com/2ExMNXU.png">
+<meta property="og:image" content="https://i.imgur.com/RG98Z9F.png">
+<meta property="og:image" content="https://i.imgur.com/dDhSzjg.png">
+<meta property="og:image" content="https://i.imgur.com/7Vkorih.png">
+<meta property="og:image" content="https://i.imgur.com/YSCeFmf.png">
+<meta property="og:image" content="https://i.imgur.com/jfWYEI1.png">
+<meta property="og:image" content="https://i.imgur.com/4iqESya.png">
+<meta property="og:image" content="https://i.imgur.com/FM0MpyT.png">
+<meta property="og:image" content="https://i.imgur.com/EVQOpOL.png">
+<meta property="og:image" content="https://i.imgur.com/UKsSHTO.png">
+<meta property="og:image" content="https://i.imgur.com/ifq7oZR.png">
+<meta property="og:image" content="https://i.imgur.com/WLEldHU.png">
+<meta property="og:image" content="https://i.imgur.com/TN0fU7T.png">
+<meta property="og:image" content="https://i.imgur.com/X3dHeJt.png">
+<meta property="og:image" content="https://i.imgur.com/W5NCoWA.png">
+<meta property="og:image" content="https://i.imgur.com/INeugMK.png">
+<meta property="og:updated_time" content="2018-10-08T13:12:40.378Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop第五天01之hdfs写入剖析">
-<meta name="twitter:description" content="大数据|动漫迷|科技控">
+<meta name="twitter:description" content="一段HDFS写入流源码分析。  首先这个得到了一个抽象类，这个FileSystemm是一个抽象类。  这个抽象类有子类，左边有一个箭头，点击得到了一个这个抽象类的所有的子类，简单看下，因为Hadoop包类的hadfs这个，得到的子类是DistributedFileSystem这个分布式文件系统。  也可以吧鼠标放到fs上会显示返回的类  也可以在IDEA的右下角的类标签里面找到：  也就是说返回了">
+<meta name="twitter:image" content="https://i.imgur.com/17cBkFO.png">
 
 
 
@@ -368,6 +410,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -395,7 +459,92 @@
       
 
       
-        
+        <p>一段HDFS写入流源码分析。</p>
+<p><img src="https://i.imgur.com/17cBkFO.png" alt=""></p>
+<p>首先这个得到了一个抽象类，这个FileSystemm是一个抽象类。</p>
+<p><img src="https://i.imgur.com/Rlbd5VC.png" alt=""></p>
+<p>这个抽象类有子类，左边有一个箭头，点击得到了一个这个抽象类的所有的子类，简单看下，因为Hadoop包类的hadfs这个，得到的子类是DistributedFileSystem这个分布式文件系统。</p>
+<p><img src="https://i.imgur.com/bzQ91XF.png" alt=""></p>
+<p>也可以吧鼠标放到fs上会显示返回的类</p>
+<p><img src="https://i.imgur.com/JOfPZvk.png" alt=""></p>
+<p>也可以在IDEA的右下角的类标签里面找到：</p>
+<p><img src="https://i.imgur.com/WSz2duV.png" alt=""></p>
+<p>也就是说返回了一个DistributedFIleSystem,</p>
+<p>然后文件系统fs.create调用了create方法返回了一个FSDataOutputStream流，这个是一个HDFS数据输出流</p>
+<p><img src="https://i.imgur.com/SKFBqkH.png" alt=""></p>
+<p><img src="https://i.imgur.com/0aIVTzf.png" alt=""></p>
+<p>单机F5单部进入第一个：</p>
+<p><img src="https://i.imgur.com/nnxWOri.png" alt=""></p>
+<p><img src="https://i.imgur.com/f434RJR.png" alt=""></p>
+<p><img src="https://i.imgur.com/4Cf1ljy.png" alt=""></p>
+<p>看这个，进到下一步，调用checkClosed()，方法，这个方法其实是继承FSOutput流里面的东西。  </p>
+<p><img src="https://i.imgur.com/lHPzWs4.png" alt=""><br>看到这个里面out=DFSOutputStream。这个是被装饰的流。调用这个流的write方法</p>
+<p>HDFS流是对DFS输出流的包装</p>
+<p>进去这个是装饰模式。</p>
+<p>在这个构造模式中也声明了字段。</p>
+<p><img src="https://i.imgur.com/8CsurDw.png" alt=""></p>
+<p>下一步：</p>
+<p><img src="https://i.imgur.com/0f1RcbV.png" alt=""></p>
+<p>调用了Close方法因为是继承    都是FSoutput流的子类。一个检查的方法，判断是否数组越界。</p>
+<p>下面这个for是个循环，循环写入，。 </p>
+<p><img src="https://i.imgur.com/MTsauqO.png" alt=""></p>
+<p>然后下一步，进入到write1方法。</p>
+<p><img src="https://i.imgur.com/nAIKdn5.png" alt=""></p>
+<p>里面的buf是一个缓冲区，count是一个成员常量</p>
+<p><img src="https://i.imgur.com/aLCcnkl.png" alt=""></p>
+<p>上图的buf看注释，是一个缓冲区用哦过来存储数据，在他被checksum校验和之前</p>
+<p>校验和就是检查是否是比之前设置的最小块大小大，而且还必须是512字节的倍数</p>
+<p><img src="https://i.imgur.com/pAFducf.png" alt=""></p>
+<p>上图点击进入到一个校验和类的里面看注释，校验和用于数据传输之前。</p>
+<p><img src="https://i.imgur.com/E8qEJy0.png" alt=""></p>
+<p>上图这两行，通过一个算法来实现校验和。通过CRC32算法类似于哈希算法。</p>
+<p><img src="https://i.imgur.com/RJ1vXHv.png" alt=""></p>
+<p>不管他，回到buf缓冲这个地方，单部进入</p>
+<p><img src="https://i.imgur.com/RKkQGry.png" alt=""></p>
+<p>首先在缓冲区进行一个判定</p>
+<p><img src="https://i.imgur.com/qfwP1Yn.png" alt=""></p>
+<p>拷贝本地数据到本地的一个buf，显示Localbuffer=4608,count=0.要拷贝的字节是4608。<br>如果拷贝的内容没有缓冲区大就考数据内容，要是比缓冲区大的话，就拷贝缓冲区大小的内容。</p>
+<p><img src="https://i.imgur.com/rk8wX6W.png" alt=""></p>
+<p>在单部进入到上图。</p>
+<p><img src="https://i.imgur.com/PjqlOXa.png" alt=""></p>
+<p>返回到代码。进入到源代码中，如上图</p>
+<p>在单部进入到这个Close里面：如下图：<br><img src="https://i.imgur.com/97VYh5X.png" alt=""></p>
+<p>这个close是out.close。out是调用父类的close方法，而且父类还是一个包装类，所以进入了包装的列的close方法。<br>再进入到close()方法。如下图：</p>
+<p><img src="https://i.imgur.com/2ExMNXU.png" alt=""></p>
+<p>out的本类HDFSOutputStream，然后这个又是一个装饰类，本质上是DFSOutputStream这个类的方法。</p>
+<p>单部进入到Out里面，看一下调用的到底是谁的out。再单部进入到Out里面</p>
+<p><img src="https://i.imgur.com/RG98Z9F.png" alt=""></p>
+<p>看注释，关闭输出流并且    释放与之相关联的系统资源。<br>上图最终进入到了DFSOutputstream的close()方法里面了。</p>
+<p><img src="https://i.imgur.com/dDhSzjg.png" alt=""></p>
+<p>接上图，看到在这个close(）方法里面有一个closeImp（)方法。调用自己的关闭实现方法<br>还在这个类里面执行呢：继续在这个类里面往下走:如下图：</p>
+<p><img src="https://i.imgur.com/7Vkorih.png" alt=""></p>
+<p>这个里面有一个flushbuffer()方法， 在单部进入到这个方法里面。如下图：</p>
+<p><img src="https://i.imgur.com/YSCeFmf.png" alt=""></p>
+<p>看到这个图里面this和当前类不太一样说明这两个东西也是继承关系。</p>
+<p>清理缓冲区两个参数，看注释：强制任何输出流字节被校验和并且被写入底层的输出流。</p>
+<p>再单步进入：</p>
+<p><img src="https://i.imgur.com/jfWYEI1.png" alt=""></p>
+<p><img src="https://i.imgur.com/4iqESya.png" alt=""></p>
+<p>看到如上图的内容。然后到了writeChecksumChunks这个方法里面，单部进入到这个里面：</p>
+<p><img src="https://i.imgur.com/FM0MpyT.png" alt=""></p>
+<p>对给定的数据小块来生成校验和，并且根据小块和校验和给底层的数据输出流。 </p>
+<p>单部进入到这个sum.calculateChunckedSum方法里面。</p>
+<p><img src="https://i.imgur.com/EVQOpOL.png" alt=""></p>
+<p><img src="https://i.imgur.com/UKsSHTO.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/ifq7oZR.png" alt=""></p>
+<p>上图吧数据写入了底层里面去了。</p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/WLEldHU.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/TN0fU7T.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/X3dHeJt.png" alt=""></p>
+<p><img src="https://i.imgur.com/W5NCoWA.png" alt=""></p>
+<p>上图就是将底层的内容打成包，再去通过网络传输。在包里面加编号和序号，也就是加顺序。</p>
+<p><img src="https://i.imgur.com/INeugMK.png" alt=""></p>
+<p>往下不写了太多了。现在的视频位置是hdfs写入剖析2的开头。</p>
+
       
     </div>
     
@@ -447,6 +596,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+            <a href="/tags/hdfs写入/" rel="tag"># hdfs写入</a>
+          
+        </div>
+      
 
       
       
@@ -465,6 +622,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/11/Hadoop第六天之Yarn作业提交/" rel="prev" title="Hadoop第六天之Yarn作业提交">
+                Hadoop第六天之Yarn作业提交 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -541,7 +702,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -563,7 +724,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

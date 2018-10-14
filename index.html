@@ -328,6 +328,417 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/11/Hadoop第六天之Yarn作业提交/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/11/Hadoop第六天之Yarn作业提交/" itemprop="url">Hadoop第六天之Yarn作业提交</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-11T15:48:32+08:00">
+                2018-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="本地模式job提交流程"><a href="#本地模式job提交流程" class="headerlink" title="本地模式job提交流程"></a>本地模式job提交流程</h2><pre><code>mr.Job = new Job();
+job.setxxx();
+JobSubmitter.提交
+LocalJobRunner.Job();
+start();
+</code></pre><h2 id="hdfs-write"><a href="#hdfs-write" class="headerlink" title="hdfs write"></a>hdfs write</h2><pre><code>packet,
+</code></pre><h2 id="hdfs-切片计算方式"><a href="#hdfs-切片计算方式" class="headerlink" title="hdfs 切片计算方式"></a>hdfs 切片计算方式</h2><pre><code>getFormatMinSplitSize() = 1
+
+//最小值(&gt;=1)                            1                        0
+long minSize = Math.max(getFormatMinSplitSize(), getMinSplitSize(job));
+
+//最大值(&lt;= Long.Max , mapreduce.input.fileinputformat.split.maxsize=)
+long maxSize = getMaxSplitSize(job);
+
+//得到block大小
+long blockSize = file.getBlockSize();
+
+//minSplit maxSplit blockSize
+//Math.max(minSize, Math.min(maxSize, blockSize));
+</code></pre><p>LF : Line feed,换行符<br>private static final byte CR = ‘\r’;<br>private static final byte LF = ‘\n’;</p>
+<h2 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h2><pre><code>1.Windows
+    源文件大小:82.8k
+    源文件类型:txt
+    压缩性能比较
+                |    DeflateCodec    GzipCodec    BZip2Codec    Lz4Codec    SnappyCodec    |结论
+    ------------|-------------------------------------------------------------------|----------------------
+    压缩时间(ms)|    450                7            196            44            不支持        |Gzip &gt; Lz4 &gt; BZip2 &gt; Deflate
+    ------------|-------------------------------------------------------------------|----------------------
+    解压时间(ms)|    444                66            85            33                        |lz4  &gt; gzip &gt; bzip2 &gt; Deflate
+    ------------|-------------------------------------------------------------------|----------------------
+    占用空间(k)    |    19k                19k            17k            31k            不支持        |Bzip &gt; Deflate = Gzip &gt; Lz4
+                |                                                                    |
+
+2.CentOS
+    源文件大小:82.8k
+    源文件类型:txt
+                |    DeflateCodec    GzipCodec    BZip2Codec    Lz4Codec    LZO        SnappyCodec    |结论
+    ------------|---------------------------------------------------------------------------|----------------------
+    压缩时间(ms)|    944                77            261            53            77        不支持        |Gzip &gt; Lz4 &gt; BZip2 &gt; Deflate
+    ------------|---------------------------------------------------------------------------|----------------------
+    解压时间(ms)|    67                66            106            52            73                    |lz4  &gt; gzip &gt; Deflate&gt; lzo &gt; bzip2 
+    ------------|---------------------------------------------------------------------------|----------------------
+    占用空间(k)    |    19k                19k            17k            31k            34k                    |Bzip &gt; Deflate = Gzip &gt; Lz4 &gt; lzo
+</code></pre><h2 id="远程调试"><a href="#远程调试" class="headerlink" title="远程调试"></a>远程调试</h2><pre><code>1.设置服务器java vm的-agentlib:jdwp选项.
+[server]
+//windwos
+//set JAVA_OPTS=%JAVA_OPTS% -agentlib:jdwp=transport=dt_socket,address=8888,server=y,suspend=n
+
+//linux
+export HADOOP_CLIENT_OPTS=-agentlib:jdwp=transport=dt_socket,address=8888,server=y,suspend=y
+
+2.在server启动java程序
+    hadoop jar HdfsDemo.jar com.it18zhang.hdfs.mr.compress.TestCompress
+
+3.server会暂挂在8888.
+    Listening ...
+
+4.客户端通过远程调试连接到远程主机的8888.
+
+5.客户端就可以调试了。
+</code></pre><p>hadoop jar<br>java </p>
+<p>hadoop jar com.it18zhang.hdfs.mr.compress.TestCompress</p>
+<p>export HADOOP_CLIENT_OPTS=-agentlib:jdwp=transport=dt_socket,address=8888,server=y,suspend=y</p>
+<h2 id="在pom-xml中引入新的插件-maven-antrun-plugin-实现文件的复制"><a href="#在pom-xml中引入新的插件-maven-antrun-plugin-实现文件的复制" class="headerlink" title="在pom.xml中引入新的插件(maven-antrun-plugin),实现文件的复制."></a>在pom.xml中引入新的插件(maven-antrun-plugin),实现文件的复制.</h2><pre><code>[pom.xml]
+&lt;project&gt;
+    ...
+    &lt;build&gt;
+        &lt;plugins&gt;
+            ...
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
+                &lt;version&gt;1.8&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;phase&gt;package&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;run&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+                            &lt;tasks&gt;
+                                &lt;echo&gt;---------开始复制jar包到共享目录下----------&lt;/echo&gt;
+                                &lt;delete file=&quot;D:\downloads\bigdata\data\HdfsDemo-1.0-SNAPSHOT.jar&quot;&gt;&lt;/delete&gt;
+                                &lt;copy file=&quot;target/HdfsDemo-1.0-SNAPSHOT.jar&quot; toFile=&quot;D:\downloads\bigdata\data\HdfsDemo.jar&quot;&gt;
+                                &lt;/copy&gt;
+                            &lt;/tasks&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+    ...
+&lt;/project&gt;
+</code></pre><h2 id="在centos上使用yum安装snappy压缩库文件"><a href="#在centos上使用yum安装snappy压缩库文件" class="headerlink" title="在centos上使用yum安装snappy压缩库文件"></a>在centos上使用yum安装snappy压缩库文件</h2><pre><code>[google snappy]
+$&gt;sudo yum search snappy                #查看是否有snappy库
+$&gt;sudo yum install -y snappy.x86_64        #安装snappy压缩解压缩库
+</code></pre><h2 id="库文件"><a href="#库文件" class="headerlink" title="库文件"></a>库文件</h2><pre><code>windows    :dll(dynamic linked library)
+linux    :so(shared object)
+</code></pre><h2 id="LZO"><a href="#LZO" class="headerlink" title="LZO"></a>LZO</h2><pre><code>1.在pom.xml引入lzo依赖
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;HdfsDemo&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;packaging&gt;jar&lt;/packaging&gt;
+        &lt;build&gt;
+            &lt;plugins&gt;
+                &lt;plugin&gt;
+                    &lt;groupId&gt;org.apache.maven.plugins
+                    &lt;/groupId&gt;
+                    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                    &lt;configuration&gt;
+                        &lt;source&gt;1.8&lt;/source&gt;
+                        &lt;target&gt;1.8&lt;/target&gt;
+                    &lt;/configuration&gt;
+                &lt;/plugin&gt;
+                &lt;plugin&gt;
+                    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                    &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
+                    &lt;version&gt;1.8&lt;/version&gt;
+                    &lt;executions&gt;
+                        &lt;execution&gt;
+                            &lt;phase&gt;package&lt;/phase&gt;
+                            &lt;goals&gt;
+                                &lt;goal&gt;run&lt;/goal&gt;
+                            &lt;/goals&gt;
+                            &lt;configuration&gt;
+                                &lt;tasks&gt;
+                                    &lt;echo&gt;---------开始复制jar包到共享目录下----------&lt;/echo&gt;
+                                    &lt;delete file=&quot;D:\downloads\bigdata\data\HdfsDemo-1.0-SNAPSHOT.jar&quot;&gt;&lt;/delete&gt;
+                                    &lt;copy file=&quot;target/HdfsDemo-1.0-SNAPSHOT.jar&quot; toFile=&quot;D:\downloads\bigdata\data\HdfsDemo.jar&quot;&gt;
+                                    &lt;/copy&gt;
+                                &lt;/tasks&gt;
+                            &lt;/configuration&gt;
+                        &lt;/execution&gt;
+                    &lt;/executions&gt;
+                &lt;/plugin&gt;
+            &lt;/plugins&gt;
+        &lt;/build&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;
+                &lt;artifactId&gt;hadoop-client&lt;/artifactId&gt;
+                &lt;version&gt;2.7.3&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;
+                &lt;artifactId&gt;hadoop-yarn-common&lt;/artifactId&gt;
+                &lt;version&gt;2.7.3&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;
+                &lt;artifactId&gt;hadoop-yarn-client&lt;/artifactId&gt;
+                &lt;version&gt;2.7.3&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;
+                &lt;artifactId&gt;hadoop-yarn-server-resourcemanager&lt;/artifactId&gt;
+                &lt;version&gt;2.7.3&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.anarres.lzo&lt;/groupId&gt;
+                &lt;artifactId&gt;lzo-hadoop&lt;/artifactId&gt;
+                &lt;version&gt;1.0.0&lt;/version&gt;
+                &lt;scope&gt;compile&lt;/scope&gt;
+            &lt;/dependency&gt;
+
+            &lt;dependency&gt;
+                &lt;groupId&gt;junit&lt;/groupId&gt;
+                &lt;artifactId&gt;junit&lt;/artifactId&gt;
+                &lt;version&gt;4.11&lt;/version&gt;
+            &lt;/dependency&gt;
+
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+2.在centos上安装lzo库
+    $&gt;sudo yum -y install lzo
+
+3.使用mvn命令下载工件中的所有依赖
+    进入pom.xml所在目录，运行cmd：
+    mvn -DoutputDirectory=./lib -DgroupId=com.it18zhang -DartifactId=HdfsDemo -Dversion=1.0-SNAPSHOT dependency:copy-dependencies
+
+4.在lib下存放依赖所有的第三方jar
+
+5.找出lzo-hadoop.jar + lzo-core.jar复制到hadoop的响应目录下。
+    $&gt;cp lzo-hadoop.jar lzo-core.jar /soft/hadoop/shared/hadoop/common/lib
+
+6.执行远程程序即可。
+</code></pre><h2 id="修改maven使用aliyun镜像。"><a href="#修改maven使用aliyun镜像。" class="headerlink" title="修改maven使用aliyun镜像。"></a>修改maven使用aliyun镜像。</h2><pre><code>[maven/conf/settings.xml]
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;
+          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;
+  &lt;pluginGroups&gt;
+  &lt;/pluginGroups&gt;
+
+  &lt;proxies&gt;
+  &lt;/proxies&gt;
+
+&lt;servers&gt;
+    &lt;server&gt;
+        &lt;id&gt;releases&lt;/id&gt;
+        &lt;username&gt;admin&lt;/username&gt;
+        &lt;password&gt;admin123&lt;/password&gt;
+    &lt;/server&gt;
+    &lt;server&gt;
+        &lt;id&gt;snapshots&lt;/id&gt;
+        &lt;username&gt;admin&lt;/username&gt;
+        &lt;password&gt;admin123&lt;/password&gt;
+    &lt;/server&gt;
+    &lt;server&gt;
+        &lt;id&gt;Tomcat7&lt;/id&gt;
+        &lt;username&gt;tomcat&lt;/username&gt;
+        &lt;password&gt;tomcat&lt;/password&gt;
+    &lt;/server&gt;
+&lt;/servers&gt;
+
+&lt;mirrors&gt;
+     &lt;mirror&gt;
+        &lt;id&gt;nexus-aliyun&lt;/id&gt;
+        &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
+        &lt;name&gt;Nexus aliyun&lt;/name&gt;
+        &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public&lt;/url&gt;
+    &lt;/mirror&gt; 
+&lt;/mirrors&gt;
+&lt;/settings&gt;
+</code></pre><h2 id="文件格式-SequenceFile"><a href="#文件格式-SequenceFile" class="headerlink" title="文件格式:SequenceFile"></a>文件格式:SequenceFile</h2><pre><code>1.SequenceFile
+    Key-Value对方式。
+
+2.不是文本文件，是二进制文件。
+
+3.可切割
+    因为有同步点。
+    reader.sync(pos);    //定位到pos之后的第一个同步点。
+    writer.sync();        //写入同步点
+
+4.压缩方式
+    不压缩
+    record压缩            //只压缩value
+    块压缩                //按照多个record形成一个block.
+</code></pre><h2 id="文件格式-MapFile"><a href="#文件格式-MapFile" class="headerlink" title="文件格式:MapFile"></a>文件格式:MapFile</h2><pre><code>1.Key-value
+2.key按升序写入(可重复)。
+3.mapFile对应一个目录，目录下有index和data文件,都是序列文件。
+4.index文件划分key区间,用于快速定位。
+</code></pre><h2 id="自定义分区函数"><a href="#自定义分区函数" class="headerlink" title="自定义分区函数"></a>自定义分区函数</h2><pre><code>1.定义分区类
+    public class MyPartitioner extends Partitioner&lt;Text, IntWritable&gt;{
+        public int getPartition(Text text, IntWritable intWritable, int numPartitions) {
+            return 0;
+        }
+    }
+2.程序中配置使用分区类
+    job.setPartitionerClass(MyPartitioner.class);
+</code></pre><h2 id="combinerd（合成）-继承了Reducer-任何的Reducer类都能被他使用"><a href="#combinerd（合成）-继承了Reducer-任何的Reducer类都能被他使用" class="headerlink" title="combinerd（合成） 继承了Reducer 任何的Reducer类都能被他使用"></a>combinerd（合成） 继承了Reducer 任何的Reducer类都能被他使用</h2><p> Map端的Reducer  预先化简<br>1，为了减少网络带宽 将Map端发出的的数据进行聚合 并不是所有的都可以用combiner<br>2,combiner </p>
+<hr>
+<p>切片个数是四个，mapper就需要也是4个 </p>
+<p>下图是一个客户端的写入过程：首先形成一个管线，因为有很多节点，节点形成管线，现在本地构建2个队列，一个发送队列sendQueue，一个是确认队列ackQueue，客户端吧消息封装成Packet放到队列里面，而且结束后会放一个空包进去，发送的话，是以管线的方式发给A，A在发给B，B在发给C，在发送的过程中有一个校验的过程chunk(4+512)就是4个校验位+512个数据字节，一个Packet是64K+33个头的字节，在确认队列里面是一个编号seqNo如果在丢列中ABC中都回执，就吧seqNo在ackQueue中移除。发送如果失败，就吧管线重新建立，吧没法送的包返回到队列之前的一个容错机制。<br><img src="https://i.imgur.com/43B2Ebp.png" alt=""></p>
+<p>输入格式定位文件，在输入格式中间有一个交互reader，在Map和Reduce都有这么一些方法，在Mapper和Reducer中有回调方法，就是本来使用的是子类的方法，但是子类中调用有父类的的run方法，然后run方法里面有reduce方法也就又调用了子类的方法，这叫做回调 。Mapper是通过reader读取下一条数据传进来的。Map和Reduce中间有一个shuffer的混洗过程，网络间分发数据的过程， Map里面先分区，分区个数等于Reduce的个数，所以有几个reduce就有几个分区，默认情况下，Map分区通过哈希算法来分区的，对K哈希。只要K相同，一定会被哈希到一个分区里面，分区也就是桶的概念，也就是只要K相同进入到同一个桶里面，只要是同一个分区就是进入到同一个reduce，默认情况下inputformat的格式，他的K就是偏移量。如果是图片格式的话就可能是别的。只有在文本输入的时候才是偏移量，当然也可以自己定义Inputformat格式。在mr计算之前切片就已经算好了，产生的切片文件和配置XML文件放到了临时目录下了。<br><img src="https://i.imgur.com/7qjZLGJ.png" alt=""></p>
+<p>看下图，首先客户端运行作业，第一步run job，第二部走ResourceManager，是Yarn层面，负责资源调度，所有集群的资源都属于ResourceManager，第二部get new application，首先得到应用的ID，第三部copyt job resources，复制切片信息和xml配置信息和jar包到HDFS，第四部提交给资源管理器，然后资源管理器start container，然后通过节点管理器启动一个MRAPPMaster（应用管理程序），第六步初始化Job，第七部检索切片信息，第八步请求资源管理器去分配一个资源列表，第九步启动节点管理器，通过节点管理器来启动一个JVM虚拟机，在虚拟机里面启动yarn子进程，第十部通过子进程读取切片信息，然后在运行MapTast或者ReduceTask<br><img src="https://i.imgur.com/lqVQLT1.png" alt=""></p>
+<p>客户端提取一个作业，然后联系资源管理器，为了得到id,在完全分布式下客户端client叫job，一旦提交就叫做application了，先请求，然后得到了appid返回给了客户端，第三部将作业信息上传到HDFS的临时目录，存档切片信息和jar包，然后找到节点管理器，然后NM孵化一个MRAPPMaster，然后检索HDFS文件系统，获取到有多少个要执行的并发任务，拿到任务之后，要求资源管理器分配一个集合，哪些节点可以用。 然后MRAppmaster在联系其他的NM，让NM去开启Yarn子进程，子进程在去检索HDFS信息，在开启Map和Reduce</p>
+<p>CR=‘\r’回车符<br>LF+’\n’换行符</p>
+<p>windows系统里面是\r\n。回车带换行。<br>linux系统只有一个\n</p>
+<p>切片是定义大方向的，阅读器recorderreader是控制细节的。切片定义任务数量，开几个map但是不一定是每个map都有任务。</p>
+<p><strong>切片问题</strong>是物理设置，但是是逻辑读取。</p>
+<p><img src="https://i.imgur.com/tgAbsGx.png" alt=""></p>
+<p>打个比方说上图这个东西比如说第一个例子，前面的设置物理划分，根据字节数划分成了4个切片，也就是有4个Mapper,然后四个切片开始读取，其中第一个物理切割到t但是实际上，由于切片读取到换行符所以，第一个Mapper也就是读取到了hello world tom，然后第二个，第二个偏移量是13+13.偏移量是13，在物理读取13个直接，但是由于Mapper检测不是行首，所以直接从下一行读取也在读取一整行</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/05/Hadoop第五天01之hdfs写入剖析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -370,6 +781,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -399,7 +832,92 @@
       
         
           
-            
+            <p>一段HDFS写入流源码分析。</p>
+<p><img src="https://i.imgur.com/17cBkFO.png" alt=""></p>
+<p>首先这个得到了一个抽象类，这个FileSystemm是一个抽象类。</p>
+<p><img src="https://i.imgur.com/Rlbd5VC.png" alt=""></p>
+<p>这个抽象类有子类，左边有一个箭头，点击得到了一个这个抽象类的所有的子类，简单看下，因为Hadoop包类的hadfs这个，得到的子类是DistributedFileSystem这个分布式文件系统。</p>
+<p><img src="https://i.imgur.com/bzQ91XF.png" alt=""></p>
+<p>也可以吧鼠标放到fs上会显示返回的类</p>
+<p><img src="https://i.imgur.com/JOfPZvk.png" alt=""></p>
+<p>也可以在IDEA的右下角的类标签里面找到：</p>
+<p><img src="https://i.imgur.com/WSz2duV.png" alt=""></p>
+<p>也就是说返回了一个DistributedFIleSystem,</p>
+<p>然后文件系统fs.create调用了create方法返回了一个FSDataOutputStream流，这个是一个HDFS数据输出流</p>
+<p><img src="https://i.imgur.com/SKFBqkH.png" alt=""></p>
+<p><img src="https://i.imgur.com/0aIVTzf.png" alt=""></p>
+<p>单机F5单部进入第一个：</p>
+<p><img src="https://i.imgur.com/nnxWOri.png" alt=""></p>
+<p><img src="https://i.imgur.com/f434RJR.png" alt=""></p>
+<p><img src="https://i.imgur.com/4Cf1ljy.png" alt=""></p>
+<p>看这个，进到下一步，调用checkClosed()，方法，这个方法其实是继承FSOutput流里面的东西。  </p>
+<p><img src="https://i.imgur.com/lHPzWs4.png" alt=""><br>看到这个里面out=DFSOutputStream。这个是被装饰的流。调用这个流的write方法</p>
+<p>HDFS流是对DFS输出流的包装</p>
+<p>进去这个是装饰模式。</p>
+<p>在这个构造模式中也声明了字段。</p>
+<p><img src="https://i.imgur.com/8CsurDw.png" alt=""></p>
+<p>下一步：</p>
+<p><img src="https://i.imgur.com/0f1RcbV.png" alt=""></p>
+<p>调用了Close方法因为是继承    都是FSoutput流的子类。一个检查的方法，判断是否数组越界。</p>
+<p>下面这个for是个循环，循环写入，。 </p>
+<p><img src="https://i.imgur.com/MTsauqO.png" alt=""></p>
+<p>然后下一步，进入到write1方法。</p>
+<p><img src="https://i.imgur.com/nAIKdn5.png" alt=""></p>
+<p>里面的buf是一个缓冲区，count是一个成员常量</p>
+<p><img src="https://i.imgur.com/aLCcnkl.png" alt=""></p>
+<p>上图的buf看注释，是一个缓冲区用哦过来存储数据，在他被checksum校验和之前</p>
+<p>校验和就是检查是否是比之前设置的最小块大小大，而且还必须是512字节的倍数</p>
+<p><img src="https://i.imgur.com/pAFducf.png" alt=""></p>
+<p>上图点击进入到一个校验和类的里面看注释，校验和用于数据传输之前。</p>
+<p><img src="https://i.imgur.com/E8qEJy0.png" alt=""></p>
+<p>上图这两行，通过一个算法来实现校验和。通过CRC32算法类似于哈希算法。</p>
+<p><img src="https://i.imgur.com/RJ1vXHv.png" alt=""></p>
+<p>不管他，回到buf缓冲这个地方，单部进入</p>
+<p><img src="https://i.imgur.com/RKkQGry.png" alt=""></p>
+<p>首先在缓冲区进行一个判定</p>
+<p><img src="https://i.imgur.com/qfwP1Yn.png" alt=""></p>
+<p>拷贝本地数据到本地的一个buf，显示Localbuffer=4608,count=0.要拷贝的字节是4608。<br>如果拷贝的内容没有缓冲区大就考数据内容，要是比缓冲区大的话，就拷贝缓冲区大小的内容。</p>
+<p><img src="https://i.imgur.com/rk8wX6W.png" alt=""></p>
+<p>在单部进入到上图。</p>
+<p><img src="https://i.imgur.com/PjqlOXa.png" alt=""></p>
+<p>返回到代码。进入到源代码中，如上图</p>
+<p>在单部进入到这个Close里面：如下图：<br><img src="https://i.imgur.com/97VYh5X.png" alt=""></p>
+<p>这个close是out.close。out是调用父类的close方法，而且父类还是一个包装类，所以进入了包装的列的close方法。<br>再进入到close()方法。如下图：</p>
+<p><img src="https://i.imgur.com/2ExMNXU.png" alt=""></p>
+<p>out的本类HDFSOutputStream，然后这个又是一个装饰类，本质上是DFSOutputStream这个类的方法。</p>
+<p>单部进入到Out里面，看一下调用的到底是谁的out。再单部进入到Out里面</p>
+<p><img src="https://i.imgur.com/RG98Z9F.png" alt=""></p>
+<p>看注释，关闭输出流并且    释放与之相关联的系统资源。<br>上图最终进入到了DFSOutputstream的close()方法里面了。</p>
+<p><img src="https://i.imgur.com/dDhSzjg.png" alt=""></p>
+<p>接上图，看到在这个close(）方法里面有一个closeImp（)方法。调用自己的关闭实现方法<br>还在这个类里面执行呢：继续在这个类里面往下走:如下图：</p>
+<p><img src="https://i.imgur.com/7Vkorih.png" alt=""></p>
+<p>这个里面有一个flushbuffer()方法， 在单部进入到这个方法里面。如下图：</p>
+<p><img src="https://i.imgur.com/YSCeFmf.png" alt=""></p>
+<p>看到这个图里面this和当前类不太一样说明这两个东西也是继承关系。</p>
+<p>清理缓冲区两个参数，看注释：强制任何输出流字节被校验和并且被写入底层的输出流。</p>
+<p>再单步进入：</p>
+<p><img src="https://i.imgur.com/jfWYEI1.png" alt=""></p>
+<p><img src="https://i.imgur.com/4iqESya.png" alt=""></p>
+<p>看到如上图的内容。然后到了writeChecksumChunks这个方法里面，单部进入到这个里面：</p>
+<p><img src="https://i.imgur.com/FM0MpyT.png" alt=""></p>
+<p>对给定的数据小块来生成校验和，并且根据小块和校验和给底层的数据输出流。 </p>
+<p>单部进入到这个sum.calculateChunckedSum方法里面。</p>
+<p><img src="https://i.imgur.com/EVQOpOL.png" alt=""></p>
+<p><img src="https://i.imgur.com/UKsSHTO.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/ifq7oZR.png" alt=""></p>
+<p>上图吧数据写入了底层里面去了。</p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/WLEldHU.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/TN0fU7T.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/X3dHeJt.png" alt=""></p>
+<p><img src="https://i.imgur.com/W5NCoWA.png" alt=""></p>
+<p>上图就是将底层的内容打成包，再去通过网络传输。在包里面加编号和序号，也就是加顺序。</p>
+<p><img src="https://i.imgur.com/INeugMK.png" alt=""></p>
+<p>往下不写了太多了。现在的视频位置是hdfs写入剖析2的开头。</p>
+
           
         
       
@@ -787,6 +1305,9 @@
 <hr>
 <p>克隆centos之后有时候出现这种情况</p>
 <p><img src="https://i.imgur.com/G7CLxft.png" alt=""></p>
+<hr>
+<p>IDEA的使用问题：<br>这个是什么快捷键。</p>
+<p><img src="https://i.imgur.com/hKrt9St.png" alt=""></p>
 
           
         
@@ -2109,147 +2630,6 @@ done
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/19/Linux基础之hostname/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/19/Linux基础之hostname/" itemprop="url">Linux基础之hostname</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-19T15:46:12+08:00">
-                2018-09-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="命令嵌套"><a href="#命令嵌套" class="headerlink" title="命令嵌套"></a>命令嵌套</h2><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用<code></code></h3><pre><code>$&gt;echo `cat b.txt`    //命令解析,无法嵌套
-$&gt;$(... $())        //支持命令的嵌套
-</code></pre><p><img src="https://i.imgur.com/wlI357k.png" alt=""></p>
-<h2 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h2><p>0.用户和组之间，一个用户可以属于多个组。</p>
-<pre><code>但是有一个首要组。
-</code></pre><p>1.adduser,等同于useradd</p>
-<p>符号链接。</p>
-<pre><code>/usr/sbin/adduser --&gt; /usr/sbin/useradd.
-</code></pre><p>2.useradd</p>
-<p>输入新密码.</p>
-<p>重复输入</p>
-<pre><code>$&gt;su root
-$&gt;useradd -m centos2
-$&gt;su root
-$&gt;passwd centos2
-
-
--m, --create-home             create the user&apos;s home directory
--p, --password PASSWORD       encrypted password of the new account
-</code></pre><p>3.使用方法</p>
-<pre><code>$&gt;su root
-$&gt;userdel -r centos2        //用户所在组目录也会被删除.在删除用户时候要用exit退出要删除的用户,删除的时候可能会exit好多次，因为会来回su。
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2304,7 +2684,7 @@ $&gt;userdel -r centos2        //用户所在组目录也会被删除.在删除�
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2326,7 +2706,7 @@ $&gt;userdel -r centos2        //用户所在组目录也会被删除.在删除�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
