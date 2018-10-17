@@ -92,8 +92,10 @@
 <meta property="og:image" content="https://i.imgur.com/43B2Ebp.png">
 <meta property="og:image" content="https://i.imgur.com/7qjZLGJ.png">
 <meta property="og:image" content="https://i.imgur.com/lqVQLT1.png">
+<meta property="og:image" content="https://i.imgur.com/bn7A9H6.png">
 <meta property="og:image" content="https://i.imgur.com/tgAbsGx.png">
-<meta property="og:updated_time" content="2018-10-14T02:38:19.869Z">
+<meta property="og:image" content="https://i.imgur.com/7qjZLGJ.png">
+<meta property="og:updated_time" content="2018-10-16T12:27:50.548Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop第六天之Yarn作业提交">
 <meta name="twitter:description" content="本地模式job提交流程mr.Job = new Job(); job.setxxx(); JobSubmitter.提交 LocalJobRunner.Job(); start(); hdfs writepacket, hdfs 切片计算方式getFormatMinSplitSize() = 1  //最小值(&amp;gt;=1)                            1">
@@ -687,12 +689,265 @@ linux    :so(shared object)
 <p>输入格式定位文件，在输入格式中间有一个交互reader，在Map和Reduce都有这么一些方法，在Mapper和Reducer中有回调方法，就是本来使用的是子类的方法，但是子类中调用有父类的的run方法，然后run方法里面有reduce方法也就又调用了子类的方法，这叫做回调 。Mapper是通过reader读取下一条数据传进来的。Map和Reduce中间有一个shuffer的混洗过程，网络间分发数据的过程， Map里面先分区，分区个数等于Reduce的个数，所以有几个reduce就有几个分区，默认情况下，Map分区通过哈希算法来分区的，对K哈希。只要K相同，一定会被哈希到一个分区里面，分区也就是桶的概念，也就是只要K相同进入到同一个桶里面，只要是同一个分区就是进入到同一个reduce，默认情况下inputformat的格式，他的K就是偏移量。如果是图片格式的话就可能是别的。只有在文本输入的时候才是偏移量，当然也可以自己定义Inputformat格式。在mr计算之前切片就已经算好了，产生的切片文件和配置XML文件放到了临时目录下了。<br><img src="https://i.imgur.com/7qjZLGJ.png" alt=""></p>
 <p>看下图，首先客户端运行作业，第一步run job，第二部走ResourceManager，是Yarn层面，负责资源调度，所有集群的资源都属于ResourceManager，第二部get new application，首先得到应用的ID，第三部copyt job resources，复制切片信息和xml配置信息和jar包到HDFS，第四部提交给资源管理器，然后资源管理器start container，然后通过节点管理器启动一个MRAPPMaster（应用管理程序），第六步初始化Job，第七部检索切片信息，第八步请求资源管理器去分配一个资源列表，第九步启动节点管理器，通过节点管理器来启动一个JVM虚拟机，在虚拟机里面启动yarn子进程，第十部通过子进程读取切片信息，然后在运行MapTast或者ReduceTask<br><img src="https://i.imgur.com/lqVQLT1.png" alt=""></p>
 <p>客户端提取一个作业，然后联系资源管理器，为了得到id,在完全分布式下客户端client叫job，一旦提交就叫做application了，先请求，然后得到了appid返回给了客户端，第三部将作业信息上传到HDFS的临时目录，存档切片信息和jar包，然后找到节点管理器，然后NM孵化一个MRAPPMaster，然后检索HDFS文件系统，获取到有多少个要执行的并发任务，拿到任务之后，要求资源管理器分配一个集合，哪些节点可以用。 然后MRAppmaster在联系其他的NM，让NM去开启Yarn子进程，子进程在去检索HDFS信息，在开启Map和Reduce</p>
+<p><img src="https://i.imgur.com/bn7A9H6.png" alt=""></p>
+<h2 id="hdfs-切片计算方式-1"><a href="#hdfs-切片计算方式-1" class="headerlink" title="hdfs 切片计算方式"></a>hdfs 切片计算方式</h2><pre><code>getFormatMinSplitSize() = 1
+
+//最小值(&gt;=1)                            1                        0
+long minSize = Math.max(getFormatMinSplitSize(), getMinSplitSize(job));
+
+//最大值(&lt;= Long.Max , mapreduce.input.fileinputformat.split.maxsize=)
+long maxSize = getMaxSplitSize(job);
+
+//得到block大小
+long blockSize = file.getBlockSize();
+
+//minSplit maxSplit blockSize
+//Math.max(minSize, Math.min(maxSize, blockSize));
+</code></pre><p>在计算切片的时候一般块大小不设置，是最好的，一般就是128M，采用本地优先策略，一个快大小是128m如果一旦把他边变1m那么切片大小就会变成1M，一个，然后128M的块大小会被分发128份切片分别传输给MR去计算，这样的话，就会增加网络间的传输，增加网络负载。所以128m是最合适的</p>
+<hr>
 <p>CR=‘\r’回车符<br>LF+’\n’换行符</p>
 <p>windows系统里面是\r\n。回车带换行。<br>linux系统只有一个\n</p>
 <p>切片是定义大方向的，阅读器recorderreader是控制细节的。切片定义任务数量，开几个map但是不一定是每个map都有任务。</p>
 <p><strong>切片问题</strong>是物理设置，但是是逻辑读取。</p>
 <p><img src="https://i.imgur.com/tgAbsGx.png" alt=""></p>
-<p>打个比方说上图这个东西比如说第一个例子，前面的设置物理划分，根据字节数划分成了4个切片，也就是有4个Mapper,然后四个切片开始读取，其中第一个物理切割到t但是实际上，由于切片读取到换行符所以，第一个Mapper也就是读取到了hello world tom，然后第二个，第二个偏移量是13+13.偏移量是13，在物理读取13个直接，但是由于Mapper检测不是行首，所以直接从下一行读取也在读取一整行</p>
+<p>打个比方说上图这个东西比如说第一个例子，前面的设置物理划分，根据字节数划分成了4个切片，也就是有4个Mapper,然后四个切片开始读取，其中第一个物理切割到t但是实际上，由于切片读取到换行符所以，第一个Mapper也就是读取到了hello world tom，然后第二个，第二个偏移量是13+13.偏移量是13，在物理读取13个直接，但是由于Mapper检测不是行首，所以直接从下一行读取也在读取一整行。这个就是每个切片128MB的缩影，吧128M变成了13而已。然后其实Textinputformat下一个环节是。recoderreader。这个会先检测是否是行首，<br><img src="https://i.imgur.com/7qjZLGJ.png" alt="">      </p>
+<h2 id="压缩问题"><a href="#压缩问题" class="headerlink" title="压缩问题"></a>压缩问题</h2><pre><code>package com.it18zhang.hdfs.mr.compress;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.io.compress.*;
+import org.apache.hadoop.util.ReflectionUtils;
+import org.junit.Test;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
+/**
+ * @Title:TestCompress
+ * @Description:
+ * @Auther: Eric Hunn
+ * @Version:1.0
+ * @Create 2018/10/14 19:39
+ */
+public class TestCompress {
+    @Test
+    public void deflateCompress() throws Exception {
+        Class[] zipClasses = {
+                DeflateCodec.class,
+                GzipCodec.class,
+                BZip2Codec.class,
+                Lz4Codec.class,
+        };
+
+        for(Class c : zipClasses){
+            zip(c);
+        }
+    }
+
+    /*压缩测试
+     *
+     * */
+    public void zip(Class codecClass) throws Exception {
+        long start = System.currentTimeMillis();
+        //实例化对象
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new Configuration());
+        //创建文件输出流，得到默认拓展名
+        FileOutputStream fos = new FileOutputStream(&quot;e:/comp/b&quot; + codec.getDefaultExtension());
+        //得到压缩流
+        CompressionOutputStream zipOut = codec.createOutputStream(fos);
+        IOUtils.copyBytes(new FileInputStream(&quot;e:/11111.txt/&quot;), zipOut, 1024);
+        zipOut.close();
+        System.out.println(codecClass.getSimpleName() + &quot; ：&quot;);
+    }
+}                                     
+</code></pre><p>压缩一般是在文件Map输出的时候压缩，Map输出的时候内存不够一般要往磁盘里面溢出，在溢出的时候可以让他压缩溢出，这样reduce的时候就要解压缩。上面代码测试过lz4不行，但是视频上是可以的，暂时不知道哪里出错了。</p>
+<pre><code>package com.it18zhang.hdfs.mr.compress;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.io.compress.*;
+import org.apache.hadoop.util.ReflectionUtils;
+import org.junit.Test;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
+/**
+ * @Title:TestCompress
+ * @Description:
+ * @Auther: Eric Hunn
+ * @Version:1.0
+ * @Create 2018/10/14 19:39
+ */
+public class TestCompress {
+    @Test
+    public void deflateCompress() throws Exception {
+        Class[] zipClasses = {
+                DeflateCodec.class,
+                GzipCodec.class,
+                BZip2Codec.class,
+//                Lz4Codec.class,
+//                SnappyCodec.class,
+        };
+
+        for(Class c : zipClasses){
+            unzip(c);
+        }
+    }
+
+    /*压缩测试
+     *
+     * */
+    public void zip(Class codecClass) throws Exception {
+        long start = System.currentTimeMillis();
+        //实例化对象
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new Configuration());
+        //创建文件输出流，得到默认拓展名
+        FileOutputStream fos = new FileOutputStream(&quot;e:/comp/b&quot; + codec.getDefaultExtension());
+        //得到压缩流
+        CompressionOutputStream zipOut = codec.createOutputStream(fos);
+        IOUtils.copyBytes(new FileInputStream(&quot;e:/11111.txt/&quot;), zipOut, 1024);
+        zipOut.close();
+        System.out.println(codecClass.getSimpleName() + &quot; ：&quot;);
+    }
+
+
+    public void unzip(Class codecClass) throws Exception {
+        long start = System.currentTimeMillis();
+        //实例化对象
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new Configuration());
+        //创建文件输出流，得到默认拓展名
+        FileInputStream fis = new FileInputStream(&quot;e:/comp/b&quot; + codec.getDefaultExtension());
+        //得到压缩流
+        CompressionInputStream zipIn = codec.createInputStream(fis);
+        IOUtils.copyBytes(zipIn,new FileOutputStream(&quot;e:/comp/b&quot; + codec.getDefaultExtension() + &quot;.txt&quot;), 1024);
+        zipIn.close();
+        System.out.println(codecClass.getSimpleName() + &quot; ：&quot; + (System.currentTimeMillis() - start));
+    }
+}
+</code></pre><h2 id="在集群上运"><a href="#在集群上运" class="headerlink" title="在集群上运"></a>在集群上运</h2><pre><code>package com.it18zhang.hdfs.mr.compress;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.io.compress.*;
+import org.apache.hadoop.util.ReflectionUtils;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
+/**
+ * @Title:TestCompress
+ * @Description:
+ * @Auther: Eric Hunn
+ * @Version:1.0
+ * @Create 2018/10/14 19:39
+ */
+public class TestCompress {
+    public static void main(String[] args) throws Exception {
+        Class[] zipClasses = {
+                DeflateCodec.class,
+                GzipCodec.class,
+                BZip2Codec.class,
+//                Lz4Codec.class,
+//                SnappyCodec.class,
+        };
+
+        for(Class c : zipClasses){
+            zip(c);
+        }
+        System.out.println(&quot;==================================&quot;);
+        for(Class c : zipClasses){
+            unzip(c);
+        }
+    }
+
+    /*压缩测试
+     *
+     * */
+    public static void zip(Class codecClass) throws Exception {
+        long start = System.currentTimeMillis();
+        //实例化对象
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new Configuration());
+        //创建文件输出流，得到默认拓展名
+        FileOutputStream fos = new FileOutputStream(&quot;/home/centos/zip/b&quot; + codec.getDefaultExtension());
+        //得到压缩流
+        CompressionOutputStream zipOut = codec.createOutputStream(fos);
+        IOUtils.copyBytes(new FileInputStream(&quot;/home/centos/zip/a.txt&quot;), zipOut, 1024);
+        zipOut.close();
+        System.out.println(codecClass.getSimpleName() + &quot; ：&quot;);
+    }
+
+
+    public static void unzip(Class codecClass) throws Exception {
+        long start = System.currentTimeMillis();
+        //实例化对象
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new Configuration());
+        //创建文件输出流，得到默认拓展名
+        FileInputStream fis = new FileInputStream(&quot;/home/centos/zip/b&quot; + codec.getDefaultExtension());
+        //得到压缩流
+        CompressionInputStream zipIn = codec.createInputStream(fis);
+        IOUtils.copyBytes(zipIn,new FileOutputStream(&quot;/home/centos/zip/b&quot; + codec.getDefaultExtension() + &quot;.txt&quot;), 1024);
+        zipIn.close();
+        System.out.println(codecClass.getSimpleName() + &quot; ：&quot; + (System.currentTimeMillis() - start));
+    }
+}
+</code></pre><h2 id="远程调试-1"><a href="#远程调试-1" class="headerlink" title="远程调试"></a>远程调试</h2><pre><code>1.设置服务器java vm的-agentlib:jdwp选项.
+[server]
+//windwos
+//set JAVA_OPTS=%JAVA_OPTS% -agentlib:jdwp=transport=dt_socket,address=8888,server=y,suspend=n
+
+//linux
+
+
+2.在server启动java程序
+    hadoop jar HdfsDemo.jar com.it18zhang.hdfs.mr.compress.TestCompress
+
+3.server会暂挂在8888.
+    Listening ...
+
+4.客户端通过远程调试连接到远程主机的8888.
+
+5.客户端就可以调试了。
+</code></pre><hr>
+<hr>
+<h3 id="通过MapFile来写入"><a href="#通过MapFile来写入" class="headerlink" title="通过MapFile来写入"></a>通过MapFile来写入</h3><pre><code>    /*写操作
+ * */
+@Test
+public void save() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(&quot;fs.defaultFS &quot;, &quot;file:///&quot;);
+    FileSystem fs = FileSystem.get(conf);
+    Path p = new Path(&quot;e:/seq/1.seq&quot;);
+    MapFile.Writer writer = new MapFile.Writer(conf, fs, &quot;e:/map&quot;, IntWritable.class, Text.class);
+
+
+    for (int i = 0; i &lt; 100000; i++) {
+        writer.append(new IntWritable(i), new Text(&quot;tom&quot; + i));
+    }
+</code></pre><p>//        for(int i =0 ;i &lt; 10 ; i++){<br>//            writer.append(new IntWritable(i),new Text(“tom” + i));<br>//        }<br>        writer.close();<br>    }</p>
+<hr>
+<h3 id="通过MapFile来读取"><a href="#通过MapFile来读取" class="headerlink" title="通过MapFile来读取"></a>通过MapFile来读取</h3><pre><code>/*读取Mapfile文件
+ * */
+@Test
+public void readMapfile() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(&quot;fs.defaultFS &quot;, &quot;file:///&quot;);
+    FileSystem fs = FileSystem.get(conf);
+    Path p = new Path(&quot;e:/seq/1.seq&quot;);
+    MapFile.Reader reader = new MapFile.Reader(fs, &quot;e:/map&quot;, conf);
+    IntWritable key = new IntWritable();
+    Text value = new Text();
+    while (reader.next(key, value)) {
+        System.out.println(key.get() + &quot;:&quot; + value.toString());
+    }
+    reader.close();
+
+
+} 
+</code></pre><hr>
+<p>Map的分区是哈希分区</p>
+<p>combiner的好处是：map端的reduce在map端做集合，减少了shuffle量。统计每个单词hello 1发了十万次，不如发一个hello1在map端做聚合发过去hello十万，即刻。就是在map端口预先reduce化简的过程。不是所有的作业都可以把reduce做成combiner。最大值最小值都可以combiner但是平均值就不行了。</p>
+<p>第六天的最后两个视频没有往下写代码，因为太多太杂了。主要讲解MR计数器，数据倾斜，Mapfile 序列化读取，压缩这些。</p>
 
       
     </div>
@@ -771,6 +1026,10 @@ linux    :so(shared object)
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/17/Hadoop第七天/" rel="prev" title="Hadoop第七天">
+                Hadoop第七天 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -856,7 +1115,7 @@ linux    :so(shared object)
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -878,7 +1137,7 @@ linux    :so(shared object)
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -954,7 +1213,7 @@ linux    :so(shared object)
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#本地模式job提交流程"><span class="nav-number">1.</span> <span class="nav-text">本地模式job提交流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hdfs-write"><span class="nav-number">2.</span> <span class="nav-text">hdfs write</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hdfs-切片计算方式"><span class="nav-number">3.</span> <span class="nav-text">hdfs 切片计算方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#压缩"><span class="nav-number">4.</span> <span class="nav-text">压缩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程调试"><span class="nav-number">5.</span> <span class="nav-text">远程调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在pom-xml中引入新的插件-maven-antrun-plugin-实现文件的复制"><span class="nav-number">6.</span> <span class="nav-text">在pom.xml中引入新的插件(maven-antrun-plugin),实现文件的复制.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在centos上使用yum安装snappy压缩库文件"><span class="nav-number">7.</span> <span class="nav-text">在centos上使用yum安装snappy压缩库文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#库文件"><span class="nav-number">8.</span> <span class="nav-text">库文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LZO"><span class="nav-number">9.</span> <span class="nav-text">LZO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改maven使用aliyun镜像。"><span class="nav-number">10.</span> <span class="nav-text">修改maven使用aliyun镜像。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件格式-SequenceFile"><span class="nav-number">11.</span> <span class="nav-text">文件格式:SequenceFile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件格式-MapFile"><span class="nav-number">12.</span> <span class="nav-text">文件格式:MapFile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义分区函数"><span class="nav-number">13.</span> <span class="nav-text">自定义分区函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#combinerd（合成）-继承了Reducer-任何的Reducer类都能被他使用"><span class="nav-number">14.</span> <span class="nav-text">combinerd（合成） 继承了Reducer 任何的Reducer类都能被他使用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#本地模式job提交流程"><span class="nav-number">1.</span> <span class="nav-text">本地模式job提交流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hdfs-write"><span class="nav-number">2.</span> <span class="nav-text">hdfs write</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hdfs-切片计算方式"><span class="nav-number">3.</span> <span class="nav-text">hdfs 切片计算方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#压缩"><span class="nav-number">4.</span> <span class="nav-text">压缩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程调试"><span class="nav-number">5.</span> <span class="nav-text">远程调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在pom-xml中引入新的插件-maven-antrun-plugin-实现文件的复制"><span class="nav-number">6.</span> <span class="nav-text">在pom.xml中引入新的插件(maven-antrun-plugin),实现文件的复制.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在centos上使用yum安装snappy压缩库文件"><span class="nav-number">7.</span> <span class="nav-text">在centos上使用yum安装snappy压缩库文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#库文件"><span class="nav-number">8.</span> <span class="nav-text">库文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LZO"><span class="nav-number">9.</span> <span class="nav-text">LZO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改maven使用aliyun镜像。"><span class="nav-number">10.</span> <span class="nav-text">修改maven使用aliyun镜像。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件格式-SequenceFile"><span class="nav-number">11.</span> <span class="nav-text">文件格式:SequenceFile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件格式-MapFile"><span class="nav-number">12.</span> <span class="nav-text">文件格式:MapFile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义分区函数"><span class="nav-number">13.</span> <span class="nav-text">自定义分区函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#combinerd（合成）-继承了Reducer-任何的Reducer类都能被他使用"><span class="nav-number">14.</span> <span class="nav-text">combinerd（合成） 继承了Reducer 任何的Reducer类都能被他使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hdfs-切片计算方式-1"><span class="nav-number">15.</span> <span class="nav-text">hdfs 切片计算方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#压缩问题"><span class="nav-number">16.</span> <span class="nav-text">压缩问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在集群上运"><span class="nav-number">17.</span> <span class="nav-text">在集群上运</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程调试-1"><span class="nav-number">18.</span> <span class="nav-text">远程调试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过MapFile来写入"><span class="nav-number">18.1.</span> <span class="nav-text">通过MapFile来写入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过MapFile来读取"><span class="nav-number">18.2.</span> <span class="nav-text">通过MapFile来读取</span></a></li></ol></li></ol></div>
             
 
           </div>

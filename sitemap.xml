@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://erichunn.github.io/2018/10/17/Hadoop%E7%AC%AC%E4%B8%83%E5%A4%A9/</loc>
+    
+    <lastmod>2018-10-17T08:22:23.136Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://erichunn.github.io/2018/10/11/Hadoop%E7%AC%AC%E5%85%AD%E5%A4%A9%E4%B9%8BYarn%E4%BD%9C%E4%B8%9A%E6%8F%90%E4%BA%A4/</loc>
     
-    <lastmod>2018-10-14T02:38:19.869Z</lastmod>
+    <lastmod>2018-10-16T12:27:50.548Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://erichunn.github.io/2018/10/01/%E9%81%87%E5%88%B0%E6%9C%AA%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
     
-    <lastmod>2018-10-09T13:37:46.327Z</lastmod>
+    <lastmod>2018-10-14T02:44:23.228Z</lastmod>
     
   </url>
   
