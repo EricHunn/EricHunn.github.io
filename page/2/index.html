@@ -1278,6 +1278,39 @@ $&gt;cd /home/centos/Desktop/vmware-tools-distrib
 <hr>
 <h2 id="多次format"><a href="#多次format" class="headerlink" title="多次format"></a>多次format</h2><p> namenode会导致namenode的id和datanode的id有变化，需要重新格式化/tmp文件夹</p>
 <hr>
+<h2 id="在windows上跑mr"><a href="#在windows上跑mr" class="headerlink" title="在windows上跑mr"></a>在windows上跑mr</h2><p>之前视频上没有去说明在windows上配置hadoop，自己去CSDN里面查找才发现下面是CSDN里面原话：</p>
+<pre><code>1.hadoop官网上下载hadoop2.7.2.tar.gz  并且配置成环境变量
+开始之前必须配置本地的hadoop环境
+HADOOP_HOME=H:\source\hadoop\hadoop-2.7.2
+PATH中增加  %HADOOP_HOME%\bin
+配置完成后，通过cmd 执行hadoop 如果能够成功证明环境配置完成。
+2.下载windows-hadoop-bin的压缩包(windows下运行MR 必备的)
+bin2.7.2 包我会提供出来
+bin2.7.2 这个是windows-hadoop-bin 的压缩包，解压完了后用解压的bin包替换成hadoop-2.7.2 里面的bin。
+注意是替换
+3.将解压出来bin目录中的hadoop.dll也放入C:\Windows\System32(最好操作)
+4.1901  这个是天气的测试数据包(后续解压在hadoop MR 的输入文件夹中)
+5.windows运行时中可能出现的错误 
+ No valid local directories in property: mapreduce.cluster.local.dir
+如果出现这个错误，可以在代码中通过这个配置和在本地的hadoop目录下中建立data
+======例如我的 H:\source\hadoop\hadoop-2.7.2\data====
+Job job = new Job();
+Configuration conf = job.getConfiguration();
+conf.set(&quot;mapreduce.cluster.local.dir&quot;,&quot;H:\\source\\hadoop\\hadoop-2.7.2\\data&quot;);
+job=new Job(conf);
+6.Winodws 运行出现
+解决org.apache.hadoop.io.nativeio.NativeIO$Windows.access0(Ljava/lang/String;I)Z
+点击打开链接
+大致流程，去官网下载src源码，将源码中nativeIo.java复制在本地项目中（新建源码中nativeIo.java的全路径,将其放入即可），修改源码中对windows的IO验证 Access方法
+7.如果在集群运行时出现 No valid local directories in property: mapreduce.cluster.local.dir
+查看是否采用的本地的localrunnal，也就是说mapred-site.xml和yarn-site.xml是否被加载.一般是这个原因，因为2.x版本上的defalut-site.xml已经配置该属性
+8.集群提交时采用hadoop和yarn  jar   xxx.jar    XXX  agrs1 agr2 提交。加载的logj配置文件也可以作为参数传入。
+9.提交集群时，如果在mapper或者reduce存在着构建一些引用包的对象，那么提交的xxx.jar必须是被打成依赖包，因为MR执行是将jar包分发其他的节点。所以不能像普通的java进程采用 java -cp x.jar 等方式。
+10.IDEA 打依赖包是，不能通过Artifrt右边的put into 左边的项目。必须在选择时，采用jar-with-dependents的方式
+两种的区别在于，第一种仅仅是将jar放入压缩的jar文件中。第二种是，采用依赖包的方式，才能识别具体的引用类。
+11.本地还需要配置log4j的配置文件，查看具体的日志12. hadoop-2.7.2的tag.gz 包
+13.windows-hadoop-bin 的包
+</code></pre><p>具体的hadoop2.7.2tat.gz和windows下编译的bin包已经放到小号的百度网盘里面了。并且在chrome大数据技术2书签里面也有。</p>
 
           
         

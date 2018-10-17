@@ -84,7 +84,7 @@
 <meta name="description" content="大数据|动漫迷|科技控">
 <meta property="og:type" content="website">
 <meta property="og:title" content="无心是一首歌">
-<meta property="og:url" content="http://erichunn.github.io/categories/Hadoop/index.html">
+<meta property="og:url" content="http://erichunn.github.io/categories/hadoop/index.html">
 <meta property="og:site_name" content="无心是一首歌">
 <meta property="og:description" content="大数据|动漫迷|科技控">
 <meta property="og:locale" content="default">
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://erichunn.github.io/categories/Hadoop/"/>
+  <link rel="canonical" href="http://erichunn.github.io/categories/hadoop/"/>
 
 
 
 
 
-  <title>Category: Hadoop | 无心是一首歌</title>
+  <title>Category: hadoop | 无心是一首歌</title>
   
 
 
@@ -320,7 +320,7 @@
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h1>Hadoop<small>Category</small>
+        <h1>hadoop<small>Category</small>
         </h1>
       </div>
 
@@ -332,37 +332,9 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2018/10/17/Hadoop第七天/" itemprop="url">
+            <a class="post-title-link" href="/2018/09/29/Hadoop第二天之搭建/" itemprop="url">
               
-                <span itemprop="name">Hadoop第七天</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-10-17T16:17:15+08:00"
-              content="2018-10-17" >
-          10-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/10/11/Hadoop第六天之Yarn作业提交/" itemprop="url">
-              
-                <span itemprop="name">Hadoop第六天之Yarn作业提交</span>
+                <span itemprop="name">Hadoop第二天之搭建</span>
               
             </a>
         
@@ -370,65 +342,9 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2018-10-11T15:48:32+08:00"
-              content="2018-10-11" >
-          10-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/10/05/Hadoop第五天01之hdfs写入剖析/" itemprop="url">
-              
-                <span itemprop="name">Hadoop第五天01之hdfs写入剖析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-10-05T16:31:19+08:00"
-              content="2018-10-05" >
-          10-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/11/Hadoop权威指南学习笔记（1）/" itemprop="url">
-              
-                <span itemprop="name">Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-11T09:25:39+08:00"
-              content="2018-09-11" >
-          09-11
+              datetime="2018-09-29T17:21:35+08:00"
+              content="2018-09-29" >
+          09-29
         </time>
       </div>
 
@@ -1028,6 +944,90 @@
               resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
             } else if (resultItems.length === 0) {
               resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+5x" /></div>'
             } else {
               resultItems.sort(function (resultLeft, resultRight) {
                 if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
