@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="多输入问题," />
+  <meta name="keywords" content="多输入问题,计数器使用,跟踪运行信息," />
 
 
 
@@ -81,18 +81,22 @@
 
 
 
-<meta name="description" content="大数据|动漫迷|科技控">
-<meta name="keywords" content="多输入问题">
+<meta name="description" content="多输入问题在IDEA里面代码： 首先明确一点InputInputformat也就是文本输入格式的输入是Longwritblele和Text，然后SequenceFileputFormat的输入是intwritble和text。 public class WCApp {      public static void main(String[] args) throws Exception {">
+<meta name="keywords" content="多输入问题,计数器使用,跟踪运行信息">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop第七天">
 <meta property="og:url" content="http://erichunn.github.io/2018/10/17/Hadoop第七天/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="大数据|动漫迷|科技控">
+<meta property="og:description" content="多输入问题在IDEA里面代码： 首先明确一点InputInputformat也就是文本输入格式的输入是Longwritblele和Text，然后SequenceFileputFormat的输入是intwritble和text。 public class WCApp {      public static void main(String[] args) throws Exception {">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-10-17T08:22:23.136Z">
+<meta property="og:image" content="https://i.imgur.com/vO9wETa.png">
+<meta property="og:image" content="https://i.imgur.com/UVIcFDb.png">
+<meta property="og:image" content="https://i.imgur.com/XeGcZvS.png">
+<meta property="og:updated_time" content="2018-10-19T10:48:20.600Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop第七天">
-<meta name="twitter:description" content="大数据|动漫迷|科技控">
+<meta name="twitter:description" content="多输入问题在IDEA里面代码： 首先明确一点InputInputformat也就是文本输入格式的输入是Longwritblele和Text，然后SequenceFileputFormat的输入是intwritble和text。 public class WCApp {      public static void main(String[] args) throws Exception {">
+<meta name="twitter:image" content="https://i.imgur.com/vO9wETa.png">
 
 
 
@@ -418,7 +422,412 @@
       
 
       
-        
+        <h1 id="多输入问题"><a href="#多输入问题" class="headerlink" title="多输入问题"></a>多输入问题</h1><p>在IDEA里面代码：</p>
+<p>首先明确一点InputInputformat也就是文本输入格式的输入是Longwritblele和Text，然后SequenceFileputFormat的输入是intwritble和text。</p>
+<pre><code>public class WCApp {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//       设置作业的各种属性
+        job.setJobName(&quot;WCAppMulti&quot;);    //作业名称
+        job.setJarByClass(WCApp.class); //搜索类路径
+
+        //多个输入
+        MultipleInputs.addInputPath(job,new Path(&quot;file:///e:/mr/txt&quot;),TextInputFormat.class,WCTextMapper.class);
+        MultipleInputs.addInputPath(job,new Path(&quot;file:///e:/mr/seq&quot;),SequenceFileInputFormat.class,WCSeqMapper.class);
+
+        //设置输出
+        FileOutputFormat.setOutputPath(job,new Path(args[0]));
+
+        job.setReducerClass(WCReducer.class);//reducer类
+        job.setNumReduceTasks(3);//reducer个数
+
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>ublic class WCReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+/**
+ * reduce
+ */
+protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+    int count = 0 ;
+    for(IntWritable iw : values){
+        count = count + iw.get() ;
+    }
+    String tno = Thread.currentThread().getName();
+    System.out.println(tno + &quot;WCReducer:&quot; + key.toString() + &quot;=&quot; + count);
+    context.write(key,new IntWritable(count));
+}
+</code></pre><p>}</p>
+<hr>
+<pre><code>public class WCTextMapper extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] arr = value.toString().split(&quot; &quot;);
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+        for(String s:arr){
+            keyout.set(s);
+            valueout.set(1);
+            context.write(keyout,valueout);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCTextMapper extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] arr = value.toString().split(&quot; &quot;);
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+        for(String s:arr){
+            keyout.set(s);
+            valueout.set(1);
+            context.write(keyout,valueout);
+        }
+    }
+}
+</code></pre><hr>
+<p>下图是配置本地的路径。要明确其中的arg[]也就是这个里配置的那个Program arguments的路径。因为只需要一个参数就可以了，因为在代码中已经写好了输入路径了。</p>
+<p><img src="https://i.imgur.com/vO9wETa.png" alt=""></p>
+<hr>
+<hr>
+<hr>
+<h1 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h1><p> 日志目录：<br>/soft/hadoop/logs/userlogs</p>
+<p>用户打印的日志。Hadoop输出的日志都是在外层的文件之中。userlogs是自己的日志打印。</p>
+<h2 id="计数器-1"><a href="#计数器-1" class="headerlink" title="计数器"></a>计数器</h2><p>是其他的内容都不做更改，在Mapper和Reducer里面添加这个语句即可<br>    context.getCounter(“r”, “WCReducer.reduce”).increment(1);</p>
+<p>然后扔到虚拟机里面去运行：<br>    hadoop jar HdfsDemo.jar com.it18zhang.hdfs.mr.WCApp hdfs://user/centos/data/ hdfs://user/centos/data/out</p>
+<h1 id="单独配置2nn到独立节点"><a href="#单独配置2nn到独立节点" class="headerlink" title="单独配置2nn到独立节点"></a>单独配置2nn到独立节点</h1><p>配置core-site文件</p>
+<pre><code>[hdfs-site.xml]
+&lt;property&gt;
+        &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt;
+        &lt;value&gt;s206:50090&lt;/value&gt;
+&lt;/property&gt;
+</code></pre><h1 id="跟踪运行器信息"><a href="#跟踪运行器信息" class="headerlink" title="跟踪运行器信息"></a>跟踪运行器信息</h1><p><img src="https://i.imgur.com/UVIcFDb.png" alt=""></p>
+<p>添加一个工具类：</p>
+<pre><code>public class Util {
+
+public static String getInfo(Object o,String msg ){
+    return getHostname() + &quot;:&quot; + getPID() + &quot;:&quot; + getTID()+&quot;:&quot;+getObjInfo(o) +msg;
+}
+
+//得到主机名
+public static String getHostname() {
+    try {
+        return InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException e) {
+        e.printStackTrace();
+    }
+    return  null;
+}
+    //获得当前程序的所在的进程ID。
+    public static int getPID()  {
+        String info = ManagementFactory.getRuntimeMXBean().getName();
+        return Integer.parseInt(info.substring(0,info.indexOf(&quot;@&quot;)));
+    }
+    //返回当前线程ID，
+    public static String getTID(){
+    return Thread.currentThread().getName();
+    }
+
+    public static  String getObjInfo(Object o){
+        String sname = o.getClass().getSimpleName();
+        return sname + &quot;@&quot;+o.hashCode();
+
+    }
+}
+</code></pre><p>然后在map和reduce阶段添加：</p>
+<pre><code>//每执行一次，计数器对这个组+1
+context.getCounter(&quot;m&quot;,Util.getInfo(this,&quot;map&quot;)).increment(1);
+</code></pre><p>效果如下图<br><img src="https://i.imgur.com/XeGcZvS.png" alt=""></p>
+<h1 id="全排序"><a href="#全排序" class="headerlink" title="全排序"></a>全排序</h1><pre><code>## 普通排序求最高年份温度 ##
+</code></pre><p>代码如下：</p>
+<pre><code>public class MaxTempApp {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(MaxTempApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+
+        job.setMapperClass(MaxTempMapper.class);         //mapper类
+        job.setReducerClass(MaxTempReducer.class);       //reduce类
+
+        job.setNumReduceTasks(3);           //reduce个数
+
+
+        job.setMapOutputKeyClass(IntWritable.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(IntWritable.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempMapper extends Mapper&lt;LongWritable, Text, IntWritable, IntWritable&gt; {
+    public MaxTempMapper() {
+        System.out.println(&quot;new MaxTempMapper&quot;);
+    }
+
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String line = value.toString();
+        String arr[] = line.split(&quot; &quot;);
+        context.write(new IntWritable(Integer.parseInt(arr[0])), new IntWritable((Integer.parseInt(arr[1]))));
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempReducer extends Reducer&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(IntWritable key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int max =Integer.MIN_VALUE;
+            for(IntWritable iw : values){
+                max = max &gt; iw.get() ? max : iw.get() ;
+            }
+                context.write(key,new IntWritable(max));
+
+    }
+}
+</code></pre><hr>
+<h2 id="全排序代码"><a href="#全排序代码" class="headerlink" title="全排序代码"></a>全排序代码</h2><p>上面代码产生的会是3个文件，文件内部各自排序，但是不是全排序的文件。全排序2种办法：</p>
+<p>1、设置分区数是1，但是数据倾斜</p>
+<ol start="2">
+<li><p>在每个分区里设置0-30，30-60，60-100即可,然后每个分区返回0,1,2进入分成不同的区<br>代码如下图：<br> public class YearPartitioner extends Partitioner&lt;IntWritable, IntWritable&gt; {</p>
+<pre><code>public int getPartition(IntWritable year, IntWritable temp, int parts) {
+    int y = year.get() - 1970;
+    if (y &lt; 33) {
+        return 0;
+    }
+    if (y &gt; 33 &amp;&amp; y &lt; 66) {
+        return 1;
+    }
+    else {
+        return 2;
+    }
+}
+</code></pre><p> }</p>
+</li>
+</ol>
+<hr>
+<pre><code>public class MaxTempReducer extends Reducer&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(IntWritable key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int max =Integer.MIN_VALUE;
+            for(IntWritable iw : values){
+                max = max &gt; iw.get() ? max : iw.get() ;
+            }
+                context.write(key,new IntWritable(max));
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempMapper extends Mapper&lt;LongWritable, Text, IntWritable, IntWritable&gt; {
+    public MaxTempMapper() {
+        System.out.println(&quot;new MaxTempMapper&quot;);
+    }
+
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String line = value.toString();
+        String arr[] = line.split(&quot; &quot;);
+        context.write(new IntWritable(Integer.parseInt(arr[0])), new IntWritable((Integer.parseInt(arr[1]))));
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempApp {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(MaxTempApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        job.setPartitionerClass(YearPartitioner.class);
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+
+        job.setMapperClass(MaxTempMapper.class);         //mapper类
+        job.setReducerClass(MaxTempReducer.class);       //reduce类
+
+        job.setNumReduceTasks(3);           //reduce个数
+
+
+        job.setMapOutputKeyClass(IntWritable.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(IntWritable.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<p>其实无非就是加一个partitioner的这个类而已。</p>
+<hr>
+<hr>
+<hr>
+<h1 id="全排序采样器"><a href="#全排序采样器" class="headerlink" title="全排序采样器"></a>全排序采样器</h1><p>1.定义1个reduce</p>
+<p>2.自定义分区函数。<br>：        自行设置分解区间。</p>
+<p>3.使用hadoop采样机制。</p>
+<p>通过采样器生成分区文件，结合hadoop的TotalOrderPartitioner进行分区划分</p>
+<p>TotalOrderPartitioner        //全排序分区类,读取外部生成的分区文件确定区间。</p>
+<p>使用时采样代码在最后端,否则会出现错误。</p>
+<p>//分区文件设置，设置的job的配置对象，不要是之前的conf.这里面的getconfiguration()是对最开始new的conf的拷贝，<br>TotalOrderPartitioner.setPartitionFile(job.getConfiguration(),new Path(“d:/mr/par.lst”));</p>
+<h2 id="首先一段产生随机年份，温度的代码"><a href="#首先一段产生随机年份，温度的代码" class="headerlink" title="首先一段产生随机年份，温度的代码"></a>首先一段产生随机年份，温度的代码</h2><pre><code>public class PrepareTempData {
+    @Test
+    public void makeData() throws IOException {
+        FileWriter fw = new FileWriter(&quot;e:/mr/temp.txt&quot;);
+        for(int i=0;i&lt;6000;i++){
+            int year=1970+ new Random().nextInt(100);
+            int temp=-30 + new Random().nextInt(600);
+            fw.write(&quot; &quot;+ year + &quot; &quot;+ temp + &quot;\r\n&quot; );
+        }
+            fw.close();
+    }
+}
+</code></pre><hr>
+<h1 id="全排序采样器-1"><a href="#全排序采样器-1" class="headerlink" title="全排序采样器"></a>全排序采样器</h1><pre><code>        public static void main(String[] args) throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(&quot;fs.defaultFS&quot;, &quot;file:///&quot;);
+
+    Job job = Job.getInstance(conf);
+
+        设置作业的各种属性
+    job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+    job.setJarByClass(MaxTempApp.class); //搜索类路径
+    job.setInputFormatClass(SequenceFileInputFormat.class);//设置输入格式类
+
+    //添加输入路径
+    FileInputFormat.addInputPath(job, new Path(args[0]));
+    //设置输出路径
+    org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+    job.setMapperClass(MaxTempMapper.class);         //mapper类
+    job.setReducerClass(MaxTempReducer.class);       //reduce类
+
+
+    job.setMapOutputKeyClass(IntWritable.class);
+    job.setMapOutputValueClass(IntWritable.class);
+
+    job.setOutputKeyClass(IntWritable.class);          //设置输出类型
+    job.setOutputValueClass(IntWritable.class);
+
+    //设置 全排序分区类
+    job.setPartitionerClass(TotalOrderPartitioner.class);
+    //将sample数据 写入分区文件
+    TotalOrderPartitioner.setPartitionFile(conf, new Path(&quot;e:/mr/par.lst&quot;));
+
+    //创建随机采样器对象
+    InputSampler.Sampler&lt;IntWritable, IntWritable&gt; sampler = new InputSampler.RandomSampler&lt;IntWritable, IntWritable&gt;(0.1, 10000, 10);
+    job.setNumReduceTasks(3);           //reduce个数
+    InputSampler.writePartitionFile(job, sampler);
+
+
+    job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempMapper extends Mapper&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt; {
+    public MaxTempMapper() {
+        System.out.println(&quot;new MaxTempMapper&quot;);
+    }
+
+    @Override
+    protected void map(IntWritable key, IntWritable value, Context context) throws IOException, InterruptedException {
+        context.write(key,value);
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempReducer extends Reducer&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(IntWritable key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int max =Integer.MIN_VALUE;
+            for(IntWritable iw : values){
+                max = max &gt; iw.get() ? max : iw.get() ;
+            }
+                context.write(key,new IntWritable(max));
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class YearPartitioner extends Partitioner&lt;IntWritable, IntWritable&gt; {
+
+    public int getPartition(IntWritable year, IntWritable temp, int parts) {
+        int y = year.get() - 1970;
+        if (y &lt; 33) {
+            return 0;
+        }
+        if (y &gt; 33 &amp;&amp; y &lt; 66) {
+            return 1;
+        }
+        else {
+            return 2;
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>全排序官方笔记:
+1.定义1个reduce
+
+2.自定义分区函数.
+    自行设置分解区间。
+
+3.使用hadoop采样机制。
+    通过采样器生成分区文件，结合hadoop的TotalOrderPartitioner进行分区划分。
+    TotalOrderPartitioner        //全排序分区类,读取外部生成的分区文件确定区间。
+
+    使用时采样代码在最后端,否则会出现错误。
+
+    //分区文件设置，设置的job的配置对象，不要是之前的conf.
+    TotalOrderPartitioner.setPartitionFile(job.getConfiguration(),new Path(&quot;d:/mr/par.lst&quot;));
+</code></pre><hr>
+<hr>
+
       
     </div>
     
@@ -473,6 +882,10 @@
         <div class="post-tags">
           
             <a href="/tags/多输入问题/" rel="tag"># 多输入问题</a>
+          
+            <a href="/tags/计数器使用/" rel="tag"># 计数器使用</a>
+          
+            <a href="/tags/跟踪运行信息/" rel="tag"># 跟踪运行信息</a>
           
         </div>
       
@@ -550,8 +963,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -592,7 +1014,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -658,6 +1080,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#多输入问题"><span class="nav-number">1.</span> <span class="nav-text">多输入问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#计数器"><span class="nav-number">2.</span> <span class="nav-text">计数器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#计数器-1"><span class="nav-number">2.1.</span> <span class="nav-text">计数器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#单独配置2nn到独立节点"><span class="nav-number">3.</span> <span class="nav-text">单独配置2nn到独立节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#跟踪运行器信息"><span class="nav-number">4.</span> <span class="nav-text">跟踪运行器信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全排序"><span class="nav-number">5.</span> <span class="nav-text">全排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#全排序代码"><span class="nav-number">5.1.</span> <span class="nav-text">全排序代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全排序采样器"><span class="nav-number">6.</span> <span class="nav-text">全排序采样器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#首先一段产生随机年份，温度的代码"><span class="nav-number">6.1.</span> <span class="nav-text">首先一段产生随机年份，温度的代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全排序采样器-1"><span class="nav-number">7.</span> <span class="nav-text">全排序采样器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

@@ -963,7 +963,7 @@ public class MaxTemperatureMapper extends MapReduceBase
 
     }
 }
-</code></pre><h2 id="这个里面的涉及到的JS的函数："><a href="#这个里面的涉及到的JS的函数：" class="headerlink" title="这个里面的涉及到的JS的函数："></a>这个里面的涉及到的JS的函数：</h2><hr>
+</code></pre><h1 id="这个里面的涉及到的JS的函数："><a href="#这个里面的涉及到的JS的函数：" class="headerlink" title="这个里面的涉及到的JS的函数："></a>这个里面的涉及到的JS的函数：</h1><hr>
 <p><strong><em>toString:toString()</em></strong> 方法可把一个逻辑值转换为字符串，并返回结果。</p>
 <hr>
 <p><strong><em>substring:substring()</em></strong> 方法用于提取字符串中介于两个指定下标之间的字符。</p>
@@ -1009,6 +1009,154 @@ parseInt(&quot;010&quot;);        //未定：返回 10 或 8
 返回值 :true
 返回值 :false
 返回值 :true
+</code></pre><hr>
+<h1 id="关于random-方法讲解"><a href="#关于random-方法讲解" class="headerlink" title="关于random()方法讲解"></a>关于random()方法讲解</h1><h3 id="java-Random-nextInt-方法"><a href="#java-Random-nextInt-方法" class="headerlink" title="java Random.nextInt()方法"></a>java Random.nextInt()方法</h3><pre><code>public int nextInt(int n)
+</code></pre><p>该方法的作用是生成一个随机的int值，该值介于[0,n)的区间，也就是0到n之间的随机int值，包含0而不包含n</p>
+<p>package org.xiaowu.random.demo;</p>
+<p>import java.util.Random;</p>
+<p>import org.junit.Test;</p>
+<p>public class RandomDemo {</p>
+<pre><code>@Test
+public void Demo(){
+    Random rnd = new Random();
+    int code = rnd.nextInt(8999) + 1000;
+    System.out.println(&quot;code:&quot;+code);
+}
+
+
+@Test
+public void Demo1(){
+    Random r = new Random();
+    int nextInt = r.nextInt();
+    Random r1 = new Random(10);
+    int nextInt2 = r1.nextInt();
+    System.out.println(&quot;nextInt:&quot;+nextInt);
+    System.out.println(&quot;nextInt2:&quot;+nextInt2);
+}
+
+
+/**
+ * 生成[0,1.0)区间的小数
+ * 
+ */
+@Test
+public void Demo2(){
+    Random r = new Random();
+    double d1 = r.nextDouble();
+    System.out.println(&quot;d1:&quot;+d1);
+}
+
+
+/**
+ * 生成[0,5.0)区间的小数
+ * 
+ */
+@Test
+public void Demo3(){
+    Random r = new Random();
+    double d2 = r.nextDouble()* 5;
+    System.out.println(&quot;d1:&quot;+d2);
+}
+
+
+/**
+ * 生成[1,2.5)区间的小数
+ * 
+ */
+@Test
+public void Demo4(){
+    Random r = new Random();
+    double d3 = r.nextDouble() * 1.5 + 1;
+    System.out.println(&quot;d1:&quot;+d3);
+}
+
+
+/**
+ * 生成任意整数
+ * 
+ */
+@Test
+public void Demo5(){
+    Random r = new Random();
+    int n1 = r.nextInt();
+    System.out.println(&quot;d1:&quot;+n1);
+}
+
+
+
+/**
+ * 生成[0,10)区间的整数
+ * 
+ */
+@Test
+public void Demo6(){
+    Random r = new Random();
+    int n2 = r.nextInt(10);
+    int n3 = Math.abs(r.nextInt() % 10);
+    System.out.println(&quot;n2:&quot;+n2);
+    System.out.println(&quot;n3:&quot;+n3);
+}
+
+
+
+/**
+ * 生成[0,10]区间的整数
+ * 
+ */
+@Test
+public void Demo7(){
+    Random r = new Random();
+    int n3 = r.nextInt(11);
+    int n4 = Math.abs(r.nextInt() % 11);
+    System.out.println(&quot;n3:&quot;+n3);
+    System.out.println(&quot;n4:&quot;+n4);
+}
+
+
+/**
+ * 生成[-3,15)区间的整数
+ * 
+ */
+@Test
+public void Demo8(){
+    Random r = new Random();
+    int n4 = r.nextInt(18) - 3;
+    int n5 = Math.abs(r.nextInt() % 18) - 3;
+    System.out.println(&quot;n4:&quot;+n4);
+    System.out.println(&quot;n5:&quot;+n5);
+}
+</code></pre><p>}</p>
+<hr>
+<p>关于nextInt()函数的一点儿说明：<br>如果想得到30到200的(包含30和200)这个跨度的数在java中一般可以有如下方式获得  </p>
+<pre><code>（1）int i = (int)(Math.random()*171) + 30;  
+
+（2）Random r = new Random () ;  
+     r.nextInt (201) ;     // 这个是0 - 200  
+
+（3）Random r = new Random () ;  
+     r.nextInt (171) + 30 ; // 这个是30 到 200.  
+
+//如下为二维数组的一点儿东西  
+public class 数组的使用说明代码 {  
+     public static void main(String args[]){  
+         int[] array=creatArray(10);   
+            printArray(array);   
+     }  
+     public static int[] creatArray(int length){        //构造含length个元素的数组的方法  
+          int[] array =new int[length];   
+          Random rad=new Random();                //产生随机数的方法（系统自己的）  
+          for(int i=0;i&lt;array.length;i++){   
+              int value = rad.nextInt(100) + 200;       //rad.nextInt(100) 意思是随机产生一个大于等于0小于100的数  ------即包含0不包含100  
+              array[i]=value;   
+           }   
+         return array;   
+      }   
+
+     public static void printArray(int[] array){   
+        for(int i=0;i&lt;array.length;i++)   
+            System.out.println(array[i]+&apos;\t&apos;);   
+          }   
+}  
 </code></pre>
           
         
@@ -1120,7 +1268,7 @@ parseInt(&quot;010&quot;);        //未定：返回 10 或 8
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

@@ -97,7 +97,8 @@
 <meta property="og:image" content="https://i.imgur.com/pgdqTkV.png">
 <meta property="og:image" content="https://i.imgur.com/U1ggRNv.png">
 <meta property="og:image" content="https://i.imgur.com/XQSLfvz.png">
-<meta property="og:updated_time" content="2018-09-16T12:28:02.574Z">
+<meta property="og:image" content="https://i.imgur.com/53RLP7k.png">
+<meta property="og:updated_time" content="2018-10-19T10:36:11.101Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux基础之文件类型-权限">
 <meta name="twitter:description" content="目录和权限 [windows] 以磁盘分区物理结构作为文件系统结构 每个用户在/home下面都有一个自己的家目录比如centos的家目录在/home/centos但是root是管理员比较特殊root的目录在/root下~是home的子一级 ‘ [centos] 逻辑结构./                    //文件系统的根.  /bin                //最初的命令(祖先)，">
@@ -460,6 +461,95 @@ chmod                //不受文件权限控制,只有owner和root才具有文�
 <p>这里面的小细节格式 ：<br>    chmode 655 a.txt</p>
 <pre><code>chmode g+w a.txt
 </code></pre><hr>
+<p>文本输入格式他的偏移量是Longwritable,他的值是value是一行，在定义采样器的时候，是intwritable。<br>要是做采样要对产生年份和温度采样。如果是文本输入格式就是文本偏移量和value。所以要把采样器采取的样本换成kv的值，而不是文本的偏移量和文本，所以对数据改造，改成序列文件，序列文件就可以读成kv了。要把输入文件改成序列文件，才可以采到他的值。</p>
+<p>package com.it18zhang.hdfs.maxtemp;</p>
+<p>import org.apache.hadoop.conf.Configuration;<br>import org.apache.hadoop.fs.Path;<br>import org.apache.hadoop.io.IntWritable;<br>import org.apache.hadoop.mapreduce.Job;<br>import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;<br>import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;<br>import org.apache.hadoop.mapreduce.lib.partition.InputSampler;<br>import org.apache.hadoop.mapreduce.lib.partition.TotalOrderPartitioner;</p>
+<p>public class MaxTempApp {</p>
+<pre><code>public static void main(String[] args) throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(&quot;fs.defaultFS&quot;, &quot;file:///&quot;);
+
+    Job job = Job.getInstance(conf);
+</code></pre><p>//        设置作业的各种属性<br>        job.setJobName(“MaxTempApp”);    //作业名称<br>        job.setJarByClass(MaxTempApp.class); //搜索类路径<br>        job.setInputFormatClass(SequenceFileInputFormat.class);//设置输入格式类</p>
+<pre><code>    //添加输入路径
+    FileInputFormat.addInputPath(job, new Path(args[0]));
+    //设置输出路径
+    org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+    job.setMapperClass(MaxTempMapper.class);         //mapper类
+    job.setReducerClass(MaxTempReducer.class);       //reduce类
+
+
+    job.setMapOutputKeyClass(IntWritable.class);
+    job.setMapOutputValueClass(IntWritable.class);
+
+    job.setOutputKeyClass(IntWritable.class);          //设置输出类型
+    job.setOutputValueClass(IntWritable.class);
+
+    //设置 全排序分区类
+    job.setPartitionerClass(TotalOrderPartitioner.class);
+    //将sample数据 写入分区文件
+    TotalOrderPartitioner.setPartitionFile(conf, new Path(&quot;e:/mr/par.lst&quot;));
+
+    //创建随机采样器对象
+    InputSampler.Sampler&lt;IntWritable, IntWritable&gt; sampler = new InputSampler.RandomSampler&lt;IntWritable, IntWritable&gt;(0.1, 10000, 10);
+    job.setNumReduceTasks(3);           //reduce个数
+    InputSampler.writePartitionFile(job, sampler);
+
+
+    job.waitForCompletion(true);
+
+}
+</code></pre><p>}</p>
+<hr>
+<pre><code>public class MaxTempMapper extends Mapper&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt; {
+    public MaxTempMapper() {
+        System.out.println(&quot;new MaxTempMapper&quot;);
+    }
+
+    @Override
+    protected void map(IntWritable key, IntWritable value, Context context) throws IOException, InterruptedException {
+        context.write(key,value);
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempReducer extends Reducer&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(IntWritable key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int max =Integer.MIN_VALUE;
+            for(IntWritable iw : values){
+                max = max &gt; iw.get() ? max : iw.get() ;
+            }
+                context.write(key,new IntWritable(max));
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class YearPartitioner extends Partitioner&lt;IntWritable, IntWritable&gt; {
+
+    public int getPartition(IntWritable year, IntWritable temp, int parts) {
+        int y = year.get() - 1970;
+        if (y &lt; 33) {
+            return 0;
+        }
+        if (y &gt; 33 &amp;&amp; y &lt; 66) {
+            return 1;
+        }
+        else {
+            return 2;
+        }
+    }
+}
+</code></pre><hr>
+<p>上图在运行的时候要注意的问题：</p>
+<p>1.Sequencen的输入是intwriteble和intwritable输入的模式</p>
+<p>2.在MaxTempApp里面的创建随机采样器和设置reduce个数，全排序分区类，sampler写入分区文件是有顺序的，看源码可以找到顺序</p>
+<p>2.5这个地方有一个设置分区个数的问题，如果是设置到了采样个数之后，那么就不需要采样了，采样的目的就是为了把分区设置2条分界线，要预先知道分区有几个，然后才能设置好分界线。</p>
+<p>3.在后面用到conf的时候，已经不再是之前的conf了，是有修改了的所以要用job.configuration。如下图要变成这样。这边的job.configuration是做了一个拷贝，并不是操纵conf的。在前面写着有Job job = Job.getInstance(conf);在这句话里面，又new了一个新的conf。所以这个conf并不是原来的new的那个conf。所以要用job.configuration()这样的语句，如果用conf就找不到原来文件的位置了。</p>
+<p><img src="https://i.imgur.com/53RLP7k.png" alt=""></p>
 
       
     </div>
@@ -649,7 +739,7 @@ chmod                //不受文件权限控制,只有owner和root才具有文�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
