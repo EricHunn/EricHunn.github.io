@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="多输入问题,计数器使用,跟踪运行信息," />
+  <meta name="keywords" content="多输入问题,计数器使用,跟踪运行信息,产生随机数文件,全排序,全排序采样器,二次排序,倒排序," />
 
 
 
@@ -82,7 +82,7 @@
 
 
 <meta name="description" content="多输入问题在IDEA里面代码： 首先明确一点InputInputformat也就是文本输入格式的输入是Longwritblele和Text，然后SequenceFileputFormat的输入是intwritble和text。 public class WCApp {      public static void main(String[] args) throws Exception {">
-<meta name="keywords" content="多输入问题,计数器使用,跟踪运行信息">
+<meta name="keywords" content="多输入问题,计数器使用,跟踪运行信息,产生随机数文件,全排序,全排序采样器,二次排序,倒排序">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop第七天">
 <meta property="og:url" content="http://erichunn.github.io/2018/10/17/Hadoop第七天/index.html">
@@ -92,7 +92,7 @@
 <meta property="og:image" content="https://i.imgur.com/vO9wETa.png">
 <meta property="og:image" content="https://i.imgur.com/UVIcFDb.png">
 <meta property="og:image" content="https://i.imgur.com/XeGcZvS.png">
-<meta property="og:updated_time" content="2018-10-19T10:48:20.600Z">
+<meta property="og:updated_time" content="2018-10-21T13:04:23.216Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop第七天">
 <meta name="twitter:description" content="多输入问题在IDEA里面代码： 首先明确一点InputInputformat也就是文本输入格式的输入是Longwritblele和Text，然后SequenceFileputFormat的输入是intwritble和text。 public class WCApp {      public static void main(String[] args) throws Exception {">
@@ -827,6 +827,164 @@ context.getCounter(&quot;m&quot;,Util.getInfo(this,&quot;map&quot;)).increment(1
     TotalOrderPartitioner.setPartitionFile(job.getConfiguration(),new Path(&quot;d:/mr/par.lst&quot;));
 </code></pre><hr>
 <hr>
+<p><strong>## 全排序和部分排序二次排序在面试比例很重的 ##</strong><br>分区在map端，分组在reduce端。<br>二次排序就是把value和key组合到一起，然后value就是nullwritable这样子。合在一起成为一个combokey。<br>Combokey不但要可比较还要串行化，hadoop的串行化机制是writable ，串行就是写入到流离去，反串行就是读出来。<br>IntWritable LongWritable这些都是经过串行化实现的类，Writable有很多子类。 </p>
+<p>二次排序代码如下：<br>    /**</p>
+<pre><code> * 自定义组合key
+ */
+public class ComboKey implements WritableComparable&lt;ComboKey&gt; {
+    private int year;
+    private int temp;
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getTemp() {
+        return temp;
+    }
+
+    public void setTemp(int temp) {
+        this.temp = temp;
+    }
+
+    /**
+     * 对key进行比较实现
+     */
+    public int compareTo(ComboKey o) {
+        int y0 = o.getYear();
+        int t0 = o.getTemp();
+        //年份相同(升序)
+        if (year == y0) {
+            //气温降序
+            return -(temp - t0);
+        } else {
+            return year - y0;
+        }
+    }
+
+    /**
+     * 串行化过程
+     */
+    public void write(DataOutput out) throws IOException {
+        //年份
+        out.writeInt(year);
+        //气温
+        out.writeInt(temp);
+    }
+
+    public void readFields(DataInput in) throws IOException {
+        year = in.readInt();
+        temp = in.readInt();
+    }
+}
+</code></pre><hr>
+<pre><code>/**
+ *ComboKeyComparator
+ */
+public class ComboKeyComparator extends WritableComparator {
+
+    protected ComboKeyComparator() {
+        super(ComboKey.class, true);
+    }
+
+    public int compare(WritableComparable a, WritableComparable b) {
+        ComboKey k1 = (ComboKey) a;
+        ComboKey k2 = (ComboKey) b;
+        return k1.compareTo(k2);
+    }
+}
+</code></pre><hr>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;, &quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//        设置作业的各种属性
+        job.setJobName(&quot;SecondarySortApp&quot;);    //作业名称
+        job.setJarByClass(MaxTempApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        job.setMapperClass(MaxTempMapper.class);         //mapper类
+        job.setReducerClass(MaxTempReducer.class);       //reduce类
+
+        //设置map输出类型
+        job.setMapOutputKeyClass(ComboKey.class);
+        job.setMapOutputValueClass(NullWritable.class);
+
+        //设置Reduceoutput类型
+        job.setOutputKeyClass(IntWritable.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        //设置分区类
+        job.setPartitionerClass(YearPartitioner.class);
+        //设置分组对比器。
+        job.setGroupingComparatorClass(YearGroupComparator.class);
+        //设置排序对比器，听说不写那个ComboKeyComparator不设置也可以
+        job.setSortComparatorClass(ComboKeyComparator.class);
+        //reduce个数
+        job.setNumReduceTasks(3);
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempMapper extends Mapper&lt;LongWritable, Text, ComboKey, NullWritable&gt; {
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String line = value.toString();
+        String[] arr = line.split(&quot; &quot;);
+
+        ComboKey keyout = new ComboKey();
+        keyout.setYear(Integer.parseInt(arr[0]));
+        keyout.setTemp(Integer.parseInt(arr[1]));
+        context.write(keyout, NullWritable.get());
+    }
+  }
+</code></pre><hr>
+<pre><code>/**
+ * Reducer
+ */
+public class MaxTempReducer extends Reducer&lt;ComboKey, NullWritable, IntWritable, IntWritable&gt;{
+    protected void reduce(ComboKey key, Iterable&lt;NullWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int year = key.getYear();
+            int temp = key.getTemp();
+            context.write(new IntWritable(year),new IntWritable(temp));
+    }
+}
+</code></pre><hr>
+<pre><code>public class YearGroupComparator extends WritableComparator {
+
+    protected YearGroupComparator() {
+        super(ComboKey.class, true);
+    }
+
+    public int compare(WritableComparable a, WritableComparable b) {
+        ComboKey k1 = (ComboKey) a ;
+        ComboKey k2 = (ComboKey) b ;
+        return k1.getYear() - k2.getYear() ;
+    }
+}
+</code></pre><hr>
+<pre><code>public class YearPartitioner extends Partitioner&lt;ComboKey,NullWritable&gt; {
+
+    public int getPartition(ComboKey key, NullWritable nullWritable, int numPartitions) {
+        int year = key.getYear();
+        return year % numPartitions;
+    }
+}
+</code></pre><hr>
+<hr>
+<hr>
 
       
     </div>
@@ -886,6 +1044,16 @@ context.getCounter(&quot;m&quot;,Util.getInfo(this,&quot;map&quot;)).increment(1
             <a href="/tags/计数器使用/" rel="tag"># 计数器使用</a>
           
             <a href="/tags/跟踪运行信息/" rel="tag"># 跟踪运行信息</a>
+          
+            <a href="/tags/产生随机数文件/" rel="tag"># 产生随机数文件</a>
+          
+            <a href="/tags/全排序/" rel="tag"># 全排序</a>
+          
+            <a href="/tags/全排序采样器/" rel="tag"># 全排序采样器</a>
+          
+            <a href="/tags/二次排序/" rel="tag"># 二次排序</a>
+          
+            <a href="/tags/倒排序/" rel="tag"># 倒排序</a>
           
         </div>
       
@@ -1014,7 +1182,7 @@ context.getCounter(&quot;m&quot;,Util.getInfo(this,&quot;map&quot;)).increment(1
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

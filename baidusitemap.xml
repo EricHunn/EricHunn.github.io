@@ -5,7 +5,7 @@
     
   <url>
     <loc>http://erichunn.github.io/2018/10/17/Hadoop%E7%AC%AC%E4%B8%83%E5%A4%A9/</loc>
-    <lastmod>2018-10-19T10:48:20.600Z</lastmod>
+    <lastmod>2018-10-21T13:04:23.216Z</lastmod>
     <data>
         <display>
         <title>Hadoop第七天</title>
@@ -16,6 +16,16 @@
         <tag>计数器使用</tag>
          
         <tag>跟踪运行信息</tag>
+         
+        <tag>产生随机数文件</tag>
+         
+        <tag>全排序</tag>
+         
+        <tag>全排序采样器</tag>
+         
+        <tag>二次排序</tag>
+         
+        <tag>倒排序</tag>
          
          
            
@@ -139,9 +149,9 @@
         <title>Hadoop第五天01之hdfs写入剖析</title>
         <pubTime>2018-10-05T08:31:19.000Z</pubTime>
         
-        <tag>Hadoop</tag>
-         
         <tag>hdfs写入</tag>
+         
+        <tag>Hadoop</tag>
          
          
            
