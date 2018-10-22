@@ -726,7 +726,7 @@ context.getCounter(&quot;m&quot;,Util.getInfo(this,&quot;map&quot;)).increment(1
     }
 }
 </code></pre><hr>
-<h1 id="全排序采样器-1"><a href="#全排序采样器-1" class="headerlink" title="全排序采样器"></a>全排序采样器</h1><pre><code>        public static void main(String[] args) throws Exception {
+<h2 id="全排序采样器代码"><a href="#全排序采样器代码" class="headerlink" title="全排序采样器代码"></a>全排序采样器代码</h2><pre><code>        public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
     conf.set(&quot;fs.defaultFS&quot;, &quot;file:///&quot;);
 
@@ -827,7 +827,7 @@ context.getCounter(&quot;m&quot;,Util.getInfo(this,&quot;map&quot;)).increment(1
 </code></pre><hr>
 <hr>
 <p><strong>## 全排序和部分排序二次排序在面试比例很重的 ##</strong><br>分区在map端，分组在reduce端。<br>二次排序就是把value和key组合到一起，然后value就是nullwritable这样子。合在一起成为一个combokey。<br>Combokey不但要可比较还要串行化，hadoop的串行化机制是writable ，串行就是写入到流离去，反串行就是读出来。<br>IntWritable LongWritable这些都是经过串行化实现的类，Writable有很多子类。 </p>
-<p>二次排序代码如下：<br>    /**</p>
+<h1 id="二次排序"><a href="#二次排序" class="headerlink" title="二次排序"></a>二次排序</h1><p>代码如下：<br>    /**</p>
 <pre><code> * 自定义组合key
  */
 public class ComboKey implements WritableComparable&lt;ComboKey&gt; {
