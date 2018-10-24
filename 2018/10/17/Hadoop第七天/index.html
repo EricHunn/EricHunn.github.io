@@ -92,7 +92,7 @@
 <meta property="og:image" content="https://i.imgur.com/vO9wETa.png">
 <meta property="og:image" content="https://i.imgur.com/UVIcFDb.png">
 <meta property="og:image" content="https://i.imgur.com/XeGcZvS.png">
-<meta property="og:updated_time" content="2018-10-22T07:29:20.037Z">
+<meta property="og:updated_time" content="2018-10-22T11:00:54.830Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop第七天">
 <meta name="twitter:description" content="多输入问题在IDEA里面代码： 首先明确一点InputInputformat也就是文本输入格式的输入是Longwritblele和Text，然后SequenceFileputFormat的输入是intwritble和text。 public class WCApp {      public static void main(String[] args) throws Exception {">
@@ -828,8 +828,9 @@ context.getCounter(&quot;m&quot;,Util.getInfo(this,&quot;map&quot;)).increment(1
 </code></pre><hr>
 <hr>
 <p><strong>## 全排序和部分排序二次排序在面试比例很重的 ##</strong><br>分区在map端，分组在reduce端。<br>二次排序就是把value和key组合到一起，然后value就是nullwritable这样子。合在一起成为一个combokey。<br>Combokey不但要可比较还要串行化，hadoop的串行化机制是writable ，串行就是写入到流离去，反串行就是读出来。<br>IntWritable LongWritable这些都是经过串行化实现的类，Writable有很多子类。 </p>
-<h1 id="二次排序"><a href="#二次排序" class="headerlink" title="二次排序"></a>二次排序</h1><p>代码如下：<br>    /**</p>
-<pre><code> * 自定义组合key
+<h1 id="二次排序"><a href="#二次排序" class="headerlink" title="二次排序"></a>二次排序</h1><p>代码如下：</p>
+<pre><code>/**
+ * 自定义组合key
  */
 public class ComboKey implements WritableComparable&lt;ComboKey&gt; {
     private int year;
@@ -1076,6 +1077,10 @@ public class MaxTempReducer extends Reducer&lt;ComboKey, NullWritable, IntWritab
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/10/22/Hadoop第八天/" rel="prev" title="Hadoop第八天">
+                Hadoop第八天 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -1160,7 +1165,7 @@ public class MaxTempReducer extends Reducer&lt;ComboKey, NullWritable, IntWritab
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1182,7 +1187,7 @@ public class MaxTempReducer extends Reducer&lt;ComboKey, NullWritable, IntWritab
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

@@ -328,6 +328,198 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/20/Linux基础之Yum命令/" itemprop="url">Linux基础之Yum命令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-20T18:17:43+08:00">
+                2018-09-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="软件源"><a href="#软件源" class="headerlink" title="软件源"></a>软件源</h2><pre><code>Repository        //仓库.
+URL                //http:// 
+
+.d                //directory目录
+xxxd            //daemon
+</code></pre><h2 id="查看仓库文件"><a href="#查看仓库文件" class="headerlink" title="查看仓库文件"></a>查看仓库文件</h2><pre><code>/etc/yum.repos.d/xxx.repo
+</code></pre><h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>传输url上的数据的。</p>
+<p>[下载文件到指定目录]</p>
+<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+</code></pre><h2 id="更换centos的软件源"><a href="#更换centos的软件源" class="headerlink" title="更换centos的软件源"></a>更换centos的软件源</h2><p>1.下载源仓库文件,xxx.repo</p>
+<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+</code></pre><p>2.将repo文件保存到/etc/yum.repos.d/目录中。</p>
+<h2 id="屏蔽软件仓库"><a href="#屏蔽软件仓库" class="headerlink" title="屏蔽软件仓库"></a>屏蔽软件仓库</h2><p>1.将/etc/yum.repos.d/xxx.repo文件删除或者更换扩展名即可。</p>
+<h2 id="修改centos能够使用sudo命令"><a href="#修改centos能够使用sudo命令" class="headerlink" title="修改centos能够使用sudo命令"></a>修改centos能够使用sudo命令</h2><pre><code>[/etc/sudoers]
+$&gt;su root
+$&gt;nano /etc/sudoers
+    ...
+    centos ALL
+</code></pre><h2 id="使用yum进行软件包安装卸载"><a href="#使用yum进行软件包安装卸载" class="headerlink" title="使用yum进行软件包安装卸载"></a>使用yum进行软件包安装卸载</h2><pre><code>$&gt;yum list                            //列出所有软件包
+$&gt;yum list installed                //列出已经安装的软件包
+$&gt;yum list installed | grep nano    //列出已经安装的软件包
+$&gt;yum search nano                    //在yum的软件源中搜索软件 
+$&gt;yum remove nano                    //卸载软件
+$&gt;yum -y install nano                //直接安装，不需要yes确认.
+$&gt;yum list installed | grep nano    //查看是否安装了Nano
+
+$&gt;mkdir /home/centos/rpms
+
+$echo 以下命令只下载软件，不安装软件
+$&gt;sudo yum install --downloadonly                //只下载
+              --downloaddir=/home/centos/rpms    //指定下载目录
+              wget
+
+//下载已经安装的软件
+$&gt;sudo yum reinstall --downloadonly    
+                     --downloaddir=/home/centos/rpms
+                     wget
+
+$&gt;sudo yum localinstall xxx.rpm    //从本地rpm文件直接安装软件
+
+
+
+$&gt;su root
+$&gt;yum search ifconfig
+$&gt;yum -y install net-tools        //安装网络工具
+
+
+#==========修改网络地址======================    //需要重启network服务
+$&gt;sudo nano /etc/sysconfig/network-scripts/ifcfg-eth1677736
+    [/etc/sysconfig/network-scripts/ifcfg-eth1677736]
+    ...
+    IPADDR=192.168.231.201
+    GATEWAY=192.168.231.2
+    DNS=192.168.231.2
+
+$&gt;service network restart                        //重启网络服务。
+
+$&gt;sudo nano /etc/resolv.conf                    //修改该文件不需要重启network服务
+    [/etc/resolv.conf]
+    nameserver 192.168.231.2
+</code></pre><h2 id="在没有nano时，使用自带的vi文本编辑器"><a href="#在没有nano时，使用自带的vi文本编辑器" class="headerlink" title="在没有nano时，使用自带的vi文本编辑器"></a>在没有nano时，使用自带的vi文本编辑器</h2><pre><code>1.vi xx.txt
+</code></pre><p>2.模式切换</p>
+<pre><code>esc                //切换到命令模式,退出编辑模式
+                //:q!  不保存退出
+                //:wq  保存退出
+                //x        删除一个字符
+                //dd    删除一行
+
+insert            //切换到编辑模式,退出命令模式
+                //del backspace
+</code></pre><h2 id="Which命令"><a href="#Which命令" class="headerlink" title="Which命令"></a>Which命令</h2><p>which命令用于查找并显示给定命令的绝对路径，环境变量PATH中保存了查找命令时需要遍历的目录。</p>
+<p>which指令会在环境变量$PATH设置的目录里查找符合条件的文件。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre><code>which(选项)(参数)
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/19/Linux基础第之循环命令/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1943,241 +2135,6 @@ chmod                //不受文件权限控制,只有owner和root才具有文�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/16/Linux基础之CentOS命令基础/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/16/Linux基础之CentOS命令基础/" itemprop="url">Linux基础</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-16T10:02:53+08:00">
-                2018-09-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <pre><code>CentOS                        Windows
-$&gt;ls                        cmd&gt;dir                //
-$&gt;ls --help                                        //查看命令帮助
-$&gt;man ls                                        //查看命令帮助
-
-$&gt;clear                        cmd&gt;cls                //清屏
-$&gt;cd /home                    cmd&gt;cd d:/            //切换目录
-$&gt;cd .                        cmd&gt;cd .            //进入当前目录
-$&gt;cd ..                        cmd&gt;cd ..            //进入上级目录
-$&gt;cd /home/centos            cmd&gt;cd d:/xx/x/x    //进入绝对路径
-</code></pre><hr>
-<pre><code>$&gt;pwd                                            //显式当前目录
-$&gt;whoami                                        //显式当前用户名
-
-$&gt;su root                                        //切换用户,输入密码,swith user
-$&gt;passwd                                        //修改当前用户的密码
-
-$&gt;ifconfig                    cmd&gt;ipconfig            //查看ip地址
-$&gt;ping localhost            cmd&gt;ping localhost        //查看网络连通情况
-$&gt;ping www.baidu.com        cmd&gt;ping www.baidu.com    //查看网络连通情况
-
-$&gt;启动桌面版的网卡
-    on.
-$&gt;su centos                                            //
-$&gt;cd /home/centos                                    //
-$&gt;cd ~                                                //回到主目录
-$&gt;cd -                                                //回到上次的目录
-$&gt;ll                                                //别名,ls -l --autocolor...
-$&gt;alias                                                //查看所有的别名
-$&gt;ls -a -l -h                                        //查看当前目录-h:人性化 -l:列表 -a:显式.开头
-$&gt;mkdir ~/Downloads/a                                //创建目录
-$&gt;touch ~/Downloads/a/1.txt                            //创建文件
-$&gt;echo helloworld &gt; 1.txt                            //重定向输出(覆盖)
-$&gt;echo helloworld &gt;&gt; 1.txt                            //重定向输出(追加模式)
-$&gt;cat 1.txt                    cmd&gt;type a.txt            //查看文件
-$&gt;cp 1.txt 2.txt                                    //复制文件
-$&gt;rm 1.txt                                            //删除文件
-$&gt;rm -rf /                                            //强行递归删除
-$&gt;mv a.txt tmp/                                        //强行递归删除
-
-
-[centos client中切换模式]
-ctrl + alt + f6                                        //切换到文本模式
-ctrl + alt                                            //切换鼠标
-ctrl + alt + f1                                        //切换桌面模式.
-ctrl + alt + f5                                        //切换到新的文本模式
-
-
-
-[nano文本编辑器,命令行模式]
-$&gt;nano a.txt                                        //打开nano编辑器，编辑a.txt文件
-$&gt;....
-$&gt;ctrl + o                                            //保存文件,提示后直接回车
-$&gt;ctrl + x                                            //退出文件
-$&gt;ctrl + k                                            //cut 文本
-$&gt;ctrl + u                                            //cut 文本
-
-$&gt;more a.txt                                        //分屏显式
-  q:退出
-  h:帮助
-$&gt;more -5 a.txt                                        //显式前5行内容
-$&gt;tail a.txt                                        //最后10行内容
-
-$&gt;find . | more                                        // | 是管道符，前面的命令的输出作为后面命令输入。
-$&gt;find ~                                            
-$&gt;ls -aR ~                                            //递归显式主目录所有的文件.(a表示包含.开头的文件)
-$&gt;head a.txt                                        //显式前10行
-$&gt;head -n 10 a.txt                                    //显式前10行
-$&gt;head -10 a.txt                                    //显式前10行
-
-$&gt;tail a.txt
-$&gt;tail -n 20 a.txt
-$&gt;tail -20 a.txt
-$&gt;tail --lines=20 a.txt
-
-$&gt;wc -c -l -w a.txt                                    //统计文本信息,
-                                                    //显式统计信息-c:字节 -l:line -w:word
-
-$&gt;hostname        //查看主机名称
-$&gt;uname -r        //查看系统内核
-$&gt;uname -a        //查看系统内核
-$&gt;uname -p        //查看系统内核
-$&gt;uname -m        //查看系统内核
-
-
-$&gt;file xxx.xx        //查看文件类型
-$&gt;gzip a.txt        //原地压缩
-$&gt;gzip -d a.txt        //原地压缩
-$&gt;gzip -dr tmp        //递归操纵文件夹下的文件
-$&gt;gunzip a.txt.gz    //等价于gzip -d a.txt
-
-$&gt;tar -cvf my.tar 1.txt tmp        //创建归档文件
-$&gt;tar -vxf my.tar                //解档文件
-</code></pre><p>把多个文件保存到一个文件，也可以从归档文件恢复到单个文件</p>
-<pre><code>-c create创建
--f 归档文件名
--vf 列出所有文件在。。里面
--xf 从。。里面抽取所有文件。
-—r 追加
--cf 创建
-</code></pre><p>例子</p>
-<pre><code>tar -cf my.tar a.txt ：将a.txt归档压缩到my.tar
-tar -xvf my.tar a.txt: 抽取my.tar里面的a.txt
-tar -cf my.tar a.txt tmp/ :将a.txt和tmp/都压缩到my.tar里面
-</code></pre><hr>
-<p><img src="https://i.imgur.com/USxFESR.png" alt=""></p>
-<p>xargs</p>
-<pre><code>在&apos;xargs&apos;加单引号把他识别为一个命令。
-$&gt;find . | grep txt | cp `xargs` temp    //xargs是多行变单行，使用空格替换回车换行符.
-                                        //`` : 是强制命令解析。
-</code></pre><p><img src="https://i.imgur.com/DEbAcEb.png" alt=""></p>
-<p>反引号’’问题</p>
-<p><img src="https://i.imgur.com/lqhkxfD.png" alt=""></p>
-<pre><code>$&gt;ping `cat a.txt`                        //命令嵌套
-</code></pre><p><img src="https://i.imgur.com/MLzjLoQ.png" alt=""></p>
-<pre><code>$&gt;which echo                            //查看命令的文件路径
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2232,7 +2189,7 @@ $&gt;find . | grep txt | cp `xargs` temp    //xargs是多行变单行，使用�
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2254,7 +2211,7 @@ $&gt;find . | grep txt | cp `xargs` temp    //xargs是多行变单行，使用�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

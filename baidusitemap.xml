@@ -4,8 +4,30 @@
 
     
   <url>
+    <loc>http://erichunn.github.io/2018/10/22/Hadoop%E7%AC%AC%E5%85%AB%E5%A4%A9/</loc>
+    <lastmod>2018-10-24T11:12:28.389Z</lastmod>
+    <data>
+        <display>
+        <title>Hadoop第八天</title>
+        <pubTime>2018-10-22T11:40:51.000Z</pubTime>
+        
+        <tag>二次排序链条化</tag>
+         
+        <tag>数据倾斜</tag>
+         
+         
+           
+             
+              <breadCrumb title="Hadoop" url="http://erichunn.github.io/categories/Hadoop/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://erichunn.github.io/2018/10/17/Hadoop%E7%AC%AC%E4%B8%83%E5%A4%A9/</loc>
-    <lastmod>2018-10-22T07:29:20.037Z</lastmod>
+    <lastmod>2018-10-22T11:00:54.830Z</lastmod>
     <data>
         <display>
         <title>Hadoop第七天</title>

@@ -328,6 +328,881 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/22/Hadoop第八天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/22/Hadoop第八天/" itemprop="url">Hadoop第八天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-22T19:40:51+08:00">
+                2018-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="二次排序链条化"><a href="#二次排序链条化" class="headerlink" title="二次排序链条化"></a>二次排序链条化</h1><p>分组不能解决数据倾斜问题，已经进入到了同一个reduce对象里面了，分一个组出来就进入同一个reduce方法里面。每次分组只是决定调用不调用同一个reduce方法。已经晚了，数据已经进入到了同一个reduce了，分区可以决定数据倾斜问题。</p>
+<p>reduce分为方法和对象，有的时候说reduce是指的是方法，有的时候指的是对象，要分开对待。</p>
+<p>单词统计做统计肯定不能哈希分区，因为哈希同一个值进入到同一个reduce对象利民区去了</p>
+<h1 id="数据倾斜问题-随机分区-二次MR"><a href="#数据倾斜问题-随机分区-二次MR" class="headerlink" title="数据倾斜问题 随机分区 二次MR"></a>数据倾斜问题 随机分区 二次MR</h1><pre><code>1.
+2.
+3.
+4.
+</code></pre><p>如果正常按照wordcount来处理会分为</p>
+<p>reduce不设置就是1，map没机会设置数量。但是也可以设置map，但是意义，以为mr提交的时候map的个数取决于切片的个数。</p>
+<p>切片的计算公式：min block、maxsplit、 blocksize取中间值<br>等于blocksize。</p>
+<p>现在文件如下，现在3个文件每个文件有一百万数据且有一百万个hello就对应了3个map。（这里没明白为什么3个切片也就是为啥3个map）</p>
+<p>每个切片里，分区个数等于reduce个数，分区的个数取决于reduce个数，之前自己已经在WCAPP里面设置好了reduce个数。</p>
+<p>我有3个map，4个reduce。那么每个map里面就有4个分区了。</p>
+<p><strong>要解决哈希分区带来的数据倾斜问题，可以通过随机分区，然后在进行二次mr来解决这个问题</strong></p>
+<p><img src="https://i.imgur.com/VoHpfBH.png" alt=""></p>
+<p>组合combineor是对分区里面的预先聚合，下面的hello就不会发送一百万次，而是提前聚合了发送了hello 一百万次。这个样子。能解决目前的倾斜问题，但是不可能这么多数据，可能量很大</p>
+<p>下面这种情况下，所有的hello根据哈希分区就进入到同一个分区，然后一百万个tom分4个分区</p>
+<p>通过随机分区可以解决数据倾斜问题，但是会产生新的问题，就是说hello被分到4个不同的reduce里面，导致reduce1产生hello10reduce2产生hello13这种问题，所以通过二次mr来解决这个问题，让hello这个单词统计，进入到同一个reduce结果当中。所以也就是通过随即分区和二次mr解决</p>
+<pre><code>[1.txt]1000000
+hello tom1
+hello tom2
+hello tom3
+hello tom4
+hello tom5
+hello tom6
+hello tom7
+hello tom8
+hello tom9
+hello tom10
+
+[2.txt]1000000
+hello tom11
+hello tom12
+hello tom13
+hello tom14
+hello tom15
+hello tom16
+hello tom17
+hello tom18
+hello tom19
+hello tom20
+
+[3.txt]1000000
+hello tom21
+hello tom22
+hello tom23
+hello tom24
+hello tom25
+hello tom26
+hello tom27
+hello tom28
+hello tom29
+hello tom30
+</code></pre><p>代码如下：<br>    //自定义分区函数<br>    public class RandomPartitioner extends Partitioner&lt;Text,IntWritable&gt; {<br>        @Override<br>        public int getPartition(Text text, IntWritable intWritable, int numPartitions) {<br>            return new Random().nextInt(numPartitions);<br>        }<br>    }</p>
+<hr>
+<pre><code>//解决数据倾斜问题：
+public class WCSkueApp {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+        Job job = Job.getInstance(conf);
+
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCSkueApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:/mr/skew/out&quot;));
+
+        //设置随机分区：
+        job.setPartitionerClass(RandomPartitioner.class);
+
+        job.setMapperClass(WCSkueMapper.class);         //mapper类
+        job.setReducerClass(WCSkueReducer.class);       //reduce类
+
+        job.setNumReduceTasks(4);
+
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueMapper extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+    public WCSkueMapper(){
+        System.out.println(&quot;new WCMapper&quot;);
+    }
+
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] arr = value.toString().split(&quot; &quot;);
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+
+        for(String s:arr){
+            keyout.set(s);
+            valueout.set(1);
+            context.write(keyout,valueout);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+
+
+    }
+}
+</code></pre><hr>
+<p>//解决数据倾斜问题：<br>    public class WCSkueApp2 {</p>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+        Job job = Job.getInstance(conf);
+
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCSkueApp2.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00000&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00001&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00002&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00003&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:/mr/skew/out2&quot;));
+
+
+        job.setMapperClass(WCSkueMapper2.class);         //mapper类
+        job.setReducerClass(WCSkueReducer2.class);       //reduce类
+
+        job.setNumReduceTasks(4);
+
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueMapper2 extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+    public WCSkueMapper2(){
+        System.out.println(&quot;new WCMapper&quot;);
+    }
+
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] arr = value.toString().split(&quot;\t&quot;);
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+        context.write(new Text(arr[0]),new IntWritable(Integer.parseInt(arr[1])));
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueReducer2 extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+
+
+    }
+}
+</code></pre><hr>
+<p>上面这个就是通过2次mr解决数据倾斜问题    但是不用那么麻烦的去切分了直接使用Keyvalueinputformat即可实现：如下代码：<br>    //解决数据倾斜问题：<br>    public class WCSkueApp2 {</p>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+        Job job = Job.getInstance(conf);
+
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCSkueApp2.class); //搜索类路径
+        job.setInputFormatClass(KeyValueTextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00000&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00001&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00002&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00003&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:/mr/skew/out2&quot;));
+
+
+        job.setMapperClass(WCSkueMapper2.class);         //mapper类
+        job.setReducerClass(WCSkueReducer2.class);       //reduce类
+
+        job.setNumReduceTasks(4);
+
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueMapper2 extends Mapper &lt;Text, Text, Text, IntWritable&gt;{
+    public WCSkueMapper2(){
+        System.out.println(&quot;new WCMapper&quot;);
+    }
+
+    protected void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+        context.write(key,new IntWritable(Integer.parseInt(value.toString())));
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueReducer2 extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+    }
+}
+</code></pre><hr>
+<hr>
+<hr>
+<h1 id="链条式编程"><a href="#链条式编程" class="headerlink" title="链条式编程"></a>链条式编程</h1><p><img src="https://i.imgur.com/VwHIXax.png" alt=""></p>
+<p>讲解上图：<br>首先通过MapMapper1来切割，然后通过MapMapper1过滤掉法轮功，真个是一个链条，在map端，执行完之后开始聚合，在reduce端，在聚合的时候，每个单词都有各自的个数，对产生的结果再次过滤，过滤掉少于5的单词，当然可以放到同一个map里面，但是如果变成模块方法，易于维护。更加方便使用。<br>m阶段可以有多个m但是R阶段只能有一个r。但是r阶段可以有多个m。</p>
+<p>代码如下图：<br>//链条式job任务<br>    public class WCChainApp {</p>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCChainApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job, new Path(&quot;e:/mr/skew&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:mr/skew/out&quot;));
+
+        //在map链条上添加一个mapper的环节
+        ChainMapper.addMapper(job,WCMapMapper1.class,LongWritable.class,Text.class,Text.class,IntWritable.class,conf);
+        ChainMapper.addMapper(job,WCMapMapper2.class,Text.class,IntWritable.class,Text.class,IntWritable.class,conf);
+
+        //在reduce链条上设置reduce
+        ChainReducer.setReducer(job,WCReducer.class,Text.class,IntWritable.class,Text.class,IntWritable.class,conf);
+        ChainReducer.addMapper(job,WCReduceMapper1.class,Text.class,IntWritable.class,Text.class,IntWritable.class,conf);
+
+        job.setNumReduceTasks(3);
+
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCMapMapper1 extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+
+    protected   void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+        String[] arr = value.toString().split(&quot; &quot;);
+        for(String s:arr){
+            keyout.set(s);
+            valueout.set(1);
+            context.write(keyout,valueout);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCMapMapper2 extends Mapper &lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    protected void map(Text key, IntWritable value, Context context) throws IOException, InterruptedException {
+        if(!key.toString().equals(&quot;falungong&quot;)){
+            context.write(key , value);
+        }
+
+    }
+}
+</code></pre><hr>
+<pre><code>//过滤单词个数
+public class WCReduceMapper1 extends Mapper&lt;Text,IntWritable,Text,IntWritable&gt; {
+    @Override
+    protected void map(Text key, IntWritable value, Context context) throws IOException, InterruptedException {
+        if(value.get() &gt; 5){
+            context.write(key,value);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>/**
+ * Reducer
+ */
+public class WCReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+
+
+    }
+}
+</code></pre><hr>
+<hr>
+<hr>
+<h2 id="FileInputFormat（读源码）"><a href="#FileInputFormat（读源码）" class="headerlink" title="FileInputFormat（读源码）"></a>FileInputFormat（读源码）</h2><pre><code>获取切片集合。
+子类都要重写方法isSplittable();
+负责创建RecordReader对象。
+设置IO路径。
+</code></pre><h2 id="RecordReader（读源码）"><a href="#RecordReader（读源码）" class="headerlink" title="RecordReader（读源码）"></a>RecordReader（读源码）</h2><pre><code>负责从InputSplit中读取KV对。
+</code></pre><h2 id="jdbc笔记模板："><a href="#jdbc笔记模板：" class="headerlink" title="jdbc笔记模板："></a>jdbc笔记模板：</h2><pre><code>[写操作]
+Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+Connection conn = DriverMananger.getConnection(&quot;jdbc:mysql://localhost:3306/big4&quot;,&quot;root&quot;,&quot;root&quot;);
+//预处理语句
+PreparedStatement ppst = conn.preparedStatement(&quot;insert into test(id,name,age) values(?,?,?)&quot;);
+//绑定参数
+ppst.setInteger(1,1);
+ppst.setInteger(2,&quot;tom&quot;);
+ppst.setInteger(3,12);
+
+ppst.executeUpdate();
+ppst.close();
+conn.close();
+
+
+[读操作]
+Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+Connection conn = DriverMananger.getConnection(&quot;jdbc:mysql://localhost:3306/big4&quot;,&quot;root&quot;,&quot;root&quot;);
+
+ppst = conn.preparedStatement(&quot;select id,name from test &quot;);
+//结果集
+ResultSet rs = ppst.executeQuery();
+while(rs.next()){
+    int id = rs.getInt(&quot;id&quot;);
+    String name = rs.getInt(&quot;name&quot;);
+}
+rs.close();
+conn.close();
+</code></pre><p>看一下下源码：<br><img src="https://i.imgur.com/5ZrVZsW.png" alt=""><br>看一下写和读入都把结果集和预处理语句都已经封装进去了，剩下的只要填空就好了。</p>
+<p>以下是从数据库中读入的代码模板：</p>
+<h1 id="使用DBWritable向数据库从数据库中读取"><a href="#使用DBWritable向数据库从数据库中读取" class="headerlink" title="使用DBWritable向数据库从数据库中读取"></a>使用DBWritable向数据库从数据库中读取</h1><h2 id="1-准备数据库"><a href="#1-准备数据库" class="headerlink" title="1.准备数据库"></a>1.准备数据库</h2><pre><code>create database big4 ;
+use big4 ;
+create table words(id int primary key auto_increment , name varchar(20) , txt varchar(255));
+
+insert into words(name,txt) values(&apos;tomas&apos;,&apos;hello world tom&apos;);
+insert into words(txt) values(&apos;hello tom world&apos;);
+insert into words(txt) values(&apos;world hello tom&apos;);
+insert into words(txt) values(&apos;world tom hello&apos;);
+</code></pre><h2 id="2-编写hadoop-MyDBWritable"><a href="#2-编写hadoop-MyDBWritable" class="headerlink" title="2.编写hadoop MyDBWritable."></a>2.编写hadoop MyDBWritable.</h2><pre><code>import org.apache.hadoop.mapreduce.lib.db.DBWritable;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * MyDBWritable
+ */
+public class MyDBWritable implements DBWritable,Writable {
+    private int id ;
+    private String name ;
+    private String txt ;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTxt() {
+        return txt;
+    }
+
+    public void setTxt(String txt) {
+        this.txt = txt;
+    }
+
+    public void write(DataOutput out) throws IOException {
+        out.writeInt(id);
+        out.writeUTF(name);
+        out.writeUTF(txt);
+    }
+
+    public void readFields(DataInput in) throws IOException {
+        id = in.readInt();
+        name = in.readUTF();
+        txt = in.readUTF();
+    }
+
+    /**
+     * 写入db
+     */
+    public void write(PreparedStatement ppst) throws SQLException {
+        ppst.setInt(1,id);
+        ppst.setString(2,name);
+        ppst.setString(3,txt);
+    }
+
+    /**
+     * 从db读取
+     */
+    public void readFields(ResultSet rs) throws SQLException {
+        id = rs.getInt(1);
+        name = rs.getString(2);
+        txt = rs.getString(3);
+    }
+}
+</code></pre><h2 id="3-WcMapper"><a href="#3-WcMapper" class="headerlink" title="3.WcMapper"></a>3.WcMapper</h2><pre><code>public class WCMapper extends Mapper&lt;LongWritable,MyDBWritable,Text,IntWritable&gt; {
+
+    protected void map(LongWritable key, MyDBWritable value, Context context) throws IOException, InterruptedException {
+        System.out.println(key);
+        String line = value.getTxt();
+        System.out.println(value.getId() + &quot;,&quot; + value.getName());
+        String[] arr = line.split(&quot; &quot;);
+        for(String s : arr){
+            context.write(new Text(s),new IntWritable(1));
+        }
+    }
+}
+</code></pre><h2 id="4-WCReducer"><a href="#4-WCReducer" class="headerlink" title="4.WCReducer"></a>4.WCReducer</h2><pre><code>protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+    int count = 0 ;
+    for(IntWritable w : values){
+        count = count + w.get() ;
+    }
+    context.write(key,new IntWritable(count));
+}
+</code></pre><h2 id="5-WCApp"><a href="#5-WCApp" class="headerlink" title="5.WCApp"></a>5.WCApp</h2><pre><code>public static void main(String[] args) throws Exception {
+    Configuration conf = new Configuration();
+    Job job = Job.getInstance(conf);
+
+    //设置job的各种属性
+    job.setJobName(&quot;MySQLApp&quot;);                        //作业名称
+    job.setJarByClass(WCApp.class);                 //搜索类
+
+    //配置数据库信息
+    String driverclass = &quot;com.mysql.jdbc.Driver&quot; ;
+    String url = &quot;jdbc:mysql://localhost:3306/big4&quot; ;
+    String username= &quot;root&quot; ;
+    String password = &quot;root&quot; ;
+    //设置数据库配置
+    DBConfiguration.configureDB(job.getConfiguration(),driverclass,url,username,password);
+    //设置数据输入内容
+    DBInputFormat.setInput(job,MyDBWritable.class,&quot;select id,name,txt from words&quot;,&quot;select count(*) from words&quot;);
+
+    //设置输出路径
+    FileOutputFormat.setOutputPath(job,new Path(&quot;e:/mr/sql/out&quot;));
+
+    //设置分区类
+    job.setMapperClass(WCMapper.class);             //mapper类
+    job.setReducerClass(WCReducer.class);           //reducer类
+
+    job.setNumReduceTasks(3);                       //reduce个数
+
+    job.setMapOutputKeyClass(Text.class);           //
+    job.setMapOutputValueClass(IntWritable.class);  //
+
+    job.setOutputKeyClass(Text.class);
+    job.setOutputValueClass(IntWritable.class);     //
+
+    job.waitForCompletion(true);
+}
+</code></pre><h2 id="6-pom-xml增加mysql驱动"><a href="#6-pom-xml增加mysql驱动" class="headerlink" title="6.pom.xml增加mysql驱动"></a>6.pom.xml增加mysql驱动</h2><pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;5.1.17&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre><h2 id="7-将mr的统计结果写入mysql数据库"><a href="#7-将mr的统计结果写入mysql数据库" class="headerlink" title="7.将mr的统计结果写入mysql数据库"></a>7.将mr的统计结果写入mysql数据库</h2><pre><code>a)准备表
+    create table stats(word varchar(50),c int);
+b)设置App的DBOutputFormat类
+    com.it18zhang.hdfs.mr.mysql.WCApp
+d)
+e)
+f)
+</code></pre><hr>
+<h1 id="mysql分页查询"><a href="#mysql分页查询" class="headerlink" title="mysql分页查询"></a>mysql分页查询</h1><p>如图所示吧：</p>
+<p><img src="https://i.imgur.com/0hHJN3B.png" alt=""></p>
+<p><img src="https://i.imgur.com/FAbkIff.png" alt=""></p>
+<p><img src="https://i.imgur.com/9wCCeH2.png" alt=""></p>
+<h1 id="使用DBWritable向数据库从数据库中写入"><a href="#使用DBWritable向数据库从数据库中写入" class="headerlink" title="使用DBWritable向数据库从数据库中写入"></a>使用DBWritable向数据库从数据库中写入</h1><pre><code>public class MyDBWritalbe implements DBWritable,Writable {
+    private int id=0;
+    private String name=&quot;&quot;;
+    private String txt=&quot;&quot;;
+    private  String word=&quot;&quot;;
+    private int wordcount=0;
+
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    public int getWordcount() {
+        return wordcount;
+    }
+
+    public void setWordcount(int wordcount) {
+        this.wordcount = wordcount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTxt() {
+        return txt;
+    }
+
+    public void setTxt(String txt) {
+        this.txt = txt;
+    }
+
+    public void write(DataOutput out) throws IOException {
+
+        out.writeInt(id);
+        out.writeUTF(name);
+        out.writeUTF(txt);
+        out.writeUTF(word);
+        out.writeInt(wordcount);
+    }
+    public void readFields(DataInput in) throws IOException {
+        id=in.readInt();
+        name=in.readUTF();
+        txt=in.readUTF();
+        word=in.readUTF();
+        wordcount=in.readInt();
+
+    }
+    //向数据库中写入DB
+    public void write(PreparedStatement ppst) throws SQLException {
+        //要求定制字段列表的时候先单词后个数。
+
+        ppst.setString(1,word);
+        ppst.setInt(2,wordcount);
+
+    }
+    //从DB中读出
+    public void readFields(ResultSet rs) throws SQLException {
+        id=rs.getInt(1);
+        name=rs.getString(2);
+        txt=rs.getString(3);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCApp {
+    //
+//    public static void main(String[] args) throws Exception {
+//        Configuration conf = new Configuration();
+//
+//        Job job = Job.getInstance(conf);
+//
+////        设置作业的各种属性
+//        job.setJobName(&quot;MySQLApp&quot;);    //作业名称
+//        job.setJarByClass(WCApp.class); //搜索类路径
+//
+//        //配置数据库信息
+//        String driverclass = &quot;com.mysql.jdbc.Driver&quot;;
+//        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+//        String usrname = &quot;root&quot;;
+//        String password = &quot;root&quot;;
+//        DBConfiguration.configureDB(conf,driverclass,url,usrname,password);
+//        //设置数据输入内容
+//        DBInputFormat.setInput(job,DBWritable.class,&quot;select id,name,txt from words&quot;,&quot;select count(*) from words&quot;);
+//        //设置输出路径
+//        FileOutputFormat.setOutputPath(job, new Path(&quot;d:/mr/sql/out&quot;));
+//
+//        job.setMapperClass(WCMapper.class);         //mapper类
+//        job.setReducerClass(WCReducer.class);       //reduce类
+//
+//        job.setNumReduceTasks(3);
+//
+//
+//        job.setMapOutputKeyClass(Text.class);
+//        job.setMapOutputValueClass(IntWritable.class);
+//
+//        job.setOutputKeyClass(Text.class);          //设置输出类型
+//        job.setOutputValueClass(IntWritable.class);
+//
+//        job.waitForCompletion(true);
+//
+//    }
+//}
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf);
+
+        //设置job的各种属性
+        job.setJobName(&quot;MySQLApp&quot;);                        //作业名称
+        job.setJarByClass(WCApp.class);                 //搜索类
+
+        //配置数据库信息
+        String driverclass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        //设置数据库配置
+        DBConfiguration.configureDB(job.getConfiguration(), driverclass, url, username, password);
+        //设置数据输入内容
+        DBInputFormat.setInput(job, MyDBWritalbe.class, &quot;select id,name,txt from words&quot;, &quot;select count(*) from words&quot;);
+        //这里定制字段列表，先单词后个数
+        DBOutputFormat.setOutput(job,&quot;stats&quot;,&quot;word&quot;,&quot;c&quot;);
+
+        //设置分区类
+        job.setMapperClass(WCMapper.class);             //mapper类
+        job.setReducerClass(WCReducer.class);           //reducer类
+
+        job.setNumReduceTasks(3);                       //reduce个数
+
+        job.setMapOutputKeyClass(Text.class);           //
+        job.setMapOutputValueClass(IntWritable.class);  //
+
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);     //
+
+        job.waitForCompletion(true);
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCMapper extends Mapper&lt;LongWritable, MyDBWritalbe, Text, IntWritable&gt; {
+    @Override
+    protected void map(LongWritable key, MyDBWritalbe value, Context context) throws IOException, InterruptedException {
+        System.out.println(key);
+        String line = value.getTxt();
+        System.out.println(value.getId() + &quot;,&quot; + value.getName());
+        String[] arr = line.split(&quot; &quot;);
+        for (String s : arr) {
+            context.write(new Text(s), new IntWritable(1));
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCReducer extends Reducer&lt;Text, IntWritable, MyDBWritalbe, NullWritable&gt; {
+
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0;
+        for (IntWritable w : values) {
+            count = count + w.get();
+        }
+        MyDBWritalbe keyout = new MyDBWritalbe();
+        keyout.setWord(key.toString());
+        keyout.setWordcount(count);
+        context.write(keyout, NullWritable.get());
+    }
+}
+</code></pre><hr>
+<h1 id="在虚拟机中跑wordcount写入数据库问题："><a href="#在虚拟机中跑wordcount写入数据库问题：" class="headerlink" title="在虚拟机中跑wordcount写入数据库问题："></a>在虚拟机中跑wordcount写入数据库问题：</h1><h2 id="需要修改的地方："><a href="#需要修改的地方：" class="headerlink" title="需要修改的地方："></a>需要修改的地方：</h2><p>1.修改url</p>
+<p><img src="https://i.imgur.com/8lkYD5v.png" alt=""></p>
+<p>2.修改core-site.xml或者删除掉</p>
+<p><img src="https://i.imgur.com/weFYMBJ.png" alt=""></p>
+<p>3.在虚拟机中分发mysql-connector-java-5.1.7-bin.jar将之分发到每个节点的/soft/hadoop/share/hadoop/common/lib目录下。</p>
+<p><img src="https://i.imgur.com/ou52Qhr.png" alt=""></p>
+<p>4.在运行</p>
+<pre><code>hadoop jar HdfsDemo.jar com.it18zhang.hdfs.mr.mysql.WCApp
+</code></pre><h2 id="出现的问题："><a href="#出现的问题：" class="headerlink" title="出现的问题："></a>出现的问题：</h2><p>1.出现连接不上的报错：</p>
+<p><img src="https://i.imgur.com/JgE2Q3e.png" alt=""></p>
+<p>百度了一下完美解决，是由于mysql没有对所有用户开启权限导致：</p>
+<p><a href="https://blog.csdn.net/OldTogether/article/details/79612627?utm_source=blogxgwz1" target="_blank" rel="noopener">https://blog.csdn.net/OldTogether/article/details/79612627?utm_source=blogxgwz1</a></p>
+<p>2.出现一下问题：</p>
+<p><img src="https://i.imgur.com/vgUGlEc.png" alt=""></p>
+<p>原因是有一个s205的防火墙没有关掉导致的：</p>
+<p><a href="https://blog.csdn.net/shirdrn/article/details/7280040" title="防火墙没关掉导致的" target="_blank" rel="noopener">https://blog.csdn.net/shirdrn/article/details/7280040</a></p>
+<hr>
+<p>完</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/17/Hadoop第七天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -827,8 +1702,9 @@ context.getCounter(&quot;m&quot;,Util.getInfo(this,&quot;map&quot;)).increment(1
 </code></pre><hr>
 <hr>
 <p><strong>## 全排序和部分排序二次排序在面试比例很重的 ##</strong><br>分区在map端，分组在reduce端。<br>二次排序就是把value和key组合到一起，然后value就是nullwritable这样子。合在一起成为一个combokey。<br>Combokey不但要可比较还要串行化，hadoop的串行化机制是writable ，串行就是写入到流离去，反串行就是读出来。<br>IntWritable LongWritable这些都是经过串行化实现的类，Writable有很多子类。 </p>
-<h1 id="二次排序"><a href="#二次排序" class="headerlink" title="二次排序"></a>二次排序</h1><p>代码如下：<br>    /**</p>
-<pre><code> * 自定义组合key
+<h1 id="二次排序"><a href="#二次排序" class="headerlink" title="二次排序"></a>二次排序</h1><p>代码如下：</p>
+<pre><code>/**
+ * 自定义组合key
  */
 public class ComboKey implements WritableComparable&lt;ComboKey&gt; {
     private int year;
@@ -3218,198 +4094,6 @@ $&gt;sudo yum install rsync
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/20/Linux基础之Yum命令/" itemprop="url">Linux基础之Yum命令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-20T18:17:43+08:00">
-                2018-09-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="软件源"><a href="#软件源" class="headerlink" title="软件源"></a>软件源</h2><pre><code>Repository        //仓库.
-URL                //http:// 
-
-.d                //directory目录
-xxxd            //daemon
-</code></pre><h2 id="查看仓库文件"><a href="#查看仓库文件" class="headerlink" title="查看仓库文件"></a>查看仓库文件</h2><pre><code>/etc/yum.repos.d/xxx.repo
-</code></pre><h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>传输url上的数据的。</p>
-<p>[下载文件到指定目录]</p>
-<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-</code></pre><h2 id="更换centos的软件源"><a href="#更换centos的软件源" class="headerlink" title="更换centos的软件源"></a>更换centos的软件源</h2><p>1.下载源仓库文件,xxx.repo</p>
-<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-</code></pre><p>2.将repo文件保存到/etc/yum.repos.d/目录中。</p>
-<h2 id="屏蔽软件仓库"><a href="#屏蔽软件仓库" class="headerlink" title="屏蔽软件仓库"></a>屏蔽软件仓库</h2><p>1.将/etc/yum.repos.d/xxx.repo文件删除或者更换扩展名即可。</p>
-<h2 id="修改centos能够使用sudo命令"><a href="#修改centos能够使用sudo命令" class="headerlink" title="修改centos能够使用sudo命令"></a>修改centos能够使用sudo命令</h2><pre><code>[/etc/sudoers]
-$&gt;su root
-$&gt;nano /etc/sudoers
-    ...
-    centos ALL
-</code></pre><h2 id="使用yum进行软件包安装卸载"><a href="#使用yum进行软件包安装卸载" class="headerlink" title="使用yum进行软件包安装卸载"></a>使用yum进行软件包安装卸载</h2><pre><code>$&gt;yum list                            //列出所有软件包
-$&gt;yum list installed                //列出已经安装的软件包
-$&gt;yum list installed | grep nano    //列出已经安装的软件包
-$&gt;yum search nano                    //在yum的软件源中搜索软件 
-$&gt;yum remove nano                    //卸载软件
-$&gt;yum -y install nano                //直接安装，不需要yes确认.
-$&gt;yum list installed | grep nano    //查看是否安装了Nano
-
-$&gt;mkdir /home/centos/rpms
-
-$echo 以下命令只下载软件，不安装软件
-$&gt;sudo yum install --downloadonly                //只下载
-              --downloaddir=/home/centos/rpms    //指定下载目录
-              wget
-
-//下载已经安装的软件
-$&gt;sudo yum reinstall --downloadonly    
-                     --downloaddir=/home/centos/rpms
-                     wget
-
-$&gt;sudo yum localinstall xxx.rpm    //从本地rpm文件直接安装软件
-
-
-
-$&gt;su root
-$&gt;yum search ifconfig
-$&gt;yum -y install net-tools        //安装网络工具
-
-
-#==========修改网络地址======================    //需要重启network服务
-$&gt;sudo nano /etc/sysconfig/network-scripts/ifcfg-eth1677736
-    [/etc/sysconfig/network-scripts/ifcfg-eth1677736]
-    ...
-    IPADDR=192.168.231.201
-    GATEWAY=192.168.231.2
-    DNS=192.168.231.2
-
-$&gt;service network restart                        //重启网络服务。
-
-$&gt;sudo nano /etc/resolv.conf                    //修改该文件不需要重启network服务
-    [/etc/resolv.conf]
-    nameserver 192.168.231.2
-</code></pre><h2 id="在没有nano时，使用自带的vi文本编辑器"><a href="#在没有nano时，使用自带的vi文本编辑器" class="headerlink" title="在没有nano时，使用自带的vi文本编辑器"></a>在没有nano时，使用自带的vi文本编辑器</h2><pre><code>1.vi xx.txt
-</code></pre><p>2.模式切换</p>
-<pre><code>esc                //切换到命令模式,退出编辑模式
-                //:q!  不保存退出
-                //:wq  保存退出
-                //x        删除一个字符
-                //dd    删除一行
-
-insert            //切换到编辑模式,退出命令模式
-                //del backspace
-</code></pre><h2 id="Which命令"><a href="#Which命令" class="headerlink" title="Which命令"></a>Which命令</h2><p>which命令用于查找并显示给定命令的绝对路径，环境变量PATH中保存了查找命令时需要遍历的目录。</p>
-<p>which指令会在环境变量$PATH设置的目录里查找符合条件的文件。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。</p>
-<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre><code>which(选项)(参数)
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3464,7 +4148,7 @@ insert            //切换到编辑模式,退出命令模式
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -3486,7 +4170,7 @@ insert            //切换到编辑模式,退出命令模式
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
