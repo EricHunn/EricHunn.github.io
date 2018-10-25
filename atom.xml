@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://erichunn.github.io/"/>
-  <updated>2018-10-24T11:12:28.389Z</updated>
+  <updated>2018-10-25T02:27:32.790Z</updated>
   <id>http://erichunn.github.io/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hadoop第九天</title>
+    <link href="http://erichunn.github.io/2018/10/25/Hadoop%E7%AC%AC%E4%B9%9D%E5%A4%A9/"/>
+    <id>http://erichunn.github.io/2018/10/25/Hadoop第九天/</id>
+    <published>2018-10-25T01:52:10.000Z</published>
+    <updated>2018-10-25T02:27:32.790Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="复习："><a href="#复习：" class="headerlink" title="复习："></a>复习：</h1><p>1.链式job编程</p><pre><code>MR        //Mapper+ / Reduce Mapper*</code></pre><p>2.DBWritable</p><pre><code>和数据库交互。</code></pre><p>3.Sqoop</p><p>4.全排序</p><pre><code>对reduce输出的所有结果进行排序。</code></pre><p>5.二次排序</p><pre><code>对value进行排序。</code></pre><p>6.数据倾斜</p><pre><code>1.reduce2.自定义分区函数    数据结果错 + 二次job3.重新设计key    数据结果错 + 二次job</code></pre><h1 id="机架感知"><a href="#机架感知" class="headerlink" title="机架感知"></a>机架感知</h1><p>机架有一块网卡。可以连接很多主机，机架上每个刀片服务器主机都连接到这个机架网卡上的。</p><p>比如一台刀片服务器上有2个进程，2个进程之间通信需要走机架上的交换机吗。不需要直接走自回环网络即可。走Localhost即可。所以2个进程之间不需要网卡交互数据。2个进程之间的距离就是0。每个进程所在的主机节点，连接他们之间的网络通路的跃点数就是他们之间的距离</p><p>如果b中绿色进程和a中红色进程需要交互就需要通过交换机，距离就是2.怎么算的，就是从每个服务器到交换机之间的距离相加，就是1+1；</p><p>如果是2个机架也要通过一个交换机连接起来。左边机架a中绿色和右边机架红色通信。距离就是4.</p><p>同一个机房通信最多就是4。也就是在通过一个交换机。</p><p>Hadoop都有机架感知能力：是他里面的一种策略，都需人为维护。在默认情况下所有节点都在同一个机架上。/default-rack。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;复习：&quot;&gt;&lt;a href=&quot;#复习：&quot; class=&quot;headerlink&quot; title=&quot;复习：&quot;&gt;&lt;/a&gt;复习：&lt;/h1&gt;&lt;p&gt;1.链式job编程&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;MR        //Mapper+ / Reduce Mapper*
+&lt;/co
+      
+    
+    </summary>
+    
+      <category term="Hadoop" scheme="http://erichunn.github.io/categories/Hadoop/"/>
+    
+    
+      <category term="机架感知" scheme="http://erichunn.github.io/tags/%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5/"/>
+    
+      <category term="HA" scheme="http://erichunn.github.io/tags/HA/"/>
+    
+      <category term="手动移动数据块" scheme="http://erichunn.github.io/tags/%E6%89%8B%E5%8A%A8%E7%A7%BB%E5%8A%A8%E6%95%B0%E6%8D%AE%E5%9D%97/"/>
+    
+  </entry>
   
   <entry>
     <title>Hadoop第八天</title>
@@ -225,7 +256,7 @@ job.se
     <link href="http://erichunn.github.io/2018/09/29/Hadoop%E7%AC%AC%E4%BA%8C%E5%A4%A9%E4%B9%8B%E6%90%AD%E5%BB%BA/"/>
     <id>http://erichunn.github.io/2018/09/29/Hadoop第二天之搭建/</id>
     <published>2018-09-29T09:21:35.000Z</published>
-    <updated>2018-09-30T01:25:17.102Z</updated>
+    <updated>2018-10-25T01:59:17.381Z</updated>
     
     <content type="html"><![CDATA[<h2 id="hadoop"><a href="#hadoop" class="headerlink" title="hadoop"></a>hadoop</h2><pre><code>1.独立模式(standalone|local)    nothing!    本地文件系统。    不需要启用单独进程。2.pesudo(伪分布模式)    等同于完全分布式，只有一个节点。    SSH:        //(Socket),                //public + private                //server : sshd ps -Af | grep sshd                //clint     : ssh                //ssh-keygen:生成公私秘钥。                //authorized_keys 需要使用644                //ssh 192.168.231.201  yes    [配置文件]        core-site.xml    //fs.defaultFS=hdfs://localhost/        hdfs-site.xml    //replication=1        mapred-site.xml    //        yarn-site.xml    //3.full distributed(完全分布式)</code></pre><h2 id="让命令行提示符显式完整路径"><a href="#让命令行提示符显式完整路径" class="headerlink" title="让命令行提示符显式完整路径"></a>让命令行提示符显式完整路径</h2><pre><code>1.编辑profile文件，添加环境变量PS1    [/etc/profile]    export PS1=&apos;[\u@\h `pwd`]\$&apos;2.source        $&gt;source /etc/profile</code></pre><h2 id="配置hadoop，使用符号连接的方式，让三种配置形态共存。"><a href="#配置hadoop，使用符号连接的方式，让三种配置形态共存。" class="headerlink" title="配置hadoop，使用符号连接的方式，让三种配置形态共存。"></a>配置hadoop，使用符号连接的方式，让三种配置形态共存。</h2><pre><code>1.创建三个配置目录,内容等同于hadoop目录    ${hadoop_home}/etc/local    ${hadoop_home}/etc/pesudo    ${hadoop_home}/etc/full2.创建符号连接    $&gt;ln -s 3.对hdfs进行格式化    $&gt;hadoop namenode -format4.修改hadoop配置文件，手动指定JAVA_HOME环境变量    [${hadoop_home}/etc/hadoop/hadoop-env.sh]    ...    export JAVA_HOME=/soft/jdk    ...5.启动hadoop的所有进程    $&gt;start-all.sh6.启动完成后，出现以下进程    $&gt;jps        33702 NameNode        33792 DataNode        33954 SecondaryNameNode        29041 ResourceManager        34191 NodeManager7.查看hdfs文件系统    $&gt;hdfs dfs -ls /8.创建目录    $&gt;hdfs dfs -mkdir -p /user/centos/hadoop9.通过webui查看hadoop的文件系统    http://localhost:50070/10.停止hadoop所有进程    $&gt;stop-all.sh11.centos防火墙操作    [cnetos 6.5之前的版本]    $&gt;sudo service firewalld stop        //停止服务    $&gt;sudo service firewalld start        //启动服务    $&gt;sudo service firewalld status        //查看状态    [centos7]    $&gt;sudo systemctl enable firewalld.service    //&quot;开机启动&quot;启用    $&gt;sudo systemctl disable firewalld.service    //&quot;开机自启&quot;禁用    $&gt;sudo systemctl start firewalld.service    //启动防火墙    $&gt;sudo systemctl stop firewalld.service        //停止防火墙    $&gt;sudo systemctl status firewalld.service    //查看防火墙状态    [开机自启]    $&gt;sudo chkconfig firewalld    on                //&quot;开启自启&quot;启用    $&gt;sudo chkconfig firewalld    off                //&quot;开启自启&quot;禁用</code></pre><h2 id="hadoop的端口"><a href="#hadoop的端口" class="headerlink" title="hadoop的端口"></a>hadoop的端口</h2><pre><code>50070        //namenode http port50075        //datanode http port50090        //2namenode    http port8020        //namenode rpc port50010        //datanode rpc port</code></pre><h2 id="hadoop四大模块"><a href="#hadoop四大模块" class="headerlink" title="hadoop四大模块"></a>hadoop四大模块</h2><pre><code>commonhdfs        //namenode + datanode + secondarynamenodemapredyarn        //resourcemanager + nodemanager</code></pre><h2 id="启动脚本"><a href="#启动脚本" class="headerlink" title="启动脚本"></a>启动脚本</h2><pre><code>1.start-all.sh        //启动所有进程2.stop-all.sh        //停止所有进程3.start-dfs.sh        //4.start-yarn.sh[hdfs]  start-dfs.sh stop-dfs.sh    NN    DN    2NN[yarn] start-yarn.sh stop-yarn.sh    RM    NM</code></pre><h2 id="修改主机名"><a href="#修改主机名" class="headerlink" title="修改主机名"></a>修改主机名</h2><pre><code>1./etc/hostname    s2012./etc/hosts    127.0.0.1 localhost    192.168.231.201 s201    192.168.231.202 s202    192.168.231.203 s203    192.168.231.204 s204</code></pre><h2 id="完全分布式"><a href="#完全分布式" class="headerlink" title="完全分布式"></a>完全分布式</h2><pre><code>1.克隆3台client(centos7)    右键centos-7--&gt;管理-&gt;克隆-&gt; ... -&gt; 完整克隆2.启动client3.启用客户机共享文件夹。4.修改hostname和ip地址文件    [/etc/hostname]    s202    [/etc/sysconfig/network-scripts/ifcfg-ethxxxx]    ...    IPADDR=..5.重启网络服务    $&gt;sudo service network restart6.修改/etc/resolv.conf文件    nameserver 192.168.231.27.重复以上3 ~ 6过程.</code></pre><h2 id="准备完全分布式主机的ssh"><a href="#准备完全分布式主机的ssh" class="headerlink" title="准备完全分布式主机的ssh"></a>准备完全分布式主机的ssh</h2><pre><code>1.删除所有主机上的/home/centos/.ssh/*2.在s201主机上生成密钥对    $&gt;ssh-keygen -t rsa -P &apos;&apos; -f ~/.ssh/id_rsa3.将s201的公钥文件id_rsa.pub远程复制到202 ~ 204主机上。  并放置/home/centos/.ssh/authorized_keys    $&gt;scp id_rsa.pub centos@s201:/home/centos/.ssh/authorized_keys    $&gt;scp id_rsa.pub centos@s202:/home/centos/.ssh/authorized_keys    $&gt;scp id_rsa.pub centos@s203:/home/centos/.ssh/authorized_keys    $&gt;scp id_rsa.pub centos@s204:/home/centos/.ssh/authorized_keys4.配置完全分布式(${hadoop_home}/etc/hadoop/)    [core-site.xml]    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;    &lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;    &lt;configuration&gt;            &lt;property&gt;                    &lt;name&gt;fs.defaultFS&lt;/name&gt;                    &lt;value&gt;hdfs://s201/&lt;/value&gt;            &lt;/property&gt;    &lt;/configuration&gt;    [hdfs-site.xml]    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;    &lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;    &lt;configuration&gt;            &lt;property&gt;                    &lt;name&gt;dfs.replication&lt;/name&gt;                    &lt;value&gt;3&lt;/value&gt;            &lt;/property&gt;    &lt;/configuration&gt;    [mapred-site.xml]        不变    [yarn-site.xml]    &lt;?xml version=&quot;1.0&quot;?&gt;    &lt;configuration&gt;            &lt;property&gt;                    &lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;                    &lt;value&gt;s201&lt;/value&gt;            &lt;/property&gt;            &lt;property&gt;                    &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;                    &lt;value&gt;mapreduce_shuffle&lt;/value&gt;            &lt;/property&gt;    &lt;/configuration&gt;    [slaves]    s202    s203    s204    [hadoop-env.sh]    ...    export JAVA_HOME=/soft/jdk    ...5.分发配置    $&gt;cd /soft/hadoop/etc/    $&gt;scp -r full centos@s202:/soft/hadoop/etc/    $&gt;scp -r full centos@s203:/soft/hadoop/etc/    $&gt;scp -r full centos@s204:/soft/hadoop/etc/6.删除符号连接    $&gt;cd /soft/hadoop/etc    $&gt;rm hadoop    $&gt;ssh s202 rm /soft/hadoop/etc/hadoop    $&gt;ssh s203 rm /soft/hadoop/etc/hadoop    $&gt;ssh s204 rm /soft/hadoop/etc/hadoop7.创建符号连接    $&gt;cd /soft/hadoop/etc/    $&gt;ln -s full hadoop    $&gt;ssh s202 ln -s /soft/hadoop/etc/full /soft/hadoop/etc/hadoop    $&gt;ssh s203 ln -s /soft/hadoop/etc/full /soft/hadoop/etc/hadoop    $&gt;ssh s204 ln -s /soft/hadoop/etc/full /soft/hadoop/etc/hadoop8.删除临时目录文件    $&gt;cd /tmp    $&gt;rm -rf hadoop-centos    $&gt;ssh s202 rm -rf /tmp/hadoop-centos    $&gt;ssh s203 rm -rf /tmp/hadoop-centos    $&gt;ssh s204 rm -rf /tmp/hadoop-centos9.删除hadoop日志    $&gt;cd /soft/hadoop/logs    $&gt;rm -rf *    $&gt;ssh s202 rm -rf /soft/hadoop/logs/*    $&gt;ssh s203 rm -rf /soft/hadoop/logs/*    $&gt;ssh s204 rm -rf /soft/hadoop/logs/*10.格式化文件系统    $&gt;hadoop namenode -format11.启动hadoop进程    $&gt;start-all.sh</code></pre><h2 id="rsync"><a href="#rsync" class="headerlink" title="rsync"></a>rsync</h2><pre><code>四个机器均安装rsync命令。远程同步.$&gt;sudo yum install rsync</code></pre><h2 id="将root用户实现无密登录"><a href="#将root用户实现无密登录" class="headerlink" title="将root用户实现无密登录"></a>将root用户实现无密登录</h2><pre><code>1.同</code></pre><h2 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h2><pre><code>1.xcall.sh2.xsync.sh    xsync.sh /home/etc/a.txt    rsync -lr /home/etc/a.txt centos@s202:/home/etc</code></pre><hr><pre><code>netstat -anop    查看进程</code></pre>]]></content>
     
@@ -240,7 +271,7 @@ job.se
     
     </summary>
     
-      <category term="hadoop" scheme="http://erichunn.github.io/categories/hadoop/"/>
+      <category term="Hadoop" scheme="http://erichunn.github.io/categories/Hadoop/"/>
     
     
       <category term="hadoop" scheme="http://erichunn.github.io/tags/hadoop/"/>
@@ -256,13 +287,13 @@ job.se
     <link href="http://erichunn.github.io/2018/09/24/Hadoop%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/"/>
     <id>http://erichunn.github.io/2018/09/24/Hadoop安装配置/</id>
     <published>2018-09-24T08:10:47.000Z</published>
-    <updated>2018-09-24T08:17:33.785Z</updated>
+    <updated>2018-10-25T01:59:09.278Z</updated>
     
     <summary type="html">
     
     </summary>
     
-      <category term="-hadoop" scheme="http://erichunn.github.io/categories/hadoop/"/>
+      <category term="-Hadoop" scheme="http://erichunn.github.io/categories/Hadoop/"/>
     
     
       <category term="-hadoop" scheme="http://erichunn.github.io/tags/hadoop/"/>
@@ -483,34 +514,6 @@ URL                //http://
     
     </summary>
     
-    
-  </entry>
-  
-  <entry>
-    <title>Linux基础之文件类型-权限</title>
-    <link href="http://erichunn.github.io/2018/09/16/Linux%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B-%E6%9D%83%E9%99%90/"/>
-    <id>http://erichunn.github.io/2018/09/16/Linux基础之文件类型-权限/</id>
-    <published>2018-09-16T10:47:50.000Z</published>
-    <updated>2018-10-19T10:36:11.101Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="目录和权限"><a href="#目录和权限" class="headerlink" title="目录和权限"></a>目录和权限</h1><hr><pre><code>[windows]以磁盘分区物理结构作为文件系统结构</code></pre><p>每个用户在/home下面都有一个自己的家目录比如centos的家目录在<br>/home/centos但是root是管理员比较特殊root的目录在/root下<br>~是home的子一级</p><p><img src="https://i.imgur.com/9EibNGJ.png" alt="">‘</p><p>[centos]</p><h2 id="逻辑结构"><a href="#逻辑结构" class="headerlink" title="逻辑结构."></a>逻辑结构.</h2><pre><code>/                    //文件系统的根./bin                //最初的命令(祖先)，binary文件,可执行文件/sbin                //super binary(重要性高)/usr/bin            //厂商相关的命令,ubuntu/usr/sbin            //厂商相关的命令,ubuntu/usr/local/bin        //用户级别。/usr/local/sbin[Linux文件类型]-        //文件d        //目录l        //链接,类似于windows快捷方式.b        //block,块文件。c        //字符文件</code></pre><p><img src="https://i.imgur.com/YW7Kf85.png" alt=""></p><hr><p><img src="https://i.imgur.com/d1kfpNH.png" alt=""></p><p>第一个字母是L的意思是link连接类的。</p><hr><p><img src="https://i.imgur.com/vBRQgXA.png" alt=""></p><p>ifconfig的命令的目录在/sbin/ifconfig这里，但是实际上/sbin已经链接到了/usr/bin里面了。所以CentOS是没有bin和、usr/bin之分的，因为已经link过去了</p><hr><h2 id="linux的权限"><a href="#linux的权限" class="headerlink" title="[linux的权限]"></a>[linux的权限]</h2><p><img src="https://i.imgur.com/1ldCqdL.png" alt=""><br>一共有9个位，每个成分是从0-7如果是777就是全部权限都付给他了</p><p><img src="https://i.imgur.com/pgdqTkV.png" alt=""><br>看这段截图。里面的-rw-rw-r–<br>第一个-是文件类型第rw后面的-是代表0</p><pre><code>$&gt;chmod                //修改文件(夹)权限$&gt;chmod    g-w            //去除group中write权.chmod                //不受文件权限控制,只有owner和root才具有文件权限的修改权。【read权限】    文件    :文件内容    文件夹    :文件夹的内容    【write权限】------------【execute权限】-------------    文件    :执行    文件夹    :进入目录</code></pre><p>看下面这个例子：<br> <img src="https://i.imgur.com/U1ggRNv.png" alt=""><br>看最下面的这个chmode 644 a.txt</p><p>6是用户的成分。4是组的成分，最后4，是others的成分。<br>所以chmode 644最后是 -rw-r–r–</p><p><img src="https://i.imgur.com/XQSLfvz.png" alt=""></p><p>这里面的小细节格式 ：<br>    chmode 655 a.txt</p><pre><code>chmode g+w a.txt</code></pre><hr><p>文本输入格式他的偏移量是Longwritable,他的值是value是一行，在定义采样器的时候，是intwritable。<br>要是做采样要对产生年份和温度采样。如果是文本输入格式就是文本偏移量和value。所以要把采样器采取的样本换成kv的值，而不是文本的偏移量和文本，所以对数据改造，改成序列文件，序列文件就可以读成kv了。要把输入文件改成序列文件，才可以采到他的值。</p><p>package com.it18zhang.hdfs.maxtemp;</p><p>import org.apache.hadoop.conf.Configuration;<br>import org.apache.hadoop.fs.Path;<br>import org.apache.hadoop.io.IntWritable;<br>import org.apache.hadoop.mapreduce.Job;<br>import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;<br>import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;<br>import org.apache.hadoop.mapreduce.lib.partition.InputSampler;<br>import org.apache.hadoop.mapreduce.lib.partition.TotalOrderPartitioner;</p><p>public class MaxTempApp {</p><pre><code>public static void main(String[] args) throws Exception {    Configuration conf = new Configuration();    conf.set(&quot;fs.defaultFS&quot;, &quot;file:///&quot;);    Job job = Job.getInstance(conf);</code></pre><p>//        设置作业的各种属性<br>        job.setJobName(“MaxTempApp”);    //作业名称<br>        job.setJarByClass(MaxTempApp.class); //搜索类路径<br>        job.setInputFormatClass(SequenceFileInputFormat.class);//设置输入格式类</p><pre><code>    //添加输入路径    FileInputFormat.addInputPath(job, new Path(args[0]));    //设置输出路径    org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));    job.setMapperClass(MaxTempMapper.class);         //mapper类    job.setReducerClass(MaxTempReducer.class);       //reduce类    job.setMapOutputKeyClass(IntWritable.class);    job.setMapOutputValueClass(IntWritable.class);    job.setOutputKeyClass(IntWritable.class);          //设置输出类型    job.setOutputValueClass(IntWritable.class);    //设置 全排序分区类    job.setPartitionerClass(TotalOrderPartitioner.class);    //将sample数据 写入分区文件    TotalOrderPartitioner.setPartitionFile(conf, new Path(&quot;e:/mr/par.lst&quot;));    //创建随机采样器对象    InputSampler.Sampler&lt;IntWritable, IntWritable&gt; sampler = new InputSampler.RandomSampler&lt;IntWritable, IntWritable&gt;(0.1, 10000, 10);    job.setNumReduceTasks(3);           //reduce个数    InputSampler.writePartitionFile(job, sampler);    job.waitForCompletion(true);}</code></pre><p>}</p><hr><pre><code>public class MaxTempMapper extends Mapper&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt; {    public MaxTempMapper() {        System.out.println(&quot;new MaxTempMapper&quot;);    }    @Override    protected void map(IntWritable key, IntWritable value, Context context) throws IOException, InterruptedException {        context.write(key,value);    }}</code></pre><hr><pre><code>public class MaxTempReducer extends Reducer&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt;{    /**     * reduce     */    protected void reduce(IntWritable key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {            int max =Integer.MIN_VALUE;            for(IntWritable iw : values){                max = max &gt; iw.get() ? max : iw.get() ;            }                context.write(key,new IntWritable(max));    }}</code></pre><hr><pre><code>public class YearPartitioner extends Partitioner&lt;IntWritable, IntWritable&gt; {    public int getPartition(IntWritable year, IntWritable temp, int parts) {        int y = year.get() - 1970;        if (y &lt; 33) {            return 0;        }        if (y &gt; 33 &amp;&amp; y &lt; 66) {            return 1;        }        else {            return 2;        }    }}</code></pre><hr><p>上图在运行的时候要注意的问题：</p><p>1.Sequencen的输入是intwriteble和intwritable输入的模式</p><p>2.在MaxTempApp里面的创建随机采样器和设置reduce个数，全排序分区类，sampler写入分区文件是有顺序的，看源码可以找到顺序</p><p>2.5这个地方有一个设置分区个数的问题，如果是设置到了采样个数之后，那么就不需要采样了，采样的目的就是为了把分区设置2条分界线，要预先知道分区有几个，然后才能设置好分界线。</p><p>3.在后面用到conf的时候，已经不再是之前的conf了，是有修改了的所以要用job.configuration。如下图要变成这样。这边的job.configuration是做了一个拷贝，并不是操纵conf的。在前面写着有Job job = Job.getInstance(conf);在这句话里面，又new了一个新的conf。所以这个conf并不是原来的new的那个conf。所以要用job.configuration()这样的语句，如果用conf就找不到原来文件的位置了。</p><p><img src="https://i.imgur.com/53RLP7k.png" alt=""></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;目录和权限&quot;&gt;&lt;a href=&quot;#目录和权限&quot; class=&quot;headerlink&quot; title=&quot;目录和权限&quot;&gt;&lt;/a&gt;目录和权限&lt;/h1&gt;&lt;hr&gt;
-&lt;pre&gt;&lt;code&gt;[windows]
-以磁盘分区物理结构作为文件系统结构
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;每
-      
-    
-    </summary>
-    
-    
-      <category term="Linux基础" scheme="http://erichunn.github.io/tags/Linux%E5%9F%BA%E7%A1%80/"/>
-    
-      <category term="文件类型权限" scheme="http://erichunn.github.io/tags/%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E6%9D%83%E9%99%90/"/>
     
   </entry>
   

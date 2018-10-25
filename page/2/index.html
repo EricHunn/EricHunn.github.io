@@ -328,6 +328,147 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/24/Hadoop安装配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/24/Hadoop安装配置/" itemprop="url">Hadoop安装配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-24T16:10:47+08:00">
+                2018-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">-Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1872,269 +2013,6 @@ $&gt;find . /mnt/cdrom
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/16/Linux基础之文件类型-权限/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/16/Linux基础之文件类型-权限/" itemprop="url">Linux基础之文件类型-权限</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-16T18:47:50+08:00">
-                2018-09-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="目录和权限"><a href="#目录和权限" class="headerlink" title="目录和权限"></a>目录和权限</h1><hr>
-<pre><code>[windows]
-以磁盘分区物理结构作为文件系统结构
-</code></pre><p>每个用户在/home下面都有一个自己的家目录比如centos的家目录在<br>/home/centos但是root是管理员比较特殊root的目录在/root下<br>~是home的子一级</p>
-<p><img src="https://i.imgur.com/9EibNGJ.png" alt="">‘</p>
-<p>[centos]</p>
-<h2 id="逻辑结构"><a href="#逻辑结构" class="headerlink" title="逻辑结构."></a>逻辑结构.</h2><pre><code>/                    //文件系统的根.
-
-/bin                //最初的命令(祖先)，binary文件,可执行文件
-/sbin                //super binary(重要性高)
-
-/usr/bin            //厂商相关的命令,ubuntu
-/usr/sbin            //厂商相关的命令,ubuntu
-
-/usr/local/bin        //用户级别。
-/usr/local/sbin
-
-[Linux文件类型]
--        //文件
-d        //目录
-l        //链接,类似于windows快捷方式.
-b        //block,块文件。
-c        //字符文件
-</code></pre><p><img src="https://i.imgur.com/YW7Kf85.png" alt=""></p>
-<hr>
-<p><img src="https://i.imgur.com/d1kfpNH.png" alt=""></p>
-<p>第一个字母是L的意思是link连接类的。</p>
-<hr>
-<p><img src="https://i.imgur.com/vBRQgXA.png" alt=""></p>
-<p>ifconfig的命令的目录在/sbin/ifconfig这里，但是实际上/sbin已经链接到了/usr/bin里面了。所以CentOS是没有bin和、usr/bin之分的，因为已经link过去了</p>
-<hr>
-<h2 id="linux的权限"><a href="#linux的权限" class="headerlink" title="[linux的权限]"></a>[linux的权限]</h2><p><img src="https://i.imgur.com/1ldCqdL.png" alt=""><br>一共有9个位，每个成分是从0-7如果是777就是全部权限都付给他了</p>
-<p><img src="https://i.imgur.com/pgdqTkV.png" alt=""><br>看这段截图。里面的-rw-rw-r–<br>第一个-是文件类型第rw后面的-是代表0</p>
-<pre><code>$&gt;chmod                //修改文件(夹)权限
-$&gt;chmod    g-w            //去除group中write权.
-
-chmod                //不受文件权限控制,只有owner和root才具有文件权限的修改权。
-
-
-【read权限】
-    文件    :文件内容
-    文件夹    :文件夹的内容    
-【write权限】
-------------
-
-【execute权限】
--------------
-    文件    :执行
-    文件夹    :进入目录
-</code></pre><p>看下面这个例子：<br> <img src="https://i.imgur.com/U1ggRNv.png" alt=""><br>看最下面的这个chmode 644 a.txt</p>
-<p>6是用户的成分。4是组的成分，最后4，是others的成分。<br>所以chmode 644最后是 -rw-r–r–</p>
-<p><img src="https://i.imgur.com/XQSLfvz.png" alt=""></p>
-<p>这里面的小细节格式 ：<br>    chmode 655 a.txt</p>
-<pre><code>chmode g+w a.txt
-</code></pre><hr>
-<p>文本输入格式他的偏移量是Longwritable,他的值是value是一行，在定义采样器的时候，是intwritable。<br>要是做采样要对产生年份和温度采样。如果是文本输入格式就是文本偏移量和value。所以要把采样器采取的样本换成kv的值，而不是文本的偏移量和文本，所以对数据改造，改成序列文件，序列文件就可以读成kv了。要把输入文件改成序列文件，才可以采到他的值。</p>
-<p>package com.it18zhang.hdfs.maxtemp;</p>
-<p>import org.apache.hadoop.conf.Configuration;<br>import org.apache.hadoop.fs.Path;<br>import org.apache.hadoop.io.IntWritable;<br>import org.apache.hadoop.mapreduce.Job;<br>import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;<br>import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;<br>import org.apache.hadoop.mapreduce.lib.partition.InputSampler;<br>import org.apache.hadoop.mapreduce.lib.partition.TotalOrderPartitioner;</p>
-<p>public class MaxTempApp {</p>
-<pre><code>public static void main(String[] args) throws Exception {
-    Configuration conf = new Configuration();
-    conf.set(&quot;fs.defaultFS&quot;, &quot;file:///&quot;);
-
-    Job job = Job.getInstance(conf);
-</code></pre><p>//        设置作业的各种属性<br>        job.setJobName(“MaxTempApp”);    //作业名称<br>        job.setJarByClass(MaxTempApp.class); //搜索类路径<br>        job.setInputFormatClass(SequenceFileInputFormat.class);//设置输入格式类</p>
-<pre><code>    //添加输入路径
-    FileInputFormat.addInputPath(job, new Path(args[0]));
-    //设置输出路径
-    org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
-    job.setMapperClass(MaxTempMapper.class);         //mapper类
-    job.setReducerClass(MaxTempReducer.class);       //reduce类
-
-
-    job.setMapOutputKeyClass(IntWritable.class);
-    job.setMapOutputValueClass(IntWritable.class);
-
-    job.setOutputKeyClass(IntWritable.class);          //设置输出类型
-    job.setOutputValueClass(IntWritable.class);
-
-    //设置 全排序分区类
-    job.setPartitionerClass(TotalOrderPartitioner.class);
-    //将sample数据 写入分区文件
-    TotalOrderPartitioner.setPartitionFile(conf, new Path(&quot;e:/mr/par.lst&quot;));
-
-    //创建随机采样器对象
-    InputSampler.Sampler&lt;IntWritable, IntWritable&gt; sampler = new InputSampler.RandomSampler&lt;IntWritable, IntWritable&gt;(0.1, 10000, 10);
-    job.setNumReduceTasks(3);           //reduce个数
-    InputSampler.writePartitionFile(job, sampler);
-
-
-    job.waitForCompletion(true);
-
-}
-</code></pre><p>}</p>
-<hr>
-<pre><code>public class MaxTempMapper extends Mapper&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt; {
-    public MaxTempMapper() {
-        System.out.println(&quot;new MaxTempMapper&quot;);
-    }
-
-    @Override
-    protected void map(IntWritable key, IntWritable value, Context context) throws IOException, InterruptedException {
-        context.write(key,value);
-    }
-}
-</code></pre><hr>
-<pre><code>public class MaxTempReducer extends Reducer&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt;{
-
-    /**
-     * reduce
-     */
-    protected void reduce(IntWritable key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
-            int max =Integer.MIN_VALUE;
-            for(IntWritable iw : values){
-                max = max &gt; iw.get() ? max : iw.get() ;
-            }
-                context.write(key,new IntWritable(max));
-
-    }
-}
-</code></pre><hr>
-<pre><code>public class YearPartitioner extends Partitioner&lt;IntWritable, IntWritable&gt; {
-
-    public int getPartition(IntWritable year, IntWritable temp, int parts) {
-        int y = year.get() - 1970;
-        if (y &lt; 33) {
-            return 0;
-        }
-        if (y &gt; 33 &amp;&amp; y &lt; 66) {
-            return 1;
-        }
-        else {
-            return 2;
-        }
-    }
-}
-</code></pre><hr>
-<p>上图在运行的时候要注意的问题：</p>
-<p>1.Sequencen的输入是intwriteble和intwritable输入的模式</p>
-<p>2.在MaxTempApp里面的创建随机采样器和设置reduce个数，全排序分区类，sampler写入分区文件是有顺序的，看源码可以找到顺序</p>
-<p>2.5这个地方有一个设置分区个数的问题，如果是设置到了采样个数之后，那么就不需要采样了，采样的目的就是为了把分区设置2条分界线，要预先知道分区有几个，然后才能设置好分界线。</p>
-<p>3.在后面用到conf的时候，已经不再是之前的conf了，是有修改了的所以要用job.configuration。如下图要变成这样。这边的job.configuration是做了一个拷贝，并不是操纵conf的。在前面写着有Job job = Job.getInstance(conf);在这句话里面，又new了一个新的conf。所以这个conf并不是原来的new的那个conf。所以要用job.configuration()这样的语句，如果用conf就找不到原来文件的位置了。</p>
-<p><img src="https://i.imgur.com/53RLP7k.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2189,7 +2067,7 @@ chmod                //不受文件权限控制,只有owner和root才具有文�
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2200,7 +2078,7 @@ chmod                //不受文件权限控制,只有owner和root才具有文�
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -2211,7 +2089,7 @@ chmod                //不受文件权限控制,只有owner和root才具有文�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

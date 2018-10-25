@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Java基础问题," />
+  <meta name="keywords" content="机架感知,HA,手动移动数据块," />
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="关于构造函数构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。 public class sadf {     public static void main(String[] args) {         Cat cat = new Cat();         cat.cry();     }  }  abstract class Animal{     pu">
-<meta name="keywords" content="Java基础问题">
+<meta name="description" content="复习：1.链式job编程 MR        //Mapper+ / Reduce Mapper* 2.DBWritable 和数据库交互。 3.Sqoop 4.全排序 对reduce输出的所有结果进行排序。 5.二次排序 对value进行排序。 6.数据倾斜 1.reduce 2.自定义分区函数     数据结果错 + 二次job 3.重新设计key     数据结果错 + 二次job 机架感知">
+<meta name="keywords" content="机架感知,HA,手动移动数据块">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java中的总结合集（1）">
-<meta property="og:url" content="http://erichunn.github.io/2018/09/12/Java中的总结合集（1）/index.html">
+<meta property="og:title" content="Hadoop第九天">
+<meta property="og:url" content="http://erichunn.github.io/2018/10/25/Hadoop第九天/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="关于构造函数构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。 public class sadf {     public static void main(String[] args) {         Cat cat = new Cat();         cat.cry();     }  }  abstract class Animal{     pu">
+<meta property="og:description" content="复习：1.链式job编程 MR        //Mapper+ / Reduce Mapper* 2.DBWritable 和数据库交互。 3.Sqoop 4.全排序 对reduce输出的所有结果进行排序。 5.二次排序 对value进行排序。 6.数据倾斜 1.reduce 2.自定义分区函数     数据结果错 + 二次job 3.重新设计key     数据结果错 + 二次job 机架感知">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-12T14:59:16.702Z">
+<meta property="og:updated_time" content="2018-10-25T02:27:32.790Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java中的总结合集（1）">
-<meta name="twitter:description" content="关于构造函数构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。 public class sadf {     public static void main(String[] args) {         Cat cat = new Cat();         cat.cry();     }  }  abstract class Animal{     pu">
+<meta name="twitter:title" content="Hadoop第九天">
+<meta name="twitter:description" content="复习：1.链式job编程 MR        //Mapper+ / Reduce Mapper* 2.DBWritable 和数据库交互。 3.Sqoop 4.全排序 对reduce输出的所有结果进行排序。 5.二次排序 对value进行排序。 6.数据倾斜 1.reduce 2.自定义分区函数     数据结果错 + 二次job 3.重新设计key     数据结果错 + 二次job 机架感知">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://erichunn.github.io/2018/09/12/Java中的总结合集（1）/"/>
+  <link rel="canonical" href="http://erichunn.github.io/2018/10/25/Hadoop第九天/"/>
 
 
 
 
 
-  <title>Java中的总结合集（1） | 无心是一首歌</title>
+  <title>Hadoop第九天 | 无心是一首歌</title>
   
 
 
@@ -329,7 +329,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/12/Java中的总结合集（1）/">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/25/Hadoop第九天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Eric Hunn">
@@ -346,7 +346,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java中的总结合集（1）</h1>
+          <h1 class="post-title" itemprop="name headline">Hadoop第九天</h1>
         
 
         <div class="post-meta">
@@ -358,8 +358,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-12T21:31:06+08:00">
-                2018-09-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-25T09:52:10+08:00">
+                2018-10-25
               </time>
             
 
@@ -368,6 +368,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -396,105 +418,27 @@
       
 
       
-        <h1 id="关于构造函数"><a href="#关于构造函数" class="headerlink" title="关于构造函数"></a>关于构造函数</h1><p>构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。</p>
-<pre><code>public class sadf {
-    public static void main(String[] args) {
-        Cat cat = new Cat();
-        cat.cry();
-    }
-
-}
-
-abstract class Animal{
-    public String name;
-    public abstract void cry();
-    public void Animal() {
-        System.out.println(&quot;new Animal&quot;);
-    }
-}
-
-class Cat extends Animal{ 
-    public void cry() {
-        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">这样的函数运行之后是</span><br><span class="line"></span><br><span class="line">	喵喵</span><br></pre></td></tr></table></figure>
-</code></pre><p>因为Animal有void变成了一个函数。还有一个默认的空构造。</p>
-<p>应该去掉void。</p>
-<pre><code>public class sadf {
-    public static void main(String[] args) {
-        Cat cat = new Cat();
-        cat.cry();
-    }
-
-}
-
-abstract class Animal{
-    public String name;
-    public abstract void cry();
-    public Animal() {
-        System.out.println(&quot;new Animal&quot;);
-    }
-}
-
-class Cat extends Animal{ 
-    public void cry() {
-        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">***</span><br><span class="line">结果是：</span><br><span class="line"></span><br><span class="line">	new Animal</span><br><span class="line">	喵喵</span><br></pre></td></tr></table></figure>
-</code></pre><hr>
-<h1 id="关于抽象abstract"><a href="#关于抽象abstract" class="headerlink" title="关于抽象abstract"></a>关于抽象abstract</h1><pre><code>class ABSTACT {
-    public static void main(String[] args) {
-        JiaFeiCat j = new JiaFeiCat();
-
-    }
-}
-
-abstract class Animal {
-    abstract void cry();
-
-    public Animal() {
-        System.out.println(&quot;我是动物&quot;);
-    }
-
-}
-
-abstract class Cat extends Animal {
-    public Cat() {
-        System.out.println(&quot;我是猫&quot;);
-    }
-
-    final void catchMouse() {
-        System.out.println(&quot;猫能抓老鼠&quot;);
-    }
-
-}
-
-final class JiaFeiCat extends Cat {
-    public JiaFeiCat() {
-        System.out.println(&quot;我是加菲猫&quot;);
-    }
-
-    @Override
-    void cry() {
-        System.out.println(&quot;加菲猫会哭&quot;);
-
-    }
-
-}
-
-class BosiCat extends Cat {
-    public BosiCat() {
-        System.out.println(&quot;我叫波斯猫&quot;);
-    }
-
-    @Override
-    void cry() {
-        System.out.println(&quot;波斯猫会叫&quot;);
-
-    }
-
-}
-</code></pre><p>打印结果：</p>
-<pre><code>我是动物
-我是猫
-我是加菲猫
-</code></pre><p>运行成功<br>abstact抽象类方法可以在子类的子类中继承即可，不用一定在第一代子类中继承。</p>
+        <h1 id="复习："><a href="#复习：" class="headerlink" title="复习："></a>复习：</h1><p>1.链式job编程</p>
+<pre><code>MR        //Mapper+ / Reduce Mapper*
+</code></pre><p>2.DBWritable</p>
+<pre><code>和数据库交互。
+</code></pre><p>3.Sqoop</p>
+<p>4.全排序</p>
+<pre><code>对reduce输出的所有结果进行排序。
+</code></pre><p>5.二次排序</p>
+<pre><code>对value进行排序。
+</code></pre><p>6.数据倾斜</p>
+<pre><code>1.reduce
+2.自定义分区函数
+    数据结果错 + 二次job
+3.重新设计key
+    数据结果错 + 二次job
+</code></pre><h1 id="机架感知"><a href="#机架感知" class="headerlink" title="机架感知"></a>机架感知</h1><p>机架有一块网卡。可以连接很多主机，机架上每个刀片服务器主机都连接到这个机架网卡上的。</p>
+<p>比如一台刀片服务器上有2个进程，2个进程之间通信需要走机架上的交换机吗。不需要直接走自回环网络即可。走Localhost即可。所以2个进程之间不需要网卡交互数据。2个进程之间的距离就是0。每个进程所在的主机节点，连接他们之间的网络通路的跃点数就是他们之间的距离</p>
+<p>如果b中绿色进程和a中红色进程需要交互就需要通过交换机，距离就是2.怎么算的，就是从每个服务器到交换机之间的距离相加，就是1+1；</p>
+<p>如果是2个机架也要通过一个交换机连接起来。左边机架a中绿色和右边机架红色通信。距离就是4.</p>
+<p>同一个机房通信最多就是4。也就是在通过一个交换机。</p>
+<p>Hadoop都有机架感知能力：是他里面的一种策略，都需人为维护。在默认情况下所有节点都在同一个机架上。/default-rack。</p>
 
       
     </div>
@@ -549,7 +493,11 @@ class BosiCat extends Cat {
       
         <div class="post-tags">
           
-            <a href="/tags/Java基础问题/" rel="tag"># Java基础问题</a>
+            <a href="/tags/机架感知/" rel="tag"># 机架感知</a>
+          
+            <a href="/tags/HA/" rel="tag"># HA</a>
+          
+            <a href="/tags/手动移动数据块/" rel="tag"># 手动移动数据块</a>
           
         </div>
       
@@ -562,8 +510,8 @@ class BosiCat extends Cat {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/11/Hadoop权威指南学习笔记（1）/" rel="next" title="Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数">
-                <i class="fa fa-chevron-left"></i> Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数
+              <a href="/2018/10/22/Hadoop第八天/" rel="next" title="Hadoop第八天">
+                <i class="fa fa-chevron-left"></i> Hadoop第八天
               </a>
             
           </div>
@@ -571,10 +519,6 @@ class BosiCat extends Cat {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/09/12/Java基础学习笔记/" rel="prev" title="Java基础学习笔记">
-                Java基础学习笔记 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -758,7 +702,7 @@ class BosiCat extends Cat {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于构造函数"><span class="nav-number">1.</span> <span class="nav-text">关于构造函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于抽象abstract"><span class="nav-number">2.</span> <span class="nav-text">关于抽象abstract</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#复习："><span class="nav-number">1.</span> <span class="nav-text">复习：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#机架感知"><span class="nav-number">2.</span> <span class="nav-text">机架感知</span></a></li></ol></div>
             
 
           </div>
