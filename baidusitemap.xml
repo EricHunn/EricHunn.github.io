@@ -5,7 +5,7 @@
     
   <url>
     <loc>http://erichunn.github.io/2018/10/25/Hadoop%E7%AC%AC%E4%B9%9D%E5%A4%A9/</loc>
-    <lastmod>2018-10-25T02:27:32.790Z</lastmod>
+    <lastmod>2018-10-27T09:06:13.510Z</lastmod>
     <data>
         <display>
         <title>Hadoop第九天</title>
@@ -13,9 +13,37 @@
         
         <tag>机架感知</tag>
          
+        <tag>机架感知实现</tag>
+         
         <tag>HA</tag>
          
         <tag>手动移动数据块</tag>
+         
+        <tag>HDFS</tag>
+         
+         
+           
+             
+              <breadCrumb title="Hadoop" url="http://erichunn.github.io/categories/Hadoop/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://erichunn.github.io/2018/09/11/Hadoop%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/</loc>
+    <lastmod>2018-10-25T09:44:08.728Z</lastmod>
+    <data>
+        <display>
+        <title>Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数</title>
+        <pubTime>2018-09-11T01:25:39.000Z</pubTime>
+        
+        <tag>Hadoop权威指南</tag>
+         
+        <tag>MapReduce学习</tag>
+         
+        <tag>JS函数学习</tag>
          
          
            
@@ -141,30 +169,6 @@
          
          
            
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://erichunn.github.io/2018/09/11/Hadoop%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/</loc>
-    <lastmod>2018-10-19T02:41:30.617Z</lastmod>
-    <data>
-        <display>
-        <title>Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数</title>
-        <pubTime>2018-09-11T01:25:39.000Z</pubTime>
-        
-        <tag>Hadoop权威指南</tag>
-         
-        <tag>MapReduce学习</tag>
-         
-        <tag>JS函数学习</tag>
-         
-         
-           
-             
-              <breadCrumb title="Hadoop" url="http://erichunn.github.io/categories/Hadoop/"/>
-          
         </display>
     </data>
     </url>
