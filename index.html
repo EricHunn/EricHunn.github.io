@@ -328,6 +328,702 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/28/Hadoop第十天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/28/Hadoop第十天/" itemprop="url">Hadoop第十天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-28T10:31:16+08:00">
+                2018-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h2><pre><code>3个JournalNode,edit log
+两个NN，active | standby
+2NN
+</code></pre><h2 id="ha的管理命令"><a href="#ha的管理命令" class="headerlink" title="ha的管理命令"></a>ha的管理命令</h2><pre><code>hdfs haadmin -getServiceState nn1        //查看服务
+hdfs haadmin -transitionToActive nn1    //激活
+hdfs haadmin -transitionToStandby nn2    //待命
+hdfs haadmin -failover nn1 nn2            //对调
+</code></pre><h2 id="数据仓库"><a href="#数据仓库" class="headerlink" title="数据仓库"></a>数据仓库</h2><pre><code>OLAP        //online analyze process,在线分析处理
+            //延迟性高.
+在于后期海量数据的查询统计hive是延迟性比较高的操作实时性不好都是批量计算
+</code></pre><h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><pre><code>OLTP        //online transaction process在线事务处理.
+            //实时性好。延迟性很低
+        mysql针对事务性处理保证ACI特性。        
+</code></pre><h2 id="HA-1"><a href="#HA-1" class="headerlink" title="HA"></a>HA</h2><pre><code>3个JournalNode,edit log
+两个NN，active | standby
+2NN
+</code></pre><h2 id="ha的管理命令-1"><a href="#ha的管理命令-1" class="headerlink" title="ha的管理命令"></a>ha的管理命令</h2><pre><code>hdfs haadmin -getServiceState nn1        //查看服务
+hdfs haadmin -transitionToActive nn1    //激活
+hdfs haadmin -transitionToStandby nn2    //待命
+hdfs haadmin -failover nn1 nn2            //对调
+</code></pre><h2 id="数据仓库-1"><a href="#数据仓库-1" class="headerlink" title="数据仓库"></a>数据仓库</h2><pre><code>OLAP        //online analyze process,在线分析处理
+            //延迟性高.
+</code></pre><h2 id="数据库-1"><a href="#数据库-1" class="headerlink" title="数据库"></a>数据库</h2><pre><code>OLTP        //online transaction process在线事务处理.
+            //实时性好。
+</code></pre><h2 id="jdbc"><a href="#jdbc" class="headerlink" title="jdbc"></a>jdbc</h2><pre><code>java database connection,java数据库连接。
+</code></pre><p>java数据库连接设计套接字编程吗：面向接口编程，依托mysql驱动程序和mysql操作， jdbc就是socket，musql就是serversocket。</p>
+<p><img src="https://i.imgur.com/5s8oEhk.png" alt=""><br>0</p>
+<pre><code>1.创建mysql数据库和表
+     create table users(id int primary key auto_increment , name varchar(20) , age int);
+2.idea中创建jdbcDemo模块
+</code></pre><h2 id="事务-transaction"><a href="#事务-transaction" class="headerlink" title="事务:transaction,"></a>事务:transaction,</h2><pre><code>和数据库之间的一组操作。
+特点.
+a        //atomic,原子性,不可分割.
+c        //consistent,不能破坏掉
+i        //isolate,隔离型.
+d        //durable.永久性
+</code></pre><h2 id="truncate"><a href="#truncate" class="headerlink" title="truncate"></a>truncate</h2><pre><code>截断表，类似于delete操作，速度快，数据无法回滚。在Mysql里面操作
+truncate table users ;
+</code></pre><h2 id="sql语句"><a href="#sql语句" class="headerlink" title="sql语句"></a>sql语句</h2><pre><code>1.
+2.
+3.
+</code></pre><h2 id="Transaction"><a href="#Transaction" class="headerlink" title="Transaction"></a>Transaction</h2><pre><code>commit            //提交
+rollback        //回滚
+savePoint        //保存点
+</code></pre><h1 id="插入10万条数据不用预处理语句"><a href="#插入10万条数据不用预处理语句" class="headerlink" title="插入10万条数据不用预处理语句"></a>插入10万条数据不用预处理语句</h1><pre><code>import org.junit.Test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+
+//测试增删改查基本功能
+public class TestCRUD {
+    @Test
+    public void testStatement() throws Exception{
+        long start=System.currentTimeMillis();
+        //创建连接
+        String diverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(diverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建语句对象
+        Statement st = conn.createStatement();
+        for(int i=0;i&lt;100000;i++){
+            String sql = &quot;insert into users(name,age) values(&apos;tomas&quot; + i + &quot;&apos;,&quot; + (i % 100) + &quot;)&quot;;
+            st.execute(sql);
+        }
+        conn.commit();
+        st.close();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+}
+</code></pre><h1 id="使用预处理语句："><a href="#使用预处理语句：" class="headerlink" title="使用预处理语句："></a>使用预处理语句：</h1><pre><code>import org.junit.Test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+//测试增删改查基本功能
+public class TestCRUD {
+    @Test
+    public void testPreparedStatement() throws Exception{
+        long start=System.currentTimeMillis();
+        //创建连接
+        String diverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(diverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建语句对象
+        String sql = &quot;insert into users(name,age) value(?,?)&quot;;
+        PreparedStatement ppst = conn.prepareStatement(sql);
+        for(int i =0;i &lt; 10000;i++){
+                ppst.setString(1,&quot;tom&quot;+i);
+                ppst.setInt(2,i%100);
+                ppst.executeUpdate();//执行更新
+             }
+        conn.commit();
+        ppst.close();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+}
+</code></pre><h2 id="上述代码加一个批处理："><a href="#上述代码加一个批处理：" class="headerlink" title="上述代码加一个批处理："></a>上述代码加一个批处理：</h2><pre><code>import org.junit.Test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+//测试增删改查基本功能
+public class TestCRUD {
+    @Test
+    public void testPreparedStatement() throws Exception {
+        long start = System.currentTimeMillis();
+        //创建连接
+        String diverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(diverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建语句对象
+        String sql = &quot;insert into users(name,age) value(?,?)&quot;;
+        PreparedStatement ppst = conn.prepareStatement(sql);
+        for (int i = 0; i &lt; 10000; i++) {
+            ppst.setString(1, &quot;tom&quot; + i);
+            ppst.setInt(2, i % 100);
+            ppst.addBatch();//这个地方相当于一个缓冲区，相当于缓冲区里面放了2000个在传出去，减少了网络带宽速度会变快
+            if (i % 200 == 0) {
+                ppst.executeUpdate();//执行更新
+            }
+        }
+        ppst.addBatch();//最后不够2000在进行一个批处理
+        conn.commit();
+        ppst.close();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+}
+</code></pre><p>这边的一个通过自回环传输一百万次插入，传输量巨大。<br>但是要是直接在Mysql端直接给个命令做一百万次插入，就很快。不用和服务器端交互很多的数据量。通过存储过程来写，存储过程就是一组sql语句。这些语句已经预先在数据库中存放了。无非就是循环了。要执行这些语句，就要发一条执行存储过程的指令，服务器已收到命令，就直接执行。 速度很快的。</p>
+<p><img src="https://i.imgur.com/7TubkBX.png" alt=""></p>
+<h1 id="100000条数据通过普通事务，预处理，批处理时间"><a href="#100000条数据通过普通事务，预处理，批处理时间" class="headerlink" title="100000条数据通过普通事务，预处理，批处理时间"></a>100000条数据通过普通事务，预处理，批处理时间</h1><pre><code>Statement                //46698
+PreparedStatent            //43338
+CallableStatement        //14385
+</code></pre><p><img src="https://i.imgur.com/YJmcnEF.png" alt=""></p>
+<h1 id="mysql存储过程"><a href="#mysql存储过程" class="headerlink" title="mysql存储过程"></a>mysql存储过程</h1><p>msyql&gt;– 定义新的终止符,<strong>*</strong>不要带空格这个是注释<strong>*</strong><br>mysql&gt;delimiter //</p>
+<p>mysql&gt;– 创建存储过程<br>mysql&gt;CREATE PROCEDURE simpleproc (OUT param1 INT)<br>        BEGIN<br>        SELECT COUNT(*) INTO param1 FROM users;        – into 是赋值方式之一<br>        END<br>        //</p>
+<p>mysql&gt;– 查看存储过程的状态<br>mysql&gt;show procedure status //</p>
+<p>mysql&gt;– 查看指定存储过程创建语句<br>mysql&gt;show create procedure simpleproc ;</p>
+<p>mysql&gt;– 调用存储过程,@a在命令中定义变量<br>mysql&gt;call simpleproc(@a)</p>
+<p>mysql&gt;– 删除存储过程<br>mysql&gt;show drop procedure simpleproc ;</p>
+<p>mysql&gt;– 定义加法存储过程,set赋值语句 :=<br>mysql&gt;create procedure sp_add(in a int,in b int, out c int)<br>            begin<br>            set c := a + b ;<br>        end<br>        //</p>
+<h2 id="java访问存储过程（调用的是上一步c-a-b这个过程）"><a href="#java访问存储过程（调用的是上一步c-a-b这个过程）" class="headerlink" title="java访问存储过程（调用的是上一步c=a+b这个过程）"></a>java访问存储过程（调用的是上一步c=a+b这个过程）</h2><pre><code>import org.junit.Test;
+import java.sql.*;
+
+/**
+ * 测试基本操作
+ */
+public class TestCRUD {
+    /**
+     * 存储过程
+     */
+    @Test
+    public void testCallableStatement() throws Exception {
+        long start = System.currentTimeMillis();
+        //创建连接
+        String driverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(driverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建可调用语句，调用存储过程
+        CallableStatement cst = conn.prepareCall(&quot;{call sp_add(?,?,?)}&quot;);
+        cst.setInt(1,2);        //绑定参数
+        cst.setInt(2,3);
+        //注册输出参数类型
+        cst.registerOutParameter(3,Types.INTEGER);
+        cst.execute();
+        int sum = cst.getInt(3);
+        System.out.println(sum);
+        conn.commit();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+}
+</code></pre><h2 id="百万数据插入，存储过程的性能"><a href="#百万数据插入，存储过程的性能" class="headerlink" title="百万数据插入，存储过程的性能"></a>百万数据插入，存储过程的性能</h2><pre><code>1.创建存储过程
+    mysql&gt;create procedure sp_batchinsert(in n int)
+        begin
+        DECLARE name0 varchar(20);    -- 定义在begin内部
+        DECLARE age0 int;
+        DECLARE i int default 0 ;
+            while i &lt; n do
+                set name0 := concat(&apos;tom&apos;,i) ;
+                set age0 := i % 100 ;
+                insert into users(name,age) values(name0,age0);
+                set i := i + 1 ;
+            end while ;
+        end 
+
+        //
+2.java代码
+    @Test
+    public void testCallableStatement() throws Exception {
+        long start = System.currentTimeMillis();
+        //创建连接
+        String driverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(driverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建可调用语句，调用存储过程
+        CallableStatement cst = conn.prepareCall(&quot;{call sp_batchinsert(?)}&quot;);
+        cst.setInt(1,1000000);        //绑定参数
+        //注册输出参数类型
+        cst.execute();
+        conn.commit();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+</code></pre><h1 id="mysql函数"><a href="#mysql函数" class="headerlink" title="mysql函数"></a>mysql函数</h1><p>这个是创建函数的SQL参考手册：</p>
+<p><img src="https://i.imgur.com/1gvxZzF.png" alt=""></p>
+<pre><code>1.函数和存储过程相似，只是多了返回值声明.
+2.创建函数
+    mysql&gt;create function sf_add(a int ,b int) returns int
+        begin
+            return a + b ;
+        end
+        //
+
+3.显式创建的函数
+    mysql&gt;show function status                -- 
+    mysql&gt;show function status like &apos;%add%&apos;    -- 
+    mysql&gt;select sf_add(1,2)                --
+
+4.java调用函数
+    @Test
+    public void testFunction() throws Exception {
+        long start = System.currentTimeMillis();
+        //创建连接
+        String driverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(driverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建可调用语句，调用存储过程
+        CallableStatement cst = conn.prepareCall(&quot;{? = call sf_add(?,?)}&quot;);
+        cst.setInt(2,100);//设置第二个参数是100第三个参数是200，第一个参数是输出。
+        cst.setInt(3,200);
+        cst.registerOutParameter(1,Types.INTEGER);
+        //注册输出参数类型
+        cst.execute();
+        System.out.println(cst.getInt(1));
+        conn.commit();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+</code></pre><h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><pre><code>multiple version concurrent control,多版本并发控制。
+数据库的记录存储有多条，每一条都附加版本。所以可以实现隔离级别。是因为有MVCC多版本并发控制
+</code></pre><h2 id="事务的并发执行，容易出现的几个现象"><a href="#事务的并发执行，容易出现的几个现象" class="headerlink" title="事务的并发执行，容易出现的几个现象"></a>事务的并发执行，容易出现的几个现象</h2><pre><code>1.脏读
+    读未提交,一个事务读取了另外一个事务改写还没有提交的数据，如果另外一个
+    事务在稍后的时候回滚。
+
+2.不可重复读
+    一个事务进行相同条件查询连续的两次或者两次以上，每次结果都不同。这个是对数据进行了更改
+    有其他事务做了update操作。
+
+3.幻读
+    和(2)很像，其他事务做了insert操作.1时间查询到了10个，2时刻查询到了20个，是因为中间有做了插入操作
+</code></pre><h2 id="隔离级别（由于有MVCC）"><a href="#隔离级别（由于有MVCC）" class="headerlink" title="隔离级别（由于有MVCC）"></a>隔离级别（由于有MVCC）</h2><pre><code>为了避免出现哪种并发现象的。
+1        //read uncommitted    ,读未提交        导致脏读导致不可重复读
+2        //read committed    ,读已提交        这里避免了脏读
+4        //repeatable read    ,可以重复读        这里避免了不可重复读。还是可以让他插入更新，但是读取的是更新之前的值
+8        //serializable        ,串行化(悲观锁)        这里避免了换读，串行化不支持并发了就已经。
+</code></pre><h2 id="演示mysql事务隔离级别"><a href="#演示mysql事务隔离级别" class="headerlink" title="演示mysql事务隔离级别"></a>演示mysql事务隔离级别</h2><pre><code>1.开启mysql客户端
+    mysql&gt;
+2.关闭自动提交
+    mysql&gt;set autocommit 0 ;
+3.每次操作数据,都要开启事务，提交事务。
+</code></pre><h2 id="脏读现象"><a href="#脏读现象" class="headerlink" title="脏读现象"></a>脏读现象</h2><pre><code>[A]
+    1)mysql&gt;start transaction ;                                -- 开始事务
+    2)msyql&gt;update users set age = age + 1 where id = 1 ;    -- 更新数据,没有提交
+    6)mysql&gt;rollback ;                                        -- 回滚
+    7)mysql&gt;select * from users ;
+
+[B]
+    3)mysql&gt;set session transaction isolation level read uncommitted ;    -- 读未提交
+    4)msyql&gt;start transaction ;        -- 开始事务
+    5)mysql&gt;select * from users ;    -- 13
+</code></pre><h2 id="避免脏读"><a href="#避免脏读" class="headerlink" title="避免脏读"></a>避免脏读</h2><pre><code>[A]
+    1)mysql&gt;start transaction ;                                -- 开始事务
+    2)msyql&gt;update users set age = age + 1 where id = 1 ;    -- 更新数据,没有提交
+    6)mysql&gt;rollback ;                                        -- 回滚
+    7)mysql&gt;select * from users ;
+
+[B]
+    3)mysql&gt;set session transaction isolation level read committed ;    -- 读已提交
+    4)msyql&gt;start transaction ;        -- 开始事务
+    5)mysql&gt;select * from users ;    -- 13
+</code></pre><h2 id="测试不可重复读-隔离级别设置为读已提交不能避免不可重复读。"><a href="#测试不可重复读-隔离级别设置为读已提交不能避免不可重复读。" class="headerlink" title="测试不可重复读(隔离级别设置为读已提交不能避免不可重复读。)"></a>测试不可重复读(隔离级别设置为读已提交不能避免不可重复读。)</h2><pre><code>[A]
+    1)mysql&gt;commit ;
+    2)mysql&gt;set session transaction isolation level read committed ;    -- 读已提交
+    3)mysql&gt;start transaction ;                                            -- 开始事务
+    4)mysql&gt;select * from users    ;                                        -- 查询
+    9)mysql&gt;select * from users    ;
+
+[B]
+    5)mysql&gt;commit;
+    6)mysql&gt;start transaction ;    
+    7)mysql&gt;update users set age = 15 where id = 1 ;                    -- 更新
+    8)mysql&gt;commit;
+</code></pre><h2 id="测试避免不可重复读-隔离级别设置为读已提交不能避免不可重复读。"><a href="#测试避免不可重复读-隔离级别设置为读已提交不能避免不可重复读。" class="headerlink" title="测试避免不可重复读(隔离级别设置为读已提交不能避免不可重复读。)"></a>测试避免不可重复读(隔离级别设置为读已提交不能避免不可重复读。)</h2><pre><code>[A]
+    1)mysql&gt;commit ;
+    2)mysql&gt;set session transaction isolation level repeatable read ;    -- 可以重复读
+    3)mysql&gt;start transaction ;                                            -- 开始事务
+    4)mysql&gt;select * from users    ;                                        -- 查询
+    9)mysql&gt;select * from users    ;
+
+[B]
+    5)mysql&gt;commit;
+    6)mysql&gt;start transaction ;    
+    7)mysql&gt;update users set age = 15 where id = 1 ;                    -- 更新
+    8)mysql&gt;commit;
+</code></pre><h2 id="测试幻读-隔离级别设置为repeatable"><a href="#测试幻读-隔离级别设置为repeatable" class="headerlink" title="测试幻读(隔离级别设置为repeatable)"></a>测试幻读(隔离级别设置为repeatable)</h2><pre><code>[A]
+    1)mysql&gt;commit ;
+    2)mysql&gt;set session transaction isolation level serializable;        -- 串行化
+    3)mysql&gt;start transaction ;                                            -- 开始事务
+    4)mysql&gt;select * from users    ;                                        -- 查询
+    9)mysql&gt;select * from users    ;
+
+[B]
+    5)mysql&gt;commit;
+    6)mysql&gt;start transaction ;    
+    7)mysql&gt;insert into users(name,age) values(&apos;tomas&apos;,13);                -- 更新
+    8)mysql&gt;commit;
+</code></pre><h2 id="ANSI-SQL"><a href="#ANSI-SQL" class="headerlink" title="ANSI SQL"></a>ANSI SQL</h2><pre><code>美国国家标准结构SQL组
+select * from users for update ;
+</code></pre><h2 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h2><pre><code>1.支持四种隔离级别。
+2.默认隔离级别是可以重复读。
+3.隔离级别是seriable,不支持并发写。
+</code></pre><h2 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h2><pre><code>LOCK TABLE t WRITE;    -- 加锁(表级锁,read)
+
+UNLOCK TABLES ;        -- 解除自己所有的所有表级锁
+
+表级锁只能通过命令来解锁。
+</code></pre><p><img src="https://i.imgur.com/cLufeUV.png" alt=""></p>
+<h2 id="编程实现脏读现象"><a href="#编程实现脏读现象" class="headerlink" title="编程实现脏读现象"></a>编程实现脏读现象</h2><pre><code>package com.it18zhang.jdbcdemo.test;
+import org.junit.Test;
+import java.sql.*;
+/**
+ * 测试隔离级别
+ */
+public class TestIsolationLevel {
+
+    /**
+     * 执行写，不提交
+     */
+    @Test
+    public void testA() throws  Exception{
+        //创建连接
+        String driverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(driverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        conn.setAutoCommit(false);
+        Statement st = conn.createStatement();
+        st.execute(&quot;update users set age = 80 where id = 1&quot;);
+
+        System.out.println(&quot;===============&quot;);
+        conn.commit();
+        conn.close();
+    }
+
+    /**
+     * 查询，查到别人没有提交的数据
+     */
+    @Test
+    public void testB() throws  Exception{
+        //创建连接
+        String driverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(driverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+
+        //设置隔离级别读未提交==&gt;导致脏读
+        /************************** 设置隔离级别 ***************************************/
+        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+        conn.setAutoCommit(false);
+        Statement st = conn.createStatement();
+
+
+        ResultSet rs = st.executeQuery(&quot;select age from users where id = 1&quot;);
+        rs.next();
+        int age = rs.getInt(1) ;
+        System.out.println(age);
+        System.out.println(&quot;===============&quot;);
+        conn.commit();
+        conn.close();
+    }
+</code></pre><h2 id="共享读锁"><a href="#共享读锁" class="headerlink" title="共享读锁"></a>共享读锁</h2><h1 id="独占写锁"><a href="#独占写锁" class="headerlink" title="独占写锁"></a>独占写锁</h1><pre><code>一个事务写操作，另一个塞住。行级别的锁
+在独占锁这块，开启事务之后，资源存在征用的情况，如果A修改&gt;=2，b修改&lt;=3那么就出现先来先用的情况，没有提交事务之前，B一直要等待状态。然后事务是you原子性的，肯定就是非交集和交集的部分都不能更改。因为原子性。查询是由隔离级别控制。在查询的时候为了不让别人更新设置隔离级别为最高级别，就是8串行化，但是很难受，连接不关掉放到连接池里面，被下一个调用，还是串行化状态，不能写入，性能差。除了设置隔离级别，我们还可以加上一个select * from users for update。这样的话就代表仅仅是对这一个查询语句的时候执行独占写锁。这个时候不需要再设置隔离级别为8了。
+</code></pre><h2 id="SQL"><a href="#SQL" class="headerlink" title="SQL"></a>SQL</h2><pre><code>//
+insert into users(name,age,...) values(&apos;&apos;,12,..) ;                -- insert
+update users set name = &apos;xxx&apos;,age = xxx ,... where id = xxx ;    -- update
+delete from users where id = xxx                                -- delete
+
+-- 投影查询 projection.
+select id,name from users where ... order by limit xxx            --select
+
+-- 查询时直接上独占写锁
+select * from users for update ;    
+</code></pre><h2 id="连接查询"><a href="#连接查询" class="headerlink" title="连接查询"></a>连接查询</h2><pre><code>1.准备表[mysql.sql]
+drop table if exists customers; -- 删除表
+drop table if exists orders ;    -- 删除表
+create table customers(id int primary key auto_increment , name varchar(20) , age int);                    -- 创建customers表
+create table orders(id int primary key auto_increment , orderno varchar(20) , price float , cid int);    -- 创建orders表
+
+-- 插入数据
+insert into customers(name,age) values(&apos;tom&apos;,12);
+insert into customers(name,age) values(&apos;tomas&apos;,13);
+insert into customers(name,age) values(&apos;tomasLee&apos;,14);
+insert into customers(name,age) values(&apos;tomason&apos;,15);
+
+-- 插入订单数据
+insert into orders(orderno,price,cid) values(&apos;No001&apos;,12.25,1);
+insert into orders(orderno,price,cid) values(&apos;No002&apos;,12.30,1);
+insert into orders(orderno,price,cid) values(&apos;No003&apos;,12.25,2);
+insert into orders(orderno,price,cid) values(&apos;No004&apos;,12.25,2);
+insert into orders(orderno,price,cid) values(&apos;No005&apos;,12.25,2);
+insert into orders(orderno,price,cid) values(&apos;No006&apos;,12.25,3);
+insert into orders(orderno,price,cid) values(&apos;No007&apos;,12.25,3);
+insert into orders(orderno,price,cid) values(&apos;No008&apos;,12.25,3);
+insert into orders(orderno,price,cid) values(&apos;No009&apos;,12.25,3);
+insert into orders(orderno,price,cid) values(&apos;No0010&apos;,12.25,NULL);
+
+---执行SQL文件
+    source d:/SQL/mysql.sql
+
+2.查询--连接查询
+mysql&gt;-- 笛卡尔积查询,无连接条件查询
+mysql&gt;select a.*,b.* from customers a , orders b ; 
+</code></pre><p><img src="https://i.imgur.com/4hC9GS4.png" alt=""></p>
+<pre><code>mysql&gt;-- 内连接,查询符合条件的记录.
+mysql&gt;select a.*,b.* from customers a , orders b where a.id = b.cid ; 
+</code></pre><p><img src="https://i.imgur.com/2bP8sx4.png" alt=""></p>
+<pre><code>mysql&gt;-- 左外连接,查询符合条件的记录.
+mysql&gt;select a.*,b.* from customers a left outer join orders b on a.id = b.cid ; 
+</code></pre><p><img src="https://i.imgur.com/XKWihaX.png" alt=""></p>
+<pre><code>mysql&gt;-- 右外连接,查询符合条件的记录.
+mysql&gt;select a.*,b.* from customers a right outer join orders b on a.id = b.cid ; 
+</code></pre><p><img src="https://i.imgur.com/LiR1yV0.png" alt=""></p>
+<p><img src="https://i.imgur.com/6GdI0kM.png" alt=""></p>
+<pre><code>mysql&gt;-- 全外连接,查询符合条件的记录(mysql不支持全外链接)
+mysql&gt;select a.*,b.* from customers a full outer join orders b on a.id = b.cid ; 
+</code></pre><p>2.查询–分组</p>
+<pre><code>             字段列表  表       条件        分组        组内条件       排序     分页
+mysql&gt;select ... from ... where ... group by ... having ...  order by ... limit ..
+
+
+mysql&gt;-- 去重查询
+mysql&gt;select distinct price,cid from orders ;
+
+mysql&gt;-- 条件查询
+mysql&gt;select price,cid from orders where price &gt; 12.27 ;
+
+mysql&gt;-- 聚集查询
+mysql&gt;select max(price) from orders ;
+mysql&gt;select min(price) from orders ;
+mysql&gt;select avg(price) from orders ;
+mysql&gt;select sum(price) from orders ;
+mysql&gt;select count(id) from orders ;
+
+mysql&gt;-- 分组查询
+mysql&gt;select max(price) from orders where cid is not null group by cid ;
+
+
+mysql&gt;-- 分组查询(组内过滤)
+mysql&gt;select cid ,orderno,max(price) as max_price,min(price) from orders where cid is not null group by cid having max_price &gt; 20 ;
+
+mysql&gt;-- 降序查询
+mysql&gt;select cid ,orderno,max(price) as max_price,min(price) from orders where cid is not null group by cid having max_price &gt; 20 order by max_price desc;
+
+mysql&gt;-- 模糊查询
+mysql&gt;select  * from customers where name like &apos;toma%&apos;        
+mysql&gt;select  * from customers where name not like &apos;toma%&apos;        
+
+mysql&gt;-- 范围查询
+mysql&gt;select  * from customers where id in (1,2,3)        
+mysql&gt;select  * from customers where id not in (1,2,3)        
+
+mysql&gt;-- between 1 and 10,闭区间
+mysql&gt;select  * from customers where id between 1 and 3 ;
+mysql&gt;select  * from customers where id &gt;= 1 and id &lt;= 3 ;
+
+mysql&gt;-- 嵌套子查询(查询没有订单的客户)
+mysql&gt;select  * from customers where id not in (select distinct cid from orders where cid is not null);
+
+mysql&gt;-- 嵌套子查询(查询订单数量&gt;2的客户)
+mysql&gt;select * from customers where id in (select cid from orders group by cid having count(cid) &gt; 2);
+mysql&gt;select * from customers where id in ( select t.cid from (select cid,count(*) as c from orders group by cid having c &gt; 2) as t);
+
+mysql&gt;--向已有表中添加列
+mysql&gt;--alter table orders add column area int;
+mysql&gt;--设置area字段的值
+mysql&gt;--update orders set area = 2 where id in(1,3,,6,7);
+mysql&gt;--设置area字段的值
+mysql&gt;--update orders set area = 1 where id not in(1,3,,6,7);
+mysql&gt;--设置area字段的值
+mysql&gt;--update orders set area = 1 where id not in(1,3,,6,7);
+稍微看一下下面这个SQL语句：
+mysq&gt;--select cid,area,count(price) from orders group by cid,area;//这句话的意思是对cid和area联合分组，什么意思：就是说要cid和area要都相同才能进入到同一个组里面去。
+mysq&gt;--select cid,area,count(price),max(price),min(price) from orders group by cid,area order by cid asc, area desc  ;//这句话的意思是对cid和area联合分组，什么意思：就是说要cid和area要都相同才能进入到同一个组里面去。然后这个cid升序area降序是在1里面对area降序，也就是说先对cid整体升序，然后对升序完之后相同的cid里面进行降序。
+</code></pre><p><img src="https://i.imgur.com/QbThVj2.png" alt=""></p>
+<pre><code>mysql&gt;-- 嵌套子查询(查询客户id,客户name,订单数量,最贵订单，最便宜订单，平均订单价格 where 订单数量&gt;2的客户)
+mysql&gt;select a.id,a.name,b.c,b.max,b.min,b.avg 
+      from customers a,((select cid,count(cid) c , max(price) max ,min(price) min,avg(price) avg from orders group by cid having c &gt; 2) as b) 
+      where a.id = b.cid ;
+</code></pre><h2 id="hadoop"><a href="#hadoop" class="headerlink" title="hadoop"></a>hadoop</h2><pre><code>MR
+
+左外连接.
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/25/Hadoop第九天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3661,6 +4357,28 @@ public void readMapfile() throws Exception {
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -3992,395 +4710,6 @@ dfs.namenode.checkpoint.dir=file://${hadoop.tmp.dir}/dfs/namesecondary
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/29/Hadoop第二天之搭建/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/29/Hadoop第二天之搭建/" itemprop="url">Hadoop第二天之搭建</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-29T17:21:35+08:00">
-                2018-09-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="hadoop"><a href="#hadoop" class="headerlink" title="hadoop"></a>hadoop</h2><pre><code>1.独立模式(standalone|local)
-    nothing!
-    本地文件系统。
-    不需要启用单独进程。
-2.pesudo(伪分布模式)
-    等同于完全分布式，只有一个节点。
-    SSH:        //(Socket),
-                //public + private
-                //server : sshd ps -Af | grep sshd
-                //clint     : ssh
-                //ssh-keygen:生成公私秘钥。
-                //authorized_keys 需要使用644
-                //ssh 192.168.231.201  yes
-    [配置文件]
-        core-site.xml    //fs.defaultFS=hdfs://localhost/
-
-        hdfs-site.xml    //replication=1
-
-        mapred-site.xml    //
-        yarn-site.xml    //
-
-
-3.full distributed(完全分布式)
-</code></pre><h2 id="让命令行提示符显式完整路径"><a href="#让命令行提示符显式完整路径" class="headerlink" title="让命令行提示符显式完整路径"></a>让命令行提示符显式完整路径</h2><pre><code>1.编辑profile文件，添加环境变量PS1
-    [/etc/profile]
-    export PS1=&apos;[\u@\h `pwd`]\$&apos;
-
-2.source    
-    $&gt;source /etc/profile
-</code></pre><h2 id="配置hadoop，使用符号连接的方式，让三种配置形态共存。"><a href="#配置hadoop，使用符号连接的方式，让三种配置形态共存。" class="headerlink" title="配置hadoop，使用符号连接的方式，让三种配置形态共存。"></a>配置hadoop，使用符号连接的方式，让三种配置形态共存。</h2><pre><code>1.创建三个配置目录,内容等同于hadoop目录
-    ${hadoop_home}/etc/local
-    ${hadoop_home}/etc/pesudo
-    ${hadoop_home}/etc/full
-
-2.创建符号连接
-    $&gt;ln -s 
-
-3.对hdfs进行格式化
-    $&gt;hadoop namenode -format
-
-4.修改hadoop配置文件，手动指定JAVA_HOME环境变量
-    [${hadoop_home}/etc/hadoop/hadoop-env.sh]
-    ...
-    export JAVA_HOME=/soft/jdk
-    ...
-
-5.启动hadoop的所有进程
-    $&gt;start-all.sh
-
-6.启动完成后，出现以下进程
-    $&gt;jps
-        33702 NameNode
-        33792 DataNode
-        33954 SecondaryNameNode
-
-        29041 ResourceManager
-        34191 NodeManager
-
-7.查看hdfs文件系统
-    $&gt;hdfs dfs -ls /
-
-8.创建目录
-    $&gt;hdfs dfs -mkdir -p /user/centos/hadoop
-
-9.通过webui查看hadoop的文件系统
-    http://localhost:50070/
-
-10.停止hadoop所有进程
-    $&gt;stop-all.sh
-
-11.centos防火墙操作
-    [cnetos 6.5之前的版本]
-    $&gt;sudo service firewalld stop        //停止服务
-    $&gt;sudo service firewalld start        //启动服务
-    $&gt;sudo service firewalld status        //查看状态
-
-    [centos7]
-    $&gt;sudo systemctl enable firewalld.service    //&quot;开机启动&quot;启用
-    $&gt;sudo systemctl disable firewalld.service    //&quot;开机自启&quot;禁用
-    $&gt;sudo systemctl start firewalld.service    //启动防火墙
-    $&gt;sudo systemctl stop firewalld.service        //停止防火墙
-    $&gt;sudo systemctl status firewalld.service    //查看防火墙状态
-
-    [开机自启]
-    $&gt;sudo chkconfig firewalld    on                //&quot;开启自启&quot;启用
-    $&gt;sudo chkconfig firewalld    off                //&quot;开启自启&quot;禁用
-</code></pre><h2 id="hadoop的端口"><a href="#hadoop的端口" class="headerlink" title="hadoop的端口"></a>hadoop的端口</h2><pre><code>50070        //namenode http port
-50075        //datanode http port
-50090        //2namenode    http port
-
-8020        //namenode rpc port
-50010        //datanode rpc port
-</code></pre><h2 id="hadoop四大模块"><a href="#hadoop四大模块" class="headerlink" title="hadoop四大模块"></a>hadoop四大模块</h2><pre><code>common
-hdfs        //namenode + datanode + secondarynamenode
-
-mapred
-yarn        //resourcemanager + nodemanager
-</code></pre><h2 id="启动脚本"><a href="#启动脚本" class="headerlink" title="启动脚本"></a>启动脚本</h2><pre><code>1.start-all.sh        //启动所有进程
-2.stop-all.sh        //停止所有进程
-
-3.start-dfs.sh        //
-4.start-yarn.sh
-
-[hdfs]  start-dfs.sh stop-dfs.sh
-    NN
-    DN
-    2NN
-
-[yarn] start-yarn.sh stop-yarn.sh
-    RM
-    NM
-</code></pre><h2 id="修改主机名"><a href="#修改主机名" class="headerlink" title="修改主机名"></a>修改主机名</h2><pre><code>1./etc/hostname
-    s201
-2./etc/hosts
-    127.0.0.1 localhost
-    192.168.231.201 s201
-    192.168.231.202 s202
-    192.168.231.203 s203
-    192.168.231.204 s204
-</code></pre><h2 id="完全分布式"><a href="#完全分布式" class="headerlink" title="完全分布式"></a>完全分布式</h2><pre><code>1.克隆3台client(centos7)
-    右键centos-7--&gt;管理-&gt;克隆-&gt; ... -&gt; 完整克隆
-2.启动client
-3.启用客户机共享文件夹。
-4.修改hostname和ip地址文件
-    [/etc/hostname]
-    s202
-
-    [/etc/sysconfig/network-scripts/ifcfg-ethxxxx]
-    ...
-    IPADDR=..
-
-5.重启网络服务
-    $&gt;sudo service network restart
-
-6.修改/etc/resolv.conf文件
-    nameserver 192.168.231.2
-
-7.重复以上3 ~ 6过程.
-</code></pre><h2 id="准备完全分布式主机的ssh"><a href="#准备完全分布式主机的ssh" class="headerlink" title="准备完全分布式主机的ssh"></a>准备完全分布式主机的ssh</h2><pre><code>1.删除所有主机上的/home/centos/.ssh/*
-
-2.在s201主机上生成密钥对
-    $&gt;ssh-keygen -t rsa -P &apos;&apos; -f ~/.ssh/id_rsa
-
-3.将s201的公钥文件id_rsa.pub远程复制到202 ~ 204主机上。
-  并放置/home/centos/.ssh/authorized_keys
-    $&gt;scp id_rsa.pub centos@s201:/home/centos/.ssh/authorized_keys
-    $&gt;scp id_rsa.pub centos@s202:/home/centos/.ssh/authorized_keys
-    $&gt;scp id_rsa.pub centos@s203:/home/centos/.ssh/authorized_keys
-    $&gt;scp id_rsa.pub centos@s204:/home/centos/.ssh/authorized_keys
-
-4.配置完全分布式(${hadoop_home}/etc/hadoop/)
-    [core-site.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;
-    &lt;configuration&gt;
-            &lt;property&gt;
-                    &lt;name&gt;fs.defaultFS&lt;/name&gt;
-                    &lt;value&gt;hdfs://s201/&lt;/value&gt;
-            &lt;/property&gt;
-    &lt;/configuration&gt;
-
-    [hdfs-site.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;
-    &lt;configuration&gt;
-            &lt;property&gt;
-                    &lt;name&gt;dfs.replication&lt;/name&gt;
-                    &lt;value&gt;3&lt;/value&gt;
-            &lt;/property&gt;
-    &lt;/configuration&gt;
-
-    [mapred-site.xml]
-        不变
-
-    [yarn-site.xml]
-    &lt;?xml version=&quot;1.0&quot;?&gt;
-    &lt;configuration&gt;
-            &lt;property&gt;
-                    &lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;
-                    &lt;value&gt;s201&lt;/value&gt;
-            &lt;/property&gt;
-            &lt;property&gt;
-                    &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;
-                    &lt;value&gt;mapreduce_shuffle&lt;/value&gt;
-            &lt;/property&gt;
-    &lt;/configuration&gt;
-
-    [slaves]
-    s202
-    s203
-    s204
-
-    [hadoop-env.sh]
-    ...
-    export JAVA_HOME=/soft/jdk
-    ...
-
-5.分发配置
-    $&gt;cd /soft/hadoop/etc/
-    $&gt;scp -r full centos@s202:/soft/hadoop/etc/
-    $&gt;scp -r full centos@s203:/soft/hadoop/etc/
-    $&gt;scp -r full centos@s204:/soft/hadoop/etc/
-
-6.删除符号连接
-    $&gt;cd /soft/hadoop/etc
-    $&gt;rm hadoop
-    $&gt;ssh s202 rm /soft/hadoop/etc/hadoop
-    $&gt;ssh s203 rm /soft/hadoop/etc/hadoop
-    $&gt;ssh s204 rm /soft/hadoop/etc/hadoop
-
-7.创建符号连接
-    $&gt;cd /soft/hadoop/etc/
-    $&gt;ln -s full hadoop
-    $&gt;ssh s202 ln -s /soft/hadoop/etc/full /soft/hadoop/etc/hadoop
-    $&gt;ssh s203 ln -s /soft/hadoop/etc/full /soft/hadoop/etc/hadoop
-    $&gt;ssh s204 ln -s /soft/hadoop/etc/full /soft/hadoop/etc/hadoop
-
-8.删除临时目录文件
-    $&gt;cd /tmp
-    $&gt;rm -rf hadoop-centos
-    $&gt;ssh s202 rm -rf /tmp/hadoop-centos
-    $&gt;ssh s203 rm -rf /tmp/hadoop-centos
-    $&gt;ssh s204 rm -rf /tmp/hadoop-centos
-
-9.删除hadoop日志
-    $&gt;cd /soft/hadoop/logs
-    $&gt;rm -rf *
-    $&gt;ssh s202 rm -rf /soft/hadoop/logs/*
-    $&gt;ssh s203 rm -rf /soft/hadoop/logs/*
-    $&gt;ssh s204 rm -rf /soft/hadoop/logs/*
-
-10.格式化文件系统
-    $&gt;hadoop namenode -format
-
-11.启动hadoop进程
-    $&gt;start-all.sh
-</code></pre><h2 id="rsync"><a href="#rsync" class="headerlink" title="rsync"></a>rsync</h2><pre><code>四个机器均安装rsync命令。
-远程同步.
-$&gt;sudo yum install rsync
-</code></pre><h2 id="将root用户实现无密登录"><a href="#将root用户实现无密登录" class="headerlink" title="将root用户实现无密登录"></a>将root用户实现无密登录</h2><pre><code>1.同
-</code></pre><h2 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h2><pre><code>1.xcall.sh
-
-
-2.xsync.sh
-    xsync.sh /home/etc/a.txt
-    rsync -lr /home/etc/a.txt centos@s202:/home/etc
-</code></pre><hr>
-<pre><code>netstat -anop    查看进程
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -4435,7 +4764,7 @@ $&gt;sudo yum install rsync
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -4446,7 +4775,7 @@ $&gt;sudo yum install rsync
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -4457,7 +4786,7 @@ $&gt;sudo yum install rsync
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-count">74</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
