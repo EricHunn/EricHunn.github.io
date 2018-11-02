@@ -92,7 +92,9 @@
 <meta property="og:image" content="https://i.imgur.com/vO9wETa.png">
 <meta property="og:image" content="https://i.imgur.com/UVIcFDb.png">
 <meta property="og:image" content="https://i.imgur.com/XeGcZvS.png">
-<meta property="og:updated_time" content="2018-10-22T11:00:54.830Z">
+<meta property="og:image" content="https://i.imgur.com/SSNM7tc.png">
+<meta property="og:image" content="https://i.imgur.com/R4Pj8tj.png">
+<meta property="og:updated_time" content="2018-11-02T13:58:54.355Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop第七天">
 <meta name="twitter:description" content="多输入问题在IDEA里面代码： 首先明确一点InputInputformat也就是文本输入格式的输入是Longwritblele和Text，然后SequenceFileputFormat的输入是intwritble和text。 public class WCApp {      public static void main(String[] args) throws Exception {">
@@ -827,7 +829,14 @@ context.getCounter(&quot;m&quot;,Util.getInfo(this,&quot;map&quot;)).increment(1
     TotalOrderPartitioner.setPartitionFile(job.getConfiguration(),new Path(&quot;d:/mr/par.lst&quot;));
 </code></pre><hr>
 <hr>
-<p><strong>## 全排序和部分排序二次排序在面试比例很重的 ##</strong><br>分区在map端，分组在reduce端。<br>二次排序就是把value和key组合到一起，然后value就是nullwritable这样子。合在一起成为一个combokey。<br>Combokey不但要可比较还要串行化，hadoop的串行化机制是writable ，串行就是写入到流离去，反串行就是读出来。<br>IntWritable LongWritable这些都是经过串行化实现的类，Writable有很多子类。 </p>
+<h2 id="全排序和部分排序二次排序在面试比例很重的"><a href="#全排序和部分排序二次排序在面试比例很重的" class="headerlink" title="全排序和部分排序二次排序在面试比例很重的"></a>全排序和部分排序二次排序在面试比例很重的</h2><p>分区在map端，分组在reduce端。<br>二次排序就是把value和key组合到一起，然后value就是nullwritable这样子。合在一起成为一个combokey。<br>Combokey不但要可比较还要串行化，hadoop的串行化机制是writable ，串行就是写入到流离去，反串行就是读出来。<br>IntWritable LongWritable这些都是经过串行化实现的类，Writable有很多子类。 </p>
+<p>value本身不能排序，为了能让他排序，吧value做到key里面去。吧年份和气温都做到key里面去，这个key是自定义的key,然后在combokey中定义里面的排序规则。自定义key,自定义对比器。</p>
+<p>wirtable是串行化机制，java本身也有串行化机制，本质是对象输出流和输入流objectInputStream,objectOutputStream。需要写入和读取就可以了，但是java的串行化效率比较低而且复杂，不能够夸语言，所以hadoop有一个自己的串行化Wriable过程。</p>
+<p>这端是reduce端，经过map端的combokey输出的combokey类是这个样子的，如果不经过处理直接聚合，就会发先，每一个combo都是一个新的都不相同，但是我们想让相同年份的进入到同一个组里面去。所以要重写分组。根据年份写分组，只要是同一个年就是同一组</p>
+<p>reduce端里面有reduce对象和reduce方法。我们说的分几个区进入到几个reduce的意思是进入到几个reduce对象。</p>
+<p><img src="https://i.imgur.com/SSNM7tc.png" alt=""></p>
+<p>现在讲一下下图：下图说在没有分组的情况下，一个key对应好多value,也就是一个1978对应好多个12。好多个12进入到迭代器里面去，不断it.next是下一个v。但是key也改变，其实每次都是变化的，<br><img src="https://i.imgur.com/R4Pj8tj.png" alt=""></p>
+<p><strong>讲一下二次排序和全排序：</strong>全排序就是整个年份-温度数据，分成几个区，让第一个区的最大值小于第二个区的最小值，然后这样子排下去，既解决了分布式的问题，又解决了数据倾斜的问题，但是value是不能排序的，因为mapreduce天生value就不能够排序。那么如何解决让温度也排序呢，就是要把年份和温度做成一个key，传入，然后再排序。就是二次排序，既实现了年份的排序，又实现了温度的排序，这里说的温度的排序是指同一个年份温度升序降序的问题。</p>
 <h1 id="二次排序"><a href="#二次排序" class="headerlink" title="二次排序"></a>二次排序</h1><p>代码如下：</p>
 <pre><code>/**
  * 自定义组合key
@@ -861,7 +870,7 @@ public class ComboKey implements WritableComparable&lt;ComboKey&gt; {
         //年份相同(升序)
         if (year == y0) {
             //气温降序
-            return -(temp - t0);
+            return -(temp - t0);            // //这个地方为什么说temp-t0是升序排列，因为这个temp-t0是默认的。默认就是升序排列加一个负号就是降序排列。本身升序排列的就是temp-t0是大于0的
         } else {
             return year - y0;
         }
@@ -976,14 +985,16 @@ public class MaxTempReducer extends Reducer&lt;ComboKey, NullWritable, IntWritab
     }
 }
 </code></pre><hr>
-<pre><code>public class YearPartitioner extends Partitioner&lt;ComboKey,NullWritable&gt; {
+<pre><code>//自定义分区，在map端执行，是map中的一个阶段，mapkv进kv出，kv出去之后要有一个分区的过程。
+//默认是哈希分区，这里边是修改了分区规则。
+public class YearPartitioner extends Partitioner&lt;ComboKey,NullWritable&gt; {
 
-    public int getPartition(ComboKey key, NullWritable nullWritable, int numPartitions) {
-        int year = key.getYear();
-        return year % numPartitions;
-    }
+public int getPartition(ComboKey key, NullWritable nullWritable, int numPartitions) {
+    int year = key.getYear();
+    return year % numPartitions;
 }
-</code></pre><hr>
+</code></pre><p>}</p>
+<hr>
 <hr>
 <hr>
 
@@ -1165,7 +1176,7 @@ public class MaxTempReducer extends Reducer&lt;ComboKey, NullWritable, IntWritab
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1187,7 +1198,7 @@ public class MaxTempReducer extends Reducer&lt;ComboKey, NullWritable, IntWritab
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">74</span>
+                  <span class="site-state-item-count">75</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -1263,7 +1274,7 @@ public class MaxTempReducer extends Reducer&lt;ComboKey, NullWritable, IntWritab
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#多输入问题"><span class="nav-number">1.</span> <span class="nav-text">多输入问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#计数器"><span class="nav-number">2.</span> <span class="nav-text">计数器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#计数器-1"><span class="nav-number">2.1.</span> <span class="nav-text">计数器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#单独配置2nn到独立节点"><span class="nav-number">3.</span> <span class="nav-text">单独配置2nn到独立节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#跟踪运行器信息"><span class="nav-number">4.</span> <span class="nav-text">跟踪运行器信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全排序"><span class="nav-number">5.</span> <span class="nav-text">全排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#全排序代码"><span class="nav-number">5.1.</span> <span class="nav-text">全排序代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全排序采样器"><span class="nav-number">6.</span> <span class="nav-text">全排序采样器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#首先一段产生随机年份，温度的代码"><span class="nav-number">6.1.</span> <span class="nav-text">首先一段产生随机年份，温度的代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全排序采样器代码"><span class="nav-number">6.2.</span> <span class="nav-text">全排序采样器代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二次排序"><span class="nav-number">7.</span> <span class="nav-text">二次排序</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#多输入问题"><span class="nav-number">1.</span> <span class="nav-text">多输入问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#计数器"><span class="nav-number">2.</span> <span class="nav-text">计数器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#计数器-1"><span class="nav-number">2.1.</span> <span class="nav-text">计数器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#单独配置2nn到独立节点"><span class="nav-number">3.</span> <span class="nav-text">单独配置2nn到独立节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#跟踪运行器信息"><span class="nav-number">4.</span> <span class="nav-text">跟踪运行器信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全排序"><span class="nav-number">5.</span> <span class="nav-text">全排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#全排序代码"><span class="nav-number">5.1.</span> <span class="nav-text">全排序代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全排序采样器"><span class="nav-number">6.</span> <span class="nav-text">全排序采样器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#首先一段产生随机年份，温度的代码"><span class="nav-number">6.1.</span> <span class="nav-text">首先一段产生随机年份，温度的代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全排序采样器代码"><span class="nav-number">6.2.</span> <span class="nav-text">全排序采样器代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全排序和部分排序二次排序在面试比例很重的"><span class="nav-number">6.3.</span> <span class="nav-text">全排序和部分排序二次排序在面试比例很重的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二次排序"><span class="nav-number">7.</span> <span class="nav-text">二次排序</span></a></li></ol></div>
             
 
           </div>
