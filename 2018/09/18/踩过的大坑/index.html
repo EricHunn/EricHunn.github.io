@@ -98,7 +98,7 @@
 <meta property="og:image" content="https://i.imgur.com/Nl7H9O2.png">
 <meta property="og:image" content="https://i.imgur.com/2p1OzOd.png">
 <meta property="og:image" content="https://i.imgur.com/KSFu5qm.png">
-<meta property="og:updated_time" content="2018-11-02T03:07:49.399Z">
+<meta property="og:updated_time" content="2018-11-07T08:25:43.211Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux基础基础—————踩过的大坑">
 <meta name="twitter:description" content="问题：图形界面浏览器能访问外网，但是ping不通很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。 解决：将网络中心里面改成这样子就行了。 具体的网站解释：https://blog.csdn.net/Arnold_lee_yc/article/details/74785995  不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。所以本">
@@ -478,6 +478,47 @@ job=new Job(conf);
 <h1 id="关于Integer-parseInt"><a href="#关于Integer-parseInt" class="headerlink" title="关于Integer,parseInt"></a>关于Integer,parseInt</h1><p>例题：</p>
 <p>设有下面两个赋值语句：<br>a = Integer.parseInt(“123”);<br>b = Integer.valueOf(“123”).intValue();<br>下述说法正确的是（  d  ）。<br>A、a是整数类型变量，b是整数类对象。<br>B、a是整数类对象，b是整数类型变量。<br>C、a和b都是整数类对象并且值相等。<br>D、a和b都是整数类型变量并且值相等。</p>
 <p>详细解析：<br>parseInt(String s )方法是类Integer的静态方法，它的作用就是将形参 s 转化为整数，比如：<br>Interger.parseInt(“1”)=1;<br>Integer.parseInt(“20”)=20;<br>Integer.parseInt(“324”)=324;<br>当然，s 表示的整数必须合法，不然是会抛异常的。<br>valueOf(String s )也是Integer类的静态方法，它的作用是将形参 s 转化为Integer对象，<br>什么是Integer对象，Integer就是基本数据类型int型包装类，就是将int包装成一个类，这样在很多场合下是必须的。如果理解不了，你就认为int是Integer的mini版，好用了很多，但也丢失了一些功能，好了，看代码：<br>Interger.valueOf(“123”)=Integer(123)<br>这时候Integer（123）就是整数123的对象表示形式，它再调用intValue()方法，就是将123的对象表示形式转化为基本数据123<br>所以，选择D</p>
+<hr>
+<p>在安装hive的时候出现了一个权限拒绝的错误，一切都是按照视频上来的为什么会出错：<br>因为视频里面的有一些日志文件夹的创建，所在的按个父目录所属权是root的不让你创建，所以说要把他的所有者改掉。改成centos即可。</p>
+<hr>
+<p>Hive创建表格报【Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. MetaException】引发的血案<br>在成功启动Hive之后感慨这次终于没有出现Bug了，满怀信心地打了长长的创建表格的命令，结果现实再一次给了我一棒，报了以下的错误Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. MetaException，看了一下错误之后，先是楞了一下，接着我就发出感慨，自从踏上编程这条不归路之后，就没有一天不是在找Bug的路上就是在处理Bug，给自己贴了个标签：找Bug就跟吃饭一样的男人。抒发心中的感慨之后，该干活还是的干活。</p>
+<p>第一步：查看配置文件 确保没有出错</p>
+<p>第二步：上网找找同是天涯落人，看看有哪位哥们也跟我一样出现了这个问题，找来找去，就找到一个更换mysql-connector-java jar包的解决方案，怎么看都不像能解决问题，抱着死马当活马医的心态，还是试了一下，果然不出意料，没有解决问题，PASS!</p>
+<p>第三步：运行 hive -hiveconf hive.root.logger=DEBUG,console打印hive启动过程的log。不打不知道，一打吓一跳，看到下面血淋淋的报错信息，心凉了半截，血案啊！！！由于太长我就截了一小部分出来</p>
+<pre><code>[main]: ERROR DataNucleus.Datastore: Error thrown executing CREATE TABLE `SERDE_PARAMS`
+(
+    `SERDE_ID` BIGINT NOT NULL,
+    `PARAM_KEY` VARCHAR(256) BINARY NOT NULL,
+    `PARAM_VALUE` VARCHAR(4000) BINARY NULL,
+    CONSTRAINT `SERDE_PARAMS_PK` PRIMARY KEY (`SERDE_ID`,`PARAM_KEY`)
+) ENGINE=INNODB : Specified key was too long; max key length is 767 bytes
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Specified key was too long; max key length is 767 bytes
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+    ...
+    at org.apache.hadoop.util.RunJar.main(RunJar.java:212)
+
+main]: ERROR Datastore.Schema: An exception was thrown while adding/validating class(es) : Specified key was too long; max key length is 767 bytes
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Specified key was too long; max key length is 767 bytes
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+    ...
+    at java.lang.reflect.Method.invoke(Method.java:606)
+    at org.apache.hadoop.util.RunJar.main(RunJar.java:212)
+</code></pre><p>————————————————————————</p>
+<pre><code>[main]: DEBUG metastore.HiveMetaStore: admin role already exists
+InvalidObjectException(message:Role admin already exists.)
+    at org.apache.hadoop.hive.metastore.ObjectStore.addRole(ObjectStore.java:3187)
+    ...
+    at java.lang.reflect.Method.invoke(Method.java:606)
+
+[main]: DEBUG metastore.HiveMetaStore: Failed while granting global privs to admin
+InvalidObjectException(message:All is already granted by admin)
+    at org.apache.hadoop.hive.metastore.ObjectStore.grantPrivileges(ObjectStore.java:3912)
+    ...
+    at org.apache.hadoop.util.RunJar.main(RunJar.java:212)
+</code></pre><p>第四步：继续搜索解决方法，然后找到了可能是字符集的原因，可以通过在mysql中将数据库的字符集改为latin1，执行以下命令： alter database hive character set latin1;</p>
+<p>第五步：重启hive，继续看log，除了第一个exception消失了之外，其他依然存在，有些疑惑，认真看了一下，发现metastore.HiveMetaStore: admin role already exists，会不会是之前hive启动出错时留下的问题，那么把mysql中的hive数据删掉重新创建一个看看。</p>
+<p>第六步：在mysql中执行以下命令：<br>drop database hive;<br>create database hive;<br>alter database hive character set latin1;</p>
+<p>第七步：重启hive，查看log，问题解决了！！！</p>
 
       
     </div>
@@ -643,7 +684,7 @@ job=new Job(conf);
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -654,7 +695,7 @@ job=new Job(conf);
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -665,7 +706,7 @@ job=new Job(conf);
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">75</span>
+                  <span class="site-state-item-count">76</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

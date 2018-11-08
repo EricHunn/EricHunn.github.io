@@ -4,6 +4,63 @@
 
     
   <url>
+    <loc>http://erichunn.github.io/2018/11/08/Hive%E7%AC%AC%E4%BA%8C%E5%A4%A9/</loc>
+    <lastmod>2018-11-08T08:52:48.590Z</lastmod>
+    <data>
+        <display>
+        <title>Hive第二天</title>
+        <pubTime>2018-11-08T08:17:04.000Z</pubTime>
+        
+        <tag>Hive</tag>
+         
+         
+           
+             
+              <breadCrumb title="Hive" url="http://erichunn.github.io/categories/Hive/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://erichunn.github.io/2018/11/06/Hive%E7%AC%AC%E4%B8%80%E5%A4%A9/</loc>
+    <lastmod>2018-11-07T13:13:48.789Z</lastmod>
+    <data>
+        <display>
+        <title>Hive第一天</title>
+        <pubTime>2018-11-06T08:35:55.000Z</pubTime>
+        
+        <tag>Hive</tag>
+         
+         
+           
+             
+              <breadCrumb title="Hive" url="http://erichunn.github.io/categories/Hive/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://erichunn.github.io/2018/09/18/%E8%B8%A9%E8%BF%87%E7%9A%84%E5%A4%A7%E5%9D%91/</loc>
+    <lastmod>2018-11-07T08:25:43.211Z</lastmod>
+    <data>
+        <display>
+        <title>Linux基础基础—————踩过的大坑</title>
+        <pubTime>2018-09-18T07:55:21.000Z</pubTime>
+        
+        <tag>大坑</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://erichunn.github.io/2018/10/17/Hadoop%E7%AC%AC%E4%B8%83%E5%A4%A9/</loc>
     <lastmod>2018-11-02T13:58:54.355Z</lastmod>
     <data>
@@ -52,23 +109,6 @@
              
               <breadCrumb title="问题" url="http://erichunn.github.io/categories/%E9%97%AE%E9%A2%98/"/>
           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://erichunn.github.io/2018/09/18/%E8%B8%A9%E8%BF%87%E7%9A%84%E5%A4%A7%E5%9D%91/</loc>
-    <lastmod>2018-11-02T03:07:49.399Z</lastmod>
-    <data>
-        <display>
-        <title>Linux基础基础—————踩过的大坑</title>
-        <pubTime>2018-09-18T07:55:21.000Z</pubTime>
-        
-        <tag>大坑</tag>
-         
-         
-           
         </display>
     </data>
     </url>
