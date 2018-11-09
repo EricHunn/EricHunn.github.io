@@ -328,6 +328,125 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/04/Hadoop第四天之滚动日志-安全模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/04/Hadoop第四天之滚动日志-安全模式/" itemprop="url">Hadoop第四天之滚动日志-安全模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-04T08:56:35+08:00">
+                2018-10-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/04/Hadoop第四天之最小块设置-指定副本数/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -557,7 +676,13 @@
 <hr>
 <p>有一个分组的问题：<br>    分组就是说组合key出来本来是每一个组合key大多都是不同的key。相同年份不同温度也是不同的key，但是为了相同的年份的组合key能够进入到同一个reduce，所以要通过分组让他这个样子，但是为什么要这个样</p>
 <pre><code>经过分区已经说达到了将不同年份的
-</code></pre>
+</code></pre><hr>
+<p>在mapreduce阶段有一个大表和小表连接</p>
+<p>hive里面也有一个小表和小表连接就在map端口，然后小表和大表连接在reduce端口。</p>
+<p>这个地方的问题没有搞明白。具体的hive在hive第二天07mr的忘记在哪里了</p>
+<hr>
+<p>然后mr的最后一天hadoop第十一天的二次排序没有搞得特别明白。</p>
+
           
         
       
@@ -2225,207 +2350,11 @@ $&gt;$(... $())        //支持命令的嵌套
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之符号连接/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/18/Linux基础之符号连接/" itemprop="url">Linux基础之符号连接</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T19:04:09+08:00">
-                2018-09-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><hr>
-<pre><code>r        //100 = 4
-        //文件  :读取内容，
-        //文件夹:是查看文件夹的内容
-w        //文件  :写数据到文件
-        //文件夹:增删文件.
-        //10 = 2
-
-x        //文件  : 运行程序
-        //文件夹: 进入该目录.
-        // 1 = 1
-</code></pre><h2 id="权限控制涉及范围"><a href="#权限控制涉及范围" class="headerlink" title="权限控制涉及范围"></a>权限控制涉及范围</h2><hr>
-<pre><code>U:user    ,rwx r-x ---
-G:group ,
-O:other , 
-</code></pre><h2 id="修改文件的owner-change-owner"><a href="#修改文件的owner-change-owner" class="headerlink" title="修改文件的owner,change owner"></a>修改文件的owner,change owner</h2><hr>
-<pre><code>chown -R root:root a.txt        //递归修改owner
-chmod -R 777 xxx                //递归修改权限.
-</code></pre><p>-R :递归显示</p>
-<p>-l :列表显示</p>
-<p>通过递归改变整个文件夹里面的文件的权限和所有者和所在组</p>
-<pre><code>chown -R root:root tmp
-</code></pre><h2 id="Linux文件夹"><a href="#Linux文件夹" class="headerlink" title="Linux文件夹"></a>Linux文件夹</h2><hr>
-<pre><code>/                //根目录
-
-/bin            //祖先
-/sbin            //祖先
-/usr/bin        //厂商
-/usr/sbin        //厂商
-/usr/local/bin    //用户
-/usr/local/sbin    //用户
-
-/etc            //配置目录
-/mnt            //挂载目录
-/boot            //引导目录
-/dev            //设备目录
-/lib[64]        //库目录
-
-
--:文件
-d:目录
-l:link 等价于windows快捷方式
-b:block,块设备
-c:charactor,字符文件
-</code></pre><h2 id="创建连接文件"><a href="#创建连接文件" class="headerlink" title="创建连接文件"></a>创建连接文件</h2><hr>
-<h3 id="1-硬链接"><a href="#1-硬链接" class="headerlink" title="1.硬链接"></a>1.硬链接</h3><p>两个完全相同文件，类似于实时备份。两个文件之间完全同步。删除时，只删一个。</p>
-<p>目录不能使用硬链接。</p>
-<pre><code>ln a.txt alink            
-</code></pre><p>//a.txt:目标文件, alink:连接名称.</p>
-<pre><code>ln b.txt b_lnk
-</code></pre><p>//硬链接，修改连接文件，源文件也改变，但是删除连接文件源文件不被删除。</p>
-<p>硬链接用的很少，大多使用符号连接</p>
-<pre><code>mv b_link b.txt
-</code></pre><p>同一目录下改名字就用移动命令即可</p>
-<h3 id="2-符号连接-软连接"><a href="#2-符号连接-软连接" class="headerlink" title="2.符号连接-软连接"></a>2.符号连接-软连接</h3><p>相当于快捷方式.</p>
-<p>可以对文件，也可以对文件夹创建符号连接。</p>
-<p>符号连接存在的时候，可以删除目标文件。</p>
-<pre><code>$&gt;ln -s a.txt alink        
-</code></pre><p>//a.txt: 目标文件  alink:连接名称(symbolic)</p>
-<p><img src="https://i.imgur.com/PBw1m7U.png" alt=""></p>
-<p>blk存放的是路径的字节数大小。开始的时候只想本目录下的b.txt所以是5个字节，后来只想一个绝对路径就变成了28个字符。例子如下图所示</p>
-<p><img src="https://i.imgur.com/Mfril9n.png" alt=""></p>
-<p>删除掉了链接指向的文件，就会变成红色。删除后在加上就回复正常变成了浅蓝色。</p>
-<p><img src="https://i.imgur.com/OpwzbVW.png" alt=""></p>
-<hr>
-<h2 id="sudo"><a href="#sudo" class="headerlink" title="sudo"></a>sudo</h2><hr>
-<p>临时借用root的权限执行命令,只在当前命令下有效。命令结束后，还是原来用户。</p>
-<h3 id="1-配置当前用户具有sudo的执行权利"><a href="#1-配置当前用户具有sudo的执行权利" class="headerlink" title="1.配置当前用户具有sudo的执行权利"></a>1.配置当前用户具有sudo的执行权利</h3><pre><code>    [/etc/sudoers]
-    ...
-    root ALL=(ALL) ALL
-    centos ALL=(ALL) ALL
-    ...
-$&gt;sudo chown -R centos:centos .
-</code></pre><p>临时切换超级管理员权限</p>
-<pre><code>sudo
-</code></pre><p>切换到另外一个用户</p>
-<pre><code>su
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2475,7 +2404,7 @@ $&gt;sudo chown -R centos:centos .
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2486,7 +2415,7 @@ $&gt;sudo chown -R centos:centos .
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -2497,7 +2426,7 @@ $&gt;sudo chown -R centos:centos .
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">76</span>
+                  <span class="site-state-item-count">77</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

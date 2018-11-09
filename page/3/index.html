@@ -328,6 +328,202 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之符号连接/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/18/Linux基础之符号连接/" itemprop="url">Linux基础之符号连接</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T19:04:09+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><hr>
+<pre><code>r        //100 = 4
+        //文件  :读取内容，
+        //文件夹:是查看文件夹的内容
+w        //文件  :写数据到文件
+        //文件夹:增删文件.
+        //10 = 2
+
+x        //文件  : 运行程序
+        //文件夹: 进入该目录.
+        // 1 = 1
+</code></pre><h2 id="权限控制涉及范围"><a href="#权限控制涉及范围" class="headerlink" title="权限控制涉及范围"></a>权限控制涉及范围</h2><hr>
+<pre><code>U:user    ,rwx r-x ---
+G:group ,
+O:other , 
+</code></pre><h2 id="修改文件的owner-change-owner"><a href="#修改文件的owner-change-owner" class="headerlink" title="修改文件的owner,change owner"></a>修改文件的owner,change owner</h2><hr>
+<pre><code>chown -R root:root a.txt        //递归修改owner
+chmod -R 777 xxx                //递归修改权限.
+</code></pre><p>-R :递归显示</p>
+<p>-l :列表显示</p>
+<p>通过递归改变整个文件夹里面的文件的权限和所有者和所在组</p>
+<pre><code>chown -R root:root tmp
+</code></pre><h2 id="Linux文件夹"><a href="#Linux文件夹" class="headerlink" title="Linux文件夹"></a>Linux文件夹</h2><hr>
+<pre><code>/                //根目录
+
+/bin            //祖先
+/sbin            //祖先
+/usr/bin        //厂商
+/usr/sbin        //厂商
+/usr/local/bin    //用户
+/usr/local/sbin    //用户
+
+/etc            //配置目录
+/mnt            //挂载目录
+/boot            //引导目录
+/dev            //设备目录
+/lib[64]        //库目录
+
+
+-:文件
+d:目录
+l:link 等价于windows快捷方式
+b:block,块设备
+c:charactor,字符文件
+</code></pre><h2 id="创建连接文件"><a href="#创建连接文件" class="headerlink" title="创建连接文件"></a>创建连接文件</h2><hr>
+<h3 id="1-硬链接"><a href="#1-硬链接" class="headerlink" title="1.硬链接"></a>1.硬链接</h3><p>两个完全相同文件，类似于实时备份。两个文件之间完全同步。删除时，只删一个。</p>
+<p>目录不能使用硬链接。</p>
+<pre><code>ln a.txt alink            
+</code></pre><p>//a.txt:目标文件, alink:连接名称.</p>
+<pre><code>ln b.txt b_lnk
+</code></pre><p>//硬链接，修改连接文件，源文件也改变，但是删除连接文件源文件不被删除。</p>
+<p>硬链接用的很少，大多使用符号连接</p>
+<pre><code>mv b_link b.txt
+</code></pre><p>同一目录下改名字就用移动命令即可</p>
+<h3 id="2-符号连接-软连接"><a href="#2-符号连接-软连接" class="headerlink" title="2.符号连接-软连接"></a>2.符号连接-软连接</h3><p>相当于快捷方式.</p>
+<p>可以对文件，也可以对文件夹创建符号连接。</p>
+<p>符号连接存在的时候，可以删除目标文件。</p>
+<pre><code>$&gt;ln -s a.txt alink        
+</code></pre><p>//a.txt: 目标文件  alink:连接名称(symbolic)</p>
+<p><img src="https://i.imgur.com/PBw1m7U.png" alt=""></p>
+<p>blk存放的是路径的字节数大小。开始的时候只想本目录下的b.txt所以是5个字节，后来只想一个绝对路径就变成了28个字符。例子如下图所示</p>
+<p><img src="https://i.imgur.com/Mfril9n.png" alt=""></p>
+<p>删除掉了链接指向的文件，就会变成红色。删除后在加上就回复正常变成了浅蓝色。</p>
+<p><img src="https://i.imgur.com/OpwzbVW.png" alt=""></p>
+<hr>
+<h2 id="sudo"><a href="#sudo" class="headerlink" title="sudo"></a>sudo</h2><hr>
+<p>临时借用root的权限执行命令,只在当前命令下有效。命令结束后，还是原来用户。</p>
+<h3 id="1-配置当前用户具有sudo的执行权利"><a href="#1-配置当前用户具有sudo的执行权利" class="headerlink" title="1.配置当前用户具有sudo的执行权利"></a>1.配置当前用户具有sudo的执行权利</h3><pre><code>    [/etc/sudoers]
+    ...
+    root ALL=(ALL) ALL
+    centos ALL=(ALL) ALL
+    ...
+$&gt;sudo chown -R centos:centos .
+</code></pre><p>临时切换超级管理员权限</p>
+<pre><code>sudo
+</code></pre><p>切换到另外一个用户</p>
+<pre><code>su
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之虚拟机增强工具的安装-文本模式的安装/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2028,393 +2224,11 @@ class BosiCat extends Cat {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/11/Hadoop权威指南学习笔记（1）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/11/Hadoop权威指南学习笔记（1）/" itemprop="url">Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-11T09:25:39+08:00">
-                2018-09-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>先看一段代码</strong></p>
-<pre><code>package lianxi;
-
-import java.io.IOException;
-
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.MapReduceBase;
-import org.apache.hadoop.mapred.OutputCollector;
-import org.apache.hadoop.mapred.Reporter;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.map.WrappedMapper.Context;
-
-public class MaxTemperatureMapper extends MapReduceBase
-        implements org.apache.hadoop.mapred.Mapper&lt;LongWritable, Text, Text, IntWritable&gt; {
-    private static final int MISSING = 9999;
-
-    public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-
-        String line = value.toString();
-        String year = line.substring(15, 19);
-        int airTemperature;
-
-        if (line.charAt(87) == &apos;+&apos;) {// parseInt doesn&apos;t like leading plus signs
-            airTemperature = Integer.parseInt(line.substring(88, 92));
-        } else {
-            airTemperature = Integer.parseInt(line.substring(87, 92));
-        }
-        String quality = line.substring(92, 93);
-        if (airTemperature != MISSING &amp;&amp; quality.matches(&quot;[01459]&quot;)) {
-            context.write(new Text(year), new IntWritable(airTemperature));
-        }
-    }
-
-    @Override
-    public void map(LongWritable arg0, Text arg1, OutputCollector&lt;Text, IntWritable&gt; arg2, Reporter arg3)
-            throws IOException {
-        // TODO Auto-generated method stub
-
-    }
-}
-</code></pre><h1 id="这个里面的涉及到的JS的函数："><a href="#这个里面的涉及到的JS的函数：" class="headerlink" title="这个里面的涉及到的JS的函数："></a>这个里面的涉及到的JS的函数：</h1><hr>
-<p><strong><em>toString:toString()</em></strong> 方法可把一个逻辑值转换为字符串，并返回结果。</p>
-<hr>
-<p><strong><em>substring:substring()</em></strong> 方法用于提取字符串中介于两个指定下标之间的字符。</p>
-<p><strong>语法</strong><br>stringObject.substring(start,stop)<br><strong>返回值</strong><br>一个新的字符串，该字符串值包含 stringObject 的一个子字符串，其内容是从 start 处到 stop-1 处的所有字符，其长度为 stop 减 start。</p>
-<p><strong>说明</strong><br>substring() 方法返回的子串包括 start 处的字符，但不包括 stop 处的字符。</p>
-<p>如果参数 start 与 stop 相等，那么该方法返回的就是一个空串（即长度为 0 的字符串）。如果 start 比 stop 大，那么该方法在提取子串之前会先交换这两个参数。</p>
-<hr>
-<p><strong><em>chartAt</em></strong>:<br>charAt() 方法可返回指定位置的字符。</p>
-<p>请注意，JavaScript 并没有一种有别于字符串类型的字符数据类型，所以返回的字符是长度为 1 的字符串</p>
-<p><strong>语法</strong><br>stringObject.charAt(index)</p>
-<p><strong>注释</strong>：字符串中第一个字符的下标是 0。如果参数 index 不在 0 与 string.length 之间，该方法将返回一个空字符串。</p>
-<hr>
-<h3 id="关于Integer-方法摘要"><a href="#关于Integer-方法摘要" class="headerlink" title="关于Integer 方法摘要"></a>关于Integer 方法摘要</h3><p><img src="https://i.imgur.com/9fKYBCw.png" alt=""><br><img src="https://i.imgur.com/BfDoR8R.png" alt=""><br><img src="https://i.imgur.com/gmadVGN.png" alt=""><br><img src="https://i.imgur.com/yEFgKbR.png" alt=""></p>
-<p>这里使用的函数是：<strong><em>paresInt(String int)</em></strong>:将字符串参数作为有符号的十进制整数进行分析。</p>
-<p>语法： parseInt(string, radix)</p>
-<p><img src="https://i.imgur.com/Onn9O0h.png" alt=""></p>
-<pre><code>parseInt(&quot;10&quot;);            //返回 10
-parseInt(&quot;19&quot;,10);        //返回 19 (10+9)
-parseInt(&quot;11&quot;,2);        //返回 3 (2+1)
-parseInt(&quot;17&quot;,8);        //返回 15 (8+7)
-parseInt(&quot;1f&quot;,16);        //返回 31 (16+15)
-parseInt(&quot;010&quot;);        //未定：返回 10 或 8
-</code></pre><hr>
-<p><strong><em>matches()</em></strong> 方法用于检测字符串是否匹配给定的正则表达式。</p>
-<p>调用此方法的 str.matches(regex) 形式与以下表达式产生的结果完全相同：</p>
-<p>在字符串匹配给定的正则表达式时，返回 true。</p>
-<pre><code>public class Test {
-    public static void main(String args[]) {
-        String Str = new String(&quot;www.runoob.com&quot;);
-
-        System.out.print(&quot;返回值 :&quot; );
-        System.out.println(Str.matches(&quot;(.*)runoob(.*)&quot;));
-
-        System.out.print(&quot;返回值 :&quot; );
-        System.out.println(Str.matches(&quot;(.*)google(.*)&quot;));
-
-        System.out.print(&quot;返回值 :&quot; );
-        System.out.println(Str.matches(&quot;www(.*)&quot;));
-    }
-}
-以上程序执行结果为：
-
-返回值 :true
-返回值 :false
-返回值 :true
-</code></pre><hr>
-<h1 id="关于random-方法讲解"><a href="#关于random-方法讲解" class="headerlink" title="关于random()方法讲解"></a>关于random()方法讲解</h1><h3 id="java-Random-nextInt-方法"><a href="#java-Random-nextInt-方法" class="headerlink" title="java Random.nextInt()方法"></a>java Random.nextInt()方法</h3><pre><code>public int nextInt(int n)
-</code></pre><p>该方法的作用是生成一个随机的int值，该值介于[0,n)的区间，也就是0到n之间的随机int值，包含0而不包含n</p>
-<p>package org.xiaowu.random.demo;</p>
-<p>import java.util.Random;</p>
-<p>import org.junit.Test;</p>
-<p>public class RandomDemo {</p>
-<pre><code>@Test
-public void Demo(){
-    Random rnd = new Random();
-    int code = rnd.nextInt(8999) + 1000;
-    System.out.println(&quot;code:&quot;+code);
-}
-
-
-@Test
-public void Demo1(){
-    Random r = new Random();
-    int nextInt = r.nextInt();
-    Random r1 = new Random(10);
-    int nextInt2 = r1.nextInt();
-    System.out.println(&quot;nextInt:&quot;+nextInt);
-    System.out.println(&quot;nextInt2:&quot;+nextInt2);
-}
-
-
-/**
- * 生成[0,1.0)区间的小数
- * 
- */
-@Test
-public void Demo2(){
-    Random r = new Random();
-    double d1 = r.nextDouble();
-    System.out.println(&quot;d1:&quot;+d1);
-}
-
-
-/**
- * 生成[0,5.0)区间的小数
- * 
- */
-@Test
-public void Demo3(){
-    Random r = new Random();
-    double d2 = r.nextDouble()* 5;
-    System.out.println(&quot;d1:&quot;+d2);
-}
-
-
-/**
- * 生成[1,2.5)区间的小数
- * 
- */
-@Test
-public void Demo4(){
-    Random r = new Random();
-    double d3 = r.nextDouble() * 1.5 + 1;
-    System.out.println(&quot;d1:&quot;+d3);
-}
-
-
-/**
- * 生成任意整数
- * 
- */
-@Test
-public void Demo5(){
-    Random r = new Random();
-    int n1 = r.nextInt();
-    System.out.println(&quot;d1:&quot;+n1);
-}
-
-
-
-/**
- * 生成[0,10)区间的整数
- * 
- */
-@Test
-public void Demo6(){
-    Random r = new Random();
-    int n2 = r.nextInt(10);
-    int n3 = Math.abs(r.nextInt() % 10);
-    System.out.println(&quot;n2:&quot;+n2);
-    System.out.println(&quot;n3:&quot;+n3);
-}
-
-
-
-/**
- * 生成[0,10]区间的整数
- * 
- */
-@Test
-public void Demo7(){
-    Random r = new Random();
-    int n3 = r.nextInt(11);
-    int n4 = Math.abs(r.nextInt() % 11);
-    System.out.println(&quot;n3:&quot;+n3);
-    System.out.println(&quot;n4:&quot;+n4);
-}
-
-
-/**
- * 生成[-3,15)区间的整数
- * 
- */
-@Test
-public void Demo8(){
-    Random r = new Random();
-    int n4 = r.nextInt(18) - 3;
-    int n5 = Math.abs(r.nextInt() % 18) - 3;
-    System.out.println(&quot;n4:&quot;+n4);
-    System.out.println(&quot;n5:&quot;+n5);
-}
-</code></pre><p>}</p>
-<hr>
-<p>关于nextInt()函数的一点儿说明：<br>如果想得到30到200的(包含30和200)这个跨度的数在java中一般可以有如下方式获得  </p>
-<pre><code>（1）int i = (int)(Math.random()*171) + 30;  
-
-（2）Random r = new Random () ;  
-     r.nextInt (201) ;     // 这个是0 - 200  
-
-（3）Random r = new Random () ;  
-     r.nextInt (171) + 30 ; // 这个是30 到 200.  
-
-//如下为二维数组的一点儿东西  
-public class 数组的使用说明代码 {  
-     public static void main(String args[]){  
-         int[] array=creatArray(10);   
-            printArray(array);   
-     }  
-     public static int[] creatArray(int length){        //构造含length个元素的数组的方法  
-          int[] array =new int[length];   
-          Random rad=new Random();                //产生随机数的方法（系统自己的）  
-          for(int i=0;i&lt;array.length;i++){   
-              int value = rad.nextInt(100) + 200;       //rad.nextInt(100) 意思是随机产生一个大于等于0小于100的数  ------即包含0不包含100  
-              array[i]=value;   
-           }   
-         return array;   
-      }   
-
-     public static void printArray(int[] array){   
-        for(int i=0;i&lt;array.length;i++)   
-            System.out.println(array[i]+&apos;\t&apos;);   
-          }   
-}  
-</code></pre><hr>
-<h1 id="JavaScript-indexOf-方法"><a href="#JavaScript-indexOf-方法" class="headerlink" title="JavaScript indexOf() 方法"></a>JavaScript indexOf() 方法</h1><p>JavaScript String 对象</p>
-<p>定义和用法</p>
-<p><img src="https://i.imgur.com/5tHZnbT.png" alt=""></p>
-<p><img src="https://i.imgur.com/eoHWtFY.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2464,7 +2278,7 @@ public class 数组的使用说明代码 {
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2475,7 +2289,7 @@ public class 数组的使用说明代码 {
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -2486,7 +2300,7 @@ public class 数组的使用说明代码 {
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">76</span>
+                  <span class="site-state-item-count">77</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
