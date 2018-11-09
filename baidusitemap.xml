@@ -4,6 +4,48 @@
 
     
   <url>
+    <loc>http://erichunn.github.io/2018/11/08/Hive%E7%AC%AC%E4%BA%8C%E5%A4%A9/</loc>
+    <lastmod>2018-11-09T15:42:04.083Z</lastmod>
+    <data>
+        <display>
+        <title>Hive第二天</title>
+        <pubTime>2018-11-08T08:17:04.000Z</pubTime>
+        
+        <tag>join</tag>
+         
+        <tag>Hive</tag>
+         
+        <tag>内部表</tag>
+         
+        <tag>外部表</tag>
+         
+        <tag>托管表</tag>
+         
+        <tag>分区</tag>
+         
+        <tag>分桶</tag>
+         
+        <tag>union</tag>
+         
+        <tag>export</tag>
+         
+        <tag>order</tag>
+         
+        <tag>sort</tag>
+         
+        <tag>动态分区</tag>
+         
+         
+           
+             
+              <breadCrumb title="Hive" url="http://erichunn.github.io/categories/Hive/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://erichunn.github.io/2018/11/09/%E5%BF%83%E6%83%85%E6%97%A5%E8%AE%B0%E2%80%94%E2%80%942018-11-09/</loc>
     <lastmod>2018-11-09T14:39:47.344Z</lastmod>
     <data>
@@ -18,41 +60,6 @@
              
               <breadCrumb title="心情记" url="http://erichunn.github.io/categories/%E5%BF%83%E6%83%85%E8%AE%B0/"/>
           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://erichunn.github.io/2018/11/08/Hive%E7%AC%AC%E4%BA%8C%E5%A4%A9/</loc>
-    <lastmod>2018-11-09T12:15:36.875Z</lastmod>
-    <data>
-        <display>
-        <title>Hive第二天</title>
-        <pubTime>2018-11-08T08:17:04.000Z</pubTime>
-        
-        <tag>Hive</tag>
-         
-         
-           
-             
-              <breadCrumb title="Hive" url="http://erichunn.github.io/categories/Hive/"/>
-          
-             
-              <breadCrumb title="内部表" url="http://erichunn.github.io/categories/Hive/%E5%86%85%E9%83%A8%E8%A1%A8/"/>
-          
-             
-              <breadCrumb title="外部表" url="http://erichunn.github.io/categories/Hive/%E5%86%85%E9%83%A8%E8%A1%A8/%E5%A4%96%E9%83%A8%E8%A1%A8/"/>
-          
-             
-             
-             
-             
-             
-             
-             
-             
-             
         </display>
     </data>
     </url>
