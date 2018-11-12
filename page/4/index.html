@@ -328,6 +328,506 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/14/京东实战项目之hive实战（1）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/14/京东实战项目之hive实战（1）/" itemprop="url">京东实战项目之hive实战（1）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-14T20:56:23+08:00">
+                2018-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>先熟悉一下Hive的基本语句：</p>
+<p><img src="https://i.imgur.com/m3EGeNB.png" alt=""></p>
+<p>首先里面的库有这么几个表，</p>
+<pre><code>desc formatted ods_order;
+</code></pre><hr>
+<p>看到表有几个信息</p>
+<p><img src="https://i.imgur.com/QySpeml.png" alt=""></p>
+<hr>
+<p>可以看到表的字段的信息。</p>
+<p><img src="https://i.imgur.com/LKLlYkH.png" alt=""></p>
+<p>同时可以看见表的是否是分区表partition information</p>
+<p>Location:可以看见路径，数据是在哪里的。</p>
+<hr>
+<p>table Type: 是否是内部表</p>
+<hr>
+<p><img src="https://i.imgur.com/xeLyY3a.png" alt=""><br>可以通过Hive看到进入到dfs里面的路径</p>
+<hr>
+<p><img src="https://i.imgur.com/xygHp2A.png" alt=""><br>可以看见里面文件的大小</p>
+<hr>
+<p>通过explain 来看他的hive是怎么走的，看他的执行计划。<br><img src="https://i.imgur.com/tSBmrzT.png" alt=""></p>
+<hr>
+<p>观察一个表的分区信息：</p>
+<p><img src="https://i.imgur.com/aqBMFwV.png" alt=""></p>
+<hr>
+<p>查看hadoop正在运行的任务</p>
+<pre><code>yarn application -list 
+</code></pre><p><img src="https://i.imgur.com/MVAygd5.png" alt=""></p>
+<p><img src="https://i.imgur.com/tFau3p3.png" alt=""></p>
+<hr>
+<p>show functions;//显示hive里所有函数<br>desc function extended add_months//显示里面具体的函数的用法</p>
+<hr>
+<p> 有时候desc formatted ods_order;里面显示的路径可能会是假的路径。在hadoop搭建的时候配置出问题，就会出现假的路径。</p>
+<p>通过命令</p>
+<pre><code>desc extended ods_order partition(dt=20151010);
+
+//通过这个命令可以找到库表的实际路径。其中的dt是通过
+show partition ado_order;来找到的。
+</code></pre><hr>
+<p><img src="https://i.imgur.com/1dogCNC.png" alt=""></p>
+<hr>
+<p><img src="https://i.imgur.com/9UA2P7t.png" alt=""></p>
+<hr>
+<p><img src="https://i.imgur.com/hrtak5b.png" alt=""><br>以前的0.1之前有些扫描数据的时候默认是不开启mapreduce的。<br>在select的时候是不开启mapreduce的。如果是少量的数据可以直接扫描出来的。但是表的数据非常大，如果不主动开启reduce执行，那么需要手动执行。通过上图来操作。设置是否开启mapreduce来执行。</p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/12/Java基础学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/12/Java基础学习笔记/" itemprop="url">Java基础学习笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-12T23:01:24+08:00">
+                2018-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/12/Java中的总结合集（1）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/12/Java中的总结合集（1）/" itemprop="url">Java中的总结合集（1）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-12T21:31:06+08:00">
+                2018-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="关于构造函数"><a href="#关于构造函数" class="headerlink" title="关于构造函数"></a>关于构造函数</h1><p>构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。</p>
+<pre><code>public class sadf {
+    public static void main(String[] args) {
+        Cat cat = new Cat();
+        cat.cry();
+    }
+
+}
+
+abstract class Animal{
+    public String name;
+    public abstract void cry();
+    public void Animal() {
+        System.out.println(&quot;new Animal&quot;);
+    }
+}
+
+class Cat extends Animal{ 
+    public void cry() {
+        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">这样的函数运行之后是</span><br><span class="line"></span><br><span class="line">	喵喵</span><br></pre></td></tr></table></figure>
+</code></pre><p>因为Animal有void变成了一个函数。还有一个默认的空构造。</p>
+<p>应该去掉void。</p>
+<pre><code>public class sadf {
+    public static void main(String[] args) {
+        Cat cat = new Cat();
+        cat.cry();
+    }
+
+}
+
+abstract class Animal{
+    public String name;
+    public abstract void cry();
+    public Animal() {
+        System.out.println(&quot;new Animal&quot;);
+    }
+}
+
+class Cat extends Animal{ 
+    public void cry() {
+        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">***</span><br><span class="line">结果是：</span><br><span class="line"></span><br><span class="line">	new Animal</span><br><span class="line">	喵喵</span><br></pre></td></tr></table></figure>
+</code></pre><hr>
+<h1 id="关于抽象abstract"><a href="#关于抽象abstract" class="headerlink" title="关于抽象abstract"></a>关于抽象abstract</h1><pre><code>class ABSTACT {
+    public static void main(String[] args) {
+        JiaFeiCat j = new JiaFeiCat();
+
+    }
+}
+
+abstract class Animal {
+    abstract void cry();
+
+    public Animal() {
+        System.out.println(&quot;我是动物&quot;);
+    }
+
+}
+
+abstract class Cat extends Animal {
+    public Cat() {
+        System.out.println(&quot;我是猫&quot;);
+    }
+
+    final void catchMouse() {
+        System.out.println(&quot;猫能抓老鼠&quot;);
+    }
+
+}
+
+final class JiaFeiCat extends Cat {
+    public JiaFeiCat() {
+        System.out.println(&quot;我是加菲猫&quot;);
+    }
+
+    @Override
+    void cry() {
+        System.out.println(&quot;加菲猫会哭&quot;);
+
+    }
+
+}
+
+class BosiCat extends Cat {
+    public BosiCat() {
+        System.out.println(&quot;我叫波斯猫&quot;);
+    }
+
+    @Override
+    void cry() {
+        System.out.println(&quot;波斯猫会叫&quot;);
+
+    }
+
+}
+</code></pre><p>打印结果：</p>
+<pre><code>我是动物
+我是猫
+我是加菲猫
+</code></pre><p>运行成功<br>abstact抽象类方法可以在子类的子类中继承即可，不用一定在第一代子类中继承。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/11/Hadoop权威指南学习笔记（1）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -751,7 +1251,7 @@ public class 数组的使用说明代码 {
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -762,7 +1262,7 @@ public class 数组的使用说明代码 {
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -773,7 +1273,7 @@ public class 数组的使用说明代码 {
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">87</span>
+                  <span class="site-state-item-count">89</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
