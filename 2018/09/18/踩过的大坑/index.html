@@ -99,7 +99,7 @@
 <meta property="og:image" content="https://i.imgur.com/2p1OzOd.png">
 <meta property="og:image" content="https://i.imgur.com/KSFu5qm.png">
 <meta property="og:image" content="https://i.imgur.com/ZIdGyjE.png">
-<meta property="og:updated_time" content="2018-11-13T08:26:00.961Z">
+<meta property="og:updated_time" content="2018-11-16T08:26:42.093Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux基础基础—————踩过的大坑">
 <meta name="twitter:description" content="问题：图形界面浏览器能访问外网，但是ping不通很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。 解决：将网络中心里面改成这样子就行了。 具体的网站解释：https://blog.csdn.net/Arnold_lee_yc/article/details/74785995  不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。所以本">
@@ -523,6 +523,9 @@ InvalidObjectException(message:All is already granted by admin)
 <hr>
 <h1 id="在编译源码包的问题"><a href="#在编译源码包的问题" class="headerlink" title="在编译源码包的问题"></a>在编译源码包的问题</h1><p>自己粗浅的理解编译的问题：举个例子有一个用Protoc编译的包，叫example.protoc，然后在windows上安装protoc，然后在cmd里面用命令将它编译成一个Java类文件。编译命令如下图</p>
 <p><img src="https://i.imgur.com/ZIdGyjE.png" alt=""></p>
+<hr>
+<p>在hbase安装的过程中，由于开始的时候设置了zookeeper的HA自动容灾，所以最开始的时候s206自动设置为active模式，要把s206设置为<br>standby模式才能在s201里面设置s201为HMaster。</p>
+<p>也就是说要杀死掉s206里面的namenode或者说通过转换吧他变成standby然后s201设置为active模式。不然会导致出错</p>
 
       
     </div>
@@ -688,7 +691,7 @@ InvalidObjectException(message:All is already granted by admin)
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
