@@ -98,7 +98,8 @@
 <meta property="og:image" content="https://i.imgur.com/Nl7H9O2.png">
 <meta property="og:image" content="https://i.imgur.com/2p1OzOd.png">
 <meta property="og:image" content="https://i.imgur.com/KSFu5qm.png">
-<meta property="og:updated_time" content="2018-11-07T08:25:43.211Z">
+<meta property="og:image" content="https://i.imgur.com/ZIdGyjE.png">
+<meta property="og:updated_time" content="2018-11-13T08:26:00.961Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux基础基础—————踩过的大坑">
 <meta name="twitter:description" content="问题：图形界面浏览器能访问外网，但是ping不通很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。 解决：将网络中心里面改成这样子就行了。 具体的网站解释：https://blog.csdn.net/Arnold_lee_yc/article/details/74785995  不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。所以本">
@@ -519,6 +520,9 @@ InvalidObjectException(message:All is already granted by admin)
 <p>第五步：重启hive，继续看log，除了第一个exception消失了之外，其他依然存在，有些疑惑，认真看了一下，发现metastore.HiveMetaStore: admin role already exists，会不会是之前hive启动出错时留下的问题，那么把mysql中的hive数据删掉重新创建一个看看。</p>
 <p>第六步：在mysql中执行以下命令：<br>drop database hive;<br>create database hive;<br>alter database hive character set latin1;</p>
 <p>第七步：重启hive，查看log，问题解决了！！！</p>
+<hr>
+<h1 id="在编译源码包的问题"><a href="#在编译源码包的问题" class="headerlink" title="在编译源码包的问题"></a>在编译源码包的问题</h1><p>自己粗浅的理解编译的问题：举个例子有一个用Protoc编译的包，叫example.protoc，然后在windows上安装protoc，然后在cmd里面用命令将它编译成一个Java类文件。编译命令如下图</p>
+<p><img src="https://i.imgur.com/ZIdGyjE.png" alt=""></p>
 
       
     </div>
@@ -684,7 +688,7 @@ InvalidObjectException(message:All is already granted by admin)
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -695,7 +699,7 @@ InvalidObjectException(message:All is already granted by admin)
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -706,7 +710,7 @@ InvalidObjectException(message:All is already granted by admin)
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-count">93</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -782,7 +786,7 @@ InvalidObjectException(message:All is already granted by admin)
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题：图形界面浏览器能访问外网，但是ping不通"><span class="nav-number">1.</span> <span class="nav-text">问题：图形界面浏览器能访问外网，但是ping不通</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装VMtools工具"><span class="nav-number">2.</span> <span class="nav-text">安装VMtools工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#克隆机器后网卡设置"><span class="nav-number">3.</span> <span class="nav-text">克隆机器后网卡设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置无密登陆"><span class="nav-number">4.</span> <span class="nav-text">配置无密登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多次format"><span class="nav-number">5.</span> <span class="nav-text">多次format</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在windows上跑mr"><span class="nav-number">6.</span> <span class="nav-text">在windows上跑mr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA"><span class="nav-number"></span> <span class="nav-text">IDEA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于Integer-parseInt"><span class="nav-number"></span> <span class="nav-text">关于Integer,parseInt</span></a></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题：图形界面浏览器能访问外网，但是ping不通"><span class="nav-number">1.</span> <span class="nav-text">问题：图形界面浏览器能访问外网，但是ping不通</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装VMtools工具"><span class="nav-number">2.</span> <span class="nav-text">安装VMtools工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#克隆机器后网卡设置"><span class="nav-number">3.</span> <span class="nav-text">克隆机器后网卡设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置无密登陆"><span class="nav-number">4.</span> <span class="nav-text">配置无密登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多次format"><span class="nav-number">5.</span> <span class="nav-text">多次format</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在windows上跑mr"><span class="nav-number">6.</span> <span class="nav-text">在windows上跑mr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA"><span class="nav-number"></span> <span class="nav-text">IDEA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于Integer-parseInt"><span class="nav-number"></span> <span class="nav-text">关于Integer,parseInt</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在编译源码包的问题"><span class="nav-number"></span> <span class="nav-text">在编译源码包的问题</span></a></div>
             
 
           </div>

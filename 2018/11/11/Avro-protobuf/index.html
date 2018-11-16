@@ -89,10 +89,14 @@
 <meta property="og:site_name" content="无心是一首歌">
 <meta property="og:description" content="hive数据倾斜. $hive&amp;gt;SET hive.optimize.skewjoin=true; $hive&amp;gt;SET hive.skewjoin.key=100000; $hive&amp;gt;SET hive.groupby.skewindata=true; CREATE TABLE mydb.doc(line string) ROW FORMAT DELIMITED FIELDS TER">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-11T13:17:36.557Z">
+<meta property="og:image" content="https://i.imgur.com/7QVjPjY.png">
+<meta property="og:image" content="https://i.imgur.com/8rzRjOu.png">
+<meta property="og:image" content="https://i.imgur.com/dKcBw8b.png">
+<meta property="og:updated_time" content="2018-11-13T12:56:38.859Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Avro&amp;protobuf">
 <meta name="twitter:description" content="hive数据倾斜. $hive&amp;gt;SET hive.optimize.skewjoin=true; $hive&amp;gt;SET hive.skewjoin.key=100000; $hive&amp;gt;SET hive.groupby.skewindata=true; CREATE TABLE mydb.doc(line string) ROW FORMAT DELIMITED FIELDS TER">
+<meta name="twitter:image" content="https://i.imgur.com/7QVjPjY.png">
 
 
 
@@ -430,21 +434,15 @@ $hive&gt;SET hive.groupby.skewindata=true;
 <p>java也有串行化，但是hadoop不适用，因为相对来讲比protobuf和avro复杂而且性能差一些。</p>
 <p>当吧对象写入磁盘文件或者用于网络传输的时候要把对象变成字节数组。</p>
 <p>串行化从本质上来讲是数据格式，就是一种格式，吧对象变成字节数组，也就是说所有数据都要落实到字节数组上，都需要这样，不管是影音文件还是别的文件，通过串行化吧他边恒字节数组    </p>
-<h2 id="javabean"><a href="#javabean" class="headerlink" title="javabean"></a>javabean</h2><h2 id="标准javabean-pojo-plain-old-java-object"><a href="#标准javabean-pojo-plain-old-java-object" class="headerlink" title="标准javabean(pojo,plain old java object)"></a>标准javabean(pojo,plain old java object)</h2><pre><code>class Person{
-    public Person(){
-    }
-    private String name ;
-    public void setName(String name){
-        this.name = name ;
-    }
-    public String getName(){
-        return name ;
-    }
-}
-</code></pre><h2 id="google-protobuf"><a href="#google-protobuf" class="headerlink" title="google protobuf"></a>google protobuf</h2><pre><code>1.下载google protobuf.
+<h1 id="关于Javabean"><a href="#关于Javabean" class="headerlink" title="关于Javabean:"></a>关于Javabean:</h1><p>标准javabean(pojo,plain old java object)</p>
+<p>任何一个Java类也可以叫javabean.广义上。</p>
+<p>狭义上的javabean：就是普通古老的java对象pojo:plain old java object </p>
+<p>也就是私有的属性，getset方法，空的构造函数。比如person,学生，人。都是javabean。现实生活中的名词，在开发中都被定义成一个类，也就是说的javabean。</p>
+<p>下面的代码就是一段javabean<br>    class Person{<br>        public Person(){<br>    }<br>    private String name;<br>    public  void setName(String name){<br>        this.name=name;<br>    }<br>    publc String genName(){<br>        return name; }<br>}</p>
+<h2 id="google-protobuf"><a href="#google-protobuf" class="headerlink" title="google protobuf"></a>google protobuf</h2><pre><code>1.下载google protobuf.配置环境
     protoc-2.5.0-win32.zip
-
-1&apos;.pom.xml
+</code></pre><p><img src="https://i.imgur.com/7QVjPjY.png" alt=""></p>
+<pre><code>1&apos;.pom.xml
     &lt;dependencies&gt;
         &lt;dependency&gt;
             &lt;groupId&gt;com.google.protobuf&lt;/groupId&gt;
@@ -485,11 +483,8 @@ $hive&gt;SET hive.groupby.skewindata=true;
     message AddressBook {
         repeated Person person = 1;
     }
-</code></pre><h1 id="关于Javabean"><a href="#关于Javabean" class="headerlink" title="关于Javabean:"></a>关于Javabean:</h1><p>任何一个Java类也可以叫javabean.广义上。</p>
-<p>狭义上的javabean：就是普通古老的java对象pojo:plain old java object </p>
-<p>也就是私有的属性，getset方法，空的构造函数。比如person,学生，人。都是javabean。现实生活中的名词，在开发中都被定义成一个类，也就是说的javabean。</p>
-<p>下面的代码就是一段javabean<br>    class Person{<br>        public Person(){<br>    }<br>    private String name;<br>    public  void setName(String name){<br>        this.name=name;<br>    }<br>    publc String genName(){<br>        return name; }<br>}    </p>
-<pre><code>4.编译描述
+
+4.编译描述
     cmd&gt;protoc --java_out . xxx.proto
 
 5.导入源代码到项目中
@@ -518,7 +513,9 @@ $hive&gt;SET hive.groupby.skewindata=true;
             System.out.println(john.getName());
         }
     }
-</code></pre><h2 id="xml"><a href="#xml" class="headerlink" title="xml"></a>xml</h2><pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+</code></pre><p>上一段是用Protobuf进行编译和反编译的过程。然后下面这段图片是用java进行编译和反编译的过程：</p>
+<p><img src="https://i.imgur.com/8rzRjOu.png" alt=""></p>
+<h2 id="xml"><a href="#xml" class="headerlink" title="xml"></a>xml</h2><pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
 &lt;persons&gt;
     &lt;person id=&quot;&quot; name=&quot;&quot;&gt;
         &lt;age&gt;12&lt;/age&gt;
@@ -543,7 +540,7 @@ $hive&gt;SET hive.groupby.skewindata=true;
 4.使用avro
     a)定义schema
     b)编译schema，生成java类
-        {
+        {    //名字空间是这个，然后类型，然后名字，然后是字段数组
             &quot;namespace&quot;: &quot;tutorialspoint.com&quot;,
             &quot;type&quot;: &quot;record&quot;,
             &quot;name&quot;: &quot;emp&quot;,
@@ -554,7 +551,7 @@ $hive&gt;SET hive.groupby.skewindata=true;
                 {&quot;name&quot;: &quot;age&quot;, &quot;type&quot;: &quot;int&quot;},
                 {&quot;name&quot;: &quot;address&quot;, &quot;type&quot;: &quot;string&quot;}
             ]
-        }
+        } 
     c)使用java类
         cmd&gt;java -jar avro-tools-1.7.7.jar compile schema emp.avsc .
 
@@ -644,8 +641,10 @@ $hive&gt;SET hive.groupby.skewindata=true;
             }
 
         }
-
-非编译模式
+</code></pre><p>看一下AVSC这个编译好的avro文件里面的是什么结构：</p>
+<p>他其实是一个json格式的结构：</p>
+<p><img src="https://i.imgur.com/dKcBw8b.png" alt=""></p>
+<pre><code>非编译模式
 ---------------
     @Test
     public void writeInSchema() throws  Exception {
@@ -766,6 +765,10 @@ $hive&gt;SET hive.groupby.skewindata=true;
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/11/12/SSM/" rel="prev" title="SSM">
+                SSM <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -850,7 +853,7 @@ $hive&gt;SET hive.groupby.skewindata=true;
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -861,7 +864,7 @@ $hive&gt;SET hive.groupby.skewindata=true;
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -872,7 +875,7 @@ $hive&gt;SET hive.groupby.skewindata=true;
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-count">93</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -948,7 +951,7 @@ $hive&gt;SET hive.groupby.skewindata=true;
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hive"><span class="nav-number">1.</span> <span class="nav-text">hive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java串行化"><span class="nav-number">2.</span> <span class="nav-text">java串行化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#串行化系统"><span class="nav-number">3.</span> <span class="nav-text">串行化系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#javabean"><span class="nav-number">4.</span> <span class="nav-text">javabean</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标准javabean-pojo-plain-old-java-object"><span class="nav-number">5.</span> <span class="nav-text">标准javabean(pojo,plain old java object)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#google-protobuf"><span class="nav-number">6.</span> <span class="nav-text">google protobuf</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于Javabean"><span class="nav-number"></span> <span class="nav-text">关于Javabean:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#xml"><span class="nav-number">1.</span> <span class="nav-text">xml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#json"><span class="nav-number">2.</span> <span class="nav-text">json</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#avro-doug-cutting"><span class="nav-number">3.</span> <span class="nav-text">avro (doug cutting)</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hive"><span class="nav-number">1.</span> <span class="nav-text">hive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java串行化"><span class="nav-number">2.</span> <span class="nav-text">java串行化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#串行化系统"><span class="nav-number">3.</span> <span class="nav-text">串行化系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于Javabean"><span class="nav-number"></span> <span class="nav-text">关于Javabean:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#google-protobuf"><span class="nav-number">1.</span> <span class="nav-text">google protobuf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xml"><span class="nav-number">2.</span> <span class="nav-text">xml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#json"><span class="nav-number">3.</span> <span class="nav-text">json</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#avro-doug-cutting"><span class="nav-number">4.</span> <span class="nav-text">avro (doug cutting)</span></a></li></ol></div>
             
 
           </div>
