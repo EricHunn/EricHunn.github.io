@@ -4,6 +4,21 @@
 
     
   <url>
+    <loc>http://erichunn.github.io/2018/11/19/Hbase%E7%AC%AC%E4%B8%89%E5%A4%A9/</loc>
+    <lastmod>2018-11-19T08:56:58.975Z</lastmod>
+    <data>
+        <display>
+        <title>Hbase第三天</title>
+        <pubTime>2018-11-19T08:56:58.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://erichunn.github.io/2018/11/16/Hbase%E7%AC%AC%E4%BA%8C%E5%A4%A9/</loc>
     <lastmod>2018-11-19T08:52:46.492Z</lastmod>
     <data>
@@ -156,6 +171,8 @@
         <title>Hive第二天</title>
         <pubTime>2018-11-08T08:17:04.000Z</pubTime>
         
+        <tag>join</tag>
+         
         <tag>Hive</tag>
          
         <tag>内部表</tag>
@@ -167,8 +184,6 @@
         <tag>分区</tag>
          
         <tag>分桶</tag>
-         
-        <tag>join</tag>
          
         <tag>union</tag>
          
@@ -647,9 +662,9 @@
         <title>Hadoop第五天01之hdfs写入剖析</title>
         <pubTime>2018-10-05T08:31:19.000Z</pubTime>
         
-        <tag>Hadoop</tag>
-         
         <tag>hdfs写入</tag>
+         
+        <tag>Hadoop</tag>
          
          
            

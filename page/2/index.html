@@ -328,6 +328,362 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/06/Hive第一天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/06/Hive第一天/" itemprop="url">Hive第一天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-06T16:35:55+08:00">
+                2018-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hive/" itemprop="url" rel="index">
+                    <span itemprop="name">Hive</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>在hadoop处理结构化数据的数据仓库。
+不是:    关系数据库
+        不是OLTP
+        实时查询和行级更新。
+</code></pre><h2 id="hive特点"><a href="#hive特点" class="headerlink" title="hive特点"></a>hive特点</h2><pre><code>hive存储数据结构(schema)在数据库中,处理的数据进入hdfs.
+OLAP
+HQL / HiveQL
+</code></pre><h2 id="hive安装"><a href="#hive安装" class="headerlink" title="hive安装"></a>hive安装</h2><pre><code>1.下载hive2.1-tar.gz
+2.tar开
+    $&gt;tar -xzvf hive-2.1.0.tar.gz -C /soft    //tar开
+    $&gt;cd /soft/hive-2.1.0                    //
+    $&gt;ln -s hive-2.1.0 hive                    //符号连接
+
+3.配置环境变量
+    [/etc/profile]
+    HIVE_HOME=/soft/hive
+    PATH=...:$HIVE_HOME/bin
+
+4.验证hive安装成功
+    $&gt;hive --v
+
+5.配置hive,使用win7的mysql存放hive的元数据.
+    a)复制mysql驱动程序到hive的lib目录下。
+        ...
+    b)配置hive-site.xml
+        复制hive-default.xml.template为hive-site.xml
+        修改连接信息为mysql链接地址，将${system:...字样替换成具体路径。
+        [hive/conf/hive-site.xml]
+        &lt;property&gt;
+            &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;
+            &lt;value&gt;root&lt;/value&gt;
+            &lt;description&gt;password to use against metastore database&lt;/description&gt;
+        &lt;/property&gt;
+        &lt;property&gt;
+            &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;
+            &lt;value&gt;root&lt;/value&gt;
+            &lt;description&gt;Username to use against metastore database&lt;/description&gt;
+        &lt;/property&gt;
+        &lt;property&gt;
+            &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;
+            &lt;value&gt;jdbc:mysql://192.168.231.1:3306/hive2&lt;/value&gt;
+        &lt;/property&gt;
+        &lt;property&gt;
+            &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;
+            &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;
+            &lt;description&gt;Driver class name for a JDBC metastore&lt;/description&gt;
+        &lt;/property&gt;
+
+    6)在msyql中创建存放hive信息的数据库
+        mysql&gt;create database hive2 ;
+
+    6)初始化hive的元数据(表结构)到mysql中。
+        $&gt;cd /soft/hive/bin
+        $&gt;schematool -dbType mysql -initSchema
+</code></pre><h1 id="hive命令行操作"><a href="#hive命令行操作" class="headerlink" title="hive命令行操作"></a>hive命令行操作</h1><h2 id="1-创建hive的数据库"><a href="#1-创建hive的数据库" class="headerlink" title="1.创建hive的数据库"></a>1.创建hive的数据库</h2><pre><code>$hive&gt;hive --version                //
+$hive&gt;hive --help                    //
+
+$hive&gt;create database mydb2 ;                //
+$hive&gt;show databases ;
+$hive&gt;use mydb2 ;
+$hive&gt;create table mydb2.t(id int,name string,age int);
+$hive&gt;drop table t ;
+$hive&gt;drop table mydb2.t ;
+$hive&gt;select * from mydb2.t ;        //查看指定库的表
+$hive&gt;exit ;                        //退出
+
+$&gt;hive                                //hive --service cli
+$&gt;hive                                //hive --service cli
+</code></pre><h2 id="2-通过远程jdbc方式连接到hive数据仓库"><a href="#2-通过远程jdbc方式连接到hive数据仓库" class="headerlink" title="2.通过远程jdbc方式连接到hive数据仓库"></a>2.通过远程jdbc方式连接到hive数据仓库</h2><pre><code>1.启动hiveserver2服务器，监听端口10000
+    $&gt;hive --service hiveserver2 &amp;
+
+2.通过beeline命令行连接到hiveserver2
+    $&gt;beeline                                            //进入beeline命令行(于hive --service beeline)
+    $beeline&gt;!help                                        //查看帮助
+    $beeline&gt;!quit                                        //退出
+    $beeline&gt;!connect jdbc:hive2://localhost:10000/mydb2//连接到hibve数据
+    $beeline&gt;show databases ;
+    $beeline&gt;use mydb2 ;
+    $beeline&gt;show tables;                                //显式表
+</code></pre><h2 id="使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库"><a href="#使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库" class="headerlink" title="使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库"></a>使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库</h2><pre><code>1.创建java模块
+2.引入maven
+3.添加hive-jdbc依赖
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;HiveDemo&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.hive&lt;/groupId&gt;
+                &lt;artifactId&gt;hive-jdbc&lt;/artifactId&gt;
+                &lt;version&gt;2.1.0&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+4.App
+    package com.it18zhang.hivedemo;
+
+    import java.sql.Connection;
+    import java.sql.DriverManager;
+    import java.sql.ResultSet;
+    import java.sql.Statement;
+
+    /**
+     * 使用jdbc方式连接到hive数据仓库，数据仓库需要开启hiveserver2服务。
+     */
+    public class App {
+        public static void main(String[] args) throws  Exception {
+            Class.forName(&quot;org.apache.hive.jdbc.HiveDriver&quot;);
+            Connection conn = DriverManager.getConnection(&quot;jdbc:hive2://192.168.231.201:10000/mydb2&quot;);
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(&quot;select id , name ,age from t&quot;);
+            while(rs.next()){
+                System.out.println(rs.getInt(1) + &quot;,&quot; + rs.getString(2)) ;
+            }
+            rs.close();
+            st.close();
+            conn.close();
+        }
+    }
+</code></pre><h1 id="hive中表"><a href="#hive中表" class="headerlink" title="hive中表"></a>hive中表</h1><h2 id="1-managed-table"><a href="#1-managed-table" class="headerlink" title="1.managed table"></a>1.managed table</h2><pre><code>托管表。
+删除表时，数据也删除了。
+</code></pre><h2 id="2-external-table"><a href="#2-external-table" class="headerlink" title="2.external table"></a>2.external table</h2><pre><code>外部表。
+删除表时，数据不删。
+</code></pre><h1 id="hive命令"><a href="#hive命令" class="headerlink" title="hive命令"></a>hive命令</h1><pre><code>//创建表,external 外部表
+$hive&gt;CREATE external TABLE IF NOT EXISTS t2(id int,name string,age int)
+COMMENT &apos;xx&apos; ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; STORED AS TEXTFILE ; 
+
+//查看表数据
+$hive&gt;desc t2 ;
+$hive&gt;desc formatted t2 ;
+
+//加载数据到hive表
+$hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t2 ;    //local上传文件
+$hive&gt;load data inpath &apos;/user/centos/customers.txt&apos; [overwrite] into table t2 ;    //移动文件
+
+//复制表
+mysql&gt;create table tt as select * from users ;        //携带数据和表结构
+mysql&gt;create table tt like users ;            //不带数据，只有表结构
+
+hive&gt;create table tt as select * from users ;    
+hive&gt;create table tt like users ;    
+
+
+//count()查询要转成mr
+$hive&gt;select count(*) from t2 ;
+$hive&gt;select id,name from t2 ;
+
+
+//
+$hive&gt;select * from t2 order by id desc ;                //MR
+
+//启用/禁用表
+$hive&gt;ALTER TABLE t2 ENABLE NO_DROP;    //不允许删除
+$hive&gt;ALTER TABLE t2 DISABLE NO_DROP;    //允许删除
+</code></pre><h1 id="分区表"><a href="#分区表" class="headerlink" title="分区表"></a>分区表</h1><pre><code>优化手段之一，从目录的层面控制搜索数据的范围。
+//创建分区表.
+$hive&gt;CREATE TABLE t3(id int,name string,age int) PARTITIONED BY (Year INT, Month INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
+
+//显式表的分区信息
+$hive&gt;SHOW PARTITIONS t3;
+
+//添加分区,创建目录
+$hive&gt; alter table t3 add partition (year=2014, month=12) partition (year=2014,month=11);
+
+//删除分区
+hive&gt;ALTER TABLE employee_partitioned DROP IF EXISTS PARTITION (year=2014, month=11);
+
+//分区结构
+hive&gt;/user/hive/warehouse/mydb2.db/t3/year=2014/month=11
+hive&gt;/user/hive/warehouse/mydb2.db/t3/year=2014/month=12
+
+
+//加载数据到分区表
+hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t3 partition(year=2014,month=11);
+
+//查询分区表
+hive&gt;select * from t3 where year = 2014 and month =11;
+</code></pre><p><img src="https://i.imgur.com/Ad6JAI7.png" alt=""></p>
+<p>分区对应的是文件夹是目录，分桶对应的是文件，按照id分桶的意思就是按照id哈希不同的哈希进入不同的桶</p>
+<pre><code>//创建桶表
+$hive&gt;CREATE TABLE t4(id int,name string,age int) CLUSTERED BY (id) INTO 3 BUCKETS ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
+
+//加载数据不会进行分桶操作
+$hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t4 ;
+
+//查询t3表数据插入到t4中。t3是分区表还多了年份和月份的2个字段所以要投影查询不能直接insert into t4 select * from t3;这是错的
+$hive&gt;insert into t4 select id,name,age from t3 ;
+</code></pre><p><img src="https://i.imgur.com/5Rpz8su.png" alt=""></p>
+<pre><code>//桶表的数量如何设置?
+//评估数据量，保证每个桶的数据量block的2倍大小。
+
+
+//连接查询
+$hive&gt;CREATE TABLE customers(id int,name string,age int) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
+$hive&gt;CREATE TABLE orders(id int,orderno string,price float,cid int) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
+
+//加载数据到表
+//内连接查询
+hive&gt;select a.*,b.* from customers a , orders b where a.id = b.cid ;
+//左外
+hive&gt;select a.*,b.* from customers a left outer join orders b on a.id = b.cid ;
+hive&gt;select a.*,b.* from customers a right outer join orders b on a.id = b.cid ;
+hive&gt;select a.*,b.* from customers a full outer join orders b on a.id = b.cid ;
+
+//explode,炸裂,表生成函数。
+//使用hive实现单词统计
+//1.建表
+$hive&gt;CREATE TABLE doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/01/Hadoop第十一天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -4878,182 +5234,6 @@ public void readMapfile() throws Exception {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/01/遇到未解决的问题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/01/遇到未解决的问题/" itemprop="url">遇到未解决的问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-01T11:15:11+08:00">
-                2018-10-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/问题/" itemprop="url" rel="index">
-                    <span itemprop="name">问题</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在eclipse中，ctrl+左键找到源码，为什么旁边在pakage explore中有有轮廓啊？</p>
-<p><img src="https://i.imgur.com/oYjJ6In.png" alt=""></p>
-<p><img src="https://i.imgur.com/IZVxlow.png" alt=""></p>
-<p>点击两个箭头即可转换。</p>
-<p>这个东西是在IDEA中怎么调出来的。</p>
-<p><img src="https://i.imgur.com/fz08Y7d.png" alt=""></p>
-<hr>
-<p>克隆centos之后有时候出现这种情况</p>
-<p><img src="https://i.imgur.com/G7CLxft.png" alt=""></p>
-<hr>
-<p>IDEA的使用问题：<br>这个是什么快捷键。</p>
-<p><img src="https://i.imgur.com/hKrt9St.png" alt=""></p>
-<hr>
-<p>在增强虚拟机工具的时候按照视频的方法没有成功，然后通过挂载的方法实现了，但是hgfs文件夹和文件夹里面的内容都是root权限的，只能修改文件夹的所有者，但是不能修改里面文件的所有者。</p>
-<hr>
-<p>有一个分组的问题：<br>    分组就是说组合key出来本来是每一个组合key大多都是不同的key。相同年份不同温度也是不同的key，但是为了相同的年份的组合key能够进入到同一个reduce，所以要通过分组让他这个样子，但是为什么要这个样</p>
-<pre><code>经过分区已经说达到了将不同年份的
-</code></pre><hr>
-<p>在mapreduce阶段有一个大表和小表连接</p>
-<p>hive里面也有一个小表和小表连接就在map端口，然后小表和大表连接在reduce端口。</p>
-<p>这个地方的问题没有搞明白。具体的hive在hive第二天07mr的忘记在哪里了</p>
-<hr>
-<p>然后mr的最后一天hadoop第十一天的二次排序没有搞得特别明白。<br>和hive阶段的自定义函数UDF没有特别清楚</p>
-<hr>
-<p>在avro和rotobuf第一天</p>
-<p>在讲解protobuf的时候写代码写到下图的时候听说这个com.example.tuorial是源码包里面的东西，我是没找到，我觉得可能是源码包里面的例子，里面包括的一些类，但是还是没有这个东西。</p>
-<p><img src="https://i.imgur.com/jaaEFTJ.png" alt=""></p>
-<p>已经解决，见大坑</p>
-<hr>
-<p>在一个spring项目里面有这样一个问题：</p>
-<p>dao层类dao一个方法，然后在servicce层里面没有new出一个dao类的对象，直接写一个属性Private Dao d;然后直接d.insert();</p>
-<p>这种方法为什么可以</p>
-<hr>
-<p>这种是什么调用方法：</p>
-<p><img src="https://i.imgur.com/sE9UKl1.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -5108,7 +5288,7 @@ public void readMapfile() throws Exception {
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
