@@ -422,7 +422,458 @@ $hbase&gt;scan &apos;ns1:t1&apos;                            //权标扫描扫�
 <p><img src="https://i.imgur.com/ipxtMbm.png" alt=""></p>
 <p><img src="https://i.imgur.com/uz0TL9q.png" alt=""></p>
 <p><img src="https://i.imgur.com/3HmcLCa.png" alt=""></p>
+<p>通过java api操作hbase:<br>    package com.it18zhang.hbasedemo;</p>
+<pre><code>import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.ConnectionFactory;
+import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.junit.Test;
 
+eate 2018/11/17 11:56
+ */
+public class TestCRUD {
+    @Test
+    public void put() throws Exception {
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+
+        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+        Table table = conn.getTable(tname);
+        byte[] rowid = Bytes.toBytes(&quot;row2&quot;);
+        byte[] f1 = Bytes.toBytes(&quot;f1&quot;);
+        byte[] id = Bytes.toBytes(&quot;id&quot;);
+        byte[] value = Bytes.toBytes(102);
+        //创建put对象
+
+        Put put = new Put(rowid);
+        put.addColumn(f1, id, value);
+        table.put(put);
+
+    }
+}
+</code></pre><p>pom文件：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+    &lt;artifactId&gt;HbaseDemo&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.11&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;
+            &lt;artifactId&gt;hbase-client&lt;/artifactId&gt;
+            &lt;version&gt;1.2.3&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+
+&lt;/project&gt;
+</code></pre><hr>
+<p>hbase架构介绍：</p>
+<p><img src="https://i.imgur.com/BaJwZ3z.png" alt=""></p>
+<h1 id="关于区域服务器"><a href="#关于区域服务器" class="headerlink" title="关于区域服务器"></a>关于区域服务器</h1><p>  每个大表按照rowkey来切分，rowkey是可排序的，每个切分的被分派到每个区域分五期里面。key是有序的。而且每个取余服务器的表都是有范围的，所以在get的时候要指定rowkey，然后查询的时候定位到这个rowkey在哪个区域服务器上，因为所有的区域服务器信息都在meta表这个自带的表里面，叫元数据表。里面存储着rowkey。也就是每个区域的rowkey的范围。</p>
+<p><img src="https://i.imgur.com/4nzxjz8.png" alt=""></p>
+<p>看里面的内容hbase；namespace,,14….,74….<br>这个就是名字空间表，起始的位置，结束的rowkey位置。<br>前4大段，是指的是一大行的前4列。两个逗号意味着没有切割。就只是在一个区域服务器里面</p>
+<p>再看下面的ns1:t1表的都是一行，然后3列不同的列，如果查询这部分直接联系s204,如果204挂了， 这个表就会更新，变成承接的新表的数据。这个ns1:t1的这个表就没有分割。column是列，info是列族，server是列</p>
+<p>在hbase查询的时候是3级定位。时间戳，列族（列），rowkey（行）</p>
+<p>看一下下面的这个目录：</p>
+<p>hbase,数据，ns1名字空间，t1表，区域服务器,f1列族，然后列族下面就是文件了二进制存储，内容都在这个二进制文件里面。</p>
+<p><img src="https://i.imgur.com/18bQKMj.png" alt=""></p>
+<p>一个表可以有多个区域，一个区域服务器肯定有多个区域，由于有副本的存在所以一个区域可以在多个服务器上，区域服务器是来提供服务的，读写过程是由区域服务器完成，相当于数据节点，这2个都是完成数据的读写过程的。</p>
+<p>在区域里面有个store在里面有MemStore。所以这些内容都是在内存当中，如果内存满了，就会被溢出到磁盘当中，Storefile就是在磁盘当中了，Hfile通过和底层交互</p>
+<h1 id="hbase的写入过程："><a href="#hbase的写入过程：" class="headerlink" title="hbase的写入过程："></a>hbase的写入过程：</h1><p><img src="https://i.imgur.com/XfOpVug.png" alt=""></p>
+<p>root这个地方写错了是老版本的，应该是meta表<br><img src="https://i.imgur.com/Imht8Oq.png" alt=""><br><img src="https://i.imgur.com/peKNm1w.png" alt=""></p>
+<p>现在妖王一个表里写数据，需要先查询这个表在那个区域服务器上，要先查询hbase空间下的meta表，因为这个表里面标识了类似于一个目录的内容，标识那个区域子在那个服务器上，也就是rowkey的范围。这个meta表在哪里呢怎么找到呢？ meta表要通过zk来找到。因为zk集群在，所以没有zk的情况下hbase都起不来。</p>
+<p>进入到hbase shell里面</p>
+<p><img src="https://i.imgur.com/Rx4QHIF.png" alt=""></p>
+<p>通过进入到shell里面发现这个meta表大概可能在这个里面，进去之后发现这个meta表在s203里面。如下图</p>
+<p><img src="https://i.imgur.com/SHSVJwz.png" alt=""></p>
+<p>所以实际上就是先联系zk然后通过zk找到他的位置在s203里面，这个meta表在s203里面</p>
+<p>ta/hbase/meta/1588230740/info/da7a63e29d1c4fb588068ea9c187ae27</p>
+<hr>
+<h1 id="hbase基于hdfs"><a href="#hbase基于hdfs" class="headerlink" title="hbase基于hdfs"></a>hbase基于hdfs</h1><p>【表数据的存储结构目录构成】</p>
+<pre><code>hdfs://s201:8020/hbase/data/${名字空间}/${表名}/区域名称/列族名称
+</code></pre><p>相同列族的数据存放在一个文件中，</p>
+<p>【WAL写前日志目录结构构成】</p>
+<pre><code>hdfs://s201:8020/hbase/wals/s202,16020,1542534586029/s202%2C16020%2C1542534586029.default.1542541792199
+
+hdfs://s201:8020/hbase/wals/${区域服务器名称}/主机名，端口号，时间戳/
+</code></pre><h1 id="client端交互过程"><a href="#client端交互过程" class="headerlink" title="client端交互过程"></a>client端交互过程</h1><p>0.集群启动时，master负责分配区域到指定的区域服务器</p>
+<p>1.联系zk找出meta表所在的区域服务器rs(regionserver)<br>        /meta/meta-region-server<br>    定位到所在的服务器</p>
+<p>2.定位rowkey，找到对应的rs(regionserver)</p>
+<p>3.缓存信息到本地，</p>
+<p>4.联系regionserver</p>
+<p>5.HRegionServe负责open-HRegion对象打开H区域服务器对象，为每个列族创建store实例，说明store是和列族对应的，store包涵多个storefile实例，他们是对hfile的轻量级封装，每个store还对应一个memstroe（用于内存储速度快），</p>
+<p><img src="https://i.imgur.com/ks0t9JW.png" alt=""></p>
+<hr>
+<h1 id="在百万数据存储的时候："><a href="#在百万数据存储的时候：" class="headerlink" title="在百万数据存储的时候："></a>在百万数据存储的时候：</h1><p>关闭WALS</p>
+<p><img src="https://i.imgur.com/ITwCty6.png" alt=""></p>
+<p>代码如下：</p>
+<pre><code>@Test
+   public void biginsert() throws Exception {
+       long start=System.currentTimeMillis();
+       Configuration conf = HBaseConfiguration.create();
+       Connection conn = ConnectionFactory.createConnection(conf);
+       TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+       HTable table = (HTable) conn.getTable(tname);
+       //不要自动清理缓冲区
+       table.setAutoFlushTo(false);
+
+       for (int i = 0; i &lt; 1000000; i++) {
+           Put put = new Put(Bytes.toBytes(&quot;row&quot; + i));
+           //关闭写前日志
+           put.setWriteToWAL(false);
+           put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i));
+           put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;), Bytes.toBytes(&quot;tom&quot; + i));
+           put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i % 100));
+           table.put(put);
+           if (i % 2000 == 0) {
+               table.flushCommits();
+           }
+       }
+       table.flushCommits();
+       System.out.println(System.currentTimeMillis()-start);
+
+   }
+</code></pre><hr>
+<p>hbase shell命令：</p>
+<p>要想删除表，先要禁用表。</p>
+<pre><code>$hbase&gt;flush &apos;ns1:t1&apos;        //清理内存数据到磁盘
+$hbase&gt;count &apos;ns1:t1&apos;        //统计函数
+$hbase&gt;disable &apos;ns1:t1&apos;        //删除表之前要禁用表
+$hbase&gt;drop &apos;ns1:t1&apos;        //删除表 
+$hbase&gt;count &apos;hbase:meta&apos;     //查看元数据表
+</code></pre><p><img src="https://i.imgur.com/AAzzOmp.png" alt=""></p>
+<hr>
+<h1 id="格式化代码，设置固定数字格式"><a href="#格式化代码，设置固定数字格式" class="headerlink" title="格式化代码，设置固定数字格式"></a>格式化代码，设置固定数字格式</h1><pre><code> @Test
+    public void formatNum(){
+        DecimalFormat format =new DecimalFormat();
+        format.applyPattern(&quot;0000000&quot;);
+//        format.applyPattern(&quot;###,###,00&quot;);
+        System.out.println(format.format(8));
+    }
+</code></pre><hr>
+<p>为什么要格式化rowid，因为rowid1008和8相比较8比1008还要大，所以要格式化一下。</p>
+<p>经过格式化rowid的代码：</p>
+<pre><code> @Test
+public void biginsert() throws Exception {
+
+    DecimalFormat format =new DecimalFormat();
+    format.applyPattern(&quot;0000000&quot;);
+    System.out.println(format.format(8));
+
+    long start=System.currentTimeMillis();
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+    HTable table = (HTable) conn.getTable(tname);
+    //不要自动清理缓冲区
+    table.setAutoFlushTo(false);
+
+    for (int i = 0; i &lt; 10000; i++) {
+        Put put = new Put(Bytes.toBytes(&quot;row&quot; + format.format(i)));
+        //关闭写前日志
+        put.setWriteToWAL(false);
+        put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i));
+        put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;), Bytes.toBytes(&quot;tom&quot; + i));
+        put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i % 100));
+        table.put(put);
+        if (i % 2000 == 0) {
+            table.flushCommits();
+        }
+    }
+    table.flushCommits();
+    System.out.println(System.currentTimeMillis()-start);
+
+}
+</code></pre><hr>
+<h1 id="flush命令"><a href="#flush命令" class="headerlink" title="flush命令"></a>flush命令</h1><pre><code>$hbase:flush：清理内存数据到磁盘
+</code></pre><h1 id="region拆分切割"><a href="#region拆分切割" class="headerlink" title="region拆分切割"></a>region拆分切割</h1><p><img src="https://i.imgur.com/v0N169Q.png" alt=""><br><img src="https://i.imgur.com/XQesWs6.png" alt=""></p>
+<p>hbase默认切割文件是10G，超过切割。</p>
+<pre><code>$hbase&gt;count &apos;ns1:t1&apos;        //统计函数
+</code></pre><p><img src="https://i.imgur.com/sjQ5dq7.png" alt=""></p>
+<pre><code>切割而一旦完成会保留原来的表结构，但是原来的数据内容已经没有了被删除了 
+</code></pre><p><img src="https://i.imgur.com/UhuexPk.png" alt=""></p>
+<p><img src="https://i.imgur.com/0NfLQSJ.png" alt=""></p>
+<p><img src="https://i.imgur.com/oJTAFPt.png" alt=""></p>
+<hr>
+<h1 id="hbase和hadoop的ha集成"><a href="#hbase和hadoop的ha集成" class="headerlink" title="hbase和hadoop的ha集成"></a>hbase和hadoop的ha集成</h1><p>1.在hbase-env.sh文件添加hadoop配置文件目录到hbase_classpath环境变量[/soft/hbase/conf/hbase-env]并且分发。</p>
+<pre><code>export HBASE_CLASSPATH=$HBASE_CLASSPATH:/soft/hadoop/    etc/hadoop
+</code></pre><p>2.在hbase/conf目录下创建到hadoop的hdfs-site.xml的符号链接</p>
+<pre><code>    $&gt;ln -s /soft/hadoop/etc/hadoop/hdfs-site.xml
+/soft/hbase/conf/hdfs-site.xml
+</code></pre><p>3.修改Hbase-site.xml文件中hbase.rootdir的目录值<br>        /soft/hbase/conf/hbase-site.xml<br>4.将之都分发出去。</p>
+<p>继承了之后及时关闭了s201的namenode，hbase的Hmaster也不会关闭，也就是形成了高可用状态。 </p>
+<hr>
+<h1 id="hbase手动移动区域"><a href="#hbase手动移动区域" class="headerlink" title="hbase手动移动区域"></a>hbase手动移动区域</h1><p>手动移动区域<br><img src="https://i.imgur.com/UayeavF.png" alt=""></p>
+<p>手动强行合并hbase块<br><img src="https://i.imgur.com/CrvZAFo.png" alt=""><br><img src="https://i.imgur.com/JCFdxeV.png" alt=""></p>
+<p>手动切割：</p>
+<h1 id="拆分风暴："><a href="#拆分风暴：" class="headerlink" title="拆分风暴："></a>拆分风暴：</h1><p><img src="https://i.imgur.com/wP6mfUJ.png" alt=""></p>
+<p>在达到10G以后，几个区域同时增长，同时到达10G临界点，同时切割额，服务器工作瞬间增大。每个都在切割，就叫切割风暴，我们要避免这种情况，通过使用手动切割，避免拆分风暴。</p>
+<hr>
+<p>代码操作增删改查<br>    package com.it18zhang.hbasedemo;</p>
+<pre><code>import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.*;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NavigableMap;
+
+/**
+ * @Title:TestCRUD
+ * @Description:
+ * @Auther: Eric Hunn
+ * @Version:1.0
+ * @Create 2018/11/17 11:56
+ */
+public class TestCRUD {
+    @Test
+    public void put() throws Exception {
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+
+        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+        Table table = conn.getTable(tname);
+        byte[] rowid = Bytes.toBytes(&quot;row2&quot;);
+        byte[] f1 = Bytes.toBytes(&quot;f1&quot;);
+        byte[] id = Bytes.toBytes(&quot;id&quot;);
+        byte[] value = Bytes.toBytes(102);
+        //创建put对象
+
+        Put put = new Put(rowid);
+        put.addColumn(f1, id, value);
+        table.put(put);
+
+    }
+
+    @Test
+    public void biginsert() throws Exception {
+
+        DecimalFormat format = new DecimalFormat();
+        format.applyPattern(&quot;0000000&quot;);
+        System.out.println(format.format(8));
+
+        long start = System.currentTimeMillis();
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+        HTable table = (HTable) conn.getTable(tname);
+        //不要自动清理缓冲区
+        table.setAutoFlushTo(false);
+
+        for (int i = 0; i &lt; 10000; i++) {
+            Put put = new Put(Bytes.toBytes(&quot;row&quot; + format.format(i)));
+            //关闭写前日志
+            put.setWriteToWAL(false);
+            put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i));
+            put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;), Bytes.toBytes(&quot;tom&quot; + i));
+            put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i % 100));
+            table.put(put);
+            if (i % 2000 == 0) {
+                table.flushCommits();
+            }
+        }
+        table.flushCommits();
+        System.out.println(System.currentTimeMillis() - start);
+
+    }
+
+    @Test
+    public void formatNum() {
+        DecimalFormat format = new DecimalFormat();
+        format.applyPattern(&quot;0000000&quot;);
+//        format.applyPattern(&quot;###,###,00&quot;);
+        System.out.println(format.format(8));
+    }
+
+    @Test
+    public void createNamespace() throws Exception {
+        //创建conf对象
+        Configuration conf = HBaseConfiguration.create();
+        //通过工厂创建连接对象
+        Connection conn = ConnectionFactory.createConnection(conf);
+        Admin admin = conn.getAdmin();
+        NamespaceDescriptor nsd = NamespaceDescriptor.create(&quot;ns2&quot;).build();
+        admin.createNamespace(nsd);
+
+        NamespaceDescriptor[] ns = admin.listNamespaceDescriptors();
+        for (NamespaceDescriptor n : ns) {
+            System.out.println(n.getName());
+        }
+
+    }
+
+    @Test
+    public void listNamespaces() throws Exception {
+        //创建conf对象
+        Configuration conf = HBaseConfiguration.create();
+        //通过工厂创建连接对象
+        Connection conn = ConnectionFactory.createConnection(conf);
+        Admin admin = conn.getAdmin();
+        NamespaceDescriptor[] ns = admin.listNamespaceDescriptors();
+        for (NamespaceDescriptor n : ns) {
+            System.out.println(n.getName());
+        }
+    }
+
+    @Test
+    public void createTables() throws Exception {
+        //创建conf对象
+        Configuration conf = HBaseConfiguration.create();
+        //通过工厂创建连接对象
+        Connection conn = ConnectionFactory.createConnection(conf);
+        Admin admin = conn.getAdmin();
+        //创建表名对象
+        TableName tbn = TableName.valueOf(&quot;ns2:t2&quot;);
+        //创建表描述符对象
+        HTableDescriptor tbl = new HTableDescriptor(tbn);
+        //在表描述符中添加列族创建列族描述符
+        HColumnDescriptor col = new HColumnDescriptor(&quot;f1&quot;);
+        tbl.addFamily(col);
+
+        admin.createTable(tbl);
+        System.out.println(&quot;over&quot;);
+    }
+
+    @Test
+    public void disableTable() throws Exception {
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        Admin admin = conn.getAdmin();
+        admin.disableTable(TableName.valueOf(&quot;ns2:t2&quot;));
+    }
+
+    @Test
+    public void dropTable() throws Exception {
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        Admin admin = conn.getAdmin();
+        admin.disableTable(TableName.valueOf(&quot;ns2:t2&quot;));
+        admin.deleteTable(TableName.valueOf(&quot;ns2:t2&quot;));
+    }
+
+    @Test
+    public void deleteData() throws IOException {
+
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+        Table table = conn.getTable(tname);
+        Delete del = new Delete(Bytes.toBytes(&quot;row0000001&quot;));
+        del.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        del.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+
+        table.delete(del);
+        System.out.println(&quot;over&quot;);
+
+    }
+
+    @Test
+    public void scanall() throws IOException {
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+        Table table = conn.getTable(tname);
+        Scan scan = new Scan();
+        ResultScanner rs = table.getScanner(scan);
+        Iterator&lt;Result&gt; it = rs.iterator();
+        while (it.hasNext()) {
+            Result r = it.next();//理解这个r是对一整行的封装
+            byte[] value = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+            System.out.println(Bytes.toString(value));
+        }
+    }
+
+
+    @Test
+    public void scan() throws IOException {
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+        Table table = conn.getTable(tname);
+        Scan scan = new Scan();
+        scan.setStartRow(Bytes.toBytes(&quot;row0005000&quot;));
+        scan.setStopRow(Bytes.toBytes(&quot;row0008000&quot;));
+        ResultScanner rs = table.getScanner(scan);
+        Iterator&lt;Result&gt; it = rs.iterator();
+        while (it.hasNext()) {
+            Result r = it.next();//理解这个r是对一整行的封装
+            byte[] value = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+            System.out.println(Bytes.toString(value));
+        }
+    }
+
+    //动态获取所有的列和列族，动态遍历，每个列和值的集合，由于强行getvalue转换成string类型，所以难免出现乱码情况
+    @Test
+    public void scan2() throws IOException {
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+        Table table = conn.getTable(tname);
+        Scan scan = new Scan();
+        ResultScanner rs = table.getScanner(scan);
+        Iterator&lt;Result&gt; it = rs.iterator();
+        while (it.hasNext()) {
+            Result r = it.next();//理解这个r是对一整行的封装
+            Map&lt;byte[], byte[]&gt; map = r.getFamilyMap(Bytes.toBytes(&quot;f1&quot;));
+            for (Map.Entry&lt;byte[], byte[]&gt; entrySet : map.entrySet()) {
+                String col = Bytes.toString(entrySet.getKey());
+                String val = Bytes.toString(entrySet.getValue());
+                System.out.println(col + &quot;:&quot; + val + &quot;,&quot;);
+            }
+            System.out.println();
+        }
+    }
+
+    @Test
+    public void scan3() throws IOException {
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+        Table table = conn.getTable(tname);
+        Scan scan = new Scan();
+        ResultScanner rs = table.getScanner(scan);
+        Iterator&lt;Result&gt; it = rs.iterator();
+        while (it.hasNext()) {
+            Result r = it.next();//理解这个r是对一整行的封装
+            //得到一行的所有map，key=f1,value=Map&lt;Col,Map&lt;Timestamp,value&gt;&gt;这个结构
+
+            NavigableMap&lt;byte[], NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt;&gt; map = r.getMap();
+            for (Map.Entry&lt;byte[], NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt;&gt; entry : map.entrySet()) {
+                //得到列族
+                String f = Bytes.toString(entry.getKey());
+                NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt; colDataMap = entry.getValue();
+                for (Map.Entry&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt; ets : colDataMap.entrySet()) {
+                    String c = Bytes.toString(ets.getKey());
+                    Map&lt;Long, byte[]&gt; tsValueMap = ets.getValue();
+                    for (Map.Entry&lt;Long, byte[]&gt; e : tsValueMap.entrySet()) {
+                        Long ts = e.getKey();
+                        String value = Bytes.toString(e.getValue());
+                        System.out.println(f + &quot;:&quot; + c + &quot;:&quot; + ts + &quot;=&quot; + value + &quot;,&quot;);
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre>
           
         
       
@@ -2319,6 +2770,8 @@ $hive&gt;SET hive.groupby.skewindata=true;
 <p>也就是说要杀死掉s206里面的namenode或者说通过转换吧他变成standby然后s201设置为active模式。不然会导致出错</p>
 <hr>
 <p>几个端口2181 8080 50070  8020 16010</p>
+<hr>
+<p>在讲解hbase 第二天的动态遍历并没有看明白，也就是说Java的基础还是很薄弱的。</p>
 
           
         
@@ -2486,7 +2939,7 @@ $hive&gt;SET hive.groupby.skewindata=true;
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/09/心情日记——2018-11-09/">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/09/人为什么要努力？——2018-11-09/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Eric Hunn">
@@ -2505,7 +2958,7 @@ $hive&gt;SET hive.groupby.skewindata=true;
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/09/心情日记——2018-11-09/" itemprop="url">心情日记——2018.11.09</a></h1>
+                <a class="post-title-link" href="/2018/11/09/人为什么要努力？——2018-11-09/" itemprop="url">心情日记——2018.11.09</a></h1>
         
 
         <div class="post-meta">
