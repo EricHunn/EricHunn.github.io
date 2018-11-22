@@ -81,17 +81,30 @@
 
 
 
-<meta name="description" content="大数据|动漫迷|科技控">
+<meta name="description" content="复习Hbase第二天随机定位+实时读写 nosql:not only sql数据库 key-value对形式的存储 key: rowkey/family+col/timstamp = value rowkey  排序,byte[] 客户端先联系zk找到元数据表hbae:meta，存放了整个数据库的表和区域服务器信息，相当于目录，类似于名称节点。当找到了之后就可以定位到区域服务器，所以hbase数据">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hbase第三天">
 <meta property="og:url" content="http://erichunn.github.io/2018/11/19/Hbase第三天/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="大数据|动漫迷|科技控">
+<meta property="og:description" content="复习Hbase第二天随机定位+实时读写 nosql:not only sql数据库 key-value对形式的存储 key: rowkey/family+col/timstamp = value rowkey  排序,byte[] 客户端先联系zk找到元数据表hbae:meta，存放了整个数据库的表和区域服务器信息，相当于目录，类似于名称节点。当找到了之后就可以定位到区域服务器，所以hbase数据">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-19T08:56:58.975Z">
+<meta property="og:image" content="https://i.imgur.com/Qq9LDyE.png">
+<meta property="og:image" content="https://i.imgur.com/r9yKelH.png">
+<meta property="og:image" content="https://i.imgur.com/2WE38AX.png">
+<meta property="og:image" content="https://i.imgur.com/U8uyqrS.png">
+<meta property="og:image" content="https://i.imgur.com/kzrUOiK.png">
+<meta property="og:image" content="https://i.imgur.com/aRdSViP.png">
+<meta property="og:image" content="https://i.imgur.com/jMwoiQ6.png">
+<meta property="og:image" content="https://i.imgur.com/0RNQJci.png">
+<meta property="og:image" content="https://i.imgur.com/9jcHOUJ.png">
+<meta property="og:image" content="https://i.imgur.com/Z5AcN4v.png">
+<meta property="og:image" content="https://i.imgur.com/6EGrJ4V.png">
+<meta property="og:image" content="https://i.imgur.com/lZeb49u.png">
+<meta property="og:updated_time" content="2018-11-21T08:21:56.695Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hbase第三天">
-<meta name="twitter:description" content="大数据|动漫迷|科技控">
+<meta name="twitter:description" content="复习Hbase第二天随机定位+实时读写 nosql:not only sql数据库 key-value对形式的存储 key: rowkey/family+col/timstamp = value rowkey  排序,byte[] 客户端先联系zk找到元数据表hbae:meta，存放了整个数据库的表和区域服务器信息，相当于目录，类似于名称节点。当找到了之后就可以定位到区域服务器，所以hbase数据">
+<meta name="twitter:image" content="https://i.imgur.com/Qq9LDyE.png">
 
 
 
@@ -395,7 +408,547 @@
       
 
       
-        
+        <h1 id="复习Hbase第二天"><a href="#复习Hbase第二天" class="headerlink" title="复习Hbase第二天"></a>复习Hbase第二天</h1><p>随机定位+实时读写</p>
+<p>nosql:not only sql数据库</p>
+<p>key-value对形式的存储</p>
+<p>key: rowkey/family+col/timstamp = value</p>
+<p>rowkey  排序,byte[]</p>
+<p>客户端先联系zk找到元数据表hbae:meta，存放了整个数据库的表和区域服务器信息，相当于目录，类似于名称节点。当找到了之后就可以定位到区域服务器，所以hbase数据读写和HRegionServer来交互，有很多regionServer构成了一个集群。数据先进入到写前日志，写前日志用于容错，用于恢复，所以在交互的时候client先交互HRegionServer然后在网Hlog里写入数据，然后在溢出之后写入HRegion，对于HRegion来说有个内存储MemStore在内存中存储数据，用来提高速度，MemStore达到一定值溢出到磁盘，所以还有一个StoreFile存储，用来和底层交互，底层就是Hfile。通过Hfile对象来跟HDFS交互，就找到了HDFS客户端DFSClient了，这个DFSClient就是hdfs范畴了，最终数据存储到HDFS里面了。</p>
+<p>表的切割指的是切割表或者切割区域，按照rowkey来切分，因为rowkey是有序的，相当于建立索引，通过切割可以实现负载均衡，如果所有东西都在一个点就会出现热点问题。</p>
+<p>hbase的增删改查是：<br>    put(rowkey).addColumn().<br>    put(Put)</p>
+<pre><code>delete
+
+get()
+
+更新也是put
+
+scan()
+</code></pre><p>merge合并。</p>
+<p>移动区域，目的减少某一个服务器的压力。可以任意配置区域所在地，由那个区域服务器承载。</p>
+<p>切割风暴：达到10G之后同时到达临界点，同时切割，为了避免可以让这个10G的值变大再切割，也就是不让他自动切割了。可以手动切割避免。或者预切割来处理。 </p>
+<p>hbase存储的荣誉量比较大，因为它存储的时候都是以kv的方式来存储，而key是三极坐标，rowkey，列，列族，时间戳+一个value，所以前三个值都要存放很多次。所以要求列族和列的名称和rowkey的名字不能太长。一旦过长，就会发现存储的时候被坐标占用了大量的空间，而value的很少，最好列和列族名字不要太长。</p>
+<p>本天会涉及rowkey的设计问题。</p>
+<h1 id="预先切割"><a href="#预先切割" class="headerlink" title="预先切割"></a>预先切割</h1><p>创建表时可以预先对表进行切割。</p>
+<p>切割线就是rowkey</p>
+<p> create ‘ns1:t2’,’f1’,SPLITES=&gt;[‘row3000’,’row6000]</p>
+<h2 id="预先切割-1"><a href="#预先切割-1" class="headerlink" title="预先切割"></a>预先切割</h2><pre><code>创建表时，预先对表进行切割。
+切割线是rowkey.
+$hbase&gt;create &apos;ns1:t2&apos;,&apos;f1&apos;,SPLITS=&gt;[&apos;row3000&apos;,&apos;row6000&apos;]
+</code></pre><h2 id="创建表时指定列族的版本数-该列族的所有列都具有相同数量版本"><a href="#创建表时指定列族的版本数-该列族的所有列都具有相同数量版本" class="headerlink" title="创建表时指定列族的版本数,该列族的所有列都具有相同数量版本"></a>创建表时指定列族的版本数,该列族的所有列都具有相同数量版本</h2><pre><code>$hbase&gt;create &apos;ns1:t3&apos;,{NAME=&gt;&apos;f1&apos;,VERSIONS=&gt;3}            //创建表时，指定列族的版本数。
+$hbase&gt;get &apos;ns1:t3&apos;,&apos;row1&apos;,{COLUMN=&gt;&apos;f1&apos;,VERSIONS=&gt;4}    //检索的时候，查询多少个版本。
+$hbase&gt;put &apos;ns1:t3&apos;,&apos;row1&apos;,&apos;f1:name&apos;,&apos;tom&apos;
+</code></pre><p>关于查询的命令行：</p>
+<p><img src="https://i.imgur.com/Qq9LDyE.png" alt=""></p>
+<p>关于创建表的命令：</p>
+<p><img src="https://i.imgur.com/r9yKelH.png" alt=""></p>
+<pre><code>@Test
+public void getWithVersions() throws IOException {
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t3&quot;);
+    Table table = conn.getTable(tname);
+    Get get = new Get(Bytes.toBytes(&quot;row1&quot;));
+    //检索所有版本
+    get.setMaxVersions();
+    Result r = table.get(get);
+    List&lt;Cell&gt; cells = r.getColumnCells(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+    for(Cell c : cells){
+        String f = Bytes.toString(c.getFamily());
+        String col = Bytes.toString(c.getQualifier());
+        long ts = c.getTimestamp();
+        String val = Bytes.toString(c.getValue());
+        System.out.println(f + &quot;/&quot; + col + &quot;/&quot; + ts + &quot;=&quot; + val);
+    }
+}
+</code></pre><h1 id="原生扫描-专家"><a href="#原生扫描-专家" class="headerlink" title="原生扫描(专家)"></a>原生扫描(专家)</h1><h2 id="1-原生扫描"><a href="#1-原生扫描" class="headerlink" title="1.原生扫描"></a>1.原生扫描</h2><pre><code>$hbase&gt;scan &apos;ns1:t3&apos;,{COLUMN=&gt;&apos;f1&apos;,RAW=&gt;true,VERSIONS=&gt;10}        //包含标记了delete的数据
+</code></pre><h2 id="2-删除数据"><a href="#2-删除数据" class="headerlink" title="2.删除数据"></a>2.删除数据</h2><pre><code>$hbase&gt;delete &apos;nd1:t3&apos;,&apos;row1&apos;,&apos;f1:name&apos;,148989875645            //删除数据，标记为删除.
+                                                                //小于该删除时间的数据都作废。
+</code></pre><h2 id="3-TTL"><a href="#3-TTL" class="headerlink" title="3.TTL"></a>3.TTL</h2><pre><code>time to live ,存活时间。
+影响所有的数据，包括没有删除的数据。
+超过该时间，原生扫描也扫不到数据。
+$hbase&gt;create &apos;ns1:tx&apos; , {NAME=&gt;&apos;f1&apos;,TTL=&gt;10,VERSIONS}
+</code></pre><h2 id="4-KEEP-DELETED-CELLS"><a href="#4-KEEP-DELETED-CELLS" class="headerlink" title="4.KEEP_DELETED_CELLS"></a>4.KEEP_DELETED_CELLS</h2><pre><code>删除key之后，数据是否还保留。
+$hbase&gt;create &apos;ns1:tx&apos; , {NAME=&gt;&apos;f1&apos;,TTL=&gt;10,VERSIONS,KEEP_DELETED_CELLS=&gt;true}
+</code></pre><p><img src="https://i.imgur.com/2WE38AX.png" alt=""></p>
+<h1 id="缓存和批处理"><a href="#缓存和批处理" class="headerlink" title="缓存和批处理"></a>缓存和批处理</h1><p><img src="https://i.imgur.com/U8uyqrS.png" alt=""></p>
+<pre><code>1.开启服务器端扫描器缓存
+    a)表层面(全局)只需要配置一个属性即可
+
+        &lt;property&gt;
+            &lt;name&gt;hbase.client.scanner.caching&lt;/name&gt;
+            &lt;!-- 整数最大值 --&gt;
+            &lt;value&gt;2147483647&lt;/value&gt;
+            &lt;source&gt;hbase-default.xml&lt;/source&gt;
+        &lt;/property&gt;
+
+    b)操作层面
+
+        //设置量
+        scan.setCaching(10);
+
+2.
+3.
+
+
+cache row nums : 1000            //632
+cache row nums : 5000            //423
+cache row nums : 1                //7359
+</code></pre><h1 id="扫描器缓存"><a href="#扫描器缓存" class="headerlink" title="扫描器缓存"></a>扫描器缓存</h1><pre><code>面向行级别的。
+
+@Test
+public void getScanCache() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+    Scan scan = new Scan();
+    scan.setCaching(5000);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    long start = System.currentTimeMillis() ;
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while(it.hasNext()){
+        Result r = it.next();
+        System.out.println(r.getColumnLatestCell(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;)));
+    }
+    System.out.println(System.currentTimeMillis() - start);
+}
+</code></pre><h1 id="批量扫描是面向列级别"><a href="#批量扫描是面向列级别" class="headerlink" title="批量扫描是面向列级别"></a>批量扫描是面向列级别</h1><p><img src="https://i.imgur.com/kzrUOiK.png" alt=""></p>
+<pre><code>控制每次next()服务器端返回的列的个数。
+scan.setBatch(5);                //每次next返回5列。
+</code></pre><h2 id="测试缓存和批处理"><a href="#测试缓存和批处理" class="headerlink" title="测试缓存和批处理"></a>测试缓存和批处理</h2><pre><code> */
+@Test
+public void testBatchAndCaching() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    scan.setCaching(2);
+    scan.setBatch(3);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        System.out.println(&quot;========================================&quot;);
+        //得到一行的所有map,key=f1,value=Map&lt;Col,Map&lt;Timestamp,value&gt;&gt;
+        NavigableMap&lt;byte[], NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt;&gt; map = r.getMap();
+        //
+        for (Map.Entry&lt;byte[], NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt;&gt; entry : map.entrySet()) {
+            //得到列族
+            String f = Bytes.toString(entry.getKey());
+            Map&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt; colDataMap = entry.getValue();
+            for (Map.Entry&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt; ets : colDataMap.entrySet()) {
+                String c = Bytes.toString(ets.getKey());
+                Map&lt;Long, byte[]&gt; tsValueMap = ets.getValue();
+                for (Map.Entry&lt;Long, byte[]&gt; e : tsValueMap.entrySet()) {
+                    Long ts = e.getKey();
+                    String value = Bytes.toString(e.getValue());
+                    System.out.print(f + &quot;/&quot; + c + &quot;/&quot; + ts + &quot;=&quot; + value + &quot;,&quot;);
+                }
+            }
+        }
+        System.out.println();
+    }
+}
+</code></pre><p>先插入数据<br><img src="https://i.imgur.com/aRdSViP.png" alt=""></p>
+<p><img src="https://i.imgur.com/jMwoiQ6.png" alt=""></p>
+<p>代码运行结果：</p>
+<p><img src="https://i.imgur.com/0RNQJci.png" alt=""></p>
+<p>上面代码和上图对应的。设置2个cach和3个batch视频上说是2行3列，但是我觉得应该是2个列族3个列的这样子去输出。然后最后这一行还剩下2个输出2个，也就是3个输出，2个输出，3个输出，2个输出，。</p>
+<p>========================================</p>
+<h1 id="f1-id-1490595148588-1-f2-addr-1490595182150-hebei-f2-age-1490595174760-12"><a href="#f1-id-1490595148588-1-f2-addr-1490595182150-hebei-f2-age-1490595174760-12" class="headerlink" title="f1/id/1490595148588=1,f2/addr/1490595182150=hebei,f2/age/1490595174760=12,"></a>f1/id/1490595148588=1,f2/addr/1490595182150=hebei,f2/age/1490595174760=12,</h1><p>f2/id/1490595164473=1,f2/name/1490595169589=tom,</p>
+<p>========================================</p>
+<h1 id="f1-id-1490595196410-2-f1-name-1490595213090-tom2-1-f2-addr-1490595264734-tangshan"><a href="#f1-id-1490595196410-2-f1-name-1490595213090-tom2-1-f2-addr-1490595264734-tangshan" class="headerlink" title="f1/id/1490595196410=2,f1/name/1490595213090=tom2.1,f2/addr/1490595264734=tangshan,"></a>f1/id/1490595196410=2,f1/name/1490595213090=tom2.1,f2/addr/1490595264734=tangshan,</h1><p>f2/age/1490595253996=13,f2/id/1490595233568=2,f2/name/1490595241891=tom2.2,</p>
+<p>========================================</p>
+<h1 id="f1-age-1490595295427-14-f1-id-1490595281251-3-f1-name-1490595289587-tom3-1"><a href="#f1-age-1490595295427-14-f1-id-1490595281251-3-f1-name-1490595289587-tom3-1" class="headerlink" title="f1/age/1490595295427=14,f1/id/1490595281251=3,f1/name/1490595289587=tom3.1,"></a>f1/age/1490595295427=14,f1/id/1490595281251=3,f1/name/1490595289587=tom3.1,</h1><p>f2/addr/1490595343690=beijing,f2/age/1490595336300=14,f2/id/1490595310966=3,</p>
+<p>========================================<br>f2/name/1490595327531=tom3.2,</p>
+<h1 id="Filter过滤器"><a href="#Filter过滤器" class="headerlink" title="Filter过滤器"></a>Filter过滤器</h1><p><img src="https://i.imgur.com/9jcHOUJ.png" alt=""><br>远程服务器收到scan对象进行反序列化，恢复成scan对象进行过滤，对每个区域进行过滤，每个区域服务器有很多区域，每个区域里面有区域扫描器， RegionScanner，会使用区域过滤器。 </p>
+<pre><code>1.RowFilter
+    select * from ns1:t1 where rowkey &lt;= row100
+/**
+
+ /**
+ * 测试RowFilter过滤器
+ */
+@Test
+public void testRowFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+    Scan scan = new Scan();
+    RowFilter rowFilter = new RowFilter(CompareFilter.CompareOp.LESS_OR_EQUAL, new BinaryComparator(Bytes.toBytes(&quot;row0100&quot;)));
+    scan.setFilter(rowFilter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        System.out.println(Bytes.toString(r.getRow()));
+    }
+}
+
+/**
+ * 测试FamilyFilter过滤器
+ */
+@Test
+public void testFamilyFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    FamilyFilter filter = new FamilyFilter(CompareFilter.CompareOp.LESS, new BinaryComparator(Bytes.toBytes(&quot;f2&quot;)));
+    scan.setFilter(filter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id);
+    }
+}
+
+/**
+ * 测试QualifierFilter(列过滤器)
+ */
+@Test
+public void testColFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    QualifierFilter colfilter = new QualifierFilter(CompareFilter.CompareOp.EQUAL, new BinaryComparator(Bytes.toBytes(&quot;id&quot;)));
+    scan.setFilter(colfilter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2name = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;name&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id + &quot; : &quot; + f2name);
+    }
+}
+
+
+/**
+ * 测试ValueFilter(值过滤器)
+ * 过滤value的值，含有指定的字符子串
+ */
+@Test
+public void testValueFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    ValueFilter filter = new ValueFilter(CompareFilter.CompareOp.EQUAL, new SubstringComparator(&quot;to&quot;));
+    scan.setFilter(filter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f1name = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+        byte[] f2name = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;name&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id + &quot; : &quot; + Bytes.toString(f1name) + &quot; : &quot; + Bytes.toString(f2name));
+    }
+}
+
+/**
+ * 依赖列过滤器
+ */
+@Test
+public void testDepFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    DependentColumnFilter filter = new DependentColumnFilter(Bytes.toBytes(&quot;f2&quot;),
+            Bytes.toBytes(&quot;addr&quot;),
+            true,
+            CompareFilter.CompareOp.NOT_EQUAL,
+            new BinaryComparator(Bytes.toBytes(&quot;beijing&quot;))
+            );
+
+    //ValueFilter filter = new ValueFilter(CompareFilter.CompareOp.EQUAL, new SubstringComparator(&quot;to&quot;));
+    scan.setFilter(filter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f1name = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+        byte[] f2name = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;name&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id + &quot; : &quot; + Bytes.toString(f1name) + &quot; : &quot; + Bytes.toString(f2name));
+    }
+}
+
+/**
+ * 单列值value过滤，
+ *  
+ */
+@Test
+public void testSingleColumValueFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    SingleColumnValueFilter filter = new SingleColumnValueFilter(Bytes.toBytes(&quot;f2&quot;,
+            Bytes.toBytes(&quot;name&quot;),
+            CompareFilter.CompareOp.NOT_EQUAL),
+            new BinaryComparator(Bytes.toBytes(&quot;tom2.1&quot;)));
+
+    //ValueFilter filter = new ValueFilter(CompareFilter.CompareOp.EQUAL, new SubstringComparator(&quot;to&quot;));
+    scan.setFilter(filter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f1name = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+        byte[] f2name = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;name&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id + &quot; : &quot; + Bytes.toString(f1name) + &quot; : &quot; + Bytes.toString(f2name));
+    }
+}
+</code></pre><h2 id="复杂查询"><a href="#复杂查询" class="headerlink" title="复杂查询"></a>复杂查询</h2><pre><code>select * from t7 where ((age &lt;= 13) and (name like &apos;%t&apos;)
+
+                                    or
+
+                        (age &gt; 13) and (name like &apos;t%&apos;))
+</code></pre><p><img src="https://i.imgur.com/Z5AcN4v.png" alt=""></p>
+<p>指定列族，指定列，指定对比方式，指定值(小于用二进制比较，等于用正则表达式串对比器)</p>
+<p><img src="https://i.imgur.com/6EGrJ4V.png" alt=""></p>
+<h1 id="复杂查询实现方式-FilterList"><a href="#复杂查询实现方式-FilterList" class="headerlink" title="复杂查询实现方式:FilterList"></a>复杂查询实现方式:FilterList</h1><pre><code>@Test
+public void testComboFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+
+    //where ... f2:age &lt;= 13
+    SingleColumnValueFilter ftl = new SingleColumnValueFilter(
+            Bytes.toBytes(&quot;f2&quot;),
+            Bytes.toBytes(&quot;age&quot;),
+            CompareFilter.CompareOp.LESS_OR_EQUAL,
+            new BinaryComparator(Bytes.toBytes(&quot;13&quot;))
+    );
+
+    //where ... f2:name like %t
+    SingleColumnValueFilter ftr = new SingleColumnValueFilter(
+            Bytes.toBytes(&quot;f2&quot;),
+            Bytes.toBytes(&quot;name&quot;),
+            CompareFilter.CompareOp.EQUAL,
+            new RegexStringComparator(&quot;^t&quot;)//以t开头
+    );
+    //ft
+    FilterList ft = new FilterList(FilterList.Operator.MUST_PASS_ALL);
+    ft.addFilter(ftl);
+    ft.addFilter(ftr);
+
+    //where ... f2:age &gt; 13
+    SingleColumnValueFilter fbl = new SingleColumnValueFilter(
+            Bytes.toBytes(&quot;f2&quot;),
+            Bytes.toBytes(&quot;age&quot;),
+            CompareFilter.CompareOp.GREATER,
+            new BinaryComparator(Bytes.toBytes(&quot;13&quot;))
+    );
+
+    //where ... f2:name like %t
+    SingleColumnValueFilter fbr = new SingleColumnValueFilter(
+            Bytes.toBytes(&quot;f2&quot;),
+            Bytes.toBytes(&quot;name&quot;),
+            CompareFilter.CompareOp.EQUAL,
+            new RegexStringComparator(&quot;t$&quot;)//以t结尾
+    );
+    //ft
+    FilterList fb = new FilterList(FilterList.Operator.MUST_PASS_ALL);
+    fb.addFilter(fbl);
+    fb.addFilter(fbr);
+
+
+    FilterList fall = new FilterList(FilterList.Operator.MUST_PASS_ONE);
+    fall.addFilter(ft);
+    fall.addFilter(fb);
+
+    scan.setFilter(fall);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f1name = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+        byte[] f2name = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;name&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id + &quot; : &quot; + Bytes.toString(f1name) + &quot; : &quot; + Bytes.toString(f2name));
+    }
+}
+</code></pre><h1 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h1><pre><code>$hbase&gt;incr &apos;ns1:t8&apos;,&apos;row1&apos;,&apos;f1:click&apos;,1
+$hbase&gt;get_counter &apos;ns1:t8&apos;,&apos;row1&apos;,&apos;f1:click&apos;    //得到计数器的值
+
+
+[API编程]
+@Test
+public void testIncr() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t8&quot;);
+    Table t = conn.getTable(tname);
+    Increment incr = new Increment(Bytes.toBytes(&quot;row1&quot;));
+    incr.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;daily&quot;),1);
+    incr.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;weekly&quot;),10);
+    incr.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;monthly&quot;),100);
+    t.increment(incr);
+}
+</code></pre><h1 id="coprocessor"><a href="#coprocessor" class="headerlink" title="coprocessor"></a>coprocessor</h1><p>协处理器工作过程：</p>
+<p><img src="https://i.imgur.com/lZeb49u.png" alt=""></p>
+<pre><code>批处理的，等价于存储过程或者触发器
+
+[Observer]
+    观察者,类似于触发器，基于事件。发生动作时，回调相应方法。
+    RegionObserver        //RegionServer区域观察者
+    MasterObserver        //Master节点。
+    WAlObserver            //
+
+[Endpoint]
+    终端,类似于存储过程。
+
+
+1.加载
+    [hbase-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
+        &lt;value&gt;coprocessor.RegionObserverExample, coprocessor.AnotherCoprocessor&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;hbase.coprocessor.master.classes&lt;/name&gt;
+        &lt;value&gt;coprocessor.MasterObserverExample&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;hbase.coprocessor.wal.classes&lt;/name&gt;
+        &lt;value&gt;coprocessor.WALObserverExample, bar.foo.MyWALObserver&lt;/value&gt;
+    &lt;/property&gt;
+
+2.自定义观察者
+    [MyRegionObserver]
+    package com.it18zhang.hbasedemo.coprocessor;
+
+    import org.apache.hadoop.hbase.Cell;
+    import org.apache.hadoop.hbase.CoprocessorEnvironment;
+    import org.apache.hadoop.hbase.client.Delete;
+    import org.apache.hadoop.hbase.client.Durability;
+    import org.apache.hadoop.hbase.client.Get;
+    import org.apache.hadoop.hbase.client.Put;
+    import org.apache.hadoop.hbase.coprocessor.BaseRegionObserver;
+    import org.apache.hadoop.hbase.coprocessor.ObserverContext;
+    import org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;
+    import org.apache.hadoop.hbase.regionserver.wal.WALEdit;
+    import org.apache.hadoop.hbase.util.Bytes;
+
+    import java.io.FileWriter;
+    import java.io.IOException;
+    import java.util.List;
+
+    /**
+     * 自定义区域观察者
+     */
+    public class MyRegionObserver extends BaseRegionObserver{
+
+        private void outInfo(String str){
+            try {
+                FileWriter fw = new FileWriter(&quot;/home/centos/coprocessor.txt&quot;,true);
+                fw.write(str + &quot;\r\n&quot;);
+                fw.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        public void start(CoprocessorEnvironment e) throws IOException {
+            super.start(e);
+            outInfo(&quot;MyRegionObserver.start()&quot;);
+        }
+
+        public void preOpen(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e) throws IOException {
+            super.preOpen(e);
+            outInfo(&quot;MyRegionObserver.preOpen()&quot;);
+        }
+
+        public void postOpen(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e) {
+            super.postOpen(e);
+            outInfo(&quot;MyRegionObserver.postOpen()&quot;);
+        }
+
+        @Override
+        public void preGetOp(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Get get, List&lt;Cell&gt; results) throws IOException {
+            super.preGetOp(e, get, results);
+            String rowkey = Bytes.toString(get.getRow());
+            outInfo(&quot;MyRegionObserver.preGetOp() : rowkey = &quot; + rowkey);
+        }
+
+        public void postGetOp(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Get get, List&lt;Cell&gt; results) throws IOException {
+            super.postGetOp(e, get, results);
+            String rowkey = Bytes.toString(get.getRow());
+            outInfo(&quot;MyRegionObserver.postGetOp() : rowkey = &quot; + rowkey);
+        }
+
+        public void prePut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+            super.prePut(e, put, edit, durability);
+            String rowkey = Bytes.toString(put.getRow());
+            outInfo(&quot;MyRegionObserver.prePut() : rowkey = &quot; + rowkey);
+        }
+
+        @Override
+        public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+            super.postPut(e, put, edit, durability);
+            String rowkey = Bytes.toString(put.getRow());
+            outInfo(&quot;MyRegionObserver.postPut() : rowkey = &quot; + rowkey);
+        }
+
+        @Override
+        public void preDelete(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Delete delete, WALEdit edit, Durability durability) throws IOException {
+            super.preDelete(e, delete, edit, durability);
+            String rowkey = Bytes.toString(delete.getRow());
+            outInfo(&quot;MyRegionObserver.preDelete() : rowkey = &quot; + rowkey);
+        }
+
+        @Override
+        public void postDelete(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Delete delete, WALEdit edit, Durability durability) throws IOException {
+            super.postDelete(e, delete, edit, durability);
+            String rowkey = Bytes.toString(delete.getRow());
+            outInfo(&quot;MyRegionObserver.postDelete() : rowkey = &quot; + rowkey);
+        }
+    }
+
+2.注册协处理器并分发
+    &lt;property&gt;
+        &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
+        &lt;value&gt;com.it18zhang.hbasedemo.coprocessor.MyRegionObserver&lt;/value&gt;
+    &lt;/property&gt;
+
+3.导出jar包。
+
+4.复制jar到共享目录，分发到jar到hbase集群的hbase lib目录下.
+    [/soft/hbase/lib]
+</code></pre>
       
     </div>
     
@@ -456,8 +1009,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/16/Hbase第一天/" rel="next" title="Hbase第一天">
-                <i class="fa fa-chevron-left"></i> Hbase第一天
+              <a href="/2018/11/19/SSM第一天/" rel="next" title="SSM第一天">
+                <i class="fa fa-chevron-left"></i> SSM第一天
               </a>
             
           </div>
@@ -465,6 +1018,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/19/SSM第二天/" rel="prev" title="SSM第二天">
+                SSM第二天 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -521,8 +1078,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -541,7 +1107,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -629,6 +1195,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#复习Hbase第二天"><span class="nav-number">1.</span> <span class="nav-text">复习Hbase第二天</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预先切割"><span class="nav-number">2.</span> <span class="nav-text">预先切割</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#预先切割-1"><span class="nav-number">2.1.</span> <span class="nav-text">预先切割</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建表时指定列族的版本数-该列族的所有列都具有相同数量版本"><span class="nav-number">2.2.</span> <span class="nav-text">创建表时指定列族的版本数,该列族的所有列都具有相同数量版本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原生扫描-专家"><span class="nav-number">3.</span> <span class="nav-text">原生扫描(专家)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-原生扫描"><span class="nav-number">3.1.</span> <span class="nav-text">1.原生扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-删除数据"><span class="nav-number">3.2.</span> <span class="nav-text">2.删除数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-TTL"><span class="nav-number">3.3.</span> <span class="nav-text">3.TTL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-KEEP-DELETED-CELLS"><span class="nav-number">3.4.</span> <span class="nav-text">4.KEEP_DELETED_CELLS</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存和批处理"><span class="nav-number">4.</span> <span class="nav-text">缓存和批处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#扫描器缓存"><span class="nav-number">5.</span> <span class="nav-text">扫描器缓存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#批量扫描是面向列级别"><span class="nav-number">6.</span> <span class="nav-text">批量扫描是面向列级别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#测试缓存和批处理"><span class="nav-number">6.1.</span> <span class="nav-text">测试缓存和批处理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#f1-id-1490595148588-1-f2-addr-1490595182150-hebei-f2-age-1490595174760-12"><span class="nav-number">7.</span> <span class="nav-text">f1/id/1490595148588=1,f2/addr/1490595182150=hebei,f2/age/1490595174760=12,</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#f1-id-1490595196410-2-f1-name-1490595213090-tom2-1-f2-addr-1490595264734-tangshan"><span class="nav-number">8.</span> <span class="nav-text">f1/id/1490595196410=2,f1/name/1490595213090=tom2.1,f2/addr/1490595264734=tangshan,</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#f1-age-1490595295427-14-f1-id-1490595281251-3-f1-name-1490595289587-tom3-1"><span class="nav-number">9.</span> <span class="nav-text">f1/age/1490595295427=14,f1/id/1490595281251=3,f1/name/1490595289587=tom3.1,</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Filter过滤器"><span class="nav-number">10.</span> <span class="nav-text">Filter过滤器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂查询"><span class="nav-number">10.1.</span> <span class="nav-text">复杂查询</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#复杂查询实现方式-FilterList"><span class="nav-number">11.</span> <span class="nav-text">复杂查询实现方式:FilterList</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#计数器"><span class="nav-number">12.</span> <span class="nav-text">计数器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#coprocessor"><span class="nav-number">13.</span> <span class="nav-text">coprocessor</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

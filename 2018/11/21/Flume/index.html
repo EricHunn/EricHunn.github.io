@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="无心是一首歌" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="hbaseNoSQL. 面向列族。 随机定位 实时读写。 分布式 可伸缩 HA zookeeper                         version(列族) rowkey/famil+qualifier/timestamp = value  rowkey        //唯一性,散列性,定长,不要太长,加盐.  二次索引 byte[] hive离线计算。 MR:MapReduceh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flume">
+<meta property="og:url" content="http://erichunn.github.io/2018/11/21/Flume/index.html">
+<meta property="og:site_name" content="无心是一首歌">
+<meta property="og:description" content="hbaseNoSQL. 面向列族。 随机定位 实时读写。 分布式 可伸缩 HA zookeeper                         version(列族) rowkey/famil+qualifier/timestamp = value  rowkey        //唯一性,散列性,定长,不要太长,加盐.  二次索引 byte[] hive离线计算。 MR:MapReduceh">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.imgur.com/DbIixF1.png">
+<meta property="og:updated_time" content="2018-11-21T14:33:08.991Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flume">
+<meta name="twitter:description" content="hbaseNoSQL. 面向列族。 随机定位 实时读写。 分布式 可伸缩 HA zookeeper                         version(列族) rowkey/famil+qualifier/timestamp = value  rowkey        //唯一性,散列性,定长,不要太长,加盐.  二次索引 byte[] hive离线计算。 MR:MapReduceh">
+<meta name="twitter:image" content="https://i.imgur.com/DbIixF1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://erichunn.github.io/2018/11/21/Flume/"/>
+
+
+
+
+
+  <title>Flume | 无心是一首歌</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?02fe19ac065353167cab1b453f2909ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">无心是一首歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于我">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-站点地图">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-腾讯公益">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            腾讯公益
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/21/Flume/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Flume</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-21T21:41:16+08:00">
+                2018-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="hbase"><a href="#hbase" class="headerlink" title="hbase"></a>hbase</h2><pre><code>NoSQL.
+面向列族。
+随机定位
+实时读写。
+分布式
+可伸缩
+HA
+zookeeper
+                        version(列族)
+rowkey/famil+qualifier/timestamp = value
+
+rowkey        //唯一性,散列性,定长,不要太长,加盐.
+
+二次索引
+byte[]
+</code></pre><h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>离线计算。
+</code></pre><h2 id="MR-MapReduce"><a href="#MR-MapReduce" class="headerlink" title="MR:MapReduce"></a>MR:MapReduce</h2><pre><code>hadoop : 
+DBWritable + WritableComparable :
+</code></pre><h2 id="将hbase的表影射到hive上，使用hive的查询语句。"><a href="#将hbase的表影射到hive上，使用hive的查询语句。" class="headerlink" title="将hbase的表影射到hive上，使用hive的查询语句。"></a>将hbase的表影射到hive上，使用hive的查询语句。</h2><pre><code>CREATE TABLE t11(key string, name string) STORED BY &apos;org.apache.hadoop.hive.hbase.HBaseStorageHandler&apos; 
+WITH SERDEPROPERTIES (&quot;hbase.columns.mapping&quot; = &quot;:key,cf:name&quot;)
+TBLPROPERTIES(&quot;hbase.table.name&quot; = &quot;ns1:t11&quot;);    
+
+select count(*) from mydb.t11 ;
+</code></pre><h2 id="flume"><a href="#flume" class="headerlink" title="flume"></a>flume</h2><p>Flume的优点<br>以下是使用Flume的优点：<br>使用Apache Flume，我们可以将数据存储到任何集中存储中<br>（HBase，HDFS）。<br>当传入数据的速率超过可以写入数据的速率时<br>目的地，Flume充当数据生产者和数据生成者之间的中介<br>集中存储并在它们之间提供稳定的数据流。<br>Flume提供了上下文路由的功能。</p>
+<ol>
+<li><p>FLUME - 介绍App Flume<br>2<br>Flume中的交易是基于渠道的，其中两个交易（一个发件人<br>为每条消息维护一个接收器。它保证了可靠的信息<br>交货。<br>Flume具有可靠性，容错性，可扩展性，可管理性和可定制性。<br>水槽的特点<br>Flume的一些显着特征如下：<br>Flume将来自多个Web服务器的日志数据提取到集中存储（HDFS，<br>HBase）有效。<br>使用Flume，我们可以立即将来自多个服务器的数据导入Hadoop。<br>与日志文件一起，Flume还用于导入大量事件数据<br>由Facebook和Twitter等社交网站和电子商务制作<br>亚马逊和Flipkart等网站。<br>Flume支持大量源和目标类型。<br>Flume支持多跳流，扇入扇出流，上下文路由等。<br>水槽可以水平缩放<br> 收集、移动、聚合大量日志数据的服务。<br> 基于流数据的架构，用于在线日志分析。</p>
+<p> 基于事件。<br> 在生产和消费者之间启动协调作用。<br> 提供了事务保证，确保消息一定被分发。<br> Source 多种<br> sink多种.</p>
+<p> multihop        //多级跃点.可以从一个flume到另外一个flume</p>
+<p> 水平扩展:        //加节点，</p>
+<p> 竖直扩展        //增加硬件。</p>
+</li>
+</ol>
+<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><pre><code>接受数据，类型有多种。
+</code></pre><h2 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h2><pre><code>临时存放地，对Source中来的数据进行缓冲，直到sink消费掉。
+</code></pre><h2 id="Sink"><a href="#Sink" class="headerlink" title="Sink"></a>Sink</h2><pre><code>从channel提取数据存放到中央化存储(hadoop / hbase)。
+</code></pre><p><img src="https://i.imgur.com/DbIixF1.png" alt=""></p>
+<p>实时产生的数据，</p>
+<p>Flume的优点<br>以下是使用Flume的优点：<br>使用Apache Flume，我们可以将数据存储到任何集中存储中<br>（HBase，HDFS）。<br>当传入数据的速率超过可以写入数据的速率时<br>目的地，Flume充当数据生产者和数据生成者之间的中介<br>集中存储并在它们之间提供稳定的数据流。<br>Flume提供了上下文路由的功能。</p>
+<ol>
+<li>FLUME - 介绍App Flume<br>2<br>Flume中的交易是基于渠道的，其中两个交易（一个发件人<br>为每条消息维护一个接收器。它保证了可靠的信息<br>交货。<br>Flume具有可靠性，容错性，可扩展性，可管理性和可定制性。<br>水槽的特点<br>Flume的一些显着特征如下：<br>Flume将来自多个Web服务器的日志数据提取到集中存储（HDFS，<br>HBase）有效。<br>使用Flume，我们可以立即将来自多个服务器的数据导入Hadoop。<br>与日志文件一起，Flume还用于导入大量事件数据<br>由Facebook和Twitter等社交网站和电子商务制作<br>亚马逊和Flipkart等网站。<br>Flume支持大量源和目标类型。<br>Flume支持多跳流，扇入扇出流，上下文路由等。<br>水槽可以水平缩放</li>
+</ol>
+<h2 id="安装flume"><a href="#安装flume" class="headerlink" title="安装flume"></a>安装flume</h2><pre><code>1.下载
+2.tar
+3.环境变量
+4.验证flume是否成功
+    $&gt;flume-ng version            //next generation.下一代.
+</code></pre><h2 id="配置flume"><a href="#配置flume" class="headerlink" title="配置flume"></a>配置flume</h2><pre><code>1.创建配置文件
+[/soft/flume/conf/hello.conf]
+#声明三种组件
+a1.sources = r1
+a1.channels = c1
+a1.sinks = k1
+
+#定义source信息
+a1.sources.r1.type=netcat
+a1.sources.r1.bind=localhost
+a1.sources.r1.port=8888
+
+#定义sink信息
+a1.sinks.k1.type=logger
+
+#定义channel信息
+a1.channels.c1.type=memory
+
+#绑定在一起
+a1.sources.r1.channels=c1
+a1.sinks.k1.channel=c1
+
+2.运行
+    a)启动flume agent
+        $&gt;bin/flume-ng agent -f ../conf/helloworld.conf -n a1 -Dflume.root.logger=INFO,console
+    b)启动nc的客户端
+        $&gt;nc localhost 8888
+        $nc&gt;hello world
+
+    c)在flume的终端输出hello world.
+</code></pre><h2 id="安装nc"><a href="#安装nc" class="headerlink" title="安装nc"></a>安装nc</h2><pre><code>$&gt;sudo yum install nmap-ncat.x86_64
+</code></pre><h2 id="清除仓库缓存"><a href="#清除仓库缓存" class="headerlink" title="清除仓库缓存"></a>清除仓库缓存</h2><pre><code>$&gt;修改ali.repo --&gt; ali.repo.bak文件。
+$&gt;sudo yum clean all
+$&gt;sudo yum makecache
+
+#例如阿里基本源 
+$&gt;sudo wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo 
+
+#阿里epel源
+$&gt;sudo wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+</code></pre><h2 id="flume-source"><a href="#flume-source" class="headerlink" title="flume source"></a>flume source</h2><pre><code>1.netcat
+    nc ..
+
+2.exec
+    实时日志收集,实时收集日志。
+    a1.sources = r1
+    a1.sinks = k1
+    a1.channels = c1
+
+    a1.sources.r1.type=exec
+    a1.sources.r1.command=tail -F /home/centos/test.txt
+
+    a1.sinks.k1.type=logger
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels=c1
+    a1.sinks.k1.channel=c1
+
+3.批量收集
+    监控一个文件夹，静态文件。
+    收集完之后，会重命名文件成新文件。.compeleted.
+    a)配置文件
+        [spooldir_r.conf]
+        a1.sources = r1
+        a1.channels = c1
+        a1.sinks = k1
+
+        a1.sources.r1.type=spooldir
+        a1.sources.r1.spoolDir=/home/centos/spool
+        a1.sources.r1.fileHeader=true
+
+        a1.sinks.k1.type=logger
+
+        a1.channels.c1.type=memory
+
+        a1.sources.r1.channels=c1
+        a1.sinks.k1.channel=c1
+
+    b)创建目录
+        $&gt;mkdir ~/spool
+
+    c)启动flume
+        $&gt;bin/flume-ng agent -f ../conf/helloworld.conf -n a1 -Dflume.root.logger=INFO,console
+
+4.序列source
+    [seq]
+    a1.sources = r1
+    a1.channels = c1
+    a1.sinks = k1
+
+    a1.sources.r1.type=seq
+    a1.sources.r1.totalEvents=1000
+
+    a1.sinks.k1.type=logger
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels=c1
+    a1.sinks.k1.channel=c1
+
+    [运行]
+    $&gt;bin/flume-ng agent -f ../conf/helloworld.conf -n a1 -Dflume.root.logger=INFO,console
+
+5.StressSource
+    a1.sources = stresssource-1
+    a1.channels = memoryChannel-1
+    a1.sources.stresssource-1.type = org.apache.flume.source.StressSource
+    a1.sources.stresssource-1.size = 10240
+    a1.sources.stresssource-1.maxTotalEvents = 1000000
+    a1.sources.stresssource-1.channels = memoryChannel-1
+</code></pre><h2 id="flume-sink"><a href="#flume-sink" class="headerlink" title="flume sink"></a>flume sink</h2><pre><code>1.hdfs
+    a1.sources = r1
+    a1.channels = c1
+    a1.sinks = k1
+
+    a1.sources.r1.type = netcat
+    a1.sources.r1.bind = localhost
+    a1.sources.r1.port = 8888
+
+    a1.sinks.k1.type = hdfs
+    a1.sinks.k1.hdfs.path = /flume/events/%y-%m-%d/%H/%M/%S
+    a1.sinks.k1.hdfs.filePrefix = events-
+
+    #是否是产生新目录,每十分钟产生一个新目录,一般控制的目录方面。
+    #2017-12-12 --&gt;
+    #2017-12-12 --&gt;%H%M%S
+
+    a1.sinks.k1.hdfs.round = true            
+    a1.sinks.k1.hdfs.roundValue = 10
+    a1.sinks.k1.hdfs.roundUnit = second
+
+    a1.sinks.k1.hdfs.useLocalTimeStamp=true
+
+    #是否产生新文件。
+    a1.sinks.k1.hdfs.rollInterval=10
+    a1.sinks.k1.hdfs.rollSize=10
+    a1.sinks.k1.hdfs.rollCount=3
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+
+2.hive
+    略
+
+3.hbase
+    a1.sources = r1
+    a1.channels = c1
+    a1.sinks = k1
+
+    a1.sources.r1.type = netcat
+    a1.sources.r1.bind = localhost
+    a1.sources.r1.port = 8888
+
+    a1.sinks.k1.type = hbase
+    a1.sinks.k1.table = ns1:t12
+    a1.sinks.k1.columnFamily = f1
+    a1.sinks.k1.serializer = org.apache.flume.sink.hbase.RegexHbaseEventSerializer
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+
+4.kafka
+</code></pre><h2 id="使用avroSource和AvroSink实现跃点agent处理"><a href="#使用avroSource和AvroSink实现跃点agent处理" class="headerlink" title="使用avroSource和AvroSink实现跃点agent处理"></a>使用avroSource和AvroSink实现跃点agent处理</h2><pre><code>1.创建配置文件
+    [avro_hop.conf]
+    #a1
+    a1.sources = r1
+    a1.sinks= k1
+    a1.channels = c1
+
+    a1.sources.r1.type=netcat
+    a1.sources.r1.bind=localhost
+    a1.sources.r1.port=8888
+
+    a1.sinks.k1.type = avro
+    a1.sinks.k1.hostname=localhost
+    a1.sinks.k1.port=9999
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+
+    #a2
+    a2.sources = r2
+    a2.sinks= k2
+    a2.channels = c2
+
+    a2.sources.r2.type=avro
+    a2.sources.r2.bind=localhost
+    a2.sources.r2.port=9999
+
+    a2.sinks.k2.type = logger
+
+    a2.channels.c2.type=memory
+
+    a2.sources.r2.channels = c2
+    a2.sinks.k2.channel = c2
+
+2.启动a2
+    $&gt;flume-ng agent -f /soft/flume/conf/avro_hop.conf -n a2 -Dflume.root.logger=INFO,console
+
+3.验证a2
+    $&gt;netstat -anop | grep 9999
+
+
+4.启动a1
+    $&gt;flume-ng agent -f /soft/flume/conf/avro_hop.conf -n a1
+
+5.验证a1
+    $&gt;netstat -anop | grep 8888
+</code></pre><h2 id="channel"><a href="#channel" class="headerlink" title="channel"></a>channel</h2><pre><code>1.MemoryChannel
+    略
+2.FileChannel
+</code></pre><p>a1.sources = r1<br>a1.sinks= k1<br>a1.channels = c1</p>
+<p>a1.sources.r1.type=netcat<br>a1.sources.r1.bind=localhost<br>a1.sources.r1.port=8888</p>
+<p>a1.sinks.k1.type=logger</p>
+<pre><code>a1.channels.c1.type = file
+a1.channels.c1.checkpointDir = /home/centos/flume/fc_check
+a1.channels.c1.dataDirs = /home/centos/flume/fc_data
+</code></pre><p>a1.sources.r1.channels=c1<br>a1.sinks.k1.channel=c1</p>
+<h2 id="可溢出文件通道"><a href="#可溢出文件通道" class="headerlink" title="可溢出文件通道"></a>可溢出文件通道</h2><p>a1.channels = c1<br>a1.channels.c1.type = SPILLABLEMEMORY</p>
+<p>#0表示禁用内存通道，等价于文件通道<br>a1.channels.c1.memoryCapacity = 0</p>
+<p>#0,禁用文件通道，等价内存通道。<br>a1.channels.c1.overflowCapacity = 2000</p>
+<p>a1.channels.c1.byteCapacity = 800000<br>a1.channels.c1.checkpointDir = /user/centos/flume/fc_check<br>a1.channels.c1.dataDirs = /user/centos/flume/fc_data</p>
+<h2 id="创建Flume模块"><a href="#创建Flume模块" class="headerlink" title="创建Flume模块"></a>创建Flume模块</h2><pre><code>1.添加pom.xml
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;FluemDemo&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.flume&lt;/groupId&gt;
+                &lt;artifactId&gt;flume-ng-core&lt;/artifactId&gt;
+                &lt;version&gt;1.7.0&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;junit&lt;/groupId&gt;
+                &lt;artifactId&gt;junit&lt;/artifactId&gt;
+                &lt;version&gt;4.11&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/21/面试理论知识/" rel="next" title="面试理论知识">
+                <i class="fa fa-chevron-left"></i> 面试理论知识
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/22/Hbase第四天/" rel="prev" title="Hbase第四天">
+                Hbase第四天 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Eric Hunn" />
+            
+              <p class="site-author-name" itemprop="name">Eric Hunn</p>
+              <p class="site-description motion-element" itemprop="description">大数据|动漫迷|科技控</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/erichunn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:erichunn.me@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/2944687303/home?wvr=5" target="_blank" title="Webibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Webibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hbase"><span class="nav-number">1.</span> <span class="nav-text">hbase</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hive"><span class="nav-number">2.</span> <span class="nav-text">hive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MR-MapReduce"><span class="nav-number">3.</span> <span class="nav-text">MR:MapReduce</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将hbase的表影射到hive上，使用hive的查询语句。"><span class="nav-number">4.</span> <span class="nav-text">将hbase的表影射到hive上，使用hive的查询语句。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flume"><span class="nav-number">5.</span> <span class="nav-text">flume</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Source"><span class="nav-number">6.</span> <span class="nav-text">Source</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Channel"><span class="nav-number">7.</span> <span class="nav-text">Channel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sink"><span class="nav-number">8.</span> <span class="nav-text">Sink</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装flume"><span class="nav-number">9.</span> <span class="nav-text">安装flume</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置flume"><span class="nav-number">10.</span> <span class="nav-text">配置flume</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装nc"><span class="nav-number">11.</span> <span class="nav-text">安装nc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#清除仓库缓存"><span class="nav-number">12.</span> <span class="nav-text">清除仓库缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flume-source"><span class="nav-number">13.</span> <span class="nav-text">flume source</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flume-sink"><span class="nav-number">14.</span> <span class="nav-text">flume sink</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用avroSource和AvroSink实现跃点agent处理"><span class="nav-number">15.</span> <span class="nav-text">使用avroSource和AvroSink实现跃点agent处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#channel"><span class="nav-number">16.</span> <span class="nav-text">channel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可溢出文件通道"><span class="nav-number">17.</span> <span class="nav-text">可溢出文件通道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Flume模块"><span class="nav-number">18.</span> <span class="nav-text">创建Flume模块</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+	  
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eric Hunn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

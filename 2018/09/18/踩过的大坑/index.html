@@ -100,7 +100,9 @@
 <meta property="og:image" content="https://i.imgur.com/KSFu5qm.png">
 <meta property="og:image" content="https://i.imgur.com/ZIdGyjE.png">
 <meta property="og:image" content="https://i.imgur.com/hPEfTo7.png">
-<meta property="og:updated_time" content="2018-11-18T08:44:25.439Z">
+<meta property="og:image" content="https://i.imgur.com/d6mKKyY.png">
+<meta property="og:image" content="https://i.imgur.com/pu7CMME.png">
+<meta property="og:updated_time" content="2018-11-19T13:24:17.600Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux基础基础—————踩过的大坑">
 <meta name="twitter:description" content="问题：图形界面浏览器能访问外网，但是ping不通很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。 解决：将网络中心里面改成这样子就行了。 具体的网站解释：https://blog.csdn.net/Arnold_lee_yc/article/details/74785995  不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。所以本">
@@ -534,6 +536,15 @@ InvalidObjectException(message:All is already granted by admin)
 <p><img src="https://i.imgur.com/hPEfTo7.png" alt=""></p>
 <hr>
 <p>在使用java api连接hbase的时候出现在IDEA里面卡死的情况，并没有什么其他的异常也不报错。原因是因为本地windows的hosts的名字不对，要修改和centos对应的hosts即可。</p>
+<hr>
+<h1 id="VMware一个50块钱买来的知识"><a href="#VMware一个50块钱买来的知识" class="headerlink" title="VMware一个50块钱买来的知识"></a>VMware一个50块钱买来的知识</h1><p>在使用VMware的时候，用360清理的时候360网络修复会自动将网络的IPV4的地址改为空：</p>
+<p>如图将之修改为192.168.192.2和255.255.255.0即可。</p>
+<p><img src="https://i.imgur.com/d6mKKyY.png" alt=""></p>
+<hr>
+<p>坑爹的错误：</p>
+<p><img src="https://i.imgur.com/pu7CMME.png" alt=""></p>
+<p>在上图的情下，看见下面的mybtis-spring是依赖于mybatis3.1.0，而上面有一个跟他一模一样的包，所以到下面这块，下面的这个版本的包就看不出来了。所以如果有的类仅仅是在下面这个版本下才有的，需要把上面的第一个包先删除掉。因为它只显示第一个依赖的包</p>
+<hr>
 
       
     </div>
@@ -699,7 +710,7 @@ InvalidObjectException(message:All is already granted by admin)
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -797,7 +808,7 @@ InvalidObjectException(message:All is already granted by admin)
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题：图形界面浏览器能访问外网，但是ping不通"><span class="nav-number">1.</span> <span class="nav-text">问题：图形界面浏览器能访问外网，但是ping不通</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装VMtools工具"><span class="nav-number">2.</span> <span class="nav-text">安装VMtools工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#克隆机器后网卡设置"><span class="nav-number">3.</span> <span class="nav-text">克隆机器后网卡设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置无密登陆"><span class="nav-number">4.</span> <span class="nav-text">配置无密登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多次format"><span class="nav-number">5.</span> <span class="nav-text">多次format</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在windows上跑mr"><span class="nav-number">6.</span> <span class="nav-text">在windows上跑mr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA"><span class="nav-number"></span> <span class="nav-text">IDEA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于Integer-parseInt"><span class="nav-number"></span> <span class="nav-text">关于Integer,parseInt</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在编译源码包的问题"><span class="nav-number"></span> <span class="nav-text">在编译源码包的问题</span></a></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题：图形界面浏览器能访问外网，但是ping不通"><span class="nav-number">1.</span> <span class="nav-text">问题：图形界面浏览器能访问外网，但是ping不通</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装VMtools工具"><span class="nav-number">2.</span> <span class="nav-text">安装VMtools工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#克隆机器后网卡设置"><span class="nav-number">3.</span> <span class="nav-text">克隆机器后网卡设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置无密登陆"><span class="nav-number">4.</span> <span class="nav-text">配置无密登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多次format"><span class="nav-number">5.</span> <span class="nav-text">多次format</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在windows上跑mr"><span class="nav-number">6.</span> <span class="nav-text">在windows上跑mr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA"><span class="nav-number"></span> <span class="nav-text">IDEA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于Integer-parseInt"><span class="nav-number"></span> <span class="nav-text">关于Integer,parseInt</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在编译源码包的问题"><span class="nav-number"></span> <span class="nav-text">在编译源码包的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware一个50块钱买来的知识"><span class="nav-number"></span> <span class="nav-text">VMware一个50块钱买来的知识</span></a></div>
             
 
           </div>
