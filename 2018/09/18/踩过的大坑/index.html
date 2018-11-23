@@ -102,7 +102,10 @@
 <meta property="og:image" content="https://i.imgur.com/hPEfTo7.png">
 <meta property="og:image" content="https://i.imgur.com/d6mKKyY.png">
 <meta property="og:image" content="https://i.imgur.com/pu7CMME.png">
-<meta property="og:updated_time" content="2018-11-19T13:24:17.600Z">
+<meta property="og:image" content="https://i.imgur.com/orMc2mQ.png">
+<meta property="og:image" content="https://i.imgur.com/HanPkpI.png">
+<meta property="og:image" content="https://i.imgur.com/tdvFJR3.png">
+<meta property="og:updated_time" content="2018-11-22T13:49:30.808Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux基础基础—————踩过的大坑">
 <meta name="twitter:description" content="问题：图形界面浏览器能访问外网，但是ping不通很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。 解决：将网络中心里面改成这样子就行了。 具体的网站解释：https://blog.csdn.net/Arnold_lee_yc/article/details/74785995  不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。所以本">
@@ -545,6 +548,16 @@ InvalidObjectException(message:All is already granted by admin)
 <p><img src="https://i.imgur.com/pu7CMME.png" alt=""></p>
 <p>在上图的情下，看见下面的mybtis-spring是依赖于mybatis3.1.0，而上面有一个跟他一模一样的包，所以到下面这块，下面的这个版本的包就看不出来了。所以如果有的类仅仅是在下面这个版本下才有的，需要把上面的第一个包先删除掉。因为它只显示第一个依赖的包</p>
 <hr>
+<p>关于360网络修复的问题，导致虚拟机无法Ping外网<br>由于360网络修复的时候修复了一个是win的v8的网络设置，一个是他修改了vmware这个软件的网络配置。</p>
+<p>解决办法：还原VMware的网络设置。</p>
+<p><img src="https://i.imgur.com/orMc2mQ.png" alt=""></p>
+<hr>
+<h1 id="关于虚拟机源，和安装nc瑞士军刀的问题："><a href="#关于虚拟机源，和安装nc瑞士军刀的问题：" class="headerlink" title="关于虚拟机源，和安装nc瑞士军刀的问题："></a>关于虚拟机源，和安装nc瑞士军刀的问题：</h1><p>首先说源：怎么安装阿里源<br>关于阿里源：<a href="https://opsx.alibaba.com/mirror" target="_blank" rel="noopener">https://opsx.alibaba.com/mirror</a></p>
+<p>阿里源安装办法：</p>
+<p><img src="https://i.imgur.com/HanPkpI.png" alt=""></p>
+<p>然后那个淘宝店主有安装了一个自动帮助配置源的一个软件：<br>他说如果nc不在这个里面的话就用这个命令：<br>用yum  install  -y epel-releases，但是最后不是用这个软件解决的。</p>
+<p>然后就是yum provides */nc<br>用这个命令先找到有关于nc的东西，然后找到这个源里面的关于nc的安装包，先要找到这个安装包的名字，然后才好安装。</p>
+<p>就是下面这样先找到。<br><img src="https://i.imgur.com/tdvFJR3.png" alt=""><br>然后用yum install即可。</p>
 
       
     </div>
@@ -808,7 +821,7 @@ InvalidObjectException(message:All is already granted by admin)
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题：图形界面浏览器能访问外网，但是ping不通"><span class="nav-number">1.</span> <span class="nav-text">问题：图形界面浏览器能访问外网，但是ping不通</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装VMtools工具"><span class="nav-number">2.</span> <span class="nav-text">安装VMtools工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#克隆机器后网卡设置"><span class="nav-number">3.</span> <span class="nav-text">克隆机器后网卡设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置无密登陆"><span class="nav-number">4.</span> <span class="nav-text">配置无密登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多次format"><span class="nav-number">5.</span> <span class="nav-text">多次format</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在windows上跑mr"><span class="nav-number">6.</span> <span class="nav-text">在windows上跑mr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA"><span class="nav-number"></span> <span class="nav-text">IDEA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于Integer-parseInt"><span class="nav-number"></span> <span class="nav-text">关于Integer,parseInt</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在编译源码包的问题"><span class="nav-number"></span> <span class="nav-text">在编译源码包的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware一个50块钱买来的知识"><span class="nav-number"></span> <span class="nav-text">VMware一个50块钱买来的知识</span></a></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题：图形界面浏览器能访问外网，但是ping不通"><span class="nav-number">1.</span> <span class="nav-text">问题：图形界面浏览器能访问外网，但是ping不通</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装VMtools工具"><span class="nav-number">2.</span> <span class="nav-text">安装VMtools工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#克隆机器后网卡设置"><span class="nav-number">3.</span> <span class="nav-text">克隆机器后网卡设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置无密登陆"><span class="nav-number">4.</span> <span class="nav-text">配置无密登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多次format"><span class="nav-number">5.</span> <span class="nav-text">多次format</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在windows上跑mr"><span class="nav-number">6.</span> <span class="nav-text">在windows上跑mr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA"><span class="nav-number"></span> <span class="nav-text">IDEA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于Integer-parseInt"><span class="nav-number"></span> <span class="nav-text">关于Integer,parseInt</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在编译源码包的问题"><span class="nav-number"></span> <span class="nav-text">在编译源码包的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware一个50块钱买来的知识"><span class="nav-number"></span> <span class="nav-text">VMware一个50块钱买来的知识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于虚拟机源，和安装nc瑞士军刀的问题："><span class="nav-number"></span> <span class="nav-text">关于虚拟机源，和安装nc瑞士军刀的问题：</span></a></div>
             
 
           </div>

@@ -88,10 +88,13 @@
 <meta property="og:site_name" content="无心是一首歌">
 <meta property="og:description" content="hbase协处理器. Observer            //触发器,基于事件激活的。 Endpoint            //存储过程,客户端调用。  RegionObserver        //system --&amp;gt; user[加载顺序]  100  00-99  callerId - 201703 : hashcode % 100 = 00-99  01,139xxxx,13">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-22T01:46:40.674Z">
+<meta property="og:image" content="https://i.imgur.com/Zt5A1OI.png">
+<meta property="og:image" content="https://i.imgur.com/QLxuFNg.png">
+<meta property="og:updated_time" content="2018-11-23T06:59:06.163Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hbase第四天">
 <meta name="twitter:description" content="hbase协处理器. Observer            //触发器,基于事件激活的。 Endpoint            //存储过程,客户端调用。  RegionObserver        //system --&amp;gt; user[加载顺序]  100  00-99  callerId - 201703 : hashcode % 100 = 00-99  01,139xxxx,13">
+<meta name="twitter:image" content="https://i.imgur.com/Zt5A1OI.png">
 
 
 
@@ -418,7 +421,10 @@ xx,callerId,callTime,calleeId
 
 startkey = xx,19626675332,
 startkey = xx,19626675333,
-</code></pre><h2 id="通化记录"><a href="#通化记录" class="headerlink" title="通化记录"></a>通化记录</h2><pre><code>1.创建表
+</code></pre><h1 id="对通话记录表的设计：（具体在HBase的设计原则2）"><a href="#对通话记录表的设计：（具体在HBase的设计原则2）" class="headerlink" title="对通话记录表的设计：（具体在HBase的设计原则2）"></a>对通话记录表的设计：（具体在HBase的设计原则2）</h1><p><img src="https://i.imgur.com/Zt5A1OI.png" alt=""></p>
+<p>对于首先创建的主叫的表是上面这张表，在查询主叫的时候只需要指定xx，主叫时间,时间片。即可。但是查询被叫的时候就不行了。几乎要全表扫描。用00,138xx,2017010101,139xxx这样查询。所以每次向这个表写记录的时候，我们都知道被叫是谁，如果知道被叫的话。我们可以在设计一张表，叫calleeLog,他的rowkey有calleid，time,callerid构成。被叫表存的value存的是主叫表rowkey里面的被叫。然后根据这个查到主叫表后面的内容。但是如果只想知道谁给你打的电话，所以在被叫表的rowkey里面加了一个callerid，如果想查询谁给你打了电话，就在被叫表rowkey里面加了一个callerid。主叫表的rowkey里面都是作为主叫出现的，被叫表里面的数据都是作为被叫出现的。主叫表的内容被叫表里没有，被叫表的内容主叫表也没有的。而且应该吧时长duration也放在里面。也就是说要把最经常使用的信息都编入rowkey里面去，能不查具体的value就尽量不查询具体的value，但是如果要查询具体的数据，什么基站，那个口啊，就是要查询主叫表里面的value的值。这个下图所示的也就是叫二次索引。在写入主叫表的时候也在往被叫表里面写入，用什么写入？也就是用协处理器来处理，怎么处理呢，就是在你写入主叫表的时候，协处理器立刻截获，然后重写里面的方法，往被叫表里面写入就可以了。所以这个就是一个电信HBase的设计原则。    </p>
+<p><img src="https://i.imgur.com/QLxuFNg.png" alt=""></p>
+<h2 id="通化记录"><a href="#通化记录" class="headerlink" title="通化记录"></a>通化记录</h2><pre><code>1.创建表
     create &apos;ns1:calllogs&apos;,&apos;f1&apos;
 
 2.创建单元测试
@@ -798,7 +804,7 @@ startkey = xx,19626675333,
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hbase"><span class="nav-number">1.</span> <span class="nav-text">hbase</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#热点"><span class="nav-number">2.</span> <span class="nav-text">热点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rowkey"><span class="nav-number">3.</span> <span class="nav-text">rowkey</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rowkey-1"><span class="nav-number">4.</span> <span class="nav-text">rowkey</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通化记录"><span class="nav-number">5.</span> <span class="nav-text">通化记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BloomFilter"><span class="nav-number">6.</span> <span class="nav-text">BloomFilter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#phonix"><span class="nav-number">7.</span> <span class="nav-text">phonix</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hbase"><span class="nav-number">1.</span> <span class="nav-text">hbase</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#热点"><span class="nav-number">2.</span> <span class="nav-text">热点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rowkey"><span class="nav-number">3.</span> <span class="nav-text">rowkey</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rowkey-1"><span class="nav-number">4.</span> <span class="nav-text">rowkey</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对通话记录表的设计：（具体在HBase的设计原则2）"><span class="nav-number"></span> <span class="nav-text">对通话记录表的设计：（具体在HBase的设计原则2）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#通化记录"><span class="nav-number">1.</span> <span class="nav-text">通化记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BloomFilter"><span class="nav-number">2.</span> <span class="nav-text">BloomFilter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#phonix"><span class="nav-number">3.</span> <span class="nav-text">phonix</span></a></li></ol></div>
             
 
           </div>
