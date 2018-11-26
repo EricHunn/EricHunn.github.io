@@ -328,6 +328,411 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/11/Avro-protobuf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/11/Avro-protobuf/" itemprop="url">Avro&protobuf</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-11T19:52:10+08:00">
+                2018-11-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Avro-Protobuf/" itemprop="url" rel="index">
+                    <span itemprop="name">Avro&Protobuf</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>数据倾斜.
+$hive&gt;SET hive.optimize.skewjoin=true;
+$hive&gt;SET hive.skewjoin.key=100000;
+$hive&gt;SET hive.groupby.skewindata=true;
+</code></pre><p>CREATE TABLE mydb.doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘,’ ;</p>
+<p>select t.word,count(*) from (select explode(split(line,’ ‘)) word from doc ) t group by t.word ;</p>
+<h2 id="java串行化"><a href="#java串行化" class="headerlink" title="java串行化"></a>java串行化</h2><h2 id="串行化系统"><a href="#串行化系统" class="headerlink" title="串行化系统"></a>串行化系统</h2><p>protobuf，协议缓冲区。</p>
+<p>在Hadoop里面的代码很多是通过相关语言自动生成的。</p>
+<p>hadoop底层的rpc都是自动生成的。</p>
+<p>java也有串行化，但是hadoop不适用，因为相对来讲比protobuf和avro复杂而且性能差一些。</p>
+<p>当吧对象写入磁盘文件或者用于网络传输的时候要把对象变成字节数组。</p>
+<p>串行化从本质上来讲是数据格式，就是一种格式，吧对象变成字节数组，也就是说所有数据都要落实到字节数组上，都需要这样，不管是影音文件还是别的文件，通过串行化吧他边恒字节数组    </p>
+<h1 id="关于Javabean"><a href="#关于Javabean" class="headerlink" title="关于Javabean:"></a>关于Javabean:</h1><p>标准javabean(pojo,plain old java object)</p>
+<p>任何一个Java类也可以叫javabean.广义上。</p>
+<p>狭义上的javabean：就是普通古老的java对象pojo:plain old java object </p>
+<p>也就是私有的属性，getset方法，空的构造函数。比如person,学生，人。都是javabean。现实生活中的名词，在开发中都被定义成一个类，也就是说的javabean。</p>
+<p>下面的代码就是一段javabean<br>    class Person{<br>        public Person(){<br>    }<br>    private String name;<br>    public  void setName(String name){<br>        this.name=name;<br>    }<br>    publc String genName(){<br>        return name; }<br>}</p>
+<h2 id="google-protobuf"><a href="#google-protobuf" class="headerlink" title="google protobuf"></a>google protobuf</h2><pre><code>1.下载google protobuf.配置环境
+    protoc-2.5.0-win32.zip
+</code></pre><p><img src="https://i.imgur.com/7QVjPjY.png" alt=""></p>
+<pre><code>1&apos;.pom.xml
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.google.protobuf&lt;/groupId&gt;
+            &lt;artifactId&gt;protobuf-java&lt;/artifactId&gt;
+            &lt;version&gt;2.5.0&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.11&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+2.设计对象
+    ...
+3.描述对象
+    package tutorial;
+    option java_package = &quot;com.example.tutorial&quot;;
+    option java_outer_classname = &quot;AddressBookProtos&quot;;
+    //这个是一个javabean，在protobuf里面叫message
+        message Person {
+        required string name = 1;
+        required int32 id = 2;
+        optional string email = 3;
+    //下面这个是一个phonetype的枚举类
+        enum PhoneType {
+            MOBILE = 0;
+            HOME = 1;
+            WORK = 2;
+        }
+    //这个也是一个javabean。
+        message PhoneNumber {
+            required string number = 1;
+            optional PhoneType type = 2 [default = HOME];
+        }
+        repeated PhoneNumber phone = 4;
+    }
+    message AddressBook {
+        repeated Person person = 1;
+    }
+
+4.编译描述
+    cmd&gt;protoc --java_out . xxx.proto
+
+5.导入源代码到项目中
+    ...
+
+6.使用对象
+    public class TestProtoBuf {
+
+        @Test
+        public void write() throws Exception{
+            AddressBookProtos.Person john = AddressBookProtos.Person.newBuilder()
+                    .setId(12345)
+                    .setName(&quot;tomas&quot;)
+                    .setEmail(&quot;123@123.123&quot;)
+                    .addPhone(AddressBookProtos.Person.PhoneNumber.newBuilder()
+                            .setNumber(&quot;+351 999 999 999&quot;)
+                            .setType(AddressBookProtos.Person.PhoneType.HOME)
+                            .build())
+                    .build();
+            john.writeTo(new FileOutputStream(&quot;d:/prototbuf.data&quot;));
+        }
+
+        @Test
+        public void read() throws Exception{
+            AddressBookProtos.Person john = AddressBookProtos.Person.parseFrom(new FileInputStream(&quot;d:/prototbuf.data&quot;));
+            System.out.println(john.getName());
+        }
+    }
+</code></pre><p>上一段是用Protobuf进行编译和反编译的过程。然后下面这段图片是用java进行编译和反编译的过程：</p>
+<p><img src="https://i.imgur.com/8rzRjOu.png" alt=""></p>
+<h2 id="xml"><a href="#xml" class="headerlink" title="xml"></a>xml</h2><pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;persons&gt;
+    &lt;person id=&quot;&quot; name=&quot;&quot;&gt;
+        &lt;age&gt;12&lt;/age&gt;
+    &lt;/person&gt;
+&lt;/person&gt;
+</code></pre><h2 id="json"><a href="#json" class="headerlink" title="json"></a>json</h2><pre><code>[{
+    &quot;id&quot; : 1,
+    &quot;nmae&quot; : &quot;tom&quot;,
+    &quot;age&quot; : 20
+},
+{
+    &quot;id&quot; : 2,
+    &quot;nmae&quot; : &quot;tomas&quot;,
+    &quot;age&quot; : 30
+}
+]
+</code></pre><h2 id="avro-doug-cutting"><a href="#avro-doug-cutting" class="headerlink" title="avro (doug cutting)"></a>avro (doug cutting)</h2><pre><code>1.数据串行化系统
+2.自描述语言.
+    数据结构和数据都存在文件中。跨语言。
+    使用json格式存储数据。
+3.可压缩 + 可切割。
+4.使用avro
+    a)定义schema
+    b)编译schema，生成java类
+        {    //名字空间是这个，然后类型，然后名字，然后是字段数组
+            &quot;namespace&quot;: &quot;tutorialspoint.com&quot;,
+            &quot;type&quot;: &quot;record&quot;,
+            &quot;name&quot;: &quot;emp&quot;,
+            &quot;fields&quot;: [
+                {&quot;name&quot;: &quot;name&quot;, &quot;type&quot;: &quot;string&quot;},
+                {&quot;name&quot;: &quot;id&quot;, &quot;type&quot;: &quot;int&quot;},
+                {&quot;name&quot;: &quot;salary&quot;, &quot;type&quot;: &quot;int&quot;},
+                {&quot;name&quot;: &quot;age&quot;, &quot;type&quot;: &quot;int&quot;},
+                {&quot;name&quot;: &quot;address&quot;, &quot;type&quot;: &quot;string&quot;}
+            ]
+        } 
+    c)使用java类
+        cmd&gt;java -jar avro-tools-1.7.7.jar compile schema emp.avsc .
+
+    d)单元测试
+        package com.it18zhang.avrodemo.test;
+
+        import org.apache.avro.Schema;
+        import org.apache.avro.file.DataFileReader;
+        import org.apache.avro.file.DataFileWriter;
+        import org.apache.avro.generic.GenericData;
+        import org.apache.avro.generic.GenericRecord;
+        import org.apache.avro.io.DatumWriter;
+        import org.apache.avro.specific.SpecificDatumReader;
+        import org.apache.avro.specific.SpecificDatumWriter;
+        import org.junit.Test;
+
+        import java.io.File;
+        import java.io.IOException;
+        import java.util.Iterator;
+
+        /**
+         * Created by Administrator on 2017/3/23.
+         */
+        public class TestAvro {
+
+        //    @Test
+        //    public void write() throws Exception {
+        //        //创建writer对象
+        //        SpecificDatumWriter empDatumWriter = new SpecificDatumWriter&lt;Employee&gt;(Employee.class);
+        //        //写入文件
+        //        DataFileWriter&lt;Employee&gt; empFileWriter = new DataFileWriter&lt;Employee&gt;(empDatumWriter);
+        //
+        //        //创建对象
+        //        Employee e1 = new Employee();
+        //        e1.setName(&quot;tomas&quot;);
+        //        e1.setAge(12);
+        //
+        //        //串行化数据到磁盘
+        //        empFileWriter.create(e1.getSchema(), new File(&quot;d:/avro/data/e1.avro&quot;));
+        //        empFileWriter.append(e1);
+        //        empFileWriter.append(e1);
+        //        empFileWriter.append(e1);
+        //        empFileWriter.append(e1);
+        //        //关闭流
+        //        empFileWriter.close();
+        //    }
+        //
+        //    @Test
+        //    public void read() throws Exception {
+        //        //创建writer对象
+        //        SpecificDatumReader empDatumReader = new SpecificDatumReader&lt;Employee&gt;(Employee.class);
+        //        //写入文件
+        //        DataFileReader&lt;Employee&gt; dataReader = new DataFileReader&lt;Employee&gt;(new File(&quot;d:/avro/data/e1.avro&quot;)  ,empDatumReader);
+        //        Iterator&lt;Employee&gt; it = dataReader.iterator();
+        //        while(it.hasNext()){
+        //            System.out.println(it.next().getName());
+        //        }
+        //    }
+
+            /**
+             * 直接使用schema文件进行读写，不需要编译
+             */
+            @Test
+            public void writeInSchema() throws  Exception {
+                //指定定义的avsc文件。
+                Schema schema = new Schema.Parser().parse(new File(&quot;d:/avro/emp.avsc&quot;));
+
+                //创建GenericRecord,相当于Employee
+                GenericRecord e1 = new GenericData.Record(schema);
+                //设置javabean属性
+                e1.put(&quot;Name&quot;, &quot;ramu&quot;);
+        //        e1.put(&quot;id&quot;, 001);
+        //        e1.put(&quot;salary&quot;, 30000);
+                e1.put(&quot;age&quot;, 25);
+        //        e1.put(&quot;address&quot;, &quot;chennai&quot;);
+
+                //
+                DatumWriter&lt;GenericRecord&gt; empDatumWriter = new SpecificDatumWriter&lt;GenericRecord&gt;(GenericRecord.class);
+                DataFileWriter&lt;GenericRecord&gt; empFileWriter = new DataFileWriter&lt;GenericRecord&gt;(empDatumWriter);
+                empFileWriter.create(schema,new File(&quot;d:/avro/data/e2.avro&quot;)) ;
+                empFileWriter.append(e1);
+                empFileWriter.append(e1);
+                empFileWriter.append(e1);
+                empFileWriter.append(e1);
+                empFileWriter.close();
+
+            }
+
+        }
+</code></pre><p>看一下AVSC这个编译好的avro文件里面的是什么结构：</p>
+<p>他其实是一个json格式的结构：</p>
+<p><img src="https://i.imgur.com/dKcBw8b.png" alt=""></p>
+<pre><code>非编译模式
+---------------
+    @Test
+    public void writeInSchema() throws  Exception {
+        //指定定义的avsc文件。
+        Schema schema = new Schema.Parser().parse(new File(&quot;d:/avro/emp.avsc&quot;));
+
+        //创建GenericRecord,相当于Employee
+        GenericRecord e1 = new GenericData.Record(schema);
+        //设置javabean属性
+        e1.put(&quot;name&quot;, &quot;ramu&quot;);
+//        e1.put(&quot;id&quot;, 001);
+//        e1.put(&quot;salary&quot;, 30000);
+        e1.put(&quot;age&quot;, 25);
+//        e1.put(&quot;address&quot;, &quot;chennai&quot;);
+
+        //
+        DatumWriter w1 = new SpecificDatumWriter (schema);
+        DataFileWriter w2 = new DataFileWriter(w1);
+        w2.create(schema,new File(&quot;d:/avro/data/e2.avro&quot;)) ;
+        w2.append(e1);
+        w2.append(e1);
+        w2.close();
+    }
+
+    /**
+     * 反串行avro数据
+     */
+    @Test
+    public void readInSchema() throws  Exception {
+        //指定定义的avsc文件。
+        Schema schema = new Schema.Parser().parse(new File(&quot;d:/avro/emp.avsc&quot;));
+
+        GenericRecord e1 = new GenericData.Record(schema);
+        DatumReader r1 = new SpecificDatumReader (schema);
+        DataFileReader r2 = new DataFileReader(new File(&quot;d:/avro/data/e2.avro&quot;),r1);
+        while(r2.hasNext()){
+            GenericRecord rec = (GenericRecord)r2.next();
+            System.out.println(rec.get(&quot;name&quot;));
+        }
+        r2.close();
+    }
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/11/笔记重点总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -434,127 +839,8 @@
 <hr>
 <p>几个端口2181 8080 50070  8020 16010</p>
 <hr>
-<p>在讲解hbase 第二天的动态遍历并没有看明白，也就是说Java的基础还是很薄弱的。讲解hbase一个三层循环嵌套来scan的没有弄明白</p>
+<p>在讲解hbase 第二天的动态遍历的那个三层For循环并没有看明白，也就是说Java的基础还是很薄弱的。讲解hbase一个三层循环嵌套来scan的没有弄明白。hbase的时候讲解的重点在于协处理器的理解和那个电信的一个calllogs的rowkey的设计。利用了一个二级索引的方式。这个地方的原理很重要。然后最后有一个平时用于生产的工具叫phoenix的工具，可以用类sql的语句写出来，避免了自己设二次索引。里面有大量协处理器的封装，可以直接用sql语句。这边又讲了一个hive和hbase集成的一个问题，这个直接在hive中直接写语句即可。注意看一下phoenix和hive集成的区别。</p>
 
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/11/心情日记———————2018-11-11/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/11/心情日记———————2018-11-11/" itemprop="url">心情日记———————2018.11.110</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-11T19:11:03+08:00">
-                2018-11-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
           
         
       
@@ -5098,7 +5384,7 @@ public int getPartition(ComboKey key, NullWritable nullWritable, int numPartitio
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">99</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

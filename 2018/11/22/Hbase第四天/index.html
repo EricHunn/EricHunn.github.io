@@ -90,7 +90,9 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://i.imgur.com/Zt5A1OI.png">
 <meta property="og:image" content="https://i.imgur.com/QLxuFNg.png">
-<meta property="og:updated_time" content="2018-11-23T06:59:06.163Z">
+<meta property="og:image" content="https://i.imgur.com/c0wLF4w.png">
+<meta property="og:image" content="https://i.imgur.com/Za6Pcr1.png">
+<meta property="og:updated_time" content="2018-11-24T07:00:26.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hbase第四天">
 <meta name="twitter:description" content="hbase协处理器. Observer            //触发器,基于事件激活的。 Endpoint            //存储过程,客户端调用。  RegionObserver        //system --&amp;gt; user[加载顺序]  100  00-99  callerId - 201703 : hashcode % 100 = 00-99  01,139xxxx,13">
@@ -498,7 +500,7 @@ startkey = xx,19626675333,
         }
     }
 
-4.配置hbase-site.xml并分发
+4.配置hbase-site.xml并分发分发jar包。
     &lt;property&gt;
         &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
         &lt;value&gt;com.it18zhang.hbasedemo.coprocessor.CalleeLogRegionObserver&lt;/value&gt;
@@ -506,7 +508,10 @@ startkey = xx,19626675333,
 
 5.启动hbase集群.
 </code></pre><h2 id="BloomFilter"><a href="#BloomFilter" class="headerlink" title="BloomFilter"></a>BloomFilter</h2><pre><code>布隆过滤器。
-</code></pre><h2 id="phonix"><a href="#phonix" class="headerlink" title="phonix"></a>phonix</h2><pre><code>1.安装phonix
+</code></pre><p><img src="https://i.imgur.com/c0wLF4w.png" alt=""></p>
+<p>代码如下:</p>
+<p><img src="https://i.imgur.com/Za6Pcr1.png" alt=""></p>
+<h2 id="phonix"><a href="#phonix" class="headerlink" title="phonix"></a>phonix</h2><pre><code>1.安装phonix
     a)下载apache-phoenix-4.10.0-HBase-1.2-bin.tar.gz
     b)tar
     c)复制xxx-server.jar到hbase的lib目录，并且分发,删除以前的phonixjar包。
@@ -516,9 +521,8 @@ startkey = xx,19626675333,
     $&gt;phonix/bin/.sqlline.py s202    //连接的是zk服务器
     $phonix&gt;!tables
     $phonix&gt;!help                    //查看帮助
-
-
-2.SQL Client安装
+</code></pre><p>phoenix在创建表的时候要使用大量的协处理器，他是在建表时候不区分大小写的，而且hbase不可以识别得出来他的表，但是hbase shell里面建的表他能识别。</p>
+<pre><code>2.SQL Client安装
     a)下载squirrel-sql-3.7.1-standard.jar
         该文件是安装文件，执行的安装程序。
         $&gt;jar -jar squirrel-sql-3.7.1-standard.jar
@@ -621,6 +625,10 @@ startkey = xx,19626675333,
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/25/Kafka/" rel="prev" title="Kafka">
+                Kafka <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -728,7 +736,7 @@ startkey = xx,19626675333,
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">99</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

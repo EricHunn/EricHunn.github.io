@@ -4,8 +4,74 @@
 
     
   <url>
+    <loc>http://erichunn.github.io/2018/11/25/Kafka/</loc>
+    <lastmod>2018-11-25T15:12:58.746Z</lastmod>
+    <data>
+        <display>
+        <title>Kafka</title>
+        <pubTime>2018-11-25T07:37:41.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://erichunn.github.io/2018/11/21/Flume/</loc>
+    <lastmod>2018-11-25T04:19:48.800Z</lastmod>
+    <data>
+        <display>
+        <title>Flume</title>
+        <pubTime>2018-11-21T13:41:16.000Z</pubTime>
+        
+        <tag>flume</tag>
+         
+        <tag>source</tag>
+         
+        <tag>sink</tag>
+         
+        <tag>channel</tag>
+         
+        <tag>安装flume</tag>
+         
+        <tag>avro跃点</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://erichunn.github.io/2018/11/11/%E7%AC%94%E8%AE%B0%E9%87%8D%E7%82%B9%E6%80%BB%E7%BB%93/</loc>
+    <lastmod>2018-11-24T11:52:05.763Z</lastmod>
+    <data>
+        <display>
+        <title>笔记重点总结</title>
+        <pubTime>2018-11-11T11:51:41.000Z</pubTime>
+        
+        <tag>笔记</tag>
+         
+        <tag>重点</tag>
+         
+        <tag>总结</tag>
+         
+         
+           
+             
+              <breadCrumb title="笔记总结" url="http://erichunn.github.io/categories/%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://erichunn.github.io/2018/11/22/Hbase%E7%AC%AC%E5%9B%9B%E5%A4%A9/</loc>
-    <lastmod>2018-11-23T06:59:06.163Z</lastmod>
+    <lastmod>2018-11-24T07:00:26.803Z</lastmod>
     <data>
         <display>
         <title>Hbase第四天</title>
@@ -28,21 +94,6 @@
         
         <tag>大坑</tag>
          
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://erichunn.github.io/2018/11/21/Flume/</loc>
-    <lastmod>2018-11-21T14:33:08.991Z</lastmod>
-    <data>
-        <display>
-        <title>Flume</title>
-        <pubTime>2018-11-21T13:41:16.000Z</pubTime>
-        
          
            
         </display>
@@ -75,30 +126,6 @@
         
          
            
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://erichunn.github.io/2018/11/11/%E7%AC%94%E8%AE%B0%E9%87%8D%E7%82%B9%E6%80%BB%E7%BB%93/</loc>
-    <lastmod>2018-11-20T15:53:55.971Z</lastmod>
-    <data>
-        <display>
-        <title>笔记重点总结</title>
-        <pubTime>2018-11-11T11:51:41.000Z</pubTime>
-        
-        <tag>笔记</tag>
-         
-        <tag>重点</tag>
-         
-        <tag>总结</tag>
-         
-         
-           
-             
-              <breadCrumb title="笔记总结" url="http://erichunn.github.io/categories/%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/"/>
-          
         </display>
     </data>
     </url>
@@ -260,21 +287,6 @@
              
               <breadCrumb title="Hive" url="http://erichunn.github.io/categories/Hive/"/>
           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://erichunn.github.io/2018/11/11/%E5%BF%83%E6%83%85%E6%97%A5%E8%AE%B0%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%942018-11-11/</loc>
-    <lastmod>2018-11-11T11:11:03.819Z</lastmod>
-    <data>
-        <display>
-        <title>心情日记———————2018.11.110</title>
-        <pubTime>2018-11-11T11:11:03.000Z</pubTime>
-        
-         
-           
         </display>
     </data>
     </url>

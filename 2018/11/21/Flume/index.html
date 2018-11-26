@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="flume,source,sink,channel,安装flume,avro跃点," />
 
 
 
@@ -82,6 +82,7 @@
 
 
 <meta name="description" content="hbaseNoSQL. 面向列族。 随机定位 实时读写。 分布式 可伸缩 HA zookeeper                         version(列族) rowkey/famil+qualifier/timestamp = value  rowkey        //唯一性,散列性,定长,不要太长,加盐.  二次索引 byte[] hive离线计算。 MR:MapReduceh">
+<meta name="keywords" content="flume,source,sink,channel,安装flume,avro跃点">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Flume">
 <meta property="og:url" content="http://erichunn.github.io/2018/11/21/Flume/index.html">
@@ -89,7 +90,9 @@
 <meta property="og:description" content="hbaseNoSQL. 面向列族。 随机定位 实时读写。 分布式 可伸缩 HA zookeeper                         version(列族) rowkey/famil+qualifier/timestamp = value  rowkey        //唯一性,散列性,定长,不要太长,加盐.  二次索引 byte[] hive离线计算。 MR:MapReduceh">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://i.imgur.com/DbIixF1.png">
-<meta property="og:updated_time" content="2018-11-21T14:33:08.991Z">
+<meta property="og:image" content="https://i.imgur.com/bzQZ9yK.png">
+<meta property="og:image" content="https://i.imgur.com/sb3F2lg.png">
+<meta property="og:updated_time" content="2018-11-25T04:19:48.800Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flume">
 <meta name="twitter:description" content="hbaseNoSQL. 面向列族。 随机定位 实时读写。 分布式 可伸缩 HA zookeeper                         version(列族) rowkey/famil+qualifier/timestamp = value  rowkey        //唯一性,散列性,定长,不要太长,加盐.  二次索引 byte[] hive离线计算。 MR:MapReduceh">
@@ -415,21 +418,26 @@ byte[]
 </code></pre><h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>离线计算。
 </code></pre><h2 id="MR-MapReduce"><a href="#MR-MapReduce" class="headerlink" title="MR:MapReduce"></a>MR:MapReduce</h2><pre><code>hadoop : 
 DBWritable + WritableComparable :
-</code></pre><h2 id="将hbase的表影射到hive上，使用hive的查询语句。"><a href="#将hbase的表影射到hive上，使用hive的查询语句。" class="headerlink" title="将hbase的表影射到hive上，使用hive的查询语句。"></a>将hbase的表影射到hive上，使用hive的查询语句。</h2><pre><code>CREATE TABLE t11(key string, name string) STORED BY &apos;org.apache.hadoop.hive.hbase.HBaseStorageHandler&apos; 
+</code></pre><h2 id="将hbase的表影射到hive上，使用hive的查询语句。"><a href="#将hbase的表影射到hive上，使用hive的查询语句。" class="headerlink" title="将hbase的表影射到hive上，使用hive的查询语句。"></a>将hbase的表影射到hive上，使用hive的查询语句。</h2><pre><code>CREATE TABLE mydb.t11(key string, name string) STORED BY &apos;org.apache.hadoop.hive.hbase.HBaseStorageHandler&apos; 
 WITH SERDEPROPERTIES (&quot;hbase.columns.mapping&quot; = &quot;:key,cf:name&quot;)
 TBLPROPERTIES(&quot;hbase.table.name&quot; = &quot;ns1:t11&quot;);    
 
 select count(*) from mydb.t11 ;
-</code></pre><h2 id="flume"><a href="#flume" class="headerlink" title="flume"></a>flume</h2><p>Flume的优点<br>以下是使用Flume的优点：<br>使用Apache Flume，我们可以将数据存储到任何集中存储中<br>（HBase，HDFS）。<br>当传入数据的速率超过可以写入数据的速率时<br>目的地，Flume充当数据生产者和数据生成者之间的中介<br>集中存储并在它们之间提供稳定的数据流。<br>Flume提供了上下文路由的功能。</p>
-<ol>
-<li><p>FLUME - 介绍App Flume<br>2<br>Flume中的交易是基于渠道的，其中两个交易（一个发件人<br>为每条消息维护一个接收器。它保证了可靠的信息<br>交货。<br>Flume具有可靠性，容错性，可扩展性，可管理性和可定制性。<br>水槽的特点<br>Flume的一些显着特征如下：<br>Flume将来自多个Web服务器的日志数据提取到集中存储（HDFS，<br>HBase）有效。<br>使用Flume，我们可以立即将来自多个服务器的数据导入Hadoop。<br>与日志文件一起，Flume还用于导入大量事件数据<br>由Facebook和Twitter等社交网站和电子商务制作<br>亚马逊和Flipkart等网站。<br>Flume支持大量源和目标类型。<br>Flume支持多跳流，扇入扇出流，上下文路由等。<br>水槽可以水平缩放<br> 收集、移动、聚合大量日志数据的服务。<br> 基于流数据的架构，用于在线日志分析。</p>
-<p> 基于事件。<br> 在生产和消费者之间启动协调作用。<br> 提供了事务保证，确保消息一定被分发。<br> Source 多种<br> sink多种.</p>
-<p> multihop        //多级跃点.可以从一个flume到另外一个flume</p>
-<p> 水平扩展:        //加节点，</p>
-<p> 竖直扩展        //增加硬件。</p>
-</li>
-</ol>
-<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><pre><code>接受数据，类型有多种。
+</code></pre><h2 id="flume"><a href="#flume" class="headerlink" title="flume"></a>flume</h2><pre><code>收集、移动、聚合大量日志数据的服务。
+基于流数据的架构，用于在线日志分析。
+
+基于事件。
+在生产和消费者之间启动协调作用。
+提供了事务保证，确保消息一定被分发。
+Source 多种
+sink多种.
+
+multihop        //多级跃点.可以从一个flume到另外一个flume
+
+水平扩展:        //加节点，
+
+竖直扩展        //增加硬件。
+</code></pre><h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><pre><code>接受数据，类型有多种。
 </code></pre><h2 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h2><pre><code>临时存放地，对Source中来的数据进行缓冲，直到sink消费掉。
 </code></pre><h2 id="Sink"><a href="#Sink" class="headerlink" title="Sink"></a>Sink</h2><pre><code>从channel提取数据存放到中央化存储(hadoop / hbase)。
 </code></pre><p><img src="https://i.imgur.com/DbIixF1.png" alt=""></p>
@@ -441,7 +449,7 @@ select count(*) from mydb.t11 ;
 <h2 id="安装flume"><a href="#安装flume" class="headerlink" title="安装flume"></a>安装flume</h2><pre><code>1.下载
 2.tar
 3.环境变量
-4.验证flume是否成功
+4.验证flume是否成功  
     $&gt;flume-ng version            //next generation.下一代.
 </code></pre><h2 id="配置flume"><a href="#配置flume" class="headerlink" title="配置flume"></a>配置flume</h2><pre><code>1.创建配置文件
 [/soft/flume/conf/hello.conf]
@@ -567,7 +575,7 @@ $&gt;sudo wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel
     a1.sinks.k1.hdfs.path = /flume/events/%y-%m-%d/%H/%M/%S
     a1.sinks.k1.hdfs.filePrefix = events-
 
-    #是否是产生新目录,每十分钟产生一个新目录,一般控制的目录方面。
+    #是否是产生新目录,每十分钟产生一个新目录,一般控制的目录方面。round是决定是否产生新文件的，滚动是决定是否产生新文件的。
     #2017-12-12 --&gt;
     #2017-12-12 --&gt;%H%M%S
 
@@ -610,7 +618,11 @@ $&gt;sudo wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel
     a1.sinks.k1.channel = c1
 
 4.kafka
-</code></pre><h2 id="使用avroSource和AvroSink实现跃点agent处理"><a href="#使用avroSource和AvroSink实现跃点agent处理" class="headerlink" title="使用avroSource和AvroSink实现跃点agent处理"></a>使用avroSource和AvroSink实现跃点agent处理</h2><pre><code>1.创建配置文件
+</code></pre><p>数据进入到源里面去，最终进入通道里面，有很多通道c1,c2,c3，这个取决于通道选择器，ChannelProcessor，对事件进行处理，先经过一堆拦截器也是有很多种 。拦截器在各个文件前加东西，拦截之后再回到选择器。拦截器是典型的批处理，把加到东西流水线似的加到头文件里面。不管是什么对象，通过什么source进来的，都被转换成envent对象。在拦截器这个地方是链式技术。把事件放到通道里面，每个通道放置事件都是一个事务，保证能成功，</p>
+<p>这个图是source到通道的图<br><img src="https://i.imgur.com/bzQZ9yK.png" alt=""></p>
+<p>sink的图：</p>
+<p><img src="https://i.imgur.com/sb3F2lg.png" alt=""></p>
+<h2 id="使用avroSource和AvroSink实现跃点agent处理"><a href="#使用avroSource和AvroSink实现跃点agent处理" class="headerlink" title="使用avroSource和AvroSink实现跃点agent处理"></a>使用avroSource和AvroSink实现跃点agent处理</h2><pre><code>1.创建配置文件
     [avro_hop.conf]
     #a1
     a1.sources = r1
@@ -746,6 +758,22 @@ a1.channels.c1.dataDirs = /home/centos/flume/fc_data
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/flume/" rel="tag"># flume</a>
+          
+            <a href="/tags/source/" rel="tag"># source</a>
+          
+            <a href="/tags/sink/" rel="tag"># sink</a>
+          
+            <a href="/tags/channel/" rel="tag"># channel</a>
+          
+            <a href="/tags/安装flume/" rel="tag"># 安装flume</a>
+          
+            <a href="/tags/avro跃点/" rel="tag"># avro跃点</a>
+          
+        </div>
+      
 
       
       
@@ -875,7 +903,7 @@ a1.channels.c1.dataDirs = /home/centos/flume/fc_data
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">99</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

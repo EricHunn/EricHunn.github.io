@@ -328,6 +328,397 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/25/Kafka/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/25/Kafka/" itemprop="url">Kafka</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-25T15:37:41+08:00">
+                2018-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="flume"><a href="#flume" class="headerlink" title="flume"></a>flume</h2><pre><code>收集日志、移动、聚合框架。
+基于事件。
+</code></pre><h2 id="agent"><a href="#agent" class="headerlink" title="agent"></a>agent</h2><pre><code>source        //接收数据,生产者
+            //put()
+            //NetcatSource
+            //ExecSource,实时收集 tail -F xxx.txt
+            //spooldir
+            //seq
+            //Stress
+            //avroSource
+
+channel        //暂存数据，缓冲区,
+            //非永久性:MemoryChannel
+            //永久性  :FileChannel,磁盘. 
+            //SpillableMemoryChannel :Mem + FileChannel.Capacity
+
+sink        //输出数据,消费者
+            //从channel提取take()数据,write()destination.
+            //HdfsSink
+            //HbaseSink
+            //avroSink
+</code></pre><p>看一下一边都是存储到哪里，如果是电信的那种需要经常查询的就需要放到Hbase里面，如果是放到hdfs里面就只能是全表扫描了。hbase可以随机定位。瞬间定位。  </p>
+<h2 id="JMS"><a href="#JMS" class="headerlink" title="JMS"></a>JMS</h2><pre><code>java message service,java消息服务。
+
+queue        //只有能有一个消费者。P2P模式(点对点).
+            //发布订阅(publish-subscribe,主题模式)，
+</code></pre><h2 id="kafka"><a href="#kafka" class="headerlink" title="kafka"></a>kafka</h2><pre><code>分布式流处理平台。
+在系统之间构建实时数据流管道。
+以topic分类对记录进行存储
+每个记录包含key-value+timestamp
+每秒钟百万消息吞吐量。
+
+
+producer            //消息生产者
+consumer            //消息消费者
+consumer group        //消费者组
+kafka server        //broker,kafka服务器也叫broker    
+topic                //主题,副本数,分区.
+zookeeper            //hadoop namenoade + RM HA | hbase | kafka
+</code></pre><h2 id="安装kafka"><a href="#安装kafka" class="headerlink" title="安装kafka"></a>安装kafka</h2><pre><code>0.选择s202 ~ s204三台主机安装kafka
+1.准备zk
+    略
+2.jdk
+    略
+3.tar文件
+4.环境变量
+    略
+5.配置kafka
+    [kafka/config/server.properties]
+    ...
+    broker.id=202
+    ...
+    listeners=PLAINTEXT://:9092
+    ...
+    log.dirs=/home/centos/kafka/logs
+    ...
+    zookeeper.connect=s201:2181,s202:2181,s203:2181
+
+6.分发server.properties，同时修改每个文件的broker.id
+
+7.启动kafka服务器
+    a)先启动zk
+    b)启动kafka
+        [s202 ~ s204]
+        $&gt;bin/kafka-server-start.sh config/server.properties
+
+    c)验证kafka服务器是否启动
+        $&gt;netstat -anop | grep 9092
+
+8.创建主题 
+    $&gt;bin/kafka-topics.sh --create --zookeeper s201:2181 --replication-factor 3 --partitions 3 --topic test
+
+9.查看主题列表
+    $&gt;bin/kafka-topics.sh --list --zookeeper s201:2181
+
+10.启动控制台生产者
+    $&gt;bin/kafka-console-producer.sh --broker-list s202:9092 --topic test1
+
+11.启动控制台消费者
+    $&gt;bin/kafka-console-consumer.sh --bootstrap-server s202:9092 --topic test1 --from-beginning --zookeeper s202:2181
+
+12.在生产者控制台输入hello world
+</code></pre><h2 id="kafka集群在zk的配置"><a href="#kafka集群在zk的配置" class="headerlink" title="kafka集群在zk的配置"></a>kafka集群在zk的配置</h2><pre><code>/controller            ===&gt;    {&quot;version&quot;:1,&quot;brokerid&quot;:202,&quot;timestamp&quot;:&quot;1490926369148&quot;
+
+/controller_epoch    ===&gt;    1
+
+/brokers
+/brokers/ids        //记载kfk集群每个服务器的信息
+/brokers/ids/202    ===&gt;    {&quot;jmx_port&quot;:-1,&quot;timestamp&quot;:&quot;1490926370304&quot;,&quot;endpoints&quot;:[&quot;PLAINTEXT://s202:9092&quot;],&quot;host&quot;:&quot;s202&quot;,&quot;version&quot;:3,&quot;port&quot;:9092}            //每个节点的连接信息
+/brokers/ids/203
+/brokers/ids/204        
+
+
+//每个主题下分区数据，主题是有分区的。
+/brokers/topics/test/partitions/0/state ===&gt;{&quot;controller_epoch&quot;:1,&quot;leader&quot;:203,&quot;version&quot;:1,&quot;leader_epoch&quot;:0,&quot;isr&quot;:[203,204,202]}
+/brokers/topics/test/partitions/1/state ===&gt;...
+/brokers/topics/test/partitions/2/state ===&gt;...
+</code></pre><p>leader是针对于主题来说的，是针对主题上的分区来说的。每个分区test主题下。controller也是kfk注册的他和broker是一个层级。说明在kfk集群里面s202是类似于Leader的身份。在</p>
+<pre><code>/brokers/seqid        ===&gt; null
+
+/admin
+/admin/delete_topics/test        ===&gt;标记删除的主题
+
+/isr_change_notification
+
+/consumers/xxxx/
+/config
+</code></pre><h2 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h2><h2 id="创建主题"><a href="#创建主题" class="headerlink" title="创建主题"></a>创建主题</h2><pre><code>repliation_factor 2 partitions 5
+
+$&gt;kafka-topic.sh --zookeeper s202:2181 --replication_factor 3 --partitions 4 --create --topic test3
+
+2 x 5  = 10        //是个文件夹
+
+[s202]
+test2-1            //
+test2-2            //
+test2-3            //
+
+[s203]
+test2-0
+test2-2
+test2-3
+test2-4
+
+[s204]
+test2-0
+test2-1
+test2-4
+</code></pre><h2 id="重新布局分区和副本，手动再平衡"><a href="#重新布局分区和副本，手动再平衡" class="headerlink" title="重新布局分区和副本，手动再平衡"></a>重新布局分区和副本，手动再平衡</h2><pre><code>$&gt;kafka-topics.sh --alter --zookeeper s202:2181 --topic test2 --replica-assignment 203:204,203:204,203:204,203:204,203:204
+</code></pre><h2 id="副本"><a href="#副本" class="headerlink" title="副本"></a>副本</h2><pre><code>broker存放消息以消息达到顺序存放。生产和消费都是副本感知的。
+支持到n-1故障。每个分区都有leader，follow.
+leader挂掉时，消息分区写入到本地log或者，向生产者发送消息确认回执之前，生产者向新的leader发送消息。
+
+新leader的选举是通过isr进行，第一个注册的follower成为leader。
+</code></pre><h2 id="kafka支持副本模式"><a href="#kafka支持副本模式" class="headerlink" title="kafka支持副本模式"></a>kafka支持副本模式</h2><pre><code>[同步复制]
+    1.producer联系zk识别leader
+    2.向leader发送消息
+    3.leadr收到消息写入到本地log
+    4.follower从leader pull消息
+    5.follower向本地写入log
+    6.follower向leader发送ack消息
+    7.leader收到所有follower的ack消息
+    8.leader向producer回传ack
+
+
+[异步副本]
+    和同步复制的区别在与leader写入本地log之后，
+    直接向client回传ack消息，不需要等待所有follower复制完成。
+</code></pre><h2 id="通过java-API实现消息生产者，发送消息"><a href="#通过java-API实现消息生产者，发送消息" class="headerlink" title="通过java API实现消息生产者，发送消息"></a>通过java API实现消息生产者，发送消息</h2><pre><code>package com.it18zhang.kafkademo.test;
+
+import org.junit.Test;
+
+import kafka.javaapi.producer.Producer;
+import kafka.producer.KeyedMessage;
+import kafka.producer.ProducerConfig;
+
+import java.util.HashMap;
+import java.util.Properties;
+
+/**
+ * Created by Administrator on 2017/3/31.
+ */
+public class TestProducer {
+    @Test
+    public void testSend(){
+        Properties props = new Properties();
+        //broker列表
+        props.put(&quot;metadata.broker.list&quot;, &quot;s202:9092&quot;);
+        //串行化
+        props.put(&quot;serializer.class&quot;, &quot;kafka.serializer.StringEncoder&quot;);
+        //
+        props.put(&quot;request.required.acks&quot;, &quot;1&quot;);
+
+        //创建生产者配置对象
+        ProducerConfig config = new ProducerConfig(props);
+
+        //创建生产者
+        Producer&lt;String, String&gt; producer = new Producer&lt;String, String&gt;(config);
+
+        KeyedMessage&lt;String, String&gt; msg = new KeyedMessage&lt;String, String&gt;(&quot;test3&quot;,&quot;100&quot; ,&quot;hello world tomas100&quot;);
+        producer.send(msg);
+        System.out.println(&quot;send over!&quot;);
+    }
+}
+</code></pre><h2 id="消息消费者"><a href="#消息消费者" class="headerlink" title="消息消费者"></a>消息消费者</h2><pre><code>/**
+ * 消费者
+ */
+@Test
+public void testConumser(){
+    //
+    Properties props = new Properties();
+    props.put(&quot;zookeeper.connect&quot;, &quot;s202:2181&quot;);
+    props.put(&quot;group.id&quot;, &quot;g3&quot;);
+    props.put(&quot;zookeeper.session.timeout.ms&quot;, &quot;500&quot;);
+    props.put(&quot;zookeeper.sync.time.ms&quot;, &quot;250&quot;);
+    props.put(&quot;auto.commit.interval.ms&quot;, &quot;1000&quot;);
+    props.put(&quot;auto.offset.reset&quot;, &quot;smallest&quot;);
+    //创建消费者配置对象
+    ConsumerConfig config = new ConsumerConfig(props);
+    //
+    Map&lt;String, Integer&gt; map = new HashMap&lt;String, Integer&gt;();
+    map.put(&quot;test3&quot;, new Integer(1));
+    Map&lt;String, List&lt;KafkaStream&lt;byte[], byte[]&gt;&gt;&gt; msgs = Consumer.createJavaConsumerConnector(new ConsumerConfig(props)).createMessageStreams(map);
+    List&lt;KafkaStream&lt;byte[], byte[]&gt;&gt; msgList = msgs.get(&quot;test3&quot;);
+    for(KafkaStream&lt;byte[],byte[]&gt; stream : msgList){
+        ConsumerIterator&lt;byte[],byte[]&gt; it = stream.iterator();
+        while(it.hasNext()){
+            byte[] message = it.next().message();
+            System.out.println(new String(message));
+        }
+    }
+}
+</code></pre><h2 id="flume集成kafka"><a href="#flume集成kafka" class="headerlink" title="flume集成kafka"></a>flume集成kafka</h2><pre><code>1.KafkaSink
+    [生产者]
+    a1.sources = r1
+    a1.sinks = k1
+    a1.channels = c1
+
+    a1.sources.r1.type=netcat
+    a1.sources.r1.bind=localhost
+    a1.sources.r1.port=8888
+
+    a1.sinks.k1.type = org.apache.flume.sink.kafka.KafkaSink
+    a1.sinks.k1.kafka.topic = test3
+    a1.sinks.k1.kafka.bootstrap.servers = s202:9092
+    a1.sinks.k1.kafka.flumeBatchSize = 20
+    a1.sinks.k1.kafka.producer.acks = 1
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+
+2.KafkaSource
+    [消费者]
+    a1.sources = r1
+    a1.sinks = k1
+    a1.channels = c1
+
+    a1.sources.r1.type = org.apache.flume.source.kafka.KafkaSource
+    a1.sources.r1.batchSize = 5000
+    a1.sources.r1.batchDurationMillis = 2000
+    a1.sources.r1.kafka.bootstrap.servers = s202:9092
+    a1.sources.r1.kafka.topics = test3
+    a1.sources.r1.kafka.consumer.group.id = g4
+
+    a1.sinks.k1.type = logger
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+
+3.Channel
+    生产者 + 消费者
+    a1.sources = r1
+    a1.sinks = k1
+    a1.channels = c1
+
+    a1.sources.r1.type = avro
+    a1.sources.r1.bind = localhost
+    a1.sources.r1.port = 8888
+
+    a1.sinks.k1.type = logger
+
+    a1.channels.c1.type = org.apache.flume.channel.kafka.KafkaChannel
+    a1.channels.c1.kafka.bootstrap.servers = s202:9092
+    a1.channels.c1.kafka.topic = test3
+    a1.channels.c1.kafka.consumer.group.id = g6
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/22/Hbase第四天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -499,7 +890,7 @@ startkey = xx,19626675333,
         }
     }
 
-4.配置hbase-site.xml并分发
+4.配置hbase-site.xml并分发分发jar包。
     &lt;property&gt;
         &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
         &lt;value&gt;com.it18zhang.hbasedemo.coprocessor.CalleeLogRegionObserver&lt;/value&gt;
@@ -507,7 +898,10 @@ startkey = xx,19626675333,
 
 5.启动hbase集群.
 </code></pre><h2 id="BloomFilter"><a href="#BloomFilter" class="headerlink" title="BloomFilter"></a>BloomFilter</h2><pre><code>布隆过滤器。
-</code></pre><h2 id="phonix"><a href="#phonix" class="headerlink" title="phonix"></a>phonix</h2><pre><code>1.安装phonix
+</code></pre><p><img src="https://i.imgur.com/c0wLF4w.png" alt=""></p>
+<p>代码如下:</p>
+<p><img src="https://i.imgur.com/Za6Pcr1.png" alt=""></p>
+<h2 id="phonix"><a href="#phonix" class="headerlink" title="phonix"></a>phonix</h2><pre><code>1.安装phonix
     a)下载apache-phoenix-4.10.0-HBase-1.2-bin.tar.gz
     b)tar
     c)复制xxx-server.jar到hbase的lib目录，并且分发,删除以前的phonixjar包。
@@ -517,9 +911,8 @@ startkey = xx,19626675333,
     $&gt;phonix/bin/.sqlline.py s202    //连接的是zk服务器
     $phonix&gt;!tables
     $phonix&gt;!help                    //查看帮助
-
-
-2.SQL Client安装
+</code></pre><p>phoenix在创建表的时候要使用大量的协处理器，他是在建表时候不区分大小写的，而且hbase不可以识别得出来他的表，但是hbase shell里面建的表他能识别。</p>
+<pre><code>2.SQL Client安装
     a)下载squirrel-sql-3.7.1-standard.jar
         该文件是安装文件，执行的安装程序。
         $&gt;jar -jar squirrel-sql-3.7.1-standard.jar
@@ -689,21 +1082,26 @@ byte[]
 </code></pre><h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>离线计算。
 </code></pre><h2 id="MR-MapReduce"><a href="#MR-MapReduce" class="headerlink" title="MR:MapReduce"></a>MR:MapReduce</h2><pre><code>hadoop : 
 DBWritable + WritableComparable :
-</code></pre><h2 id="将hbase的表影射到hive上，使用hive的查询语句。"><a href="#将hbase的表影射到hive上，使用hive的查询语句。" class="headerlink" title="将hbase的表影射到hive上，使用hive的查询语句。"></a>将hbase的表影射到hive上，使用hive的查询语句。</h2><pre><code>CREATE TABLE t11(key string, name string) STORED BY &apos;org.apache.hadoop.hive.hbase.HBaseStorageHandler&apos; 
+</code></pre><h2 id="将hbase的表影射到hive上，使用hive的查询语句。"><a href="#将hbase的表影射到hive上，使用hive的查询语句。" class="headerlink" title="将hbase的表影射到hive上，使用hive的查询语句。"></a>将hbase的表影射到hive上，使用hive的查询语句。</h2><pre><code>CREATE TABLE mydb.t11(key string, name string) STORED BY &apos;org.apache.hadoop.hive.hbase.HBaseStorageHandler&apos; 
 WITH SERDEPROPERTIES (&quot;hbase.columns.mapping&quot; = &quot;:key,cf:name&quot;)
 TBLPROPERTIES(&quot;hbase.table.name&quot; = &quot;ns1:t11&quot;);    
 
 select count(*) from mydb.t11 ;
-</code></pre><h2 id="flume"><a href="#flume" class="headerlink" title="flume"></a>flume</h2><p>Flume的优点<br>以下是使用Flume的优点：<br>使用Apache Flume，我们可以将数据存储到任何集中存储中<br>（HBase，HDFS）。<br>当传入数据的速率超过可以写入数据的速率时<br>目的地，Flume充当数据生产者和数据生成者之间的中介<br>集中存储并在它们之间提供稳定的数据流。<br>Flume提供了上下文路由的功能。</p>
-<ol>
-<li><p>FLUME - 介绍App Flume<br>2<br>Flume中的交易是基于渠道的，其中两个交易（一个发件人<br>为每条消息维护一个接收器。它保证了可靠的信息<br>交货。<br>Flume具有可靠性，容错性，可扩展性，可管理性和可定制性。<br>水槽的特点<br>Flume的一些显着特征如下：<br>Flume将来自多个Web服务器的日志数据提取到集中存储（HDFS，<br>HBase）有效。<br>使用Flume，我们可以立即将来自多个服务器的数据导入Hadoop。<br>与日志文件一起，Flume还用于导入大量事件数据<br>由Facebook和Twitter等社交网站和电子商务制作<br>亚马逊和Flipkart等网站。<br>Flume支持大量源和目标类型。<br>Flume支持多跳流，扇入扇出流，上下文路由等。<br>水槽可以水平缩放<br> 收集、移动、聚合大量日志数据的服务。<br> 基于流数据的架构，用于在线日志分析。</p>
-<p> 基于事件。<br> 在生产和消费者之间启动协调作用。<br> 提供了事务保证，确保消息一定被分发。<br> Source 多种<br> sink多种.</p>
-<p> multihop        //多级跃点.可以从一个flume到另外一个flume</p>
-<p> 水平扩展:        //加节点，</p>
-<p> 竖直扩展        //增加硬件。</p>
-</li>
-</ol>
-<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><pre><code>接受数据，类型有多种。
+</code></pre><h2 id="flume"><a href="#flume" class="headerlink" title="flume"></a>flume</h2><pre><code>收集、移动、聚合大量日志数据的服务。
+基于流数据的架构，用于在线日志分析。
+
+基于事件。
+在生产和消费者之间启动协调作用。
+提供了事务保证，确保消息一定被分发。
+Source 多种
+sink多种.
+
+multihop        //多级跃点.可以从一个flume到另外一个flume
+
+水平扩展:        //加节点，
+
+竖直扩展        //增加硬件。
+</code></pre><h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><pre><code>接受数据，类型有多种。
 </code></pre><h2 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h2><pre><code>临时存放地，对Source中来的数据进行缓冲，直到sink消费掉。
 </code></pre><h2 id="Sink"><a href="#Sink" class="headerlink" title="Sink"></a>Sink</h2><pre><code>从channel提取数据存放到中央化存储(hadoop / hbase)。
 </code></pre><p><img src="https://i.imgur.com/DbIixF1.png" alt=""></p>
@@ -715,7 +1113,7 @@ select count(*) from mydb.t11 ;
 <h2 id="安装flume"><a href="#安装flume" class="headerlink" title="安装flume"></a>安装flume</h2><pre><code>1.下载
 2.tar
 3.环境变量
-4.验证flume是否成功
+4.验证flume是否成功  
     $&gt;flume-ng version            //next generation.下一代.
 </code></pre><h2 id="配置flume"><a href="#配置flume" class="headerlink" title="配置flume"></a>配置flume</h2><pre><code>1.创建配置文件
 [/soft/flume/conf/hello.conf]
@@ -841,7 +1239,7 @@ $&gt;sudo wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel
     a1.sinks.k1.hdfs.path = /flume/events/%y-%m-%d/%H/%M/%S
     a1.sinks.k1.hdfs.filePrefix = events-
 
-    #是否是产生新目录,每十分钟产生一个新目录,一般控制的目录方面。
+    #是否是产生新目录,每十分钟产生一个新目录,一般控制的目录方面。round是决定是否产生新文件的，滚动是决定是否产生新文件的。
     #2017-12-12 --&gt;
     #2017-12-12 --&gt;%H%M%S
 
@@ -884,7 +1282,11 @@ $&gt;sudo wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel
     a1.sinks.k1.channel = c1
 
 4.kafka
-</code></pre><h2 id="使用avroSource和AvroSink实现跃点agent处理"><a href="#使用avroSource和AvroSink实现跃点agent处理" class="headerlink" title="使用avroSource和AvroSink实现跃点agent处理"></a>使用avroSource和AvroSink实现跃点agent处理</h2><pre><code>1.创建配置文件
+</code></pre><p>数据进入到源里面去，最终进入通道里面，有很多通道c1,c2,c3，这个取决于通道选择器，ChannelProcessor，对事件进行处理，先经过一堆拦截器也是有很多种 。拦截器在各个文件前加东西，拦截之后再回到选择器。拦截器是典型的批处理，把加到东西流水线似的加到头文件里面。不管是什么对象，通过什么source进来的，都被转换成envent对象。在拦截器这个地方是链式技术。把事件放到通道里面，每个通道放置事件都是一个事务，保证能成功，</p>
+<p>这个图是source到通道的图<br><img src="https://i.imgur.com/bzQZ9yK.png" alt=""></p>
+<p>sink的图：</p>
+<p><img src="https://i.imgur.com/sb3F2lg.png" alt=""></p>
+<h2 id="使用avroSource和AvroSink实现跃点agent处理"><a href="#使用avroSource和AvroSink实现跃点agent处理" class="headerlink" title="使用avroSource和AvroSink实现跃点agent处理"></a>使用avroSource和AvroSink实现跃点agent处理</h2><pre><code>1.创建配置文件
     [avro_hop.conf]
     #a1
     a1.sources = r1
@@ -3185,6 +3587,125 @@ Mybatis        //持久化。jdbc , mysql
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/16/Hbase第一天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/16/Hbase第一天/" itemprop="url">Hbase第一天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-16T09:33:51+08:00">
+                2018-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/16/Hbase第二天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3778,125 +4299,6 @@ public class TestCRUD {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/16/Hbase第一天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/16/Hbase第一天/" itemprop="url">Hbase第一天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-16T09:33:51+08:00">
-                2018-11-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/15/Zookeeper第二天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -4304,411 +4706,6 @@ Support for exporting metrics via the Hadoop metrics subsystem to files or Gangl
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/11/Avro-protobuf/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/11/Avro-protobuf/" itemprop="url">Avro&protobuf</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-11T19:52:10+08:00">
-                2018-11-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Avro-Protobuf/" itemprop="url" rel="index">
-                    <span itemprop="name">Avro&Protobuf</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>数据倾斜.
-$hive&gt;SET hive.optimize.skewjoin=true;
-$hive&gt;SET hive.skewjoin.key=100000;
-$hive&gt;SET hive.groupby.skewindata=true;
-</code></pre><p>CREATE TABLE mydb.doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘,’ ;</p>
-<p>select t.word,count(*) from (select explode(split(line,’ ‘)) word from doc ) t group by t.word ;</p>
-<h2 id="java串行化"><a href="#java串行化" class="headerlink" title="java串行化"></a>java串行化</h2><h2 id="串行化系统"><a href="#串行化系统" class="headerlink" title="串行化系统"></a>串行化系统</h2><p>protobuf，协议缓冲区。</p>
-<p>在Hadoop里面的代码很多是通过相关语言自动生成的。</p>
-<p>hadoop底层的rpc都是自动生成的。</p>
-<p>java也有串行化，但是hadoop不适用，因为相对来讲比protobuf和avro复杂而且性能差一些。</p>
-<p>当吧对象写入磁盘文件或者用于网络传输的时候要把对象变成字节数组。</p>
-<p>串行化从本质上来讲是数据格式，就是一种格式，吧对象变成字节数组，也就是说所有数据都要落实到字节数组上，都需要这样，不管是影音文件还是别的文件，通过串行化吧他边恒字节数组    </p>
-<h1 id="关于Javabean"><a href="#关于Javabean" class="headerlink" title="关于Javabean:"></a>关于Javabean:</h1><p>标准javabean(pojo,plain old java object)</p>
-<p>任何一个Java类也可以叫javabean.广义上。</p>
-<p>狭义上的javabean：就是普通古老的java对象pojo:plain old java object </p>
-<p>也就是私有的属性，getset方法，空的构造函数。比如person,学生，人。都是javabean。现实生活中的名词，在开发中都被定义成一个类，也就是说的javabean。</p>
-<p>下面的代码就是一段javabean<br>    class Person{<br>        public Person(){<br>    }<br>    private String name;<br>    public  void setName(String name){<br>        this.name=name;<br>    }<br>    publc String genName(){<br>        return name; }<br>}</p>
-<h2 id="google-protobuf"><a href="#google-protobuf" class="headerlink" title="google protobuf"></a>google protobuf</h2><pre><code>1.下载google protobuf.配置环境
-    protoc-2.5.0-win32.zip
-</code></pre><p><img src="https://i.imgur.com/7QVjPjY.png" alt=""></p>
-<pre><code>1&apos;.pom.xml
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;com.google.protobuf&lt;/groupId&gt;
-            &lt;artifactId&gt;protobuf-java&lt;/artifactId&gt;
-            &lt;version&gt;2.5.0&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;junit&lt;/groupId&gt;
-            &lt;artifactId&gt;junit&lt;/artifactId&gt;
-            &lt;version&gt;4.11&lt;/version&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-
-2.设计对象
-    ...
-3.描述对象
-    package tutorial;
-    option java_package = &quot;com.example.tutorial&quot;;
-    option java_outer_classname = &quot;AddressBookProtos&quot;;
-    //这个是一个javabean，在protobuf里面叫message
-        message Person {
-        required string name = 1;
-        required int32 id = 2;
-        optional string email = 3;
-    //下面这个是一个phonetype的枚举类
-        enum PhoneType {
-            MOBILE = 0;
-            HOME = 1;
-            WORK = 2;
-        }
-    //这个也是一个javabean。
-        message PhoneNumber {
-            required string number = 1;
-            optional PhoneType type = 2 [default = HOME];
-        }
-        repeated PhoneNumber phone = 4;
-    }
-    message AddressBook {
-        repeated Person person = 1;
-    }
-
-4.编译描述
-    cmd&gt;protoc --java_out . xxx.proto
-
-5.导入源代码到项目中
-    ...
-
-6.使用对象
-    public class TestProtoBuf {
-
-        @Test
-        public void write() throws Exception{
-            AddressBookProtos.Person john = AddressBookProtos.Person.newBuilder()
-                    .setId(12345)
-                    .setName(&quot;tomas&quot;)
-                    .setEmail(&quot;123@123.123&quot;)
-                    .addPhone(AddressBookProtos.Person.PhoneNumber.newBuilder()
-                            .setNumber(&quot;+351 999 999 999&quot;)
-                            .setType(AddressBookProtos.Person.PhoneType.HOME)
-                            .build())
-                    .build();
-            john.writeTo(new FileOutputStream(&quot;d:/prototbuf.data&quot;));
-        }
-
-        @Test
-        public void read() throws Exception{
-            AddressBookProtos.Person john = AddressBookProtos.Person.parseFrom(new FileInputStream(&quot;d:/prototbuf.data&quot;));
-            System.out.println(john.getName());
-        }
-    }
-</code></pre><p>上一段是用Protobuf进行编译和反编译的过程。然后下面这段图片是用java进行编译和反编译的过程：</p>
-<p><img src="https://i.imgur.com/8rzRjOu.png" alt=""></p>
-<h2 id="xml"><a href="#xml" class="headerlink" title="xml"></a>xml</h2><pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;persons&gt;
-    &lt;person id=&quot;&quot; name=&quot;&quot;&gt;
-        &lt;age&gt;12&lt;/age&gt;
-    &lt;/person&gt;
-&lt;/person&gt;
-</code></pre><h2 id="json"><a href="#json" class="headerlink" title="json"></a>json</h2><pre><code>[{
-    &quot;id&quot; : 1,
-    &quot;nmae&quot; : &quot;tom&quot;,
-    &quot;age&quot; : 20
-},
-{
-    &quot;id&quot; : 2,
-    &quot;nmae&quot; : &quot;tomas&quot;,
-    &quot;age&quot; : 30
-}
-]
-</code></pre><h2 id="avro-doug-cutting"><a href="#avro-doug-cutting" class="headerlink" title="avro (doug cutting)"></a>avro (doug cutting)</h2><pre><code>1.数据串行化系统
-2.自描述语言.
-    数据结构和数据都存在文件中。跨语言。
-    使用json格式存储数据。
-3.可压缩 + 可切割。
-4.使用avro
-    a)定义schema
-    b)编译schema，生成java类
-        {    //名字空间是这个，然后类型，然后名字，然后是字段数组
-            &quot;namespace&quot;: &quot;tutorialspoint.com&quot;,
-            &quot;type&quot;: &quot;record&quot;,
-            &quot;name&quot;: &quot;emp&quot;,
-            &quot;fields&quot;: [
-                {&quot;name&quot;: &quot;name&quot;, &quot;type&quot;: &quot;string&quot;},
-                {&quot;name&quot;: &quot;id&quot;, &quot;type&quot;: &quot;int&quot;},
-                {&quot;name&quot;: &quot;salary&quot;, &quot;type&quot;: &quot;int&quot;},
-                {&quot;name&quot;: &quot;age&quot;, &quot;type&quot;: &quot;int&quot;},
-                {&quot;name&quot;: &quot;address&quot;, &quot;type&quot;: &quot;string&quot;}
-            ]
-        } 
-    c)使用java类
-        cmd&gt;java -jar avro-tools-1.7.7.jar compile schema emp.avsc .
-
-    d)单元测试
-        package com.it18zhang.avrodemo.test;
-
-        import org.apache.avro.Schema;
-        import org.apache.avro.file.DataFileReader;
-        import org.apache.avro.file.DataFileWriter;
-        import org.apache.avro.generic.GenericData;
-        import org.apache.avro.generic.GenericRecord;
-        import org.apache.avro.io.DatumWriter;
-        import org.apache.avro.specific.SpecificDatumReader;
-        import org.apache.avro.specific.SpecificDatumWriter;
-        import org.junit.Test;
-
-        import java.io.File;
-        import java.io.IOException;
-        import java.util.Iterator;
-
-        /**
-         * Created by Administrator on 2017/3/23.
-         */
-        public class TestAvro {
-
-        //    @Test
-        //    public void write() throws Exception {
-        //        //创建writer对象
-        //        SpecificDatumWriter empDatumWriter = new SpecificDatumWriter&lt;Employee&gt;(Employee.class);
-        //        //写入文件
-        //        DataFileWriter&lt;Employee&gt; empFileWriter = new DataFileWriter&lt;Employee&gt;(empDatumWriter);
-        //
-        //        //创建对象
-        //        Employee e1 = new Employee();
-        //        e1.setName(&quot;tomas&quot;);
-        //        e1.setAge(12);
-        //
-        //        //串行化数据到磁盘
-        //        empFileWriter.create(e1.getSchema(), new File(&quot;d:/avro/data/e1.avro&quot;));
-        //        empFileWriter.append(e1);
-        //        empFileWriter.append(e1);
-        //        empFileWriter.append(e1);
-        //        empFileWriter.append(e1);
-        //        //关闭流
-        //        empFileWriter.close();
-        //    }
-        //
-        //    @Test
-        //    public void read() throws Exception {
-        //        //创建writer对象
-        //        SpecificDatumReader empDatumReader = new SpecificDatumReader&lt;Employee&gt;(Employee.class);
-        //        //写入文件
-        //        DataFileReader&lt;Employee&gt; dataReader = new DataFileReader&lt;Employee&gt;(new File(&quot;d:/avro/data/e1.avro&quot;)  ,empDatumReader);
-        //        Iterator&lt;Employee&gt; it = dataReader.iterator();
-        //        while(it.hasNext()){
-        //            System.out.println(it.next().getName());
-        //        }
-        //    }
-
-            /**
-             * 直接使用schema文件进行读写，不需要编译
-             */
-            @Test
-            public void writeInSchema() throws  Exception {
-                //指定定义的avsc文件。
-                Schema schema = new Schema.Parser().parse(new File(&quot;d:/avro/emp.avsc&quot;));
-
-                //创建GenericRecord,相当于Employee
-                GenericRecord e1 = new GenericData.Record(schema);
-                //设置javabean属性
-                e1.put(&quot;Name&quot;, &quot;ramu&quot;);
-        //        e1.put(&quot;id&quot;, 001);
-        //        e1.put(&quot;salary&quot;, 30000);
-                e1.put(&quot;age&quot;, 25);
-        //        e1.put(&quot;address&quot;, &quot;chennai&quot;);
-
-                //
-                DatumWriter&lt;GenericRecord&gt; empDatumWriter = new SpecificDatumWriter&lt;GenericRecord&gt;(GenericRecord.class);
-                DataFileWriter&lt;GenericRecord&gt; empFileWriter = new DataFileWriter&lt;GenericRecord&gt;(empDatumWriter);
-                empFileWriter.create(schema,new File(&quot;d:/avro/data/e2.avro&quot;)) ;
-                empFileWriter.append(e1);
-                empFileWriter.append(e1);
-                empFileWriter.append(e1);
-                empFileWriter.append(e1);
-                empFileWriter.close();
-
-            }
-
-        }
-</code></pre><p>看一下AVSC这个编译好的avro文件里面的是什么结构：</p>
-<p>他其实是一个json格式的结构：</p>
-<p><img src="https://i.imgur.com/dKcBw8b.png" alt=""></p>
-<pre><code>非编译模式
----------------
-    @Test
-    public void writeInSchema() throws  Exception {
-        //指定定义的avsc文件。
-        Schema schema = new Schema.Parser().parse(new File(&quot;d:/avro/emp.avsc&quot;));
-
-        //创建GenericRecord,相当于Employee
-        GenericRecord e1 = new GenericData.Record(schema);
-        //设置javabean属性
-        e1.put(&quot;name&quot;, &quot;ramu&quot;);
-//        e1.put(&quot;id&quot;, 001);
-//        e1.put(&quot;salary&quot;, 30000);
-        e1.put(&quot;age&quot;, 25);
-//        e1.put(&quot;address&quot;, &quot;chennai&quot;);
-
-        //
-        DatumWriter w1 = new SpecificDatumWriter (schema);
-        DataFileWriter w2 = new DataFileWriter(w1);
-        w2.create(schema,new File(&quot;d:/avro/data/e2.avro&quot;)) ;
-        w2.append(e1);
-        w2.append(e1);
-        w2.close();
-    }
-
-    /**
-     * 反串行avro数据
-     */
-    @Test
-    public void readInSchema() throws  Exception {
-        //指定定义的avsc文件。
-        Schema schema = new Schema.Parser().parse(new File(&quot;d:/avro/emp.avsc&quot;));
-
-        GenericRecord e1 = new GenericData.Record(schema);
-        DatumReader r1 = new SpecificDatumReader (schema);
-        DataFileReader r2 = new DataFileReader(new File(&quot;d:/avro/data/e2.avro&quot;),r1);
-        while(r2.hasNext()){
-            GenericRecord rec = (GenericRecord)r2.next();
-            System.out.println(rec.get(&quot;name&quot;));
-        }
-        r2.close();
-    }
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -4785,7 +4782,7 @@ $hive&gt;SET hive.groupby.skewindata=true;
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">99</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
