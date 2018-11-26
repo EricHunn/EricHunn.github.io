@@ -88,10 +88,12 @@
 <meta property="og:site_name" content="无心是一首歌">
 <meta property="og:description" content="flume收集日志、移动、聚合框架。 基于事件。 agentsource        //接收数据,生产者             //put()             //NetcatSource             //ExecSource,实时收集 tail -F xxx.txt             //spooldir             //seq">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-25T15:12:58.746Z">
+<meta property="og:image" content="https://i.imgur.com/Kq3MmBF.png">
+<meta property="og:updated_time" content="2018-11-26T12:45:32.575Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka">
 <meta name="twitter:description" content="flume收集日志、移动、聚合框架。 基于事件。 agentsource        //接收数据,生产者             //put()             //NetcatSource             //ExecSource,实时收集 tail -F xxx.txt             //spooldir             //seq">
+<meta name="twitter:image" content="https://i.imgur.com/Kq3MmBF.png">
 
 
 
@@ -502,7 +504,10 @@ zookeeper            //hadoop namenoade + RM HA | hbase | kafka
 
 /consumers/xxxx/
 /config
-</code></pre><h2 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h2><h2 id="创建主题"><a href="#创建主题" class="headerlink" title="创建主题"></a>创建主题</h2><pre><code>repliation_factor 2 partitions 5
+</code></pre><p>下图是生产者没有连接zk别的都是有连接zk的</p>
+<p><img src="https://i.imgur.com/Kq3MmBF.png" alt=""></p>
+<h2 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h2><h2 id="创建主题"><a href="#创建主题" class="headerlink" title="创建主题"></a>创建主题</h2><pre><code>//2个副本5个分区，2乘以5对应了10个文件夹分配到3个节点所以s202里面有3个，
+repliation_factor 2 partitions 5
 
 $&gt;kafka-topic.sh --zookeeper s202:2181 --replication_factor 3 --partitions 4 --create --topic test3
 
