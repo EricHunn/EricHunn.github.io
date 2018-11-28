@@ -89,7 +89,8 @@
 <meta property="og:description" content="flume收集日志、移动、聚合框架。 基于事件。 agentsource        //接收数据,生产者             //put()             //NetcatSource             //ExecSource,实时收集 tail -F xxx.txt             //spooldir             //seq">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://i.imgur.com/Kq3MmBF.png">
-<meta property="og:updated_time" content="2018-11-26T12:45:32.575Z">
+<meta property="og:image" content="https://i.imgur.com/U1pTiwY.png">
+<meta property="og:updated_time" content="2018-11-26T14:25:41.761Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka">
 <meta name="twitter:description" content="flume收集日志、移动、聚合框架。 基于事件。 agentsource        //接收数据,生产者             //put()             //NetcatSource             //ExecSource,实时收集 tail -F xxx.txt             //spooldir             //seq">
@@ -672,7 +673,9 @@ public void testConumser(){
 
     a1.sources.r1.channels = c1
     a1.sinks.k1.channel = c1
-</code></pre>
+</code></pre><p>flume重启后会重新读取里面的内容，那么怎么解决重复读取？要引进行序号，每一行都是一个事件，所以在sink里面之后写入redis或者hbase里面因为是高速的，下次再启动flume，虽然从头开始读，也往通道里面放，但是对于sink来讲，会判断他的行号，如果序号比我的数据存的要早，就滤过。比这个大就往里写。相当于一个拦截器</p>
+<p><img src="https://i.imgur.com/U1pTiwY.png" alt=""></p>
+
       
     </div>
     
@@ -742,6 +745,10 @@ public void testConumser(){
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/28/Java基础（关于面试）/" rel="prev" title="Java基础（关于面试）">
+                Java基础（关于面试） <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -827,7 +834,7 @@ public void testConumser(){
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -838,7 +845,7 @@ public void testConumser(){
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -849,7 +856,7 @@ public void testConumser(){
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">99</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

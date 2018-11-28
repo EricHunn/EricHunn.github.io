@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="SSM," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -81,18 +81,22 @@
 
 
 
-<meta name="description" content="SSMSpring        //业务层框架 Spring MVC    //开发web程序应用的模块model + view + controller Mybatis        //持久化。jdbc , mysql mybatisibatis. 体验1.创建项目和模块 2.添加pom.xml     &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;q">
-<meta name="keywords" content="SSM">
+<meta name="description" content="SSM第二天三大框架的整合： 数据库层：mybatis数据持久化层：dao在交互mybatisdao:数据访问层：数据访问对象，存放简单的增删改查。每个表都有这个业务service层：业务层，和dao交互，对dao的方法进行组合调用。形成套餐springmvc展现层：做网页，做web开发的，springmvc应该和业务层交互，在springmvc里面的controller层和业务层交互，展现的东西">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SSM第一天">
 <meta property="og:url" content="http://erichunn.github.io/2018/11/19/SSM第一天/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="SSMSpring        //业务层框架 Spring MVC    //开发web程序应用的模块model + view + controller Mybatis        //持久化。jdbc , mysql mybatisibatis. 体验1.创建项目和模块 2.添加pom.xml     &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;q">
+<meta property="og:description" content="SSM第二天三大框架的整合： 数据库层：mybatis数据持久化层：dao在交互mybatisdao:数据访问层：数据访问对象，存放简单的增删改查。每个表都有这个业务service层：业务层，和dao交互，对dao的方法进行组合调用。形成套餐springmvc展现层：做网页，做web开发的，springmvc应该和业务层交互，在springmvc里面的controller层和业务层交互，展现的东西">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-19T15:26:31.753Z">
+<meta property="og:image" content="https://i.imgur.com/ygpfvcz.png">
+<meta property="og:image" content="https://i.imgur.com/M8K3Sqr.png">
+<meta property="og:image" content="https://i.imgur.com/pu7CMME.png">
+<meta property="og:image" content="https://i.imgur.com/DufbOjZ.png">
+<meta property="og:updated_time" content="2018-11-27T08:19:13.920Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SSM第一天">
-<meta name="twitter:description" content="SSMSpring        //业务层框架 Spring MVC    //开发web程序应用的模块model + view + controller Mybatis        //持久化。jdbc , mysql mybatisibatis. 体验1.创建项目和模块 2.添加pom.xml     &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;q">
+<meta name="twitter:description" content="SSM第二天三大框架的整合： 数据库层：mybatis数据持久化层：dao在交互mybatisdao:数据访问层：数据访问对象，存放简单的增删改查。每个表都有这个业务service层：业务层，和dao交互，对dao的方法进行组合调用。形成套餐springmvc展现层：做网页，做web开发的，springmvc应该和业务层交互，在springmvc里面的controller层和业务层交互，展现的东西">
+<meta name="twitter:image" content="https://i.imgur.com/ygpfvcz.png">
 
 
 
@@ -358,7 +362,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-19T15:39:39+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-19T22:35:23+08:00">
                 2018-11-19
               </time>
             
@@ -396,285 +400,73 @@
       
 
       
-        <h2 id="SSM"><a href="#SSM" class="headerlink" title="SSM"></a>SSM</h2><pre><code>Spring        //业务层框架
-Spring MVC    //开发web程序应用的模块model + view + controller
-Mybatis        //持久化。jdbc , mysql
-</code></pre><h2 id="mybatis"><a href="#mybatis" class="headerlink" title="mybatis"></a>mybatis</h2><pre><code>ibatis.
-</code></pre><h2 id="体验"><a href="#体验" class="headerlink" title="体验"></a>体验</h2><pre><code>1.创建项目和模块
-2.添加pom.xml
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+        <h1 id="SSM第二天"><a href="#SSM第二天" class="headerlink" title="SSM第二天"></a>SSM第二天</h1><p>三大框架的整合：</p>
+<p>数据库层：<br>mybatis数据持久化层：dao在交互mybatis<br>dao:数据访问层：数据访问对象，存放简单的增删改查。每个表都有这个业务<br>service层：业务层，和dao交互，对dao的方法进行组合调用。形成套餐<br>springmvc展现层：做网页，做web开发的，springmvc应该和业务层交互，在springmvc里面的controller层和业务层交互，展现的东西就是jsp做web开发做网站的，做web应用的。通过web架构来实现。springmvc就是web架构里面的一个。</p>
+<p><img src="https://i.imgur.com/ygpfvcz.png" alt=""></p>
+<h1 id="Mybais和数据库整合"><a href="#Mybais和数据库整合" class="headerlink" title="Mybais和数据库整合"></a>Mybais和数据库整合</h1><p><img src="https://i.imgur.com/M8K3Sqr.png" alt=""></p>
+<p>1.在pom中添加依赖：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
 
-        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-        &lt;artifactId&gt;mybatisdemo&lt;/artifactId&gt;
-        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
-                &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
-                &lt;version&gt;3.2.1&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;mysql&lt;/groupId&gt;
-                &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
-                &lt;version&gt;5.1.17&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;junit&lt;/groupId&gt;
-                &lt;artifactId&gt;junit&lt;/artifactId&gt;
-                &lt;version&gt;4.11&lt;/version&gt;
-            &lt;/dependency&gt;
-        &lt;/dependencies&gt;
-    &lt;/project&gt;
+    &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+    &lt;artifactId&gt;SpringmybatisDemo&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
 
-3.添加配置
-    [resoucecs/mybatis-config.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-    &lt;!DOCTYPE configuration
-      PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;
-      &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
-    &lt;configuration&gt;
-      &lt;environments default=&quot;development&quot;&gt;
-        &lt;environment id=&quot;development&quot;&gt;
-          &lt;transactionManager type=&quot;JDBC&quot;/&gt;
-          &lt;dataSource type=&quot;POOLED&quot;&gt;
-            &lt;property name=&quot;driver&quot; value=&quot;${driver}&quot;/&gt;
-            &lt;property name=&quot;url&quot; value=&quot;${url}&quot;/&gt;
-            &lt;property name=&quot;username&quot; value=&quot;${username}&quot;/&gt;
-            &lt;property name=&quot;password&quot; value=&quot;${password}&quot;/&gt;
-          &lt;/dataSource&gt;
-        &lt;/environment&gt;
-      &lt;/environments&gt;
-      &lt;mappers&gt;
-        &lt;mapper resource=&quot;org/mybatis/example/BlogMapper.xml&quot;/&gt;
-      &lt;/mappers&gt;
-    &lt;/configuration&gt;
-
-4.创建库和表
-    mysql&gt;create database mybatis ;
-    mysql&gt;use mybatis ;
-    mysql&gt;create table users(id int primary key auto_increment , name varchar(20) ,age int) ;
-    mysql&gt;desc users ;
-
-5.测试连接
-    package com.it18zhang.mybatisdemo;
-
-    import org.apache.ibatis.io.Resources;
-    import org.apache.ibatis.session.SqlSession;
-    import org.apache.ibatis.session.SqlSessionFactory;
-    import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-
-    import java.io.IOException;
-    import java.io.InputStream;
-
-    /**
-     *
-     */
-    public class App {
-        public static void main(String[] args) {
-            try {
-                //指定配置文件的路径(类路径)
-                String resource = &quot;mybatis-config.xml&quot;;
-                //加载文件
-                InputStream inputStream = Resources.getResourceAsStream(resource);
-
-                //创建会话工厂Builder,相当于连接池
-                SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
-
-                //通过sf开启会话，相当于打开连接。
-                SqlSession s = sf.openSession();
-                System.out.println(s);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-6.编写mapper文件。
-    a)创建User类，和users对应
-        public class User {
-            private Integer id ;
-            private String name ;
-            private int age ;
-            //get/set
-        }
-
-    b)创建UserMapper.xml,存放在resources/目录下
-        包名[resources/UserMapper.xml]
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-        &lt;!DOCTYPE mapper
-                PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
-                &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
-        &lt;!-- 定义名字空间 --&gt;
-        &lt;mapper namespace=&quot;users&quot;&gt;
-            &lt;!-- 定义insert语句 --&gt;
-            &lt;insert id=&quot;insert&quot;&gt;
-              insert into users(name,age) values(#{name},#{age})
-            &lt;/insert&gt;
-        &lt;/mapper&gt;
-
-7.在resources/mybatis-config.xml文件中引入mapper的xml文件.
-    [resources/mybatis-config.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-    &lt;!DOCTYPE configuration
-            PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;
-            &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
-    &lt;configuration&gt;
-        &lt;environments default=&quot;development&quot;&gt;
-            &lt;environment id=&quot;development&quot;&gt;
-                &lt;transactionManager type=&quot;JDBC&quot;/&gt;
-                &lt;dataSource type=&quot;POOLED&quot;&gt;
-                    &lt;property name=&quot;driver&quot; value=&quot;com.mysql.jdbc.Driver&quot;/&gt;
-                    &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis&quot;/&gt;
-                    &lt;property name=&quot;username&quot; value=&quot;root&quot;/&gt;
-                    &lt;property name=&quot;password&quot; value=&quot;root&quot;/&gt;
-                &lt;/dataSource&gt;
-            &lt;/environment&gt;
-        &lt;/environments&gt;
-        &lt;!-- *****引入映射文件(新增部分)***** --&gt;
-        &lt;mappers&gt;
-            &lt;mapper resource=&quot;UserMapper.xml&quot;/&gt;
-        &lt;/mappers&gt;
-    &lt;/configuration&gt;
-
-8.编写单元测试，实现插入.
-    [test/com.it18zhang.mybatis.test.TestCRUD.java]
-    /**
-     * insert
-     */
-    @Test
-    public void insert() throws Exception {
-        //指定配置文件的路径(类路径)
-        String resource = &quot;mybatis-config.xml&quot;;
-        //加载文件
-        InputStream inputStream = Resources.getResourceAsStream(resource);
-
-        //创建会话工厂Builder,相当于连接池
-        SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
-
-        //通过sf开启会话，相当于打开连接。
-        SqlSession s = sf.openSession();
-        User u = new User();
-
-        u.setName(&quot;jerry&quot;);
-        u.setAge(2);
-        s.insert(&quot;users.insert&quot;, u);
-        s.commit();
-        s.close();
-    }
-
-9.完成update-selectOne-selectAll操作。
-    9.1)编写UserMapper.xml，添加相应的元素
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-        &lt;!DOCTYPE mapper
-                PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
-                &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
-        &lt;mapper namespace=&quot;users&quot;&gt;
-            &lt;insert id=&quot;insert&quot;&gt;
-              insert into users(name,age) values(#{name},#{age})
-            &lt;/insert&gt;
-            &lt;update id=&quot;update&quot;&gt;
-                update users set name = #{name} , age = #{age} where id = #{id}
-            &lt;/update&gt;
-
-            &lt;!-- selectOne --&gt;
-            &lt;select id=&quot;selectOne&quot; parameterType=&quot;int&quot; resultType=&quot;com.it18zhang.mybatisdemo.domain.User&quot;&gt;
-                select * from users where id = #{id}
-            &lt;/select&gt;
-
-            &lt;!-- selectAll --&gt;
-            &lt;select id=&quot;selectAll&quot; resultType=&quot;com.it18zhang.mybatisdemo.domain.User&quot;&gt;
-                select * from users
-            &lt;/select&gt;
-        &lt;/mapper&gt;
-
-    9.2)编写测试程序
-        /**
-         * Created by Administrator on 2017/4/6.
-         */
-        public class TestCRUD {
-
-            /**
-             * insert
-             */
-            @Test
-            public void insert() throws Exception {
-                //指定配置文件的路径(类路径)
-                String resource = &quot;mybatis-config.xml&quot;;
-                //加载文件
-                InputStream inputStream = Resources.getResourceAsStream(resource);
-
-                //创建会话工厂Builder,相当于连接池
-                SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
-
-                //通过sf开启会话，相当于打开连接。
-                SqlSession s = sf.openSession();
-                User u = new User();
-
-                u.setName(&quot;jerry&quot;);
-                u.setAge(2);
-                s.insert(&quot;users.insert&quot;, u);
-                s.commit();
-                s.close();
-            }
-
-            /**
-             * update
-             */
-            @Test
-            public void update() throws Exception {
-                String resource = &quot;mybatis-config.xml&quot;;
-                InputStream inputStream = Resources.getResourceAsStream(resource);
-                SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
-                SqlSession s = sf.openSession();
-                User u = new User();
-                u.setId(1);
-                u.setName(&quot;tomas&quot;);
-                u.setAge(32);
-                s.update(&quot;users.update&quot;, u);
-                s.commit();
-                s.close();
-            }
-
-            /**
-             * selectOne
-             */
-            @Test
-            public void selectOne() throws Exception {
-                String resource = &quot;mybatis-config.xml&quot;;
-                InputStream inputStream = Resources.getResourceAsStream(resource);
-                SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
-                SqlSession s = sf.openSession();
-                User user = s.selectOne(&quot;users.selectOne&quot;,1);
-                System.out.println(user.getName());
-                s.commit();
-                s.close();
-            }
-
-            /**
-             * selectOne
-             */
-            @Test
-            public void selectAll() throws Exception {
-                String resource = &quot;mybatis-config.xml&quot;;
-                InputStream inputStream = Resources.getResourceAsStream(resource);
-                SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
-                SqlSession s = sf.openSession();
-                List&lt;User&gt; users = s.selectList(&quot;users.selectAll&quot;);
-                for(User uu : users){
-                    System.out.println(uu.getName() + &quot;,&quot; + uu.getAge());
-                }
-                s.commit();
-                s.close();
-            }
-        }
-</code></pre><hr>
-<p>几个文件：<br>    mybatis-config.xml配置文件指定数据库连接信息<br>    usermapper.xml映射文件，指定sql语句<br>    javabean.<br>    TestCRUD:测试文件，通过API访问，首先加载资源，产生一个会话工厂，开启会话，打开连接，实例化对象，加载。</p>
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.11&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+            &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+            &lt;version&gt;3.4.6&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;mysql&lt;/groupId&gt;
+            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+            &lt;version&gt;5.1.17&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.mchange&lt;/groupId&gt;
+            &lt;artifactId&gt;c3p0&lt;/artifactId&gt;
+            &lt;version&gt;0.9.5.2&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+            &lt;version&gt;4.3.3.RElEASE&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+            &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;    
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+            &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+        &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+        &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+        &lt;version&gt;1.1.0&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre><p>2.创建包</p>
+<pre><code>com.it18zhang.springmybatis.dao
+com.it18zhang.springmybatis.service
+com.it18zhang.springmybatis.utils
+</code></pre><p>3.配置beans.xml在source下</p>
 <hr>
+<p>坑爹的错误：</p>
+<p><img src="https://i.imgur.com/pu7CMME.png" alt=""></p>
+<p>在上图的情下，看见下面的mybtis-spring是依赖于mybatis3.1.0，而上面有一个跟他一模一样的包，所以到下面这块，下面的这个版本的包就看不出来了。所以如果有的类仅仅是在下面这个版本下才有的，需要把上面的第一个包先删除掉。因为它只显示第一个依赖的包</p>
 <h2 id="复杂应用"><a href="#复杂应用" class="headerlink" title="复杂应用"></a>复杂应用</h2><pre><code>1.准备数据
     sql.sql
 
@@ -683,7 +475,7 @@ Mybatis        //持久化。jdbc , mysql
     public class Order {
         private Integer id ;
         private String orderNo ;
-        //简历关联关系，订单和客户之间是多对一关系
+        //简历关联关系
         private User user ;
 
         //get/set
@@ -1077,7 +869,9 @@ Mybatis        //持久化。jdbc , mysql
         User u = dao.selctOne(1);
         System.out.println(u.getName());
     }
-</code></pre>
+</code></pre><hr>
+<p>回调接口的一个画图分析：<br><img src="https://i.imgur.com/DufbOjZ.png" alt=""></p>
+
       
     </div>
     
@@ -1129,12 +923,6 @@ Mybatis        //持久化。jdbc , mysql
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/SSM/" rel="tag"># SSM</a>
-          
-        </div>
-      
 
       
       
@@ -1144,8 +932,8 @@ Mybatis        //持久化。jdbc , mysql
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/16/Hbase第二天/" rel="next" title="Hbase第二天">
-                <i class="fa fa-chevron-left"></i> Hbase第二天
+              <a href="/2018/11/19/Hbase第三天/" rel="next" title="Hbase第三天">
+                <i class="fa fa-chevron-left"></i> Hbase第三天
               </a>
             
           </div>
@@ -1154,8 +942,8 @@ Mybatis        //持久化。jdbc , mysql
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/11/19/Hbase第三天/" rel="prev" title="Hbase第三天">
-                Hbase第三天 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/11/21/面试理论知识/" rel="prev" title="面试理论知识">
+                面试理论知识 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1242,7 +1030,7 @@ Mybatis        //持久化。jdbc , mysql
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1253,7 +1041,7 @@ Mybatis        //持久化。jdbc , mysql
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -1264,7 +1052,7 @@ Mybatis        //持久化。jdbc , mysql
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">99</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -1340,7 +1128,7 @@ Mybatis        //持久化。jdbc , mysql
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SSM"><span class="nav-number">1.</span> <span class="nav-text">SSM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mybatis"><span class="nav-number">2.</span> <span class="nav-text">mybatis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#体验"><span class="nav-number">3.</span> <span class="nav-text">体验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂应用"><span class="nav-number">4.</span> <span class="nav-text">复杂应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置一对多"><span class="nav-number">5.</span> <span class="nav-text">配置一对多</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合多对一和一对多关联关系到一个实体-Order-中"><span class="nav-number">6.</span> <span class="nav-text">组合多对一和一对多关联关系到一个实体(Order)中</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改造项目"><span class="nav-number">7.</span> <span class="nav-text">改造项目</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSM第二天"><span class="nav-number">1.</span> <span class="nav-text">SSM第二天</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mybais和数据库整合"><span class="nav-number">2.</span> <span class="nav-text">Mybais和数据库整合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂应用"><span class="nav-number">2.1.</span> <span class="nav-text">复杂应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置一对多"><span class="nav-number">2.2.</span> <span class="nav-text">配置一对多</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合多对一和一对多关联关系到一个实体-Order-中"><span class="nav-number">2.3.</span> <span class="nav-text">组合多对一和一对多关联关系到一个实体(Order)中</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改造项目"><span class="nav-number">2.4.</span> <span class="nav-text">改造项目</span></a></li></ol></li></ol></div>
             
 
           </div>

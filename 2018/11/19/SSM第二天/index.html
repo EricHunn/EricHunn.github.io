@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="SSM," />
 
 
 
@@ -81,21 +81,23 @@
 
 
 
-<meta name="description" content="SSM第二天三大框架的整合： 数据库层：mybatis数据持久化层：dao在交互mybatisdao:数据访问层：数据访问对象，存放简单的增删改查。每个表都有这个业务service层：业务层，和dao交互，对dao的方法进行组合调用。形成套餐springmvc展现层：做网页，做web开发的，springmvc应该和业务层交互，在springmvc里面的controller层和业务层交互，展现的东西">
+<meta name="description" content="mybatis持久化技术。jdbc sql Spring    业务层框架。 管理bean的。 new  Map&amp;lt;String,Object&amp;gt; 体验spring1.创建模块 ,添加pom.xml     &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;     &amp;lt;project xmlns=&amp;quot">
+<meta name="keywords" content="SSM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SSM第二天">
 <meta property="og:url" content="http://erichunn.github.io/2018/11/19/SSM第二天/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="SSM第二天三大框架的整合： 数据库层：mybatis数据持久化层：dao在交互mybatisdao:数据访问层：数据访问对象，存放简单的增删改查。每个表都有这个业务service层：业务层，和dao交互，对dao的方法进行组合调用。形成套餐springmvc展现层：做网页，做web开发的，springmvc应该和业务层交互，在springmvc里面的controller层和业务层交互，展现的东西">
+<meta property="og:description" content="mybatis持久化技术。jdbc sql Spring    业务层框架。 管理bean的。 new  Map&amp;lt;String,Object&amp;gt; 体验spring1.创建模块 ,添加pom.xml     &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;     &amp;lt;project xmlns=&amp;quot">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://i.imgur.com/ygpfvcz.png">
-<meta property="og:image" content="https://i.imgur.com/M8K3Sqr.png">
-<meta property="og:image" content="https://i.imgur.com/pu7CMME.png">
-<meta property="og:updated_time" content="2018-11-19T14:37:45.982Z">
+<meta property="og:image" content="https://i.imgur.com/f3jj2Pc.png">
+<meta property="og:image" content="https://i.imgur.com/WIINiCh.png">
+<meta property="og:image" content="https://i.imgur.com/JOlAVsY.png">
+<meta property="og:image" content="https://i.imgur.com/4Kts8mg.png">
+<meta property="og:updated_time" content="2018-11-28T13:23:45.304Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SSM第二天">
-<meta name="twitter:description" content="SSM第二天三大框架的整合： 数据库层：mybatis数据持久化层：dao在交互mybatisdao:数据访问层：数据访问对象，存放简单的增删改查。每个表都有这个业务service层：业务层，和dao交互，对dao的方法进行组合调用。形成套餐springmvc展现层：做网页，做web开发的，springmvc应该和业务层交互，在springmvc里面的controller层和业务层交互，展现的东西">
-<meta name="twitter:image" content="https://i.imgur.com/ygpfvcz.png">
+<meta name="twitter:description" content="mybatis持久化技术。jdbc sql Spring    业务层框架。 管理bean的。 new  Map&amp;lt;String,Object&amp;gt; 体验spring1.创建模块 ,添加pom.xml     &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;     &amp;lt;project xmlns=&amp;quot">
+<meta name="twitter:image" content="https://i.imgur.com/f3jj2Pc.png">
 
 
 
@@ -361,7 +363,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-19T22:35:23+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-19T15:39:39+08:00">
                 2018-11-19
               </time>
             
@@ -399,218 +401,231 @@
       
 
       
-        <h1 id="SSM第二天"><a href="#SSM第二天" class="headerlink" title="SSM第二天"></a>SSM第二天</h1><p>三大框架的整合：</p>
-<p>数据库层：<br>mybatis数据持久化层：dao在交互mybatis<br>dao:数据访问层：数据访问对象，存放简单的增删改查。每个表都有这个业务<br>service层：业务层，和dao交互，对dao的方法进行组合调用。形成套餐<br>springmvc展现层：做网页，做web开发的，springmvc应该和业务层交互，在springmvc里面的controller层和业务层交互，展现的东西就是jsp做web开发做网站的，做web应用的。通过web架构来实现。springmvc就是web架构里面的一个。</p>
-<p><img src="https://i.imgur.com/ygpfvcz.png" alt=""></p>
-<h1 id="Mybais和数据库整合"><a href="#Mybais和数据库整合" class="headerlink" title="Mybais和数据库整合"></a>Mybais和数据库整合</h1><p><img src="https://i.imgur.com/M8K3Sqr.png" alt=""></p>
-<p>1.在pom中添加依赖：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+        <h2 id="mybatis"><a href="#mybatis" class="headerlink" title="mybatis"></a>mybatis</h2><pre><code>持久化技术。jdbc
+sql
+</code></pre><h2 id="Spring"><a href="#Spring" class="headerlink" title="Spring    "></a>Spring    </h2><pre><code>业务层框架。
+管理bean的。
+new 
+Map&lt;String,Object&gt;
+</code></pre><h2 id="体验spring"><a href="#体验spring" class="headerlink" title="体验spring"></a>体验spring</h2><pre><code>1.创建模块 ,添加pom.xml
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
 
-    &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-    &lt;artifactId&gt;SpringmybatisDemo&lt;/artifactId&gt;
-    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;springdemo&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
 
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;junit&lt;/groupId&gt;
-            &lt;artifactId&gt;junit&lt;/artifactId&gt;
-            &lt;version&gt;4.11&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
-            &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
-            &lt;version&gt;3.4.6&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;mysql&lt;/groupId&gt;
-            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
-            &lt;version&gt;5.1.17&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;com.mchange&lt;/groupId&gt;
-            &lt;artifactId&gt;c3p0&lt;/artifactId&gt;
-            &lt;version&gt;0.9.5.2&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
-            &lt;version&gt;4.3.3.RElEASE&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
-            &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;    
-            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
-            &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-        &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
-        &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
-        &lt;version&gt;1.1.0&lt;/version&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;junit&lt;/groupId&gt;
+                &lt;artifactId&gt;junit&lt;/artifactId&gt;
+                &lt;version&gt;4.11&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+2.创建java类
+    public class WelcomeService {
+        private String message ;
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public void sayHello(){
+            System.out.println(message);
+        }
+    }    
+
+3.创建配置文件
+    [resources/beans.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+        &lt;bean id=&quot;ws&quot; class=&quot;com.it18zhang.springdemo.service.WelcomeService&quot;&gt;
+            &lt;property name=&quot;message&quot; value=&quot;hello world&quot; /&gt;
+        &lt;/bean&gt;
+    &lt;/beans&gt;
+
+4.创建App
+    [App.java]
+    public static void main(String[] args) {
+        //创建容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;beans.xml&quot;);
+        WelcomeService ws = (WelcomeService)ac.getBean(&quot;ws&quot;);
+        ws.sayHello();
+    }
+</code></pre><h2 id="spring的注解方式使用"><a href="#spring的注解方式使用" class="headerlink" title="spring的注解方式使用"></a>spring的注解方式使用</h2><pre><code>0.增加pom.xml文件
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+        &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
     &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/project&gt;
-</code></pre><p>2.创建包</p>
-<pre><code>com.it18zhang.springmybatis.dao
-com.it18zhang.springmybatis.service
-com.it18zhang.springmybatis.utils
-</code></pre><p>3.配置beans.xml在source下</p>
-<hr>
-<p>坑爹的错误：</p>
-<p><img src="https://i.imgur.com/pu7CMME.png" alt=""></p>
-<p>在上图的情下，看见下面的mybtis-spring是依赖于mybatis3.1.0，而上面有一个跟他一模一样的包，所以到下面这块，下面的这个版本的包就看不出来了。所以如果有的类仅仅是在下面这个版本下才有的，需要把上面的第一个包先删除掉。因为它只显示第一个依赖的包</p>
-<h2 id="复杂应用"><a href="#复杂应用" class="headerlink" title="复杂应用"></a>复杂应用</h2><pre><code>1.准备数据
-    sql.sql
 
-2.创建java类.
-    [Order.java]
-    public class Order {
-        private Integer id ;
-        private String orderNo ;
-        //简历关联关系
-        private User user ;
+1.UserDao增加@Repository注解.
 
-        //get/set
-    }
-
-    [Item.java]
-    public class Item {
-        private Integer id;
-        private String itemName;
-        //订单项和订单之间的关联关系
-        private Order order;
-        //get/set
-    }
-
-3.创建Order映射文件
-    [resource/OrderMapper.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-    &lt;!DOCTYPE mapper
-            PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
-            &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
-    &lt;mapper namespace=&quot;orders&quot;&gt;
-        &lt;insert id=&quot;insert&quot;&gt;
-          insert into orders(orderno,uid) values(#{orderNo},#{user.id})
-        &lt;/insert&gt;
-
-        &lt;!-- findById --&gt;
-        &lt;select id=&quot;selectOne&quot; parameterType=&quot;int&quot; resultMap=&quot;RM_Order&quot;&gt;
-          select
-            o.id oid ,
-            o.orderno oorderno ,
-            o.uid uid ,
-            u.name uname ,
-            u.age uage
-          from orders o
-            left outer join users u on o.uid = u.id where o.id = #{id}
-        &lt;/select&gt;
-        &lt;!-- findAll --&gt;
-        &lt;select id=&quot;selectAll&quot; resultMap=&quot;RM_Order&quot;&gt;
-          select
-            o.id oid ,
-            o.orderno oorderno ,
-            o.uid uid ,
-            u.name uname ,
-            u.age uage
-          from orders o
-            left outer join users u on o.uid = u.id
-        &lt;/select&gt;
-        &lt;!-- 自定义结果映射 --&gt;
-        &lt;resultMap id=&quot;RM_Order&quot; type=&quot;com.it18zhang.mybatisdemo.domain.Order&quot;&gt;
-            &lt;id property=&quot;id&quot; column=&quot;oid&quot;/&gt;
-            &lt;result property=&quot;orderNo&quot; column=&quot;oorderno&quot;/&gt;
-            &lt;association property=&quot;user&quot; javaType=&quot;com.it18zhang.mybatisdemo.domain.User&quot;&gt;
-                &lt;id property=&quot;id&quot; column=&quot;uid&quot; /&gt;
-                &lt;result property=&quot;name&quot; column=&quot;uname&quot; /&gt;
-                &lt;result property=&quot;age&quot; column=&quot;uage&quot; /&gt;
-            &lt;/association&gt;
-        &lt;/resultMap&gt;
-    &lt;/mapper&gt;
-
-4.修改配置文件,添加映射。
-    [resource/mybatis-config.xml]
-    &lt;!-- 引入映射文件 --&gt;
-    &lt;mappers&gt;
-        &lt;mapper resource=&quot;*Mapper.xml&quot;/&gt;
-    &lt;/mappers&gt;
-
-5.测试类
-    public class TestOrder {
-
-        /**
-         * insert
-         */
-        @Test
-        public void insert() throws Exception {
-            String resource = &quot;mybatis-config.xml&quot;;
-            InputStream inputStream = Resources.getResourceAsStream(resource);
-            SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
-            SqlSession s = sf.openSession();
-
-            User u = new User();
-            u.setId(2);
-
-            Order o = new Order();
-            o.setOrderNo(&quot;No005&quot;);
-            o.setUser(u);
-
-            s.insert(&quot;orders.insert&quot;,o);
-            s.commit();
-            s.close();
-        }
-
-        @Test
-        public void selectOne() throws Exception {
-            String resource = &quot;mybatis-config.xml&quot;;
-            InputStream inputStream = Resources.getResourceAsStream(resource);
-            SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
-            SqlSession s = sf.openSession();
-            Order order = s.selectOne(&quot;orders.selectOne&quot;,1);
-            System.out.println(order.getOrderNo());
-            s.commit();
-            s.close();
-        }
-
-        @Test
-        public void selectAll() throws Exception {
-            String resource = &quot;mybatis-config.xml&quot;;
-            InputStream inputStream = Resources.getResourceAsStream(resource);
-            SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
-            SqlSession s = sf.openSession();
-            List&lt;Order&gt; list = s.selectList(&quot;orders.selectAll&quot;);
-            for(Order o : list){
-                System.out.println(o.getOrderNo() + &quot; : &quot; + o.getUser().getName());
-            }
-            s.commit();
-            s.close();
-        }
-    }
-</code></pre><h2 id="配置一对多"><a href="#配置一对多" class="headerlink" title="配置一对多"></a>配置一对多</h2><pre><code>1.在User中增加orders集合。
-    public class User {
+    @Repository(&quot;userDao&quot;)
+    public class UserDao{
         ...
-        private List&lt;Order&gt; orders ;
-        //get/set
     }
 
-2.改造UserMapper.xml
-</code></pre><h2 id="组合多对一和一对多关联关系到一个实体-Order-中"><a href="#组合多对一和一对多关联关系到一个实体-Order-中" class="headerlink" title="组合多对一和一对多关联关系到一个实体(Order)中"></a>组合多对一和一对多关联关系到一个实体(Order)中</h2><pre><code>1.关系
-    Order(*) -&gt; (1)User
-    Order(1) -&gt; (*)Item
-
-2.Order.java
-    class Order{
+2.Service增加 @Service注解。
+    @Service(&quot;ws&quot;)
+    public class WelcomeService {
         ...
-        List&lt;Item&gt; items ;
-        //get/set    
+        //注入指定的dao对象
+        @Resource(name = &quot;userDao&quot;)
+        public void setDao(UserDao dao) {
+            this.dao = dao;
+        }
     }
-2&apos;.修改配置文件增加别名
+
+3.修改beans.xml文件，引入context空间，使用组件扫描。
+    [resrouces/beans.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+           xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt;
+        &lt;context:component-scan base-package=&quot;com.it18zhang.springdemo.dao,com.it18zhang.springdemo.service&quot; /&gt;
+
+4.测试App.java
+    public class App {
+        public static void main(String[] args) {
+            //创建容器
+            ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;beans.xml&quot;);
+            WelcomeService ws = (WelcomeService)ac.getBean(&quot;ws&quot;);
+            ws.sayHello();
+        }
+    }
+</code></pre><h2 id="spring-整合mybatis"><a href="#spring-整合mybatis" class="headerlink" title="spring 整合mybatis"></a>spring 整合mybatis</h2><pre><code>1.创建模块 pom.xml
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;springmybatisdemo&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;junit&lt;/groupId&gt;
+                &lt;artifactId&gt;junit&lt;/artifactId&gt;
+                &lt;version&gt;4.11&lt;/version&gt;
+            &lt;/dependency&gt;
+
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+                &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+                &lt;version&gt;3.1.0&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;mysql&lt;/groupId&gt;
+                &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+                &lt;version&gt;5.1.17&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;c3p0&lt;/groupId&gt;
+                &lt;artifactId&gt;c3p0&lt;/artifactId&gt;
+                &lt;version&gt;0.9.1.2&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
+                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+                &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+                &lt;version&gt;1.3.0&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
+                &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
+                &lt;version&gt;1.8.10&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+2.创建包
+    com.it18zhang.springmybatis.dao
+    com.it18zhang.springmybatis.service
+    com.it18zhang.springmybatis.util
+3.配置beans.xml
+    [resources/beans.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+        &lt;!-- 数据源 --&gt;
+        &lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;
+            &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;/&gt;
+            &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis&quot;/&gt;
+            &lt;property name=&quot;user&quot; value=&quot;root&quot;/&gt;
+            &lt;property name=&quot;password&quot; value=&quot;root&quot;/&gt;
+            &lt;property name=&quot;maxPoolSize&quot; value=&quot;10&quot;/&gt;
+            &lt;property name=&quot;minPoolSize&quot; value=&quot;2&quot;/&gt;
+            &lt;property name=&quot;initialPoolSize&quot; value=&quot;3&quot;/&gt;
+            &lt;property name=&quot;acquireIncrement&quot; value=&quot;2&quot;/&gt;
+        &lt;/bean&gt;
+    &lt;/beans&gt;
+
+4.编写单元测试
+    @Test
+    public void testConn() throws Exception {
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;beans.xml&quot;);
+        DataSource ds = (DataSource)ac.getBean(&quot;dataSource&quot;);
+        System.out.println(ds.getConnection());
+    }
+
+5.添加domain类
+    User
+    Order
+    Item
+    略
+
+6.添加Mapper.xml映射文件
+    //注意：修改类的别名
+    resources/UserMapper.xml
+    resources/OrderMapper.xml
+
+7.添加mybatis-config.xml
     [resources/mybatis-config.xml]
     &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
     &lt;!DOCTYPE configuration
@@ -618,21 +633,10 @@ com.it18zhang.springmybatis.utils
             &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
     &lt;configuration&gt;
         &lt;typeAliases&gt;
-            &lt;typeAlias type=&quot;com.it18zhang.mybatisdemo.domain.User&quot; alias=&quot;_User&quot;/&gt;
-            &lt;typeAlias type=&quot;com.it18zhang.mybatisdemo.domain.Order&quot; alias=&quot;_Order&quot;/&gt;
-            &lt;typeAlias type=&quot;com.it18zhang.mybatisdemo.domain.Item&quot; alias=&quot;_Item&quot;/&gt;
+            &lt;typeAlias type=&quot;com.it18zhang.springmybatis.domain.User&quot; alias=&quot;_User&quot;/&gt;
+            &lt;typeAlias type=&quot;com.it18zhang.springmybatis.domain.Order&quot; alias=&quot;_Order&quot;/&gt;
+            &lt;typeAlias type=&quot;com.it18zhang.springmybatis.domain.Item&quot; alias=&quot;_Item&quot;/&gt;
         &lt;/typeAliases&gt;
-        &lt;environments default=&quot;development&quot;&gt;
-            &lt;environment id=&quot;development&quot;&gt;
-                &lt;transactionManager type=&quot;JDBC&quot;/&gt;
-                &lt;dataSource type=&quot;POOLED&quot;&gt;
-                    &lt;property name=&quot;driver&quot; value=&quot;com.mysql.jdbc.Driver&quot;/&gt;
-                    &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis&quot;/&gt;
-                    &lt;property name=&quot;username&quot; value=&quot;root&quot;/&gt;
-                    &lt;property name=&quot;password&quot; value=&quot;root&quot;/&gt;
-                &lt;/dataSource&gt;
-            &lt;/environment&gt;
-        &lt;/environments&gt;
         &lt;!-- 引入映射文件 --&gt;
         &lt;mappers&gt;
             &lt;mapper resource=&quot;UserMapper.xml&quot;/&gt;
@@ -640,235 +644,141 @@ com.it18zhang.springmybatis.utils
         &lt;/mappers&gt;
     &lt;/configuration&gt;
 
-3.OrderMapper.xml
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-    &lt;!DOCTYPE mapper
-            PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
-            &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
-    &lt;mapper namespace=&quot;orders&quot;&gt;
-        &lt;insert id=&quot;insert&quot;&gt;
-          insert into orders(orderno,uid) values(#{orderNo},#{user.id})
-        &lt;/insert&gt;
-
-        &lt;!-- findById --&gt;
-        &lt;select id=&quot;selectOne&quot; parameterType=&quot;int&quot; resultMap=&quot;RM_Order&quot;&gt;
-          select
-            o.id      oid ,
-            o.orderno oorderno ,
-            o.uid     uid ,
-            u.name    uname ,
-            u.age     uage ,
-            i.id      iid,
-            i.itemname iitemname
-          from orders o
-            left outer join users u on o.uid = u.id
-            left outer join items i on o.id = i.oid
-          where o.id = #{id}
-        &lt;/select&gt;
-        &lt;!-- findAll --&gt;
-        &lt;select id=&quot;selectAll&quot; resultMap=&quot;RM_Order&quot;&gt;
-          select
-            o.id      oid ,
-            o.orderno oorderno ,
-            o.uid     uid ,
-            u.name    uname ,
-            u.age     uage ,
-            i.id      iid,
-            i.itemname iitemname
-          from orders o
-            left outer join users u on o.uid = u.id
-            left outer join items i on o.id = i.oid
-        &lt;/select&gt;
-        &lt;!-- 自定义结果映射 --&gt;
-        &lt;resultMap id=&quot;RM_Order&quot; type=&quot;com.it18zhang.mybatisdemo.domain.Order&quot;&gt;
-            &lt;id property=&quot;id&quot; column=&quot;oid&quot;/&gt;
-            &lt;result property=&quot;orderNo&quot; column=&quot;oorderno&quot;/&gt;
-            &lt;association property=&quot;user&quot; javaType=&quot;com.it18zhang.mybatisdemo.domain.User&quot;&gt;
-                &lt;id property=&quot;id&quot; column=&quot;uid&quot; /&gt;
-                &lt;result property=&quot;name&quot; column=&quot;uname&quot; /&gt;
-                &lt;result property=&quot;age&quot; column=&quot;uage&quot; /&gt;
-            &lt;/association&gt;
-            &lt;collection property=&quot;items&quot; ofType=&quot;_Item&quot;&gt;
-                &lt;id property=&quot;id&quot; column=&quot;iid&quot; /&gt;
-                &lt;result property=&quot;itemName&quot; column=&quot;iitemname&quot; /&gt;
-            &lt;/collection&gt;
-        &lt;/resultMap&gt;
-    &lt;/mapper&gt;
-
-4.测试
-    @Test
-    public void selectOne() throws Exception {
-        String resource = &quot;mybatis-config.xml&quot;;
-        InputStream inputStream = Resources.getResourceAsStream(resource);
-        SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
-        SqlSession s = sf.openSession();
-        Order order = s.selectOne(&quot;orders.selectOne&quot;,1);
-        System.out.println(order.getOrderNo() + order.getUser().getName());
-        for(Item i : order.getItems()){
-            System.out.println(i.getId() + &quot;:&quot; + i.getItemName());
-        }
-        s.commit();
-        s.close();
-    }
-</code></pre><h2 id="改造项目"><a href="#改造项目" class="headerlink" title="改造项目"></a>改造项目</h2><pre><code>1.引入Util类
-    package com.it18zhang.mybatisdemo.util;
-
-    import org.apache.ibatis.io.Resources;
-    import org.apache.ibatis.session.SqlSession;
-    import org.apache.ibatis.session.SqlSessionFactory;
-    import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-
-    import java.io.InputStream;
-
-    /**
-     * 工具类
-     */
-    public class Util {
-        //
-        private static SqlSessionFactory sf ;
-
-        static{
-            try {
-                String resource = &quot;mybatis-config.xml&quot;;
-                InputStream inputStream = Resources.getResourceAsStream(resource);
-                sf = new SqlSessionFactoryBuilder().build(inputStream);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        /**
-         * 开启会话
-         */
-        public static SqlSession openSession(){
-            return sf.openSession() ;
-        }
-
-        /**
-         * 关闭会话
-         */
-        public static void closeSession(SqlSession s){
-            if(s != null){
-                s.close();
-            }
-        }
-
-
-        /**
-         * 关闭会话
-         */
-        public static void rollbackTx(SqlSession s) {
-            if (s != null) {
-                s.rollback();
-            }
-        }
-    }
-
-2.设计模板类DaoTemplate和回调MybatisCallback接口
-    [DaoTemplate.java]
-    package com.it18zhang.mybatisdemo.dao;
-
-    import com.it18zhang.mybatisdemo.util.Util;
-    import org.apache.ibatis.session.SqlSession;
-
-    /**
-     * 模板类
-     */
-    public class DaoTemplate {
-        /**
-         * 执行
-         */
-        public static Object execute(MybatisCallback cb){
-            SqlSession s = null;
-            try {
-                s = Util.openSession();
-                Object ret = cb.doInMybatis(s);
-                s.commit();
-                return ret ;
-            } catch (Exception e) {
-                Util.rollbackTx(s);
-            } finally {
-                Util.closeSession(s);
-            }
-            return null ;
-        }
-    }
-
-    [MybatisCallback.java]
-    package com.it18zhang.mybatisdemo.dao;
-
-    import org.apache.ibatis.session.SqlSession;
-
-    /**
-     * 回调接口
-     */
-    public interface MybatisCallback {
-        public Object doInMybatis(SqlSession s);
-    }
-
-3.通过模板类+回调接口实现UserDao.java
-    [UserDao.java]
-    package com.it18zhang.mybatisdemo.dao;
-
-    import com.it18zhang.mybatisdemo.domain.User;
-    import com.it18zhang.mybatisdemo.util.Util;
-    import org.apache.ibatis.session.SqlSession;
+8.创建Dao接口和实现类.
+    [BaseDao.java]
+    package com.it18zhang.springmybatis.dao;
 
     import java.util.List;
 
     /**
-     * UserDao
+     *基本Dao接口
      */
-    public class UserDao {
+    public interface BaseDao&lt;T&gt; {
+        public void insert(T t) ;
+        public void update(T t) ;
+        public void delete(Integer id) ;
+        public T selectOne(Integer id) ;
+        public List&lt;T&gt; selectAll() ;
+    }
 
-        /**
-         * 插入操作
-         */
-        public void insert(final User user){
-            DaoTemplate.execute(new MybatisCallback() {
-                public Object doInMybatis(SqlSession s) {
-                    s.insert(&quot;users.insert&quot;,user);
-                    return null ;
-                }
-            });
+    [UserDao.java]
+    package com.it18zhang.springmybatis.dao;
+
+    import com.it18zhang.springmybatis.domain.User;
+    import org.mybatis.spring.support.SqlSessionDaoSupport;
+
+    import java.util.List;
+
+    /**
+     */
+    @Repository(&quot;userDao&quot;)
+    public class UserDao extends SqlSessionDaoSupport implements BaseDao&lt;User&gt; {
+
+        public void insert(User user) {
+            getSqlSession().insert(&quot;users.insert&quot;,user);
         }
 
-        /**
-         * 插入操作
-         */
-        public void update(final User user){
-            DaoTemplate.execute(new MybatisCallback() {
-                public Object doInMybatis(SqlSession s) {
-                    s.update(&quot;users.update&quot;, user);
-                    return null ;
-                }
-            });
+        public void update(User user) {
+            getSqlSession().update(&quot;users.update&quot;, user);
         }
 
-        public User selctOne(final Integer id){
-            return (User)DaoTemplate.execute(new MybatisCallback() {
-                public Object doInMybatis(SqlSession s) {
-                    return s.selectOne(&quot;users.selectOne&quot;,id);
-                }
-            });
+        public void delete(Integer id ) {
+            getSqlSession().delete(&quot;users.delete&quot;, id);
         }
 
-        public List&lt;User&gt; selctAll(){
-            return (List&lt;User&gt;)DaoTemplate.execute(new MybatisCallback() {
-                public Object doInMybatis(SqlSession s) {
-                    return s.selectList(&quot;users.selectAll&quot;);
-                }
-            });
+        public User selectOne(Integer id) {
+            return getSqlSession().selectOne(&quot;users.selectOne&quot;,id) ;
+        }
+
+        public List&lt;User&gt; selectAll() {
+            return getSqlSession().selectList(&quot;users.selectAll&quot;);
+        }
+    }
+</code></pre><p>a<br>        [OrderDao.java]<br>        略</p>
+<pre><code>9.创建BaseService&lt;T&gt;.java接口 + UserService.java + UserServcieImpl.java
+    [BaseService.java]
+    package com.it18zhang.springmybatis.service;
+
+    import java.util.List;
+
+    /**
+     * Created by Administrator on 2017/4/7.
+     */
+    public interface BaseService&lt;T&gt; {
+        public void insert(T t);
+
+        public void update(T t);
+
+        public void delete(Integer id);
+
+        public T selectOne(Integer id);
+
+        public List&lt;T&gt; selectAll();
+    }
+
+    [BaseServiceImpl.java]
+    public abstract class BaseServiceImpl&lt;T&gt; implements BaseService&lt;T&gt; {
+
+        private BaseDao&lt;T&gt; dao ;
+
+        public void setDao(BaseDao&lt;T&gt; dao) {
+            this.dao = dao;
+        }
+
+        public void insert(T t) {
+            dao.insert(t);
+        }
+        ...
+    }
+
+    [UserService.java]
+    public interface UserService extends BaseService&lt;User&gt; {
+
+    }
+
+    [UserServiceImpl.java]
+    @Service(&quot;userService&quot;)
+    public class UserServiceImpl extends BaseServiceImpl&lt;User&gt; implements  UserService{
+        /*** 重写该方法，注入指定的Dao对象 ***/
+        @Resource(name=&quot;userDao&quot;)
+        public void setDao(BaseDao&lt;User&gt; dao) {
+            super.setDao(dao);
         }
     }
 
-4.App测试
-    public static void main(String[] args) {
-        UserDao dao = new UserDao();
-        User u = dao.selctOne(1);
-        System.out.println(u.getName());
+10.完善spring的配置文件.
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+</code></pre><beans xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.springframework.org/schema/beans
+                                   http://www.springframework.org/schema/beans/spring-beans.xsd
+                                   http://www.springframework.org/schema/context
+                                   http://www.springframework.org/schema/context/spring-context-4.3.xsd
+                                   http://www.springframework.org/schema/tx
+                                   http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+                                   http://www.springframework.org/schema/aop
+                                   http://www.springframework.org/schema/aop/spring-aop-4.3.xsd" default-autowire="byType"><br>    <!-- 配置事务特征 --><br>    &lt;tx:advice id=”txAdvice” transaction-manager=”txManager”&gt;<br>        <a href="tx:attributes" target="_blank" rel="noopener">tx:attributes</a><br>            <!--，配置事务特征，
+            name代表所有都要加隔离事物。propagation代表传播行为，*是通配，隔离级别都用默认隔离级别
+            那么那些方法需要事务呢？所以我们又要加一个AOP的范畴--><br>            &lt;tx:method name=”<em>“ propagation=”REQUIRED” isolation=”DEFAULT”/&gt;<br>        &lt;/tx:attributes&gt;<br>    &lt;/tx:advice&gt;<br><br>    <!-- 配置事务切面 也叫aop。
+    意思是不用改源码，加入事务的管理功能其实都对应的是javabean。--><br>    <a href="aop:config" target="_blank" rel="noopener">aop:config</a><br>        &lt;!–advisor代表切入点通知，吧事务txAdvice加到一个地方去，这个地方叫做切入点，哪里执行execution呢，就是任何地方<br>        第一个</em>匹配的是函数的返回值  任何函数返回值都可以，然后<em>.代表包，任何包以及包的子包，然后.</em>service第一个点代表<br>        包和类的分割符，后面就是以Service结尾的任何接口或类，然后最后括号里面的..代表参数不限，随便什么参数都可以–&gt;<br>        &lt;aop:advisor advice-ref=”txAdvice” pointcut=”execution(<em> </em>..<em>Service.</em>(..))” /&gt;<br>    &lt;/aop:config&gt;<br><br>    <!-- 扫描包 --><br>    &lt;context:component-scan base-package=”com.it18zhang.springmybatis.dao,com.it18zhang.springmybatis.service” /&gt;<br><br>    <!-- 数据源 --><br>    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"><br>        <property name="driverClass" value="com.mysql.jdbc.Driver"><br>        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/mybatis"><br>        <property name="user" value="root"><br>        <property name="password" value="root"><br>        <property name="maxPoolSize" value="10"><br>        <property name="minPoolSize" value="2"><br>        <property name="initialPoolSize" value="3"><br>        <property name="acquireIncrement" value="2"><br>    </property></property></property></property></property></property></property></property></bean><br><br>    <!-- mybatis整合spring的核心类。配置会话工厂 --><br>    <bean id="sf" class="org.mybatis.spring.SqlSessionFactoryBean"><br>        <!-- 指定数据源 --><br>        <property name="dataSource" ref="dataSource"><br>        <!-- 指定mybatis配置文件 --><br>        <property name="configLocation" value="mybatis-config.xml"><br>    </property></property></bean><br><br>    <!-- 数据源事务管理器 --><br>    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"><br>        <property name="dataSource" ref="dataSource"><br>    </property></bean><br></beans>
+
+<pre><code>11.测试UserService
+    @Test
+    public void testUserService() throws Exception {
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;beans.xml&quot;);
+        UserService us = (UserService)ac.getBean(&quot;userService&quot;);
+        User u = new User();
+        u.setName(&quot;jerry&quot;);
+        u.setAge(12);
+        us.insert(u);
     }
 </code></pre><hr>
+<p>select i.id iid,i.itemname iitemname,o.id oid,o.orderno oorderno , u.id uid ,u.name uname ,u.age uage<br>from items i<br>    left outer join orders o on i.oid = o.id<br>    left outer join users u on o.uid = u.id<br>where i.id = 2</p>
+<p>我们一般吧最基础的增删改查里面放到baseservice这个接口里面，这里面是公共的功能，所以在下面还需要有分开的叉开的，需要有userservice继承自baseservice,他也是一个接口，然后在userservice里面有什么需要加的功能加到这个里面，也就是说在服务层需要有什么功能的都加到这个接口里面，避免都要实现。这个地方是要继承的。</p>
+<p><img src="https://i.imgur.com/f3jj2Pc.png" alt=""></p>
+<p><img src="https://i.imgur.com/WIINiCh.png" alt=""></p>
+<p>一个spring整合mybatis的rose图：</p>
+<p><img src="https://i.imgur.com/JOlAVsY.png" alt=""></p>
+<p>整个结构：<br>这个里面如果直接接受dao可以在调试中get到他的具体的内容，<br>如果接受service就不行因为事务管理封装起了sevice。所以接收到的是一个事务</p>
+<p><img src="https://i.imgur.com/4Kts8mg.png" alt=""></p>
 
       
     </div>
@@ -921,6 +831,12 @@ com.it18zhang.springmybatis.utils
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/SSM/" rel="tag"># SSM</a>
+          
+        </div>
+      
 
       
       
@@ -930,8 +846,8 @@ com.it18zhang.springmybatis.utils
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/19/Hbase第三天/" rel="next" title="Hbase第三天">
-                <i class="fa fa-chevron-left"></i> Hbase第三天
+              <a href="/2018/11/16/Hbase第二天/" rel="next" title="Hbase第二天">
+                <i class="fa fa-chevron-left"></i> Hbase第二天
               </a>
             
           </div>
@@ -940,8 +856,8 @@ com.it18zhang.springmybatis.utils
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/11/21/面试理论知识/" rel="prev" title="面试理论知识">
-                面试理论知识 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/11/19/Hbase第三天/" rel="prev" title="Hbase第三天">
+                Hbase第三天 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1028,7 +944,7 @@ com.it18zhang.springmybatis.utils
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1039,7 +955,7 @@ com.it18zhang.springmybatis.utils
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -1050,7 +966,7 @@ com.it18zhang.springmybatis.utils
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">99</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -1126,7 +1042,7 @@ com.it18zhang.springmybatis.utils
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSM第二天"><span class="nav-number">1.</span> <span class="nav-text">SSM第二天</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mybais和数据库整合"><span class="nav-number">2.</span> <span class="nav-text">Mybais和数据库整合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂应用"><span class="nav-number">2.1.</span> <span class="nav-text">复杂应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置一对多"><span class="nav-number">2.2.</span> <span class="nav-text">配置一对多</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合多对一和一对多关联关系到一个实体-Order-中"><span class="nav-number">2.3.</span> <span class="nav-text">组合多对一和一对多关联关系到一个实体(Order)中</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改造项目"><span class="nav-number">2.4.</span> <span class="nav-text">改造项目</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#mybatis"><span class="nav-number">1.</span> <span class="nav-text">mybatis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring"><span class="nav-number">2.</span> <span class="nav-text">Spring    </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#体验spring"><span class="nav-number">3.</span> <span class="nav-text">体验spring</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spring的注解方式使用"><span class="nav-number">4.</span> <span class="nav-text">spring的注解方式使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spring-整合mybatis"><span class="nav-number">5.</span> <span class="nav-text">spring 整合mybatis</span></a></li></ol></div>
             
 
           </div>

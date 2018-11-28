@@ -328,6 +328,169 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/14/京东实战项目之hive实战（1）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/14/京东实战项目之hive实战（1）/" itemprop="url">京东实战项目之hive实战（1）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-14T20:56:23+08:00">
+                2018-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>先熟悉一下Hive的基本语句：</p>
+<p><img src="https://i.imgur.com/m3EGeNB.png" alt=""></p>
+<p>首先里面的库有这么几个表，</p>
+<pre><code>desc formatted ods_order;
+</code></pre><hr>
+<p>看到表有几个信息</p>
+<p><img src="https://i.imgur.com/QySpeml.png" alt=""></p>
+<hr>
+<p>可以看到表的字段的信息。</p>
+<p><img src="https://i.imgur.com/LKLlYkH.png" alt=""></p>
+<p>同时可以看见表的是否是分区表partition information</p>
+<p>Location:可以看见路径，数据是在哪里的。</p>
+<hr>
+<p>table Type: 是否是内部表</p>
+<hr>
+<p><img src="https://i.imgur.com/xeLyY3a.png" alt=""><br>可以通过Hive看到进入到dfs里面的路径</p>
+<hr>
+<p><img src="https://i.imgur.com/xygHp2A.png" alt=""><br>可以看见里面文件的大小</p>
+<hr>
+<p>通过explain 来看他的hive是怎么走的，看他的执行计划。<br><img src="https://i.imgur.com/tSBmrzT.png" alt=""></p>
+<hr>
+<p>观察一个表的分区信息：</p>
+<p><img src="https://i.imgur.com/aqBMFwV.png" alt=""></p>
+<hr>
+<p>查看hadoop正在运行的任务</p>
+<pre><code>yarn application -list 
+</code></pre><p><img src="https://i.imgur.com/MVAygd5.png" alt=""></p>
+<p><img src="https://i.imgur.com/tFau3p3.png" alt=""></p>
+<hr>
+<p>show functions;//显示hive里所有函数<br>desc function extended add_months//显示里面具体的函数的用法</p>
+<hr>
+<p> 有时候desc formatted ods_order;里面显示的路径可能会是假的路径。在hadoop搭建的时候配置出问题，就会出现假的路径。</p>
+<p>通过命令</p>
+<pre><code>desc extended ods_order partition(dt=20151010);
+
+//通过这个命令可以找到库表的实际路径。其中的dt是通过
+show partition ado_order;来找到的。
+</code></pre><hr>
+<p><img src="https://i.imgur.com/1dogCNC.png" alt=""></p>
+<hr>
+<p><img src="https://i.imgur.com/9UA2P7t.png" alt=""></p>
+<hr>
+<p><img src="https://i.imgur.com/hrtak5b.png" alt=""><br>以前的0.1之前有些扫描数据的时候默认是不开启mapreduce的。<br>在select的时候是不开启mapreduce的。如果是少量的数据可以直接扫描出来的。但是表的数据非常大，如果不主动开启reduce执行，那么需要手动执行。通过上图来操作。设置是否开启mapreduce来执行。</p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/12/Java基础学习笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1088,7 +1251,7 @@ public class 数组的使用说明代码 {
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1099,7 +1262,7 @@ public class 数组的使用说明代码 {
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -1110,7 +1273,7 @@ public class 数组的使用说明代码 {
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">99</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

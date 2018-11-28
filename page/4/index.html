@@ -328,6 +328,185 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/19/Linux基础第之循环命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/19/Linux基础第之循环命令/" itemprop="url">Linux基础第之循环命令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-19T18:03:21+08:00">
+                2018-09-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="访问文件-夹-物理位置"><a href="#访问文件-夹-物理位置" class="headerlink" title="访问文件(夹)物理位置"></a>访问文件(夹)物理位置</h2><p>pwd命令是显示当前的逻辑位置。</p>
+<p>物理位置是针对符号连接也是针对软连接的。</p>
+<p>//进入/t的物理位置</p>
+<pre><code>$&gt;cd -P /t    
+</code></pre><p>//显式当前目录的物理位置</p>
+<pre><code>$&gt;pwd -P            
+</code></pre><p><img src="https://i.imgur.com/uCWAgEF.png" alt=""></p>
+<h2 id="访问环境变量"><a href="#访问环境变量" class="headerlink" title="访问环境变量"></a>访问环境变量</h2><pre><code>echo ${PATH}                //ok
+echo $PATH                    //ok
+echo &quot;$PATH&quot;                //ok
+echo &apos;$PATH&apos;                //&apos;&apos;原样输出这个不行，显示“PATH”
+</code></pre><h2 id="export定义环境变量-只在session中有效-当前会话"><a href="#export定义环境变量-只在session中有效-当前会话" class="headerlink" title="export定义环境变量,只在session中有效 (当前会话)"></a>export定义环境变量,只在session中有效 (当前会话)</h2><pre><code>$&gt;export name=${PATH}:tom
+</code></pre><p>设置name为${Var1}的值，Var1没有设置为${Var2}的值。</p>
+<pre><code>$&gt;export name=${Var1:-${Var2}}    
+</code></pre><p><img src="https://i.imgur.com/l1hKqkn.png" alt=""></p>
+<h2 id="命令执行过程"><a href="#命令执行过程" class="headerlink" title="命令执行过程"></a>命令执行过程</h2><pre><code>$?        //命令的返回值存储变量,0:成功 1:失败。
+$#        //参数个数
+$1        //第几个参数
+$0        //当前脚本(命令)名称
+$@        //取出所有参数
+shift    //参数左移
+${a/b/c}    //
+</code></pre><p><img src="https://i.imgur.com/jhsCOo7.png" alt=""></p>
+<p><img src="https://i.imgur.com/v4zjND7.png" alt=""></p>
+<p><img src="https://i.imgur.com/qkZ4UhX.png" alt=""></p>
+<p>下面一个例子</p>
+<p><img src="https://i.imgur.com/i9F9fEr.png" alt=""></p>
+<p><img src="https://i.imgur.com/6u7sNQx.png" alt=""></p>
+<p>向左移位解释：</p>
+<p><img src="https://i.imgur.com/erlgoWB.png" alt=""></p>
+<h2 id="if-命令讲解"><a href="#if-命令讲解" class="headerlink" title="if 命令讲解"></a>if 命令讲解</h2><p>语法:</p>
+<p>中括号是可以选择的：</p>
+<pre><code>if COMMANDS; then COMMANDS; [ elif COMMANDS; then COMMANDS; ]... [ else COMMANDS; ] fi
+
+
+if [ $# -lt 3 ]; then xx ; fi
+
+3,5
+</code></pre><p><img src="https://i.imgur.com/oUNME5o.png" alt=""></p>
+<p><img src="https://i.imgur.com/zj0NX7K.png" alt=""></p>
+<p><img src="https://i.imgur.com/eRyv4Iw.png" alt=""></p>
+<h2 id="使用for循环输出1-100个数"><a href="#使用for循环输出1-100个数" class="headerlink" title="使用for循环输出1 - 100个数"></a>使用for循环输出1 - 100个数</h2><p>看一下for的帮助文档，注意从冒号之后是开始的：</p>
+<p><img src="https://i.imgur.com/drXeDUE.png" alt=""></p>
+<pre><code>for NAME [in WORDS ... ] ; do COMMANDS; done
+for x in a b c d ; do echo $x ; done ;
+</code></pre><p><img src="https://i.imgur.com/wrIcUZI.png" alt=""></p>
+<p>通过for循环打印一个三角形：<br>首先看一下<br><img src="https://i.imgur.com/2ayzuZl.png" alt=""></p>
+<p>然后这段是命令：</p>
+<p><img src="https://i.imgur.com/IKLm90v.png" alt=""></p>
+<h2 id="while语法"><a href="#while语法" class="headerlink" title="while语法"></a>while语法</h2><pre><code>for: for NAME [in WORDS ... ] ; do COMMANDS; done
+
+for ((: for (( exp1; exp2; exp3 )); do COMMANDS; done
+</code></pre><p><img src="https://i.imgur.com/qewzeuC.png" alt=""></p>
+<p>一个例子：</p>
+<pre><code>#!/bin/bash
+((i=0))
+while ((i&lt;100)) ; do
+    echo $i;
+    i=$((i+1))
+done
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/19/Linux基础之hostname/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2080,169 +2259,6 @@ $&gt;find . | grep txt | cp `xargs` temp    //xargs是多行变单行，使用�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/14/京东实战项目之hive实战（1）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/14/京东实战项目之hive实战（1）/" itemprop="url">京东实战项目之hive实战（1）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-14T20:56:23+08:00">
-                2018-09-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>先熟悉一下Hive的基本语句：</p>
-<p><img src="https://i.imgur.com/m3EGeNB.png" alt=""></p>
-<p>首先里面的库有这么几个表，</p>
-<pre><code>desc formatted ods_order;
-</code></pre><hr>
-<p>看到表有几个信息</p>
-<p><img src="https://i.imgur.com/QySpeml.png" alt=""></p>
-<hr>
-<p>可以看到表的字段的信息。</p>
-<p><img src="https://i.imgur.com/LKLlYkH.png" alt=""></p>
-<p>同时可以看见表的是否是分区表partition information</p>
-<p>Location:可以看见路径，数据是在哪里的。</p>
-<hr>
-<p>table Type: 是否是内部表</p>
-<hr>
-<p><img src="https://i.imgur.com/xeLyY3a.png" alt=""><br>可以通过Hive看到进入到dfs里面的路径</p>
-<hr>
-<p><img src="https://i.imgur.com/xygHp2A.png" alt=""><br>可以看见里面文件的大小</p>
-<hr>
-<p>通过explain 来看他的hive是怎么走的，看他的执行计划。<br><img src="https://i.imgur.com/tSBmrzT.png" alt=""></p>
-<hr>
-<p>观察一个表的分区信息：</p>
-<p><img src="https://i.imgur.com/aqBMFwV.png" alt=""></p>
-<hr>
-<p>查看hadoop正在运行的任务</p>
-<pre><code>yarn application -list 
-</code></pre><p><img src="https://i.imgur.com/MVAygd5.png" alt=""></p>
-<p><img src="https://i.imgur.com/tFau3p3.png" alt=""></p>
-<hr>
-<p>show functions;//显示hive里所有函数<br>desc function extended add_months//显示里面具体的函数的用法</p>
-<hr>
-<p> 有时候desc formatted ods_order;里面显示的路径可能会是假的路径。在hadoop搭建的时候配置出问题，就会出现假的路径。</p>
-<p>通过命令</p>
-<pre><code>desc extended ods_order partition(dt=20151010);
-
-//通过这个命令可以找到库表的实际路径。其中的dt是通过
-show partition ado_order;来找到的。
-</code></pre><hr>
-<p><img src="https://i.imgur.com/1dogCNC.png" alt=""></p>
-<hr>
-<p><img src="https://i.imgur.com/9UA2P7t.png" alt=""></p>
-<hr>
-<p><img src="https://i.imgur.com/hrtak5b.png" alt=""><br>以前的0.1之前有些扫描数据的时候默认是不开启mapreduce的。<br>在select的时候是不开启mapreduce的。如果是少量的数据可以直接扫描出来的。但是表的数据非常大，如果不主动开启reduce执行，那么需要手动执行。通过上图来操作。设置是否开启mapreduce来执行。</p>
-<hr>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2297,7 +2313,7 @@ show partition ado_order;来找到的。
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2308,7 +2324,7 @@ show partition ado_order;来找到的。
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -2319,7 +2335,7 @@ show partition ado_order;来找到的。
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">99</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
