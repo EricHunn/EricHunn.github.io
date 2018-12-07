@@ -328,6 +328,1010 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/12/01/剑指offer面试题Java版(一)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/01/剑指offer面试题Java版(一)/" itemprop="url">剑指offer面试题Java版(一)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T16:56:56+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/面试/" itemprop="url" rel="index">
+                    <span itemprop="name">面试</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/面试/剑指offer/" itemprop="url" rel="index">
+                    <span itemprop="name">剑指offer</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>数组基础：</p>
+<pre><code>import java.util.Arrays;
+import java.util.Scanner;
+public class jichu {
+
+public static void main(String args[]) {
+    int[][] array = {{1, 3, 4,}, {123, 23, 4}};
+    int target = 3;
+    jichu offer = new jichu();
+    boolean b = offer.find(array, target);
+    System.out.println(b);
+    System.out.println(array[0][0]);
+    System.out.println(array[0][1]);
+    System.out.println(array[0][2]);
+    System.out.println(array[1][0]);
+    System.out.println(array[1][1]);
+    System.out.println(array[1][2]);
+
+    System.out.println(&quot;一维数组转换成String,一维数组按大小排序，以为数组取最大值最小值&quot;);
+    offer.chaxun();
+    System.out.println(&quot;遍历数组的几种方式==================&quot;);
+    offer.bianli1(array);
+    offer.bianli2(array);
+    offer.bianli3(array);
+    System.out.println(&quot;实现数组交换----------------&quot;);
+    offer.jiaohuan(array);
+    System.out.println(&quot;打印杨辉三角=========================&quot;);
+    offer.yanghhui();
+
+}
+
+public void chaxun() {
+    int[] a = new int[]{80, 23, 46, 26};
+    System.out.println(Arrays.toString(a));
+    Arrays.sort(a);
+    System.out.println(Arrays.toString(a));
+    System.out.println(&quot;最小值：&quot; + a[0] + &quot;, 最大值&quot; + a[a.length - 1]);
+    System.out.println(Arrays.binarySearch(a, 450));
+}
+
+//遍历二维数组
+public void bianli1(int[][] arr) {
+
+    for (int i = 0; i &lt; arr.length; i++) {
+        for (int j = 0; j &lt; arr[i].length; j++) {
+            System.out.print(arr[i][j] + &quot; &quot;);
+        }
+        System.out.println();    //换行
+    }
+}
+
+public void bianli2(int[][] arr) {
+    for (int[] a : arr) {
+        for (int b : a) {
+            System.out.print(b + &quot; &quot;);
+        }
+        System.out.println();
+    }
+}
+
+public void bianli3(int[][] arr) {
+    System.out.println(Arrays.toString(arr[0]));
+
+    for (int i = 0; i &lt; arr.length; i++)
+        System.out.println(Arrays.toString(arr[i]));
+}
+
+
+//二维数组所有的都头尾交换
+public void jiaohuan(int[][] arr) {
+    for (int i = 0; i &lt; arr.length; i++) {
+        for (int j = 0; j &lt; arr[i].length; j++) {
+            System.out.print(arr[i][j] + &quot; &quot;);
+        }
+        System.out.println();    //换行
+    }
+    for (int start = 0, end = arr.length - 1; start &lt; end; start++, end--) {
+        int[] temp = arr[start];
+        arr[start] = arr[end];
+        arr[end] = temp;
+    }
+    for (int i = 0; i &lt; arr.length; i++) {
+        for (int j = 0; j &lt; arr[i].length; j++) {
+            System.out.print(arr[i][j] + &quot; &quot;);
+        }
+        System.out.println();    //换行
+    }
+}
+
+
+public void yanghhui() {
+    //从控制台获取行数
+    Scanner s = new Scanner(System.in);
+    int row = s.nextInt();
+    //根据行数定义好二维数组，由于每一行的元素个数不同，所以不定义每一行的个数
+    int[][] arr = new int[row][];
+    //遍历二维数组
+
+    for (int i = 0; i &lt; row; i++) {
+        //初始化每一行的这个一维数组
+        arr[i] = new int[i + 1];
+        //遍历这个一维数组，添加元素
+        for (int j = 0; j &lt;= i; j++) {
+            //每一列的开头和结尾元素为1，开头的时候，j=0，结尾的时候，j=i
+            if (j == 0 || j == i) {
+                arr[i][j] = 1;
+            } else {//每一个元素是它上一行的元素和斜对角元素之和
+                arr[i][j] = arr[i - 1][j] + arr[i - 1][j - 1];
+            }
+            System.out.print(arr[i][j] + &quot;\t&quot;);
+        }
+        System.out.println(&quot;&quot;);
+    }
+}
+
+public void yanghuipra() {
+    Scanner scanner = new Scanner(System.in);
+    int row = scanner.nextInt();
+
+    int[][] arr = new int[row][];
+
+
+    for (int i = 0; i &lt; row; i++) {
+        arr[i] = new int[i + 1];
+        for (int j = 0; j &lt; row; j++) {
+            if (j == 0 || j == i) {
+                arr[i][j] = 1;
+            } else {
+                arr[i][j] = arr[i - 1][j - 1] + arr[i - 1][j];
+            }
+            System.out.println(arr[i][j] + &quot;\n&quot;);
+        }
+    }
+}
+</code></pre><p>}</p>
+<hr>
+<pre><code>public static void main(String[] args) {
+//// write your code here
+    int[][] A=new  int[][]{{1,2},{4,5},{7,8,10,11,12},{}};
+    System.out.println(A.length);//4,表示数组的行数
+    System.out.println(A[0].length);//2，表示对应行的长度
+    System.out.println(A[1].length);//2
+    System.out.println(A[2].length);//5
+}
+</code></pre><hr>
+<p>if语句基础：</p>
+<p><img src="https://i.imgur.com/OxiJEES.png" alt=""></p>
+<hr>
+<p>第一个个算法</p>
+<p>在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完<br>成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数</p>
+<pre><code> public static void main(String args[]) {
+    int[][] array = {{1, 3, 4,}, {123, 23, 4}};
+    int target = 3;
+    jichu offer = new jichu();
+
+    offer.find();
+
+}
+
+public boolean find(int[][] array, int target) {
+    if (array == null) {
+        return false;
+    }
+    int row = 0;
+    int column = array[0].length - 1;
+    while (row &lt; array.length &amp;&amp; column &gt;= 0) {
+        if (array[row][column] == target) {
+            return true;
+        }
+        if (array[row][column] &gt; target) {
+            column--;
+        } else {
+            row++;
+        }
+    }
+    return false;
+}
+</code></pre><p>第二个算法：<br>将一个字符串中的空格替换成“%20”。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/12/01/剑指offer面试题Java版/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/01/剑指offer面试题Java版/" itemprop="url">剑指offer面试题Java版</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T16:56:56+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/面试/" itemprop="url" rel="index">
+                    <span itemprop="name">面试</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/面试/剑指offer/" itemprop="url" rel="index">
+                    <span itemprop="name">剑指offer</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/29/SSM第三天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/29/SSM第三天/" itemprop="url">SSM第三天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-29T21:16:19+08:00">
+                2018-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="部署tomcat服务器"><a href="#部署tomcat服务器" class="headerlink" title="部署tomcat服务器"></a>部署tomcat服务器</h2><pre><code>1.下载apache-tomcat-7.0.70-windows-x64.zip
+2.解压文件，不要放到中文或者空格目录下。
+3.进入加压目录.
+    cmd&gt;cd {tomcat_home}/bin
+
+4.执行命令
+    cmd&gt;startup.bat
+5.通过浏览器访问页面，查看是否启动成功。
+    http://localhost:8080/
+</code></pre><h2 id="tomcat目录结构"><a href="#tomcat目录结构" class="headerlink" title="tomcat目录结构"></a>tomcat目录结构</h2><pre><code>bin        //执行文件
+conf    //配置文件目录,server.xml,修改8080.
+
+webapps    //项目部署目录,项目打成war包，运行期间自行解压。
+
+work    //临时目录
+logs    //日志目录
+</code></pre><h2 id="在idea中开发web项目"><a href="#在idea中开发web项目" class="headerlink" title="在idea中开发web项目"></a>在idea中开发web项目</h2><pre><code>1.在idea中配置tomcat服务器
+    settings &gt; applications server -&gt; + --&gt; 定位到tomcat解压目录 -&gt;ok
+2.创建java模块 + javaEE支持 + maven支持.
+3.运行web程序
+</code></pre><h2 id="配置idea中tomcat热部署"><a href="#配置idea中tomcat热部署" class="headerlink" title="配置idea中tomcat热部署"></a>配置idea中tomcat热部署</h2><pre><code>0.关闭tomcat服务器
+1.run --&gt; edit configuration
+2.Server选项卡--&gt; VM options部分
+    on &quot;Update&quot; action : update Classes and resources
+    on Frame deactivation : update Classes and resources
+
+3.启动服务器要选择&quot;debug&quot;模式.
+</code></pre><h2 id="在web模块中添加mvn支持"><a href="#在web模块中添加mvn支持" class="headerlink" title="在web模块中添加mvn支持"></a>在web模块中添加mvn支持</h2><p>这个地方controller返回的是modelandview然后在返回给分发器程序的。返回的是模型视图的逻辑名。而且还需要配置一个视图解析器。</p>
+<p><img src="https://i.imgur.com/kxi323W.png" alt=""></p>
+<p>handlemapping controller viewresolve需要配置到beans.xml里面，这个文件可以随意配置名字。</p>
+<pre><code>1.在pom.xml引入springmvc的依赖
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;myspringmvc&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+2.在web/WEB-INF/web.xml文件中配置DispatcherServlet分发器.
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot;
+             version=&quot;3.1&quot;&gt;
+        &lt;!-- 配置分发器Servlet --&gt;
+        &lt;servlet&gt;
+            &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;
+            &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+        &lt;/servlet&gt;
+        &lt;servlet-mapping&gt;
+            &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;
+            &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+        &lt;/servlet-mapping&gt;
+    &lt;/web-app&gt;
+
+3.配置springmvc配置文件，使用注解驱动配置项(默认名称就是dispatcher-servlet.xml)
+    [web/WEB-INF/dispatcher-servlet.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+           xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/mvc
+                            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd&quot;&gt;
+        &lt;!-- 使用注解驱动 --&gt;
+        &lt;mvc:annotation-driven  /&gt;
+    &lt;/beans&gt;
+
+4.编写控制器类
+    [HomeController.java]
+    package com.it18zhang.springmvc.web.controller;
+
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+
+    /**
+     * HomeController
+     */
+    @Controller
+    public class HomeController {
+
+        /**
+         * 打开主页
+         */
+        @RequestMapping(&quot;/home&quot;)
+        public String openHome(){
+            System.out.println(&quot;hello world&quot;);
+            return null ;
+        }
+    }
+
+5.配置dispatcher-servlet.xml文件，增加扫描路径配置。
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+           xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+           xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/mvc
+                            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt;
+        &lt;!-- 配置扫描路径 --&gt;
+        &lt;context:component-scan base-package=&quot;com.it18zhang.springmvc.web.controller&quot; /&gt;
+        &lt;!-- 使用注解驱动 --&gt;
+        &lt;mvc:annotation-driven  /&gt;
+    &lt;/beans&gt;
+
+6.启动程序，访问地址
+    http://localhost:9090/
+
+
+7.出现类找不到的原因。
+    idea的web项目默认不会将依赖类库放置到web-inf/lib下，需要手动设置详情见PPT。
+    project structure -&gt; artifacts -&gt; myspringmvc:war exploded -&gt; 选择 output layout选项卡 -&gt;
+    选择右侧的available elements下myspringmvc条目的所有类库 -&gt;右键 -&gt; put into WEB-INF/lib即可。
+
+8.运行程序。
+
+9.配置Spring MVC是视图解析器.
+    [web/WEB-INF/dispatcher-servlet.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+           xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+           xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/mvc
+                            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt;
+        &lt;!-- 配置扫描路径 --&gt;
+        &lt;context:component-scan base-package=&quot;com.it18zhang.springmvc.web.controller&quot; /&gt;
+        &lt;!-- 使用注解驱动 --&gt;
+        &lt;mvc:annotation-driven  /&gt;
+
+        &lt;!-- 内部资源视图解析器 --&gt;
+        &lt;bean class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+            &lt;property name=&quot;prefix&quot; value=&quot;/&quot; /&gt;
+            &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+        &lt;/bean&gt;
+    &lt;/beans&gt;
+
+10.添加jsp页面和控制代码
+    [HomeController.java]
+    package com.it18zhang.springmvc.web.controller;
+
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+
+    /**
+     * HomeController
+     */
+    @Controller
+    public class HomeController {
+        /**
+         * 打开主页
+         */
+        @RequestMapping(&quot;/home&quot;)
+        public String openHome(){
+            System.out.println(&quot;hello world&quot;);
+            return &quot;index&quot;;
+        }
+        /**
+         * 打开主页
+         */
+        @RequestMapping(&quot;/home2&quot;)
+        public String home2(){
+            System.out.println(&quot;how are you???&quot;);
+            return &quot;index2&quot;;
+        }
+    }
+
+11./web/index.jsp + /web/index2.jsp
+    [/web/index2.jsp]
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;index2.jsp&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        welcome to spring mvc !!!
+      &lt;/body&gt;
+    &lt;/html&gt;
+</code></pre><h2 id="html"><a href="#html" class="headerlink" title="html:"></a>html:</h2><pre><code>标签类型
+inline            //行内标签,自己不占一行,和其他标签可以在一行.&lt;br&gt;
+block            //块标签,自己占一行。
+
+&lt;a href=&quot;&quot;&gt;百度&lt;/a&gt;
+</code></pre><h2 id="模拟注册行为"><a href="#模拟注册行为" class="headerlink" title="模拟注册行为"></a>模拟注册行为</h2><pre><code>1.创建/web/reg.jsp
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+      &lt;title&gt;reg.jsp&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;form action=&quot;/doReg2&quot; method=&quot;post&quot;&gt;
+      UserName : &lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;&lt;br&gt;
+      Password : &lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;&lt;br&gt;
+      &lt;input type=&quot;submit&quot;/&gt;
+    &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+
+2&apos;.引入Servlet API类库
+    [pom.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;myspringmvc&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+                &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+                &lt;version&gt;2.5&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+2.创建RegController.java
+    package com.it18zhang.springmvc.web.controller;
+
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestParam;
+
+    import javax.servlet.http.HttpServletRequest;
+
+    /**
+     *
+     */
+    @Controller
+    public class RegController {
+
+        @RequestMapping(&quot;/toReg&quot;)
+        public String toRegView(){
+            return &quot;reg&quot; ;
+        }
+
+        @RequestMapping(&quot;/doReg&quot;)
+        public String doReg(@RequestParam(&quot;username&quot;) String username, @RequestParam(&quot;password&quot;) String password){
+            System.out.println(&quot;插入数据&quot;);
+            System.out.println(username + &quot;,&quot; + password);
+            return &quot;index&quot; ;
+        }
+
+        @RequestMapping(&quot;/doReg2&quot;)
+        public String doReg(HttpServletRequest req) {
+            System.out.println(&quot;插入数据222&quot;);
+            String user = req.getParameter(&quot;username&quot;);
+            System.out.println(user);
+            return &quot;index&quot;;
+        }
+    }
+</code></pre><h2 id="引入jstl标签库-jee标准标签库。"><a href="#引入jstl标签库-jee标准标签库。" class="headerlink" title="引入jstl标签库,jee标准标签库。"></a>引入jstl标签库,jee标准标签库。</h2><pre><code>1.添加pom.xml依赖
+    &lt;dependency&gt;
+        &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+        &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+        &lt;version&gt;1.2&lt;/version&gt;
+    &lt;/dependency&gt;
+
+2.修改jsp页面,声明标签库并使用标签
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;reg.jsp&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;form action=&apos;&lt;c:url value=&quot;/reg.jsp&quot; /&gt;&apos; method=&quot;post&quot;&gt;
+        UserName : &lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;&lt;br&gt;
+        Password : &lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;&lt;br&gt;
+        &lt;input type=&quot;submit&quot;/&gt;
+    &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+3.修改上下文名称
+    project structure --&gt; artifacts --&gt; edit
+4.
+5.
+</code></pre><h2 id="模拟查询-查询一个User对象"><a href="#模拟查询-查询一个User对象" class="headerlink" title="模拟查询-查询一个User对象"></a>模拟查询-查询一个User对象</h2><pre><code>1.添加方法
+    class RegController{
+
+        ...
+
+        /*****从请求中提取uid参数******/
+        @RequestMapping(&quot;/selectOne&quot;)
+        public String selectOne(Model model , @RequestParam(&quot;uid&quot;) int uid){
+            System.out.println(&quot;接受到了参数 : uid = &quot; + uid);
+            String username =&quot;tomson&quot; ;
+            //将数据存放到model中，向jsp传递.
+            model.addAttribute(&quot;myusername&quot;, username);
+            return &quot;selectOne&quot; ;
+        }
+    }
+
+2.创建selectOne.jsp
+    [selectOne.jsp]
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;selectOne.jsp&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        username : &lt;c:out value=&quot;${myusername}&quot; /&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+
+3.打开浏览器输入地址;
+    http://localhost:9090/selectOne?uid=100
+</code></pre><h2 id="模拟查询-查询全部信息"><a href="#模拟查询-查询全部信息" class="headerlink" title="模拟查询-查询全部信息"></a>模拟查询-查询全部信息</h2><pre><code>1.定义User类。
+    public class User {
+        private Integer id;
+        private String name;
+        private int age;
+        ...
+        //get/set
+    }
+
+2.在RegController中添加方法
+    class RegController{
+        ...
+    @RequestMapping(&quot;/selectAll&quot;)
+    public String selectAll(Model m){
+        List&lt;User&gt; list = new ArrayList&lt;User&gt;();
+        for(int i = 1  ; i &lt;= 50 ; i ++){
+            User u = new User();
+            u.setId(i);
+            u.setName(&quot;tom&quot; + i);
+            u.setAge(i % 20);
+            list.add(u) ;
+        }
+        //
+        m.addAttribute(&quot;allUsers&quot;,list);
+        return &quot;userList&quot; ;
+    }
+
+3.创建userList.jsp
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;selectOne.jsp&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;table border=&quot;1px&quot;&gt;
+            &lt;tr&gt;
+                &lt;td&gt;ID&lt;/td&gt;
+                &lt;td&gt;NAME&lt;/td&gt;
+                &lt;td&gt;AGE&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;c:forEach items=&quot;${allUsers}&quot; var=&quot;u&quot;&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;&lt;c:out value=&quot;${u.id}&quot;/&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;c:out value=&quot;${u.name}&quot;/&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;c:out value=&quot;${u.age}&quot;/&gt;&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/c:forEach&gt;
+        &lt;/table&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+
+4.启动服务器,输入地址
+    http://localhost:9090/selectAll
+</code></pre><h2 id="forward"><a href="#forward" class="headerlink" title="forward:"></a>forward:</h2><pre><code>请求转发，在服务器内部完成。客户端不参与，地址栏不改变。
+而且只能转发到本应用的其他路径上。共享请求参数。
+</code></pre><p>redirect<br>    重定向，客户端参与，地址栏变，可以重定向到任意url地址。<br>    不能共享变量。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/28/Java基础（关于面试）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2944,1215 +3948,6 @@ public void testIncr() throws IOException {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/19/SSM第二天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/19/SSM第二天/" itemprop="url">SSM第二天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-19T15:39:39+08:00">
-                2018-11-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="mybatis"><a href="#mybatis" class="headerlink" title="mybatis"></a>mybatis</h2><pre><code>持久化技术。jdbc
-sql
-</code></pre><h2 id="Spring"><a href="#Spring" class="headerlink" title="Spring    "></a>Spring    </h2><pre><code>业务层框架。
-管理bean的。
-new 
-Map&lt;String,Object&gt;
-</code></pre><h2 id="体验spring"><a href="#体验spring" class="headerlink" title="体验spring"></a>体验spring</h2><pre><code>1.创建模块 ,添加pom.xml
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-        &lt;artifactId&gt;springdemo&lt;/artifactId&gt;
-        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;junit&lt;/groupId&gt;
-                &lt;artifactId&gt;junit&lt;/artifactId&gt;
-                &lt;version&gt;4.11&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
-                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-            &lt;/dependency&gt;
-        &lt;/dependencies&gt;
-    &lt;/project&gt;
-
-2.创建java类
-    public class WelcomeService {
-        private String message ;
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-
-        public void sayHello(){
-            System.out.println(message);
-        }
-    }    
-
-3.创建配置文件
-    [resources/beans.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-                            http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
-
-        &lt;bean id=&quot;ws&quot; class=&quot;com.it18zhang.springdemo.service.WelcomeService&quot;&gt;
-            &lt;property name=&quot;message&quot; value=&quot;hello world&quot; /&gt;
-        &lt;/bean&gt;
-    &lt;/beans&gt;
-
-4.创建App
-    [App.java]
-    public static void main(String[] args) {
-        //创建容器
-        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;beans.xml&quot;);
-        WelcomeService ws = (WelcomeService)ac.getBean(&quot;ws&quot;);
-        ws.sayHello();
-    }
-</code></pre><h2 id="spring的注解方式使用"><a href="#spring的注解方式使用" class="headerlink" title="spring的注解方式使用"></a>spring的注解方式使用</h2><pre><code>0.增加pom.xml文件
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
-        &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-    &lt;/dependency&gt;
-
-1.UserDao增加@Repository注解.
-
-    @Repository(&quot;userDao&quot;)
-    public class UserDao{
-        ...
-    }
-
-2.Service增加 @Service注解。
-    @Service(&quot;ws&quot;)
-    public class WelcomeService {
-        ...
-        //注入指定的dao对象
-        @Resource(name = &quot;userDao&quot;)
-        public void setDao(UserDao dao) {
-            this.dao = dao;
-        }
-    }
-
-3.修改beans.xml文件，引入context空间，使用组件扫描。
-    [resrouces/beans.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-           xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
-           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-                            http://www.springframework.org/schema/beans/spring-beans.xsd
-                            http://www.springframework.org/schema/context
-                            http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt;
-        &lt;context:component-scan base-package=&quot;com.it18zhang.springdemo.dao,com.it18zhang.springdemo.service&quot; /&gt;
-
-4.测试App.java
-    public class App {
-        public static void main(String[] args) {
-            //创建容器
-            ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;beans.xml&quot;);
-            WelcomeService ws = (WelcomeService)ac.getBean(&quot;ws&quot;);
-            ws.sayHello();
-        }
-    }
-</code></pre><h2 id="spring-整合mybatis"><a href="#spring-整合mybatis" class="headerlink" title="spring 整合mybatis"></a>spring 整合mybatis</h2><pre><code>1.创建模块 pom.xml
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-        &lt;artifactId&gt;springmybatisdemo&lt;/artifactId&gt;
-        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;junit&lt;/groupId&gt;
-                &lt;artifactId&gt;junit&lt;/artifactId&gt;
-                &lt;version&gt;4.11&lt;/version&gt;
-            &lt;/dependency&gt;
-
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
-                &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
-                &lt;version&gt;3.1.0&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;mysql&lt;/groupId&gt;
-                &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
-                &lt;version&gt;5.1.17&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;c3p0&lt;/groupId&gt;
-                &lt;artifactId&gt;c3p0&lt;/artifactId&gt;
-                &lt;version&gt;0.9.1.2&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
-                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
-                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
-                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
-                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
-                &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
-                &lt;version&gt;1.3.0&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
-                &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
-                &lt;version&gt;1.8.10&lt;/version&gt;
-            &lt;/dependency&gt;
-        &lt;/dependencies&gt;
-    &lt;/project&gt;
-
-2.创建包
-    com.it18zhang.springmybatis.dao
-    com.it18zhang.springmybatis.service
-    com.it18zhang.springmybatis.util
-3.配置beans.xml
-    [resources/beans.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-                            http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
-        &lt;!-- 数据源 --&gt;
-        &lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;
-            &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;/&gt;
-            &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis&quot;/&gt;
-            &lt;property name=&quot;user&quot; value=&quot;root&quot;/&gt;
-            &lt;property name=&quot;password&quot; value=&quot;root&quot;/&gt;
-            &lt;property name=&quot;maxPoolSize&quot; value=&quot;10&quot;/&gt;
-            &lt;property name=&quot;minPoolSize&quot; value=&quot;2&quot;/&gt;
-            &lt;property name=&quot;initialPoolSize&quot; value=&quot;3&quot;/&gt;
-            &lt;property name=&quot;acquireIncrement&quot; value=&quot;2&quot;/&gt;
-        &lt;/bean&gt;
-    &lt;/beans&gt;
-
-4.编写单元测试
-    @Test
-    public void testConn() throws Exception {
-        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;beans.xml&quot;);
-        DataSource ds = (DataSource)ac.getBean(&quot;dataSource&quot;);
-        System.out.println(ds.getConnection());
-    }
-
-5.添加domain类
-    User
-    Order
-    Item
-    略
-
-6.添加Mapper.xml映射文件
-    //注意：修改类的别名
-    resources/UserMapper.xml
-    resources/OrderMapper.xml
-
-7.添加mybatis-config.xml
-    [resources/mybatis-config.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-    &lt;!DOCTYPE configuration
-            PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;
-            &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
-    &lt;configuration&gt;
-        &lt;typeAliases&gt;
-            &lt;typeAlias type=&quot;com.it18zhang.springmybatis.domain.User&quot; alias=&quot;_User&quot;/&gt;
-            &lt;typeAlias type=&quot;com.it18zhang.springmybatis.domain.Order&quot; alias=&quot;_Order&quot;/&gt;
-            &lt;typeAlias type=&quot;com.it18zhang.springmybatis.domain.Item&quot; alias=&quot;_Item&quot;/&gt;
-        &lt;/typeAliases&gt;
-        &lt;!-- 引入映射文件 --&gt;
-        &lt;mappers&gt;
-            &lt;mapper resource=&quot;UserMapper.xml&quot;/&gt;
-            &lt;mapper resource=&quot;OrderMapper.xml&quot;/&gt;
-        &lt;/mappers&gt;
-    &lt;/configuration&gt;
-
-8.创建Dao接口和实现类.
-    [BaseDao.java]
-    package com.it18zhang.springmybatis.dao;
-
-    import java.util.List;
-
-    /**
-     *基本Dao接口
-     */
-    public interface BaseDao&lt;T&gt; {
-        public void insert(T t) ;
-        public void update(T t) ;
-        public void delete(Integer id) ;
-        public T selectOne(Integer id) ;
-        public List&lt;T&gt; selectAll() ;
-    }
-
-    [UserDao.java]
-    package com.it18zhang.springmybatis.dao;
-
-    import com.it18zhang.springmybatis.domain.User;
-    import org.mybatis.spring.support.SqlSessionDaoSupport;
-
-    import java.util.List;
-
-    /**
-     */
-    @Repository(&quot;userDao&quot;)
-    public class UserDao extends SqlSessionDaoSupport implements BaseDao&lt;User&gt; {
-
-        public void insert(User user) {
-            getSqlSession().insert(&quot;users.insert&quot;,user);
-        }
-
-        public void update(User user) {
-            getSqlSession().update(&quot;users.update&quot;, user);
-        }
-
-        public void delete(Integer id ) {
-            getSqlSession().delete(&quot;users.delete&quot;, id);
-        }
-
-        public User selectOne(Integer id) {
-            return getSqlSession().selectOne(&quot;users.selectOne&quot;,id) ;
-        }
-
-        public List&lt;User&gt; selectAll() {
-            return getSqlSession().selectList(&quot;users.selectAll&quot;);
-        }
-    }
-</code></pre><p>a<br>        [OrderDao.java]<br>        略</p>
-<pre><code>9.创建BaseService&lt;T&gt;.java接口 + UserService.java + UserServcieImpl.java
-    [BaseService.java]
-    package com.it18zhang.springmybatis.service;
-
-    import java.util.List;
-
-    /**
-     * Created by Administrator on 2017/4/7.
-     */
-    public interface BaseService&lt;T&gt; {
-        public void insert(T t);
-
-        public void update(T t);
-
-        public void delete(Integer id);
-
-        public T selectOne(Integer id);
-
-        public List&lt;T&gt; selectAll();
-    }
-
-    [BaseServiceImpl.java]
-    public abstract class BaseServiceImpl&lt;T&gt; implements BaseService&lt;T&gt; {
-
-        private BaseDao&lt;T&gt; dao ;
-
-        public void setDao(BaseDao&lt;T&gt; dao) {
-            this.dao = dao;
-        }
-
-        public void insert(T t) {
-            dao.insert(t);
-        }
-        ...
-    }
-
-    [UserService.java]
-    public interface UserService extends BaseService&lt;User&gt; {
-
-    }
-
-    [UserServiceImpl.java]
-    @Service(&quot;userService&quot;)
-    public class UserServiceImpl extends BaseServiceImpl&lt;User&gt; implements  UserService{
-        /*** 重写该方法，注入指定的Dao对象 ***/
-        @Resource(name=&quot;userDao&quot;)
-        public void setDao(BaseDao&lt;User&gt; dao) {
-            super.setDao(dao);
-        }
-    }
-
-10.完善spring的配置文件.
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-</code></pre><beans xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.springframework.org/schema/beans
-                                   http://www.springframework.org/schema/beans/spring-beans.xsd
-                                   http://www.springframework.org/schema/context
-                                   http://www.springframework.org/schema/context/spring-context-4.3.xsd
-                                   http://www.springframework.org/schema/tx
-                                   http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
-                                   http://www.springframework.org/schema/aop
-                                   http://www.springframework.org/schema/aop/spring-aop-4.3.xsd" default-autowire="byType"><br>    <!-- 配置事务特征 --><br>    &lt;tx:advice id=”txAdvice” transaction-manager=”txManager”&gt;<br>        <a href="tx:attributes" target="_blank" rel="noopener">tx:attributes</a><br>            <!--，配置事务特征，
-            name代表所有都要加隔离事物。propagation代表传播行为，*是通配，隔离级别都用默认隔离级别
-            那么那些方法需要事务呢？所以我们又要加一个AOP的范畴--><br>            &lt;tx:method name=”<em>“ propagation=”REQUIRED” isolation=”DEFAULT”/&gt;<br>        &lt;/tx:attributes&gt;<br>    &lt;/tx:advice&gt;<br><br>    <!-- 配置事务切面 也叫aop。
-    意思是不用改源码，加入事务的管理功能其实都对应的是javabean。--><br>    <a href="aop:config" target="_blank" rel="noopener">aop:config</a><br>        &lt;!–advisor代表切入点通知，吧事务txAdvice加到一个地方去，这个地方叫做切入点，哪里执行execution呢，就是任何地方<br>        第一个</em>匹配的是函数的返回值  任何函数返回值都可以，然后<em>.代表包，任何包以及包的子包，然后.</em>service第一个点代表<br>        包和类的分割符，后面就是以Service结尾的任何接口或类，然后最后括号里面的..代表参数不限，随便什么参数都可以–&gt;<br>        &lt;aop:advisor advice-ref=”txAdvice” pointcut=”execution(<em> </em>..<em>Service.</em>(..))” /&gt;<br>    &lt;/aop:config&gt;<br><br>    <!-- 扫描包 --><br>    &lt;context:component-scan base-package=”com.it18zhang.springmybatis.dao,com.it18zhang.springmybatis.service” /&gt;<br><br>    <!-- 数据源 --><br>    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"><br>        <property name="driverClass" value="com.mysql.jdbc.Driver"><br>        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/mybatis"><br>        <property name="user" value="root"><br>        <property name="password" value="root"><br>        <property name="maxPoolSize" value="10"><br>        <property name="minPoolSize" value="2"><br>        <property name="initialPoolSize" value="3"><br>        <property name="acquireIncrement" value="2"><br>    </property></property></property></property></property></property></property></property></bean><br><br>    <!-- mybatis整合spring的核心类。配置会话工厂 --><br>    <bean id="sf" class="org.mybatis.spring.SqlSessionFactoryBean"><br>        <!-- 指定数据源 --><br>        <property name="dataSource" ref="dataSource"><br>        <!-- 指定mybatis配置文件 --><br>        <property name="configLocation" value="mybatis-config.xml"><br>    </property></property></bean><br><br>    <!-- 数据源事务管理器 --><br>    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"><br>        <property name="dataSource" ref="dataSource"><br>    </property></bean><br></beans>
-
-<pre><code>11.测试UserService
-    @Test
-    public void testUserService() throws Exception {
-        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;beans.xml&quot;);
-        UserService us = (UserService)ac.getBean(&quot;userService&quot;);
-        User u = new User();
-        u.setName(&quot;jerry&quot;);
-        u.setAge(12);
-        us.insert(u);
-    }
-</code></pre><hr>
-<p>select i.id iid,i.itemname iitemname,o.id oid,o.orderno oorderno , u.id uid ,u.name uname ,u.age uage<br>from items i<br>    left outer join orders o on i.oid = o.id<br>    left outer join users u on o.uid = u.id<br>where i.id = 2</p>
-<p>我们一般吧最基础的增删改查里面放到baseservice这个接口里面，这里面是公共的功能，所以在下面还需要有分开的叉开的，需要有userservice继承自baseservice,他也是一个接口，然后在userservice里面有什么需要加的功能加到这个里面，也就是说在服务层需要有什么功能的都加到这个接口里面，避免都要实现。这个地方是要继承的。</p>
-<p><img src="https://i.imgur.com/f3jj2Pc.png" alt=""></p>
-<p><img src="https://i.imgur.com/WIINiCh.png" alt=""></p>
-<p>一个spring整合mybatis的rose图：</p>
-<p><img src="https://i.imgur.com/JOlAVsY.png" alt=""></p>
-<p>整个结构：<br>这个里面如果直接接受dao可以在调试中get到他的具体的内容，<br>如果接受service就不行因为事务管理封装起了sevice。所以接收到的是一个事务</p>
-<p><img src="https://i.imgur.com/4Kts8mg.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/16/Hbase第二天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/16/Hbase第二天/" itemprop="url">Hbase第二天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-16T09:33:51+08:00">
-                2018-11-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>start-hbase.sh<br>    hbase-daemon.sh start master<br>    habse-daemon.sh    start regionserver</p>
-<p>hbase的ha设置：<br>    直接打开S202或者s203的master进程即可，启动命令如上图。</p>
-<p>hbase shell操作：<br>    $&gt;hbaes shell<br>    $hbase&gt;help</p>
-<p>namespace 类似于Mysql库的概念</p>
-<p>insert into<br>nosql: not only SQL<br>key-value<br>put用来放kv对。<br>在建表的时候没有指定列明，指定的是列族名，然后这个列族下的列是可以增减的。<br>help ‘put’</p>
-<p><img src="https://i.imgur.com/5JUqC0b.png" alt=""></p>
-<p>habase shell 操作：</p>
-<pre><code>$&gt;hbase shell                                    //登陆shell终端
-$hbase&gt;help                                        //    
-$hbase&gt;help &apos;list_namespace&apos;                    //查看特定 的命令帮助
-$hbase&gt;list_namespace                            //列出名字空间（数据库）
-$hbase&gt;list_namespace_tables &apos;default&apos;            //列出名字空间
-$hbase&gt;create_namespace &apos;ns1&apos;                    //创建名字空间
-$hbase&gt;help &apos;create&apos;                            //
-$hbase&gt;create &apos;ns1:t1&apos;,&apos;f1&apos;                        //创建表，指定空间下
-$hbase&gt;put &apos;ns1:t1&apos;,&apos;row1&apos;,&apos;f1:id&apos;,100
-$hbase&gt;put &apos;ns1:t1&apos;,&apos;row1&apos;,&apos;f1:name&apos;,tom
-$hbase&gt;get &apos;ns1:t1&apos;,&apos;row1&apos;                        //指定查询row
-$hbase&gt;scan &apos;ns1:t1&apos;                            //权标扫描扫描ns1列族的t1列
-</code></pre><p>三级坐标定位，一个是列族，一个是row一个是时间戳如下图;</p>
-<p><img src="https://i.imgur.com/ipxtMbm.png" alt=""></p>
-<p><img src="https://i.imgur.com/uz0TL9q.png" alt=""></p>
-<p><img src="https://i.imgur.com/3HmcLCa.png" alt=""></p>
-<p>通过java api操作hbase:<br>    package com.it18zhang.hbasedemo;</p>
-<pre><code>import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Table;
-import org.apache.hadoop.hbase.util.Bytes;
-import org.junit.Test;
-
-eate 2018/11/17 11:56
- */
-public class TestCRUD {
-    @Test
-    public void put() throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        byte[] rowid = Bytes.toBytes(&quot;row2&quot;);
-        byte[] f1 = Bytes.toBytes(&quot;f1&quot;);
-        byte[] id = Bytes.toBytes(&quot;id&quot;);
-        byte[] value = Bytes.toBytes(102);
-        //创建put对象
-
-        Put put = new Put(rowid);
-        put.addColumn(f1, id, value);
-        table.put(put);
-
-    }
-}
-</code></pre><p>pom文件：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-    &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-    &lt;artifactId&gt;HbaseDemo&lt;/artifactId&gt;
-    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;junit&lt;/groupId&gt;
-            &lt;artifactId&gt;junit&lt;/artifactId&gt;
-            &lt;version&gt;4.11&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;
-            &lt;artifactId&gt;hbase-client&lt;/artifactId&gt;
-            &lt;version&gt;1.2.3&lt;/version&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-
-
-&lt;/project&gt;
-</code></pre><hr>
-<p>hbase架构介绍：</p>
-<p><img src="https://i.imgur.com/BaJwZ3z.png" alt=""></p>
-<h1 id="关于区域服务器"><a href="#关于区域服务器" class="headerlink" title="关于区域服务器"></a>关于区域服务器</h1><p>  每个大表按照rowkey来切分，rowkey是可排序的，每个切分的被分派到每个区域分五期里面。key是有序的。而且每个取余服务器的表都是有范围的，所以在get的时候要指定rowkey，然后查询的时候定位到这个rowkey在哪个区域服务器上，因为所有的区域服务器信息都在meta表这个自带的表里面，叫元数据表。里面存储着rowkey。也就是每个区域的rowkey的范围。</p>
-<p><img src="https://i.imgur.com/4nzxjz8.png" alt=""></p>
-<p>看里面的内容hbase；namespace,,14….,74….<br>这个就是名字空间表，起始的位置，结束的rowkey位置。<br>前4大段，是指的是一大行的前4列。两个逗号意味着没有切割。就只是在一个区域服务器里面</p>
-<p>再看下面的ns1:t1表的都是一行，然后3列不同的列，如果查询这部分直接联系s204,如果204挂了， 这个表就会更新，变成承接的新表的数据。这个ns1:t1的这个表就没有分割。column是列，info是列族，server是列</p>
-<p>在hbase查询的时候是3级定位。时间戳，列族（列），rowkey（行）</p>
-<p>看一下下面的这个目录：</p>
-<p>hbase,数据，ns1名字空间，t1表，区域服务器,f1列族，然后列族下面就是文件了二进制存储，内容都在这个二进制文件里面。</p>
-<p><img src="https://i.imgur.com/18bQKMj.png" alt=""></p>
-<p>一个表可以有多个区域，一个区域服务器肯定有多个区域，由于有副本的存在所以一个区域可以在多个服务器上，区域服务器是来提供服务的，读写过程是由区域服务器完成，相当于数据节点，这2个都是完成数据的读写过程的。</p>
-<p>在区域里面有个store在里面有MemStore。所以这些内容都是在内存当中，如果内存满了，就会被溢出到磁盘当中，Storefile就是在磁盘当中了，Hfile通过和底层交互</p>
-<h1 id="hbase的写入过程："><a href="#hbase的写入过程：" class="headerlink" title="hbase的写入过程："></a>hbase的写入过程：</h1><p><img src="https://i.imgur.com/XfOpVug.png" alt=""></p>
-<p>root这个地方写错了是老版本的，应该是meta表<br><img src="https://i.imgur.com/Imht8Oq.png" alt=""><br><img src="https://i.imgur.com/peKNm1w.png" alt=""></p>
-<p>现在妖王一个表里写数据，需要先查询这个表在那个区域服务器上，要先查询hbase空间下的meta表，因为这个表里面标识了类似于一个目录的内容，标识那个区域子在那个服务器上，也就是rowkey的范围。这个meta表在哪里呢怎么找到呢？ meta表要通过zk来找到。因为zk集群在，所以没有zk的情况下hbase都起不来。</p>
-<p>进入到hbase shell里面</p>
-<p><img src="https://i.imgur.com/Rx4QHIF.png" alt=""></p>
-<p>通过进入到shell里面发现这个meta表大概可能在这个里面，进去之后发现这个meta表在s203里面。如下图</p>
-<p><img src="https://i.imgur.com/SHSVJwz.png" alt=""></p>
-<p>所以实际上就是先联系zk然后通过zk找到他的位置在s203里面，这个meta表在s203里面</p>
-<p>ta/hbase/meta/1588230740/info/da7a63e29d1c4fb588068ea9c187ae27</p>
-<hr>
-<h1 id="hbase基于hdfs"><a href="#hbase基于hdfs" class="headerlink" title="hbase基于hdfs"></a>hbase基于hdfs</h1><p>【表数据的存储结构目录构成】</p>
-<pre><code>hdfs://s201:8020/hbase/data/${名字空间}/${表名}/区域名称/列族名称
-</code></pre><p>相同列族的数据存放在一个文件中，</p>
-<p>【WAL写前日志目录结构构成】</p>
-<pre><code>hdfs://s201:8020/hbase/wals/s202,16020,1542534586029/s202%2C16020%2C1542534586029.default.1542541792199
-
-hdfs://s201:8020/hbase/wals/${区域服务器名称}/主机名，端口号，时间戳/
-</code></pre><h1 id="client端交互过程"><a href="#client端交互过程" class="headerlink" title="client端交互过程"></a>client端交互过程</h1><p>0.集群启动时，master负责分配区域到指定的区域服务器</p>
-<p>1.联系zk找出meta表所在的区域服务器rs(regionserver)<br>        /meta/meta-region-server<br>    定位到所在的服务器</p>
-<p>2.定位rowkey，找到对应的rs(regionserver)</p>
-<p>3.缓存信息到本地，</p>
-<p>4.联系regionserver</p>
-<p>5.HRegionServe负责open-HRegion对象打开H区域服务器对象，为每个列族创建store实例，说明store是和列族对应的，store包涵多个storefile实例，他们是对hfile的轻量级封装，每个store还对应一个memstroe（用于内存储速度快），</p>
-<p><img src="https://i.imgur.com/ks0t9JW.png" alt=""></p>
-<hr>
-<h1 id="在百万数据存储的时候："><a href="#在百万数据存储的时候：" class="headerlink" title="在百万数据存储的时候："></a>在百万数据存储的时候：</h1><p>关闭WALS</p>
-<p><img src="https://i.imgur.com/ITwCty6.png" alt=""></p>
-<p>代码如下：</p>
-<pre><code>@Test
-   public void biginsert() throws Exception {
-       long start=System.currentTimeMillis();
-       Configuration conf = HBaseConfiguration.create();
-       Connection conn = ConnectionFactory.createConnection(conf);
-       TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-       HTable table = (HTable) conn.getTable(tname);
-       //不要自动清理缓冲区
-       table.setAutoFlushTo(false);
-
-       for (int i = 0; i &lt; 1000000; i++) {
-           Put put = new Put(Bytes.toBytes(&quot;row&quot; + i));
-           //关闭写前日志
-           put.setWriteToWAL(false);
-           put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i));
-           put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;), Bytes.toBytes(&quot;tom&quot; + i));
-           put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i % 100));
-           table.put(put);
-           if (i % 2000 == 0) {
-               table.flushCommits();
-           }
-       }
-       table.flushCommits();
-       System.out.println(System.currentTimeMillis()-start);
-
-   }
-</code></pre><hr>
-<p>hbase shell命令：</p>
-<p>要想删除表，先要禁用表。</p>
-<pre><code>$hbase&gt;flush &apos;ns1:t1&apos;        //清理内存数据到磁盘
-$hbase&gt;count &apos;ns1:t1&apos;        //统计函数
-$hbase&gt;disable &apos;ns1:t1&apos;        //删除表之前要禁用表
-$hbase&gt;drop &apos;ns1:t1&apos;        //删除表 
-$hbase&gt;count &apos;hbase:meta&apos;     //查看元数据表
-</code></pre><p><img src="https://i.imgur.com/AAzzOmp.png" alt=""></p>
-<hr>
-<h1 id="格式化代码，设置固定数字格式"><a href="#格式化代码，设置固定数字格式" class="headerlink" title="格式化代码，设置固定数字格式"></a>格式化代码，设置固定数字格式</h1><pre><code> @Test
-    public void formatNum(){
-        DecimalFormat format =new DecimalFormat();
-        format.applyPattern(&quot;0000000&quot;);
-//        format.applyPattern(&quot;###,###,00&quot;);
-        System.out.println(format.format(8));
-    }
-</code></pre><hr>
-<p>为什么要格式化rowid，因为rowid1008和8相比较8比1008还要大，所以要格式化一下。</p>
-<p>经过格式化rowid的代码：</p>
-<pre><code> @Test
-public void biginsert() throws Exception {
-
-    DecimalFormat format =new DecimalFormat();
-    format.applyPattern(&quot;0000000&quot;);
-    System.out.println(format.format(8));
-
-    long start=System.currentTimeMillis();
-    Configuration conf = HBaseConfiguration.create();
-    Connection conn = ConnectionFactory.createConnection(conf);
-    TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-    HTable table = (HTable) conn.getTable(tname);
-    //不要自动清理缓冲区
-    table.setAutoFlushTo(false);
-
-    for (int i = 0; i &lt; 10000; i++) {
-        Put put = new Put(Bytes.toBytes(&quot;row&quot; + format.format(i)));
-        //关闭写前日志
-        put.setWriteToWAL(false);
-        put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i));
-        put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;), Bytes.toBytes(&quot;tom&quot; + i));
-        put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i % 100));
-        table.put(put);
-        if (i % 2000 == 0) {
-            table.flushCommits();
-        }
-    }
-    table.flushCommits();
-    System.out.println(System.currentTimeMillis()-start);
-
-}
-</code></pre><hr>
-<h1 id="flush命令"><a href="#flush命令" class="headerlink" title="flush命令"></a>flush命令</h1><pre><code>$hbase:flush：清理内存数据到磁盘
-</code></pre><h1 id="region拆分切割"><a href="#region拆分切割" class="headerlink" title="region拆分切割"></a>region拆分切割</h1><p><img src="https://i.imgur.com/v0N169Q.png" alt=""><br><img src="https://i.imgur.com/XQesWs6.png" alt=""></p>
-<p>hbase默认切割文件是10G，超过切割。</p>
-<pre><code>$hbase&gt;count &apos;ns1:t1&apos;        //统计函数
-</code></pre><p><img src="https://i.imgur.com/sjQ5dq7.png" alt=""></p>
-<pre><code>切割而一旦完成会保留原来的表结构，但是原来的数据内容已经没有了被删除了 
-</code></pre><p><img src="https://i.imgur.com/UhuexPk.png" alt=""></p>
-<p><img src="https://i.imgur.com/0NfLQSJ.png" alt=""></p>
-<p><img src="https://i.imgur.com/oJTAFPt.png" alt=""></p>
-<hr>
-<h1 id="hbase和hadoop的ha集成"><a href="#hbase和hadoop的ha集成" class="headerlink" title="hbase和hadoop的ha集成"></a>hbase和hadoop的ha集成</h1><p>1.在hbase-env.sh文件添加hadoop配置文件目录到hbase_classpath环境变量[/soft/hbase/conf/hbase-env]并且分发。</p>
-<pre><code>export HBASE_CLASSPATH=$HBASE_CLASSPATH:/soft/hadoop/    etc/hadoop
-</code></pre><p>2.在hbase/conf目录下创建到hadoop的hdfs-site.xml的符号链接</p>
-<pre><code>    $&gt;ln -s /soft/hadoop/etc/hadoop/hdfs-site.xml
-/soft/hbase/conf/hdfs-site.xml
-</code></pre><p>3.修改Hbase-site.xml文件中hbase.rootdir的目录值<br>        /soft/hbase/conf/hbase-site.xml<br>4.将之都分发出去。</p>
-<p>继承了之后及时关闭了s201的namenode，hbase的Hmaster也不会关闭，也就是形成了高可用状态。 </p>
-<hr>
-<h1 id="hbase手动移动区域"><a href="#hbase手动移动区域" class="headerlink" title="hbase手动移动区域"></a>hbase手动移动区域</h1><p>手动移动区域<br><img src="https://i.imgur.com/UayeavF.png" alt=""></p>
-<p>手动强行合并hbase块<br><img src="https://i.imgur.com/CrvZAFo.png" alt=""><br><img src="https://i.imgur.com/JCFdxeV.png" alt=""></p>
-<p>手动切割：</p>
-<h1 id="拆分风暴："><a href="#拆分风暴：" class="headerlink" title="拆分风暴："></a>拆分风暴：</h1><p><img src="https://i.imgur.com/wP6mfUJ.png" alt=""></p>
-<p>在达到10G以后，几个区域同时增长，同时到达10G临界点，同时切割额，服务器工作瞬间增大。每个都在切割，就叫切割风暴，我们要避免这种情况，通过使用手动切割，避免拆分风暴。</p>
-<hr>
-<p>代码操作增删改查<br>    package com.it18zhang.hbasedemo;</p>
-<pre><code>import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.*;
-import org.apache.hadoop.hbase.util.Bytes;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NavigableMap;
-
-/**
- * @Title:TestCRUD
- * @Description:
- * @Auther: Eric Hunn
- * @Version:1.0
- * @Create 2018/11/17 11:56
- */
-public class TestCRUD {
-    @Test
-    public void put() throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        byte[] rowid = Bytes.toBytes(&quot;row2&quot;);
-        byte[] f1 = Bytes.toBytes(&quot;f1&quot;);
-        byte[] id = Bytes.toBytes(&quot;id&quot;);
-        byte[] value = Bytes.toBytes(102);
-        //创建put对象
-
-        Put put = new Put(rowid);
-        put.addColumn(f1, id, value);
-        table.put(put);
-
-    }
-
-    @Test
-    public void biginsert() throws Exception {
-
-        DecimalFormat format = new DecimalFormat();
-        format.applyPattern(&quot;0000000&quot;);
-        System.out.println(format.format(8));
-
-        long start = System.currentTimeMillis();
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        HTable table = (HTable) conn.getTable(tname);
-        //不要自动清理缓冲区
-        table.setAutoFlushTo(false);
-
-        for (int i = 0; i &lt; 10000; i++) {
-            Put put = new Put(Bytes.toBytes(&quot;row&quot; + format.format(i)));
-            //关闭写前日志
-            put.setWriteToWAL(false);
-            put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i));
-            put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;), Bytes.toBytes(&quot;tom&quot; + i));
-            put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i % 100));
-            table.put(put);
-            if (i % 2000 == 0) {
-                table.flushCommits();
-            }
-        }
-        table.flushCommits();
-        System.out.println(System.currentTimeMillis() - start);
-
-    }
-
-    @Test
-    public void formatNum() {
-        DecimalFormat format = new DecimalFormat();
-        format.applyPattern(&quot;0000000&quot;);
-//        format.applyPattern(&quot;###,###,00&quot;);
-        System.out.println(format.format(8));
-    }
-
-    @Test
-    public void createNamespace() throws Exception {
-        //创建conf对象
-        Configuration conf = HBaseConfiguration.create();
-        //通过工厂创建连接对象
-        Connection conn = ConnectionFactory.createConnection(conf);
-        Admin admin = conn.getAdmin();
-        NamespaceDescriptor nsd = NamespaceDescriptor.create(&quot;ns2&quot;).build();
-        admin.createNamespace(nsd);
-
-        NamespaceDescriptor[] ns = admin.listNamespaceDescriptors();
-        for (NamespaceDescriptor n : ns) {
-            System.out.println(n.getName());
-        }
-
-    }
-
-    @Test
-    public void listNamespaces() throws Exception {
-        //创建conf对象
-        Configuration conf = HBaseConfiguration.create();
-        //通过工厂创建连接对象
-        Connection conn = ConnectionFactory.createConnection(conf);
-        Admin admin = conn.getAdmin();
-        NamespaceDescriptor[] ns = admin.listNamespaceDescriptors();
-        for (NamespaceDescriptor n : ns) {
-            System.out.println(n.getName());
-        }
-    }
-
-    @Test
-    public void createTables() throws Exception {
-        //创建conf对象
-        Configuration conf = HBaseConfiguration.create();
-        //通过工厂创建连接对象
-        Connection conn = ConnectionFactory.createConnection(conf);
-        Admin admin = conn.getAdmin();
-        //创建表名对象
-        TableName tbn = TableName.valueOf(&quot;ns2:t2&quot;);
-        //创建表描述符对象
-        HTableDescriptor tbl = new HTableDescriptor(tbn);
-        //在表描述符中添加列族创建列族描述符
-        HColumnDescriptor col = new HColumnDescriptor(&quot;f1&quot;);
-        tbl.addFamily(col);
-
-        admin.createTable(tbl);
-        System.out.println(&quot;over&quot;);
-    }
-
-    @Test
-    public void disableTable() throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        Admin admin = conn.getAdmin();
-        admin.disableTable(TableName.valueOf(&quot;ns2:t2&quot;));
-    }
-
-    @Test
-    public void dropTable() throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        Admin admin = conn.getAdmin();
-        admin.disableTable(TableName.valueOf(&quot;ns2:t2&quot;));
-        admin.deleteTable(TableName.valueOf(&quot;ns2:t2&quot;));
-    }
-
-    @Test
-    public void deleteData() throws IOException {
-
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        Delete del = new Delete(Bytes.toBytes(&quot;row0000001&quot;));
-        del.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
-        del.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
-
-        table.delete(del);
-        System.out.println(&quot;over&quot;);
-
-    }
-
-    @Test
-    public void scanall() throws IOException {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        Scan scan = new Scan();
-        ResultScanner rs = table.getScanner(scan);
-        Iterator&lt;Result&gt; it = rs.iterator();
-        while (it.hasNext()) {
-            Result r = it.next();//理解这个r是对一整行的封装
-            byte[] value = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
-            System.out.println(Bytes.toString(value));
-        }
-    }
-
-
-    @Test
-    public void scan() throws IOException {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        Scan scan = new Scan();
-        scan.setStartRow(Bytes.toBytes(&quot;row0005000&quot;));
-        scan.setStopRow(Bytes.toBytes(&quot;row0008000&quot;));
-        ResultScanner rs = table.getScanner(scan);
-        Iterator&lt;Result&gt; it = rs.iterator();
-        while (it.hasNext()) {
-            Result r = it.next();//理解这个r是对一整行的封装
-            byte[] value = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
-            System.out.println(Bytes.toString(value));
-        }
-    }
-
-    //动态获取所有的列和列族，动态遍历，每个列和值的集合，由于强行getvalue转换成string类型，所以难免出现乱码情况
-    @Test
-    public void scan2() throws IOException {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        Scan scan = new Scan();
-        ResultScanner rs = table.getScanner(scan);
-        Iterator&lt;Result&gt; it = rs.iterator();
-        while (it.hasNext()) {
-            Result r = it.next();//理解这个r是对一整行的封装
-            Map&lt;byte[], byte[]&gt; map = r.getFamilyMap(Bytes.toBytes(&quot;f1&quot;));
-            for (Map.Entry&lt;byte[], byte[]&gt; entrySet : map.entrySet()) {
-                String col = Bytes.toString(entrySet.getKey());
-                String val = Bytes.toString(entrySet.getValue());
-                System.out.println(col + &quot;:&quot; + val + &quot;,&quot;);
-            }
-            System.out.println();
-        }
-    }
-
-    @Test
-    public void scan3() throws IOException {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        Scan scan = new Scan();
-        ResultScanner rs = table.getScanner(scan);
-        Iterator&lt;Result&gt; it = rs.iterator();
-        while (it.hasNext()) {
-            Result r = it.next();//理解这个r是对一整行的封装
-            //得到一行的所有map，key=f1,value=Map&lt;Col,Map&lt;Timestamp,value&gt;&gt;这个结构
-
-            NavigableMap&lt;byte[], NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt;&gt; map = r.getMap();
-            for (Map.Entry&lt;byte[], NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt;&gt; entry : map.entrySet()) {
-                //得到列族
-                String f = Bytes.toString(entry.getKey());
-                NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt; colDataMap = entry.getValue();
-                for (Map.Entry&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt; ets : colDataMap.entrySet()) {
-                    String c = Bytes.toString(ets.getKey());
-                    Map&lt;Long, byte[]&gt; tsValueMap = ets.getValue();
-                    for (Map.Entry&lt;Long, byte[]&gt; e : tsValueMap.entrySet()) {
-                        Long ts = e.getKey();
-                        String value = Bytes.toString(e.getValue());
-                        System.out.println(f + &quot;:&quot; + c + &quot;:&quot; + ts + &quot;=&quot; + value + &quot;,&quot;);
-                    }
-                }
-            }
-        }
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/16/Hbase第一天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/16/Hbase第一天/" itemprop="url">Hbase第一天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-16T09:33:51+08:00">
-                2018-11-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -4207,7 +4002,7 @@ public class TestCRUD {
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -4218,7 +4013,7 @@ public class TestCRUD {
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -4229,7 +4024,7 @@ public class TestCRUD {
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">100</span>
+                  <span class="site-state-item-count">104</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

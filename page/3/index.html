@@ -328,6 +328,2005 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/28/Hadoop第十天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/28/Hadoop第十天/" itemprop="url">Hadoop第十天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-28T10:31:16+08:00">
+                2018-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h2><pre><code>3个JournalNode,edit log
+两个NN，active | standby
+2NN
+</code></pre><h2 id="ha的管理命令"><a href="#ha的管理命令" class="headerlink" title="ha的管理命令"></a>ha的管理命令</h2><pre><code>hdfs haadmin -getServiceState nn1        //查看服务
+hdfs haadmin -transitionToActive nn1    //激活
+hdfs haadmin -transitionToStandby nn2    //待命
+hdfs haadmin -failover nn1 nn2            //对调
+</code></pre><h2 id="数据仓库"><a href="#数据仓库" class="headerlink" title="数据仓库"></a>数据仓库</h2><pre><code>OLAP        //online analyze process,在线分析处理
+            //延迟性高.
+在于后期海量数据的查询统计hive是延迟性比较高的操作实时性不好都是批量计算
+</code></pre><h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><pre><code>OLTP        //online transaction process在线事务处理.
+            //实时性好。延迟性很低
+        mysql针对事务性处理保证ACI特性。        
+</code></pre><h2 id="HA-1"><a href="#HA-1" class="headerlink" title="HA"></a>HA</h2><pre><code>3个JournalNode,edit log
+两个NN，active | standby
+2NN
+</code></pre><h2 id="ha的管理命令-1"><a href="#ha的管理命令-1" class="headerlink" title="ha的管理命令"></a>ha的管理命令</h2><pre><code>hdfs haadmin -getServiceState nn1        //查看服务
+hdfs haadmin -transitionToActive nn1    //激活
+hdfs haadmin -transitionToStandby nn2    //待命
+hdfs haadmin -failover nn1 nn2            //对调
+</code></pre><h2 id="数据仓库-1"><a href="#数据仓库-1" class="headerlink" title="数据仓库"></a>数据仓库</h2><pre><code>OLAP        //online analyze process,在线分析处理
+            //延迟性高.
+</code></pre><h2 id="数据库-1"><a href="#数据库-1" class="headerlink" title="数据库"></a>数据库</h2><pre><code>OLTP        //online transaction process在线事务处理.
+            //实时性好。
+</code></pre><h2 id="jdbc"><a href="#jdbc" class="headerlink" title="jdbc"></a>jdbc</h2><pre><code>java database connection,java数据库连接。
+</code></pre><p>java数据库连接设计套接字编程吗：面向接口编程，依托mysql驱动程序和mysql操作， jdbc就是socket，musql就是serversocket。</p>
+<p><img src="https://i.imgur.com/5s8oEhk.png" alt=""><br>0</p>
+<pre><code>1.创建mysql数据库和表
+     create table users(id int primary key auto_increment , name varchar(20) , age int);
+2.idea中创建jdbcDemo模块
+</code></pre><h2 id="事务-transaction"><a href="#事务-transaction" class="headerlink" title="事务:transaction,"></a>事务:transaction,</h2><pre><code>和数据库之间的一组操作。
+特点.
+a        //atomic,原子性,不可分割.
+c        //consistent,不能破坏掉
+i        //isolate,隔离型.
+d        //durable.永久性
+</code></pre><h2 id="truncate"><a href="#truncate" class="headerlink" title="truncate"></a>truncate</h2><pre><code>截断表，类似于delete操作，速度快，数据无法回滚。在Mysql里面操作
+truncate table users ;
+</code></pre><h2 id="sql语句"><a href="#sql语句" class="headerlink" title="sql语句"></a>sql语句</h2><pre><code>1.
+2.
+3.
+</code></pre><h2 id="Transaction"><a href="#Transaction" class="headerlink" title="Transaction"></a>Transaction</h2><pre><code>commit            //提交
+rollback        //回滚
+savePoint        //保存点
+</code></pre><h1 id="插入10万条数据不用预处理语句"><a href="#插入10万条数据不用预处理语句" class="headerlink" title="插入10万条数据不用预处理语句"></a>插入10万条数据不用预处理语句</h1><pre><code>import org.junit.Test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+
+//测试增删改查基本功能
+public class TestCRUD {
+    @Test
+    public void testStatement() throws Exception{
+        long start=System.currentTimeMillis();
+        //创建连接
+        String diverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(diverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建语句对象
+        Statement st = conn.createStatement();
+        for(int i=0;i&lt;100000;i++){
+            String sql = &quot;insert into users(name,age) values(&apos;tomas&quot; + i + &quot;&apos;,&quot; + (i % 100) + &quot;)&quot;;
+            st.execute(sql);
+        }
+        conn.commit();
+        st.close();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+}
+</code></pre><h1 id="使用预处理语句："><a href="#使用预处理语句：" class="headerlink" title="使用预处理语句："></a>使用预处理语句：</h1><pre><code>import org.junit.Test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+//测试增删改查基本功能
+public class TestCRUD {
+    @Test
+    public void testPreparedStatement() throws Exception{
+        long start=System.currentTimeMillis();
+        //创建连接
+        String diverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(diverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建语句对象
+        String sql = &quot;insert into users(name,age) value(?,?)&quot;;
+        PreparedStatement ppst = conn.prepareStatement(sql);
+        for(int i =0;i &lt; 10000;i++){
+                ppst.setString(1,&quot;tom&quot;+i);
+                ppst.setInt(2,i%100);
+                ppst.executeUpdate();//执行更新
+             }
+        conn.commit();
+        ppst.close();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+}
+</code></pre><h2 id="上述代码加一个批处理："><a href="#上述代码加一个批处理：" class="headerlink" title="上述代码加一个批处理："></a>上述代码加一个批处理：</h2><pre><code>import org.junit.Test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+//测试增删改查基本功能
+public class TestCRUD {
+    @Test
+    public void testPreparedStatement() throws Exception {
+        long start = System.currentTimeMillis();
+        //创建连接
+        String diverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(diverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建语句对象
+        String sql = &quot;insert into users(name,age) value(?,?)&quot;;
+        PreparedStatement ppst = conn.prepareStatement(sql);
+        for (int i = 0; i &lt; 10000; i++) {
+            ppst.setString(1, &quot;tom&quot; + i);
+            ppst.setInt(2, i % 100);
+            ppst.addBatch();//这个地方相当于一个缓冲区，相当于缓冲区里面放了2000个在传出去，减少了网络带宽速度会变快
+            if (i % 200 == 0) {
+                ppst.executeUpdate();//执行更新
+            }
+        }
+        ppst.addBatch();//最后不够2000在进行一个批处理
+        conn.commit();
+        ppst.close();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+}
+</code></pre><p>这边的一个通过自回环传输一百万次插入，传输量巨大。<br>但是要是直接在Mysql端直接给个命令做一百万次插入，就很快。不用和服务器端交互很多的数据量。通过存储过程来写，存储过程就是一组sql语句。这些语句已经预先在数据库中存放了。无非就是循环了。要执行这些语句，就要发一条执行存储过程的指令，服务器已收到命令，就直接执行。 速度很快的。</p>
+<p><img src="https://i.imgur.com/7TubkBX.png" alt=""></p>
+<h1 id="100000条数据通过普通事务，预处理，批处理时间"><a href="#100000条数据通过普通事务，预处理，批处理时间" class="headerlink" title="100000条数据通过普通事务，预处理，批处理时间"></a>100000条数据通过普通事务，预处理，批处理时间</h1><pre><code>Statement                //46698
+PreparedStatent            //43338
+CallableStatement        //14385
+</code></pre><p><img src="https://i.imgur.com/YJmcnEF.png" alt=""></p>
+<h1 id="mysql存储过程"><a href="#mysql存储过程" class="headerlink" title="mysql存储过程"></a>mysql存储过程</h1><p>msyql&gt;– 定义新的终止符,<strong>*</strong>不要带空格这个是注释<strong>*</strong><br>mysql&gt;delimiter //</p>
+<p>mysql&gt;– 创建存储过程<br>mysql&gt;CREATE PROCEDURE simpleproc (OUT param1 INT)<br>        BEGIN<br>        SELECT COUNT(*) INTO param1 FROM users;        – into 是赋值方式之一<br>        END<br>        //</p>
+<p>mysql&gt;– 查看存储过程的状态<br>mysql&gt;show procedure status //</p>
+<p>mysql&gt;– 查看指定存储过程创建语句<br>mysql&gt;show create procedure simpleproc ;</p>
+<p>mysql&gt;– 调用存储过程,@a在命令中定义变量<br>mysql&gt;call simpleproc(@a)</p>
+<p>mysql&gt;– 删除存储过程<br>mysql&gt;show drop procedure simpleproc ;</p>
+<p>mysql&gt;– 定义加法存储过程,set赋值语句 :=<br>mysql&gt;create procedure sp_add(in a int,in b int, out c int)<br>            begin<br>            set c := a + b ;<br>        end<br>        //</p>
+<h2 id="java访问存储过程（调用的是上一步c-a-b这个过程）"><a href="#java访问存储过程（调用的是上一步c-a-b这个过程）" class="headerlink" title="java访问存储过程（调用的是上一步c=a+b这个过程）"></a>java访问存储过程（调用的是上一步c=a+b这个过程）</h2><pre><code>import org.junit.Test;
+import java.sql.*;
+
+/**
+ * 测试基本操作
+ */
+public class TestCRUD {
+    /**
+     * 存储过程
+     */
+    @Test
+    public void testCallableStatement() throws Exception {
+        long start = System.currentTimeMillis();
+        //创建连接
+        String driverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(driverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建可调用语句，调用存储过程
+        CallableStatement cst = conn.prepareCall(&quot;{call sp_add(?,?,?)}&quot;);
+        cst.setInt(1,2);        //绑定参数
+        cst.setInt(2,3);
+        //注册输出参数类型
+        cst.registerOutParameter(3,Types.INTEGER);
+        cst.execute();
+        int sum = cst.getInt(3);
+        System.out.println(sum);
+        conn.commit();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+}
+</code></pre><h2 id="百万数据插入，存储过程的性能"><a href="#百万数据插入，存储过程的性能" class="headerlink" title="百万数据插入，存储过程的性能"></a>百万数据插入，存储过程的性能</h2><pre><code>1.创建存储过程
+    mysql&gt;create procedure sp_batchinsert(in n int)
+        begin
+        DECLARE name0 varchar(20);    -- 定义在begin内部
+        DECLARE age0 int;
+        DECLARE i int default 0 ;
+            while i &lt; n do
+                set name0 := concat(&apos;tom&apos;,i) ;
+                set age0 := i % 100 ;
+                insert into users(name,age) values(name0,age0);
+                set i := i + 1 ;
+            end while ;
+        end 
+
+        //
+2.java代码
+    @Test
+    public void testCallableStatement() throws Exception {
+        long start = System.currentTimeMillis();
+        //创建连接
+        String driverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(driverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建可调用语句，调用存储过程
+        CallableStatement cst = conn.prepareCall(&quot;{call sp_batchinsert(?)}&quot;);
+        cst.setInt(1,1000000);        //绑定参数
+        //注册输出参数类型
+        cst.execute();
+        conn.commit();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+</code></pre><h1 id="mysql函数"><a href="#mysql函数" class="headerlink" title="mysql函数"></a>mysql函数</h1><p>这个是创建函数的SQL参考手册：</p>
+<p><img src="https://i.imgur.com/1gvxZzF.png" alt=""></p>
+<pre><code>1.函数和存储过程相似，只是多了返回值声明.
+2.创建函数
+    mysql&gt;create function sf_add(a int ,b int) returns int
+        begin
+            return a + b ;
+        end
+        //
+
+3.显式创建的函数
+    mysql&gt;show function status                -- 
+    mysql&gt;show function status like &apos;%add%&apos;    -- 
+    mysql&gt;select sf_add(1,2)                --
+
+4.java调用函数
+    @Test
+    public void testFunction() throws Exception {
+        long start = System.currentTimeMillis();
+        //创建连接
+        String driverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(driverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        //关闭自动提交
+        conn.setAutoCommit(false);
+
+        //创建可调用语句，调用存储过程
+        CallableStatement cst = conn.prepareCall(&quot;{? = call sf_add(?,?)}&quot;);
+        cst.setInt(2,100);//设置第二个参数是100第三个参数是200，第一个参数是输出。
+        cst.setInt(3,200);
+        cst.registerOutParameter(1,Types.INTEGER);
+        //注册输出参数类型
+        cst.execute();
+        System.out.println(cst.getInt(1));
+        conn.commit();
+        conn.close();
+        System.out.println(System.currentTimeMillis() - start);
+    }
+</code></pre><h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><pre><code>multiple version concurrent control,多版本并发控制。
+数据库的记录存储有多条，每一条都附加版本。所以可以实现隔离级别。是因为有MVCC多版本并发控制
+</code></pre><h2 id="事务的并发执行，容易出现的几个现象"><a href="#事务的并发执行，容易出现的几个现象" class="headerlink" title="事务的并发执行，容易出现的几个现象"></a>事务的并发执行，容易出现的几个现象</h2><pre><code>1.脏读
+    读未提交,一个事务读取了另外一个事务改写还没有提交的数据，如果另外一个
+    事务在稍后的时候回滚。
+
+2.不可重复读
+    一个事务进行相同条件查询连续的两次或者两次以上，每次结果都不同。这个是对数据进行了更改
+    有其他事务做了update操作。
+
+3.幻读
+    和(2)很像，其他事务做了insert操作.1时间查询到了10个，2时刻查询到了20个，是因为中间有做了插入操作
+</code></pre><h2 id="隔离级别（由于有MVCC）"><a href="#隔离级别（由于有MVCC）" class="headerlink" title="隔离级别（由于有MVCC）"></a>隔离级别（由于有MVCC）</h2><pre><code>为了避免出现哪种并发现象的。
+1        //read uncommitted    ,读未提交        导致脏读导致不可重复读
+2        //read committed    ,读已提交        这里避免了脏读
+4        //repeatable read    ,可以重复读        这里避免了不可重复读。还是可以让他插入更新，但是读取的是更新之前的值
+8        //serializable        ,串行化(悲观锁)        这里避免了换读，串行化不支持并发了就已经。
+</code></pre><h2 id="演示mysql事务隔离级别"><a href="#演示mysql事务隔离级别" class="headerlink" title="演示mysql事务隔离级别"></a>演示mysql事务隔离级别</h2><pre><code>1.开启mysql客户端
+    mysql&gt;
+2.关闭自动提交
+    mysql&gt;set autocommit 0 ;
+3.每次操作数据,都要开启事务，提交事务。
+</code></pre><h2 id="脏读现象"><a href="#脏读现象" class="headerlink" title="脏读现象"></a>脏读现象</h2><pre><code>[A]
+    1)mysql&gt;start transaction ;                                -- 开始事务
+    2)msyql&gt;update users set age = age + 1 where id = 1 ;    -- 更新数据,没有提交
+    6)mysql&gt;rollback ;                                        -- 回滚
+    7)mysql&gt;select * from users ;
+
+[B]
+    3)mysql&gt;set session transaction isolation level read uncommitted ;    -- 读未提交
+    4)msyql&gt;start transaction ;        -- 开始事务
+    5)mysql&gt;select * from users ;    -- 13
+</code></pre><h2 id="避免脏读"><a href="#避免脏读" class="headerlink" title="避免脏读"></a>避免脏读</h2><pre><code>[A]
+    1)mysql&gt;start transaction ;                                -- 开始事务
+    2)msyql&gt;update users set age = age + 1 where id = 1 ;    -- 更新数据,没有提交
+    6)mysql&gt;rollback ;                                        -- 回滚
+    7)mysql&gt;select * from users ;
+
+[B]
+    3)mysql&gt;set session transaction isolation level read committed ;    -- 读已提交
+    4)msyql&gt;start transaction ;        -- 开始事务
+    5)mysql&gt;select * from users ;    -- 13
+</code></pre><h2 id="测试不可重复读-隔离级别设置为读已提交不能避免不可重复读。"><a href="#测试不可重复读-隔离级别设置为读已提交不能避免不可重复读。" class="headerlink" title="测试不可重复读(隔离级别设置为读已提交不能避免不可重复读。)"></a>测试不可重复读(隔离级别设置为读已提交不能避免不可重复读。)</h2><pre><code>[A]
+    1)mysql&gt;commit ;
+    2)mysql&gt;set session transaction isolation level read committed ;    -- 读已提交
+    3)mysql&gt;start transaction ;                                            -- 开始事务
+    4)mysql&gt;select * from users    ;                                        -- 查询
+    9)mysql&gt;select * from users    ;
+
+[B]
+    5)mysql&gt;commit;
+    6)mysql&gt;start transaction ;    
+    7)mysql&gt;update users set age = 15 where id = 1 ;                    -- 更新
+    8)mysql&gt;commit;
+</code></pre><h2 id="测试避免不可重复读-隔离级别设置为读已提交不能避免不可重复读。"><a href="#测试避免不可重复读-隔离级别设置为读已提交不能避免不可重复读。" class="headerlink" title="测试避免不可重复读(隔离级别设置为读已提交不能避免不可重复读。)"></a>测试避免不可重复读(隔离级别设置为读已提交不能避免不可重复读。)</h2><pre><code>[A]
+    1)mysql&gt;commit ;
+    2)mysql&gt;set session transaction isolation level repeatable read ;    -- 可以重复读
+    3)mysql&gt;start transaction ;                                            -- 开始事务
+    4)mysql&gt;select * from users    ;                                        -- 查询
+    9)mysql&gt;select * from users    ;
+
+[B]
+    5)mysql&gt;commit;
+    6)mysql&gt;start transaction ;    
+    7)mysql&gt;update users set age = 15 where id = 1 ;                    -- 更新
+    8)mysql&gt;commit;
+</code></pre><h2 id="测试幻读-隔离级别设置为repeatable"><a href="#测试幻读-隔离级别设置为repeatable" class="headerlink" title="测试幻读(隔离级别设置为repeatable)"></a>测试幻读(隔离级别设置为repeatable)</h2><pre><code>[A]
+    1)mysql&gt;commit ;
+    2)mysql&gt;set session transaction isolation level serializable;        -- 串行化
+    3)mysql&gt;start transaction ;                                            -- 开始事务
+    4)mysql&gt;select * from users    ;                                        -- 查询
+    9)mysql&gt;select * from users    ;
+
+[B]
+    5)mysql&gt;commit;
+    6)mysql&gt;start transaction ;    
+    7)mysql&gt;insert into users(name,age) values(&apos;tomas&apos;,13);                -- 更新
+    8)mysql&gt;commit;
+</code></pre><h2 id="ANSI-SQL"><a href="#ANSI-SQL" class="headerlink" title="ANSI SQL"></a>ANSI SQL</h2><pre><code>美国国家标准结构SQL组
+select * from users for update ;
+</code></pre><h2 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h2><pre><code>1.支持四种隔离级别。
+2.默认隔离级别是可以重复读。
+3.隔离级别是seriable,不支持并发写。
+</code></pre><h2 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h2><pre><code>LOCK TABLE t WRITE;    -- 加锁(表级锁,read)
+
+UNLOCK TABLES ;        -- 解除自己所有的所有表级锁
+
+表级锁只能通过命令来解锁。
+</code></pre><p><img src="https://i.imgur.com/cLufeUV.png" alt=""></p>
+<h2 id="编程实现脏读现象"><a href="#编程实现脏读现象" class="headerlink" title="编程实现脏读现象"></a>编程实现脏读现象</h2><pre><code>package com.it18zhang.jdbcdemo.test;
+import org.junit.Test;
+import java.sql.*;
+/**
+ * 测试隔离级别
+ */
+public class TestIsolationLevel {
+
+    /**
+     * 执行写，不提交
+     */
+    @Test
+    public void testA() throws  Exception{
+        //创建连接
+        String driverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(driverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        conn.setAutoCommit(false);
+        Statement st = conn.createStatement();
+        st.execute(&quot;update users set age = 80 where id = 1&quot;);
+
+        System.out.println(&quot;===============&quot;);
+        conn.commit();
+        conn.close();
+    }
+
+    /**
+     * 查询，查到别人没有提交的数据
+     */
+    @Test
+    public void testB() throws  Exception{
+        //创建连接
+        String driverClass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        Class.forName(driverClass);
+        Connection conn = DriverManager.getConnection(url, username, password);
+
+        //设置隔离级别读未提交==&gt;导致脏读
+        /************************** 设置隔离级别 ***************************************/
+        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+        conn.setAutoCommit(false);
+        Statement st = conn.createStatement();
+
+
+        ResultSet rs = st.executeQuery(&quot;select age from users where id = 1&quot;);
+        rs.next();
+        int age = rs.getInt(1) ;
+        System.out.println(age);
+        System.out.println(&quot;===============&quot;);
+        conn.commit();
+        conn.close();
+    }
+</code></pre><h2 id="共享读锁"><a href="#共享读锁" class="headerlink" title="共享读锁"></a>共享读锁</h2><h1 id="独占写锁"><a href="#独占写锁" class="headerlink" title="独占写锁"></a>独占写锁</h1><pre><code>一个事务写操作，另一个塞住。行级别的锁
+在独占锁这块，开启事务之后，资源存在征用的情况，如果A修改&gt;=2，b修改&lt;=3那么就出现先来先用的情况，没有提交事务之前，B一直要等待状态。然后事务是you原子性的，肯定就是非交集和交集的部分都不能更改。因为原子性。查询是由隔离级别控制。在查询的时候为了不让别人更新设置隔离级别为最高级别，就是8串行化，但是很难受，连接不关掉放到连接池里面，被下一个调用，还是串行化状态，不能写入，性能差。除了设置隔离级别，我们还可以加上一个select * from users for update。这样的话就代表仅仅是对这一个查询语句的时候执行独占写锁。这个时候不需要再设置隔离级别为8了。
+</code></pre><h2 id="SQL"><a href="#SQL" class="headerlink" title="SQL"></a>SQL</h2><pre><code>//
+insert into users(name,age,...) values(&apos;&apos;,12,..) ;                -- insert
+update users set name = &apos;xxx&apos;,age = xxx ,... where id = xxx ;    -- update
+delete from users where id = xxx                                -- delete
+
+-- 投影查询 projection.
+select id,name from users where ... order by limit xxx            --select
+
+-- 查询时直接上独占写锁
+select * from users for update ;    
+</code></pre><h2 id="连接查询"><a href="#连接查询" class="headerlink" title="连接查询"></a>连接查询</h2><pre><code>1.准备表[mysql.sql]
+drop table if exists customers; -- 删除表
+drop table if exists orders ;    -- 删除表
+create table customers(id int primary key auto_increment , name varchar(20) , age int);                    -- 创建customers表
+create table orders(id int primary key auto_increment , orderno varchar(20) , price float , cid int);    -- 创建orders表
+
+-- 插入数据
+insert into customers(name,age) values(&apos;tom&apos;,12);
+insert into customers(name,age) values(&apos;tomas&apos;,13);
+insert into customers(name,age) values(&apos;tomasLee&apos;,14);
+insert into customers(name,age) values(&apos;tomason&apos;,15);
+
+-- 插入订单数据
+insert into orders(orderno,price,cid) values(&apos;No001&apos;,12.25,1);
+insert into orders(orderno,price,cid) values(&apos;No002&apos;,12.30,1);
+insert into orders(orderno,price,cid) values(&apos;No003&apos;,12.25,2);
+insert into orders(orderno,price,cid) values(&apos;No004&apos;,12.25,2);
+insert into orders(orderno,price,cid) values(&apos;No005&apos;,12.25,2);
+insert into orders(orderno,price,cid) values(&apos;No006&apos;,12.25,3);
+insert into orders(orderno,price,cid) values(&apos;No007&apos;,12.25,3);
+insert into orders(orderno,price,cid) values(&apos;No008&apos;,12.25,3);
+insert into orders(orderno,price,cid) values(&apos;No009&apos;,12.25,3);
+insert into orders(orderno,price,cid) values(&apos;No0010&apos;,12.25,NULL);
+
+---执行SQL文件
+    source d:/SQL/mysql.sql
+
+2.查询--连接查询
+mysql&gt;-- 笛卡尔积查询,无连接条件查询
+mysql&gt;select a.*,b.* from customers a , orders b ; 
+</code></pre><p><img src="https://i.imgur.com/4hC9GS4.png" alt=""></p>
+<pre><code>mysql&gt;-- 内连接,查询符合条件的记录.
+mysql&gt;select a.*,b.* from customers a , orders b where a.id = b.cid ; 
+</code></pre><p><img src="https://i.imgur.com/2bP8sx4.png" alt=""></p>
+<pre><code>mysql&gt;-- 左外连接,查询符合条件的记录.
+mysql&gt;select a.*,b.* from customers a left outer join orders b on a.id = b.cid ; 
+</code></pre><p><img src="https://i.imgur.com/XKWihaX.png" alt=""></p>
+<pre><code>mysql&gt;-- 右外连接,查询符合条件的记录.
+mysql&gt;select a.*,b.* from customers a right outer join orders b on a.id = b.cid ; 
+</code></pre><p><img src="https://i.imgur.com/LiR1yV0.png" alt=""></p>
+<p><img src="https://i.imgur.com/6GdI0kM.png" alt=""></p>
+<pre><code>mysql&gt;-- 全外连接,查询符合条件的记录(mysql不支持全外链接)
+mysql&gt;select a.*,b.* from customers a full outer join orders b on a.id = b.cid ; 
+</code></pre><p>2.查询–分组</p>
+<pre><code>             字段列表  表       条件        分组        组内条件       排序     分页
+mysql&gt;select ... from ... where ... group by ... having ...  order by ... limit ..
+
+
+mysql&gt;-- 去重查询
+mysql&gt;select distinct price,cid from orders ;
+
+mysql&gt;-- 条件查询
+mysql&gt;select price,cid from orders where price &gt; 12.27 ;
+
+mysql&gt;-- 聚集查询
+mysql&gt;select max(price) from orders ;
+mysql&gt;select min(price) from orders ;
+mysql&gt;select avg(price) from orders ;
+mysql&gt;select sum(price) from orders ;
+mysql&gt;select count(id) from orders ;
+
+mysql&gt;-- 分组查询
+mysql&gt;select max(price) from orders where cid is not null group by cid ;
+
+
+mysql&gt;-- 分组查询(组内过滤)
+mysql&gt;select cid ,orderno,max(price) as max_price,min(price) from orders where cid is not null group by cid having max_price &gt; 20 ;
+
+mysql&gt;-- 降序查询
+mysql&gt;select cid ,orderno,max(price) as max_price,min(price) from orders where cid is not null group by cid having max_price &gt; 20 order by max_price desc;
+
+mysql&gt;-- 模糊查询
+mysql&gt;select  * from customers where name like &apos;toma%&apos;        
+mysql&gt;select  * from customers where name not like &apos;toma%&apos;        
+
+mysql&gt;-- 范围查询
+mysql&gt;select  * from customers where id in (1,2,3)        
+mysql&gt;select  * from customers where id not in (1,2,3)        
+
+mysql&gt;-- between 1 and 10,闭区间
+mysql&gt;select  * from customers where id between 1 and 3 ;
+mysql&gt;select  * from customers where id &gt;= 1 and id &lt;= 3 ;
+
+mysql&gt;-- 嵌套子查询(查询没有订单的客户)
+mysql&gt;select  * from customers where id not in (select distinct cid from orders where cid is not null);
+
+mysql&gt;-- 嵌套子查询(查询订单数量&gt;2的客户)
+mysql&gt;select * from customers where id in (select cid from orders group by cid having count(cid) &gt; 2);
+mysql&gt;select * from customers where id in ( select t.cid from (select cid,count(*) as c from orders group by cid having c &gt; 2) as t);
+
+mysql&gt;--向已有表中添加列
+mysql&gt;--alter table orders add column area int;
+mysql&gt;--设置area字段的值
+mysql&gt;--update orders set area = 2 where id in(1,3,,6,7);
+mysql&gt;--设置area字段的值
+mysql&gt;--update orders set area = 1 where id not in(1,3,,6,7);
+mysql&gt;--设置area字段的值
+mysql&gt;--update orders set area = 1 where id not in(1,3,,6,7);
+稍微看一下下面这个SQL语句：
+mysq&gt;--select cid,area,count(price) from orders group by cid,area;//这句话的意思是对cid和area联合分组，什么意思：就是说要cid和area要都相同才能进入到同一个组里面去。
+mysq&gt;--select cid,area,count(price),max(price),min(price) from orders group by cid,area order by cid asc, area desc  ;//这句话的意思是对cid和area联合分组，什么意思：就是说要cid和area要都相同才能进入到同一个组里面去。然后这个cid升序area降序是在1里面对area降序，也就是说先对cid整体升序，然后对升序完之后相同的cid里面进行降序。
+</code></pre><p><img src="https://i.imgur.com/QbThVj2.png" alt=""></p>
+<pre><code>mysql&gt;-- 嵌套子查询(查询客户id,客户name,订单数量,最贵订单，最便宜订单，平均订单价格 where 订单数量&gt;2的客户)
+mysql&gt;select a.id,a.name,b.c,b.max,b.min,b.avg 
+      from customers a,((select cid,count(cid) c , max(price) max ,min(price) min,avg(price) avg from orders group by cid having c &gt; 2) as b) 
+      where a.id = b.cid ;
+</code></pre><h2 id="hadoop"><a href="#hadoop" class="headerlink" title="hadoop"></a>hadoop</h2><pre><code>MR
+
+左外连接.
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/25/Hadoop第九天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/25/Hadoop第九天/" itemprop="url">Hadoop第九天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-25T09:52:10+08:00">
+                2018-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="复习："><a href="#复习：" class="headerlink" title="复习："></a>复习：</h1><p>1.链式job编程</p>
+<pre><code>MR        //Mapper+ / Reduce Mapper*
+</code></pre><p>2.DBWritable</p>
+<pre><code>和数据库交互。
+</code></pre><p>3.Sqoop</p>
+<p>4.全排序</p>
+<pre><code>对reduce输出的所有结果进行排序。
+</code></pre><p>5.二次排序</p>
+<pre><code>对value进行排序。
+</code></pre><p>6.数据倾斜</p>
+<pre><code>1.reduce
+2.自定义分区函数
+    数据结果错 + 二次job
+3.重新设计key
+    数据结果错 + 二次job
+</code></pre><h1 id="机架感知"><a href="#机架感知" class="headerlink" title="机架感知"></a>机架感知</h1><p>机架有一块网卡。可以连接很多主机，机架上每个刀片服务器主机都连接到这个机架网卡上的。</p>
+<p>比如一台刀片服务器上有2个进程，2个进程之间通信需要走机架上的交换机吗。不需要直接走自回环网络即可。走Localhost即可。所以2个进程之间不需要网卡交互数据。2个进程之间的距离就是0。每个进程所在的主机节点，连接他们之间的网络通路的跃点数就是他们之间的距离</p>
+<p>如果b中绿色进程和a中红色进程需要交互就需要通过交换机，距离就是2.怎么算的，就是从每个服务器到交换机之间的距离相加，就是1+1；</p>
+<p>如果是2个机架也要通过一个交换机连接起来。左边机架a中绿色和右边机架红色通信。距离就是4.</p>
+<p>同一个机房通信最多就是4。也就是在通过一个交换机。</p>
+<p>Hadoop都有机架感知能力：是他里面的一种策略，都需人为维护。在默认情况下所有节点都在同一个机架上。/default-rack。<br><img src="https://i.imgur.com/jdRJXuc.png" alt=""><br>但是在临近节点数据量非常大的时候，也是不会使用的，就近原则只是一种策略，还有其他策略。</p>
+<h2 id="fault-tolerance"><a href="#fault-tolerance" class="headerlink" title="fault tolerance"></a>fault tolerance</h2><pre><code>容错.
+针对业务。
+map或reduce任务失败，的这种错误。
+</code></pre><h2 id="fail-over"><a href="#fail-over" class="headerlink" title="fail over"></a>fail over</h2><pre><code>容灾.
+针对硬件故障。
+</code></pre><h2 id="master-slave"><a href="#master-slave" class="headerlink" title="master / slave"></a>master / slave</h2><pre><code>主(master,namenode)从(slave,datanode)结构.
+</code></pre><p> topology.node.switch.mapping.impl</p>
+<h1 id="客户端请求Namenode来读取datanodes的过程"><a href="#客户端请求Namenode来读取datanodes的过程" class="headerlink" title="客户端请求Namenode来读取datanodes的过程"></a>客户端请求Namenode来读取datanodes的过程</h1><p><img src="https://i.imgur.com/XFcQNFV.png" alt=""><br>Namenode只存放文件系统的数据信息，而不存放各个节点的IP地址。存放块ID，块列表。</p>
+<h2 id="可靠性"><a href="#可靠性" class="headerlink" title="可靠性"></a>可靠性</h2><pre><code>提供数据安全的能力。
+</code></pre><h2 id="可用性"><a href="#可用性" class="headerlink" title="可用性"></a>可用性</h2><pre><code>提供持续服务的能力。
+</code></pre><h2 id="默认的副本放置策略"><a href="#默认的副本放置策略" class="headerlink" title="默认的副本放置策略"></a>默认的副本放置策略</h2><pre><code>首选在本地机架的一个node存放副本,另一个副本在本地机架的另一个不同节点。
+最后一个副本在不同机架的不同节点上。
+</code></pre><p>hads oiv        //image data metadata.    离线镜像查看器<br>hads oev        //edit        编辑日志</p>
+<p>镜像文件存放的是元信息，元信息包括块，块ID，块列表，是不是上下级关系，副本数，权限，块大小。除了数据内容本身内容之外的。</p>
+<p>通过实现接口改变配置实现一个机架感知。</p>
+<h2 id="自定义机架感知-优化hadoop集群一种方式"><a href="#自定义机架感知-优化hadoop集群一种方式" class="headerlink" title="自定义机架感知(优化hadoop集群一种方式)"></a>自定义机架感知(优化hadoop集群一种方式)</h2><pre><code>1.自定义实现类
+package com.it18zhang.hdfs.rackaware;
+
+import org.apache.hadoop.net.DNSToSwitchMapping;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/*机架感知实现类
+吧203以下的机器设置为机架1，吧203以上的机架设置为机架2
+ */
+
+public class MyRackAware implements DNSToSwitchMapping {
+
+    public List&lt;String&gt; resolve(List&lt;String&gt; names) {
+        ArrayList&lt;String&gt; list = new ArrayList&lt;String&gt;();
+        //true表示是不是追加模式
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(&quot;/home/centos/rackaware.txt&quot;, true);
+            for (String str : names) {
+                fw.write(str + &quot;\r\n&quot;);
+                if (str.startsWith(&quot;192&quot;)) {
+                    //192.168.192.202
+                    String ip = str.substring(str.lastIndexOf(&quot;.&quot;) + 1);
+                    if (Integer.parseInt(ip) &lt;= 203) {
+                        list.add(&quot;/rack1/&quot; + ip);
+                    } else {
+                        list.add(&quot;/rack2&quot; + ip);
+                    }
+                } else if (str.startsWith(&quot;s&quot;)) {
+                    String ip = str.substring(1);
+                    if (Integer.parseInt(ip) &lt;= 203) {
+                        list.add(&quot;/rack1/&quot; + ip);
+                    } else {
+                        list.add(&quot;/rack2&quot; + ip);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public void reloadCachedMappings() {
+    }
+    public void reloadCachedMappings(List&lt;String&gt; names) {
+    }
+}
+
+
+2.配置core-site.xml
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;
+    &lt;configuration&gt;
+            &lt;property&gt;
+                    &lt;name&gt;fs.defaultFS&lt;/name&gt;
+                    &lt;value&gt;hdfs://192.168.231.201/&lt;/value&gt;
+            &lt;/property&gt;
+            &lt;property&gt;
+                    &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;
+                    &lt;value&gt;/home/centos/hadoop&lt;/value&gt;
+            &lt;/property&gt;
+            &lt;property&gt;
+                    &lt;name&gt;topology.node.switch.mapping.impl&lt;/name&gt;
+                    &lt;value&gt;com.it18zhang.hdfs.rackaware.MyRackAware&lt;/value&gt;
+            &lt;/property&gt;
+    &lt;/configuration&gt;
+
+3.导出jar包
+
+4.复制jar到/soft/hadoop/shared/hadoop/common/lib（这个是hadoop的类路径）
+
+5.分发jar.(可以不做)
+    实际上不需要分发，只在名称节点上运行。
+
+6.重启名称节点
+    $&gt;hadoop-daemon.sh stop namenode
+    $&gt;hadoop-daemon.sh start namenode
+</code></pre><hr>
+<p>在s202上传一个文件，最后得出来确实和副本存放策略一致：</p>
+<pre><code>首选在本地机架的一个node存放副本,另一个副本在本地机架的另一个不同节点。
+最后一个副本在不同机架的不同节点上。
+</code></pre><p><img src="https://i.imgur.com/agPBlr6.png" alt=""></p>
+<hr>
+<h1 id="关于HDFS"><a href="#关于HDFS" class="headerlink" title="关于HDFS"></a>关于HDFS</h1><p>下面这一段是关于HDFS的讲解，HDFS包括namenode和datanode，名称节点和数据节点。名称节点只是保存名称信息。那么如果在HDFS中文件移动的话怎么办，就是名称节点改变目录来移动即可。1kb和1G的速度是一样的。在HDFS中移动只是改变路径而已，块根本就没变，只能重新删掉在put才是真正移动了块。这一节就是通过实验验证了这个问题。</p>
+<p><img src="https://i.imgur.com/JozXTOc.png" alt=""></p>
+<hr>
+<h2 id="去IOE"><a href="#去IOE" class="headerlink" title="去IOE"></a>去IOE</h2><pre><code>IBM            //
+Oracle        //
+EMC            //
+</code></pre><h2 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h2><pre><code>1.NFS
+    网络共享存储设备。
+
+2.QJM
+    Quorum Journal Manager
+
+3.两个名称节点
+    active            //激活
+    standby            //待命
+</code></pre><p>active            //激活<br>deactive        //钝化</p>
+<h2 id="SPOF"><a href="#SPOF" class="headerlink" title="SPOF"></a>SPOF</h2><pre><code>single point of failure,单点故障。
+</code></pre><h2 id="事务是个特性"><a href="#事务是个特性" class="headerlink" title="事务是个特性"></a>事务是个特性</h2><pre><code>a        //atomic    原子性
+c        //consistent一致性
+i        //isolate    隔离型
+d        //durable    永久性·
+</code></pre><h2 id="majority"><a href="#majority" class="headerlink" title="majority "></a>majority </h2><pre><code>大部分.
+</code></pre><h2 id="HA高可用配置"><a href="#HA高可用配置" class="headerlink" title="HA高可用配置"></a>HA高可用配置</h2><pre><code>high availability,高可用.
+/home/centos/hadoop/dfs/data/current/BP-2100834435-192.168.231.201-1489328949370/current/finalized/subdir0/subdir0
+
+两个名称节点，一个active(激活态)，一个是standby(slave待命),slave节点维护足够多状态以便于容灾。
+和客户端交互的active节点,standby不交互.
+两个节点都和JN守护进程构成组的进行通信。
+
+数据节点配置两个名称节点，分别报告各自的信息。
+
+同一时刻只能有一个激活态名称节点。
+
+脑裂:两个节点都是激活态。
+为防止脑裂，JNs只允许同一时刻只有一个节点向其写数据。容灾发生时，成为active节点的namenode接管
+向jn的写入工作。
+</code></pre><h2 id="硬件资源"><a href="#硬件资源" class="headerlink" title="硬件资源"></a>硬件资源</h2><pre><code>名称节点:    硬件配置相同。
+JN节点    :    轻量级进程，至少3个节点,允许挂掉的节点数 (n - 1) / 2.
+            不需要再运行辅助名称节点。
+</code></pre><h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><h2 id="配置细节"><a href="#配置细节" class="headerlink" title="配置细节"></a>配置细节</h2><pre><code>0.s201和s206具有完全一致的配置，尤其是ssh.
+
+1.配置nameservice
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.nameservices&lt;/name&gt;
+        &lt;value&gt;mycluster&lt;/value&gt;
+    &lt;/property&gt;
+
+2.dfs.ha.namenodes.[nameservice ID]
+    [hdfs-site.xml]
+    &lt;!-- myucluster下的名称节点两个id --&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.ha.namenodes.mycluster&lt;/name&gt;
+        &lt;value&gt;nn1,nn2&lt;/value&gt;
+    &lt;/property&gt;
+
+3.dfs.namenode.rpc-address.[nameservice ID].[name node ID] 
+    [hdfs-site.xml]
+    配置每个nn的rpc地址。
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.rpc-address.mycluster.nn1&lt;/name&gt;
+        &lt;value&gt;s201:8020&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.rpc-address.mycluster.nn2&lt;/name&gt;
+        &lt;value&gt;s206:8020&lt;/value&gt;
+    &lt;/property&gt;
+
+4.dfs.namenode.http-address.[nameservice ID].[name node ID]
+    配置webui端口
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.http-address.mycluster.nn1&lt;/name&gt;
+        &lt;value&gt;s201:50070&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.http-address.mycluster.nn2&lt;/name&gt;
+        &lt;value&gt;s206:50070&lt;/value&gt;
+    &lt;/property&gt;
+
+5.dfs.namenode.shared.edits.dir
+    名称节点共享编辑目录.
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.shared.edits.dir&lt;/name&gt;
+        &lt;value&gt;qjournal://s202:8485;s203:8485;s204:8485/mycluster&lt;/value&gt;
+    &lt;/property&gt;
+
+6.dfs.client.failover.proxy.provider.[nameservice ID]
+    java类，client使用它判断哪个节点是激活态。
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.client.failover.proxy.provider.mycluster&lt;/name&gt;
+        &lt;value&gt;org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider&lt;/value&gt;
+    &lt;/property&gt;
+
+7.dfs.ha.fencing.methods
+    脚本列表或者java类，在容灾保护激活态的nn.
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.ha.fencing.methods&lt;/name&gt;
+        &lt;value&gt;
+                sshfence
+                shell(/bin/true)
+        &lt;/value&gt;
+    &lt;/property&gt;
+
+    &lt;property&gt;
+        &lt;name&gt;dfs.ha.fencing.ssh.private-key-files&lt;/name&gt;
+        &lt;value&gt;/home/centos/.ssh/id_rsa&lt;/value&gt;
+    &lt;/property&gt;
+
+8.fs.defaultFS 
+    配置hdfs文件系统名称服务。
+    [core-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;fs.defaultFS&lt;/name&gt;
+        &lt;value&gt;hdfs://mycluster&lt;/value&gt;
+    &lt;/property&gt; 
+
+9.dfs.journalnode.edits.dir
+    配置JN存放edit的本地路径。
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.journalnode.edits.dir&lt;/name&gt;
+        &lt;value&gt;/home/centos/hadoop/journal&lt;/value&gt;
+    &lt;/property&gt;
+</code></pre><h2 id="部署细节"><a href="#部署细节" class="headerlink" title="部署细节"></a>部署细节</h2><pre><code>1.在jn节点分别启动jn进程
+    $&gt;hadoop-daemon.sh start journalnode
+
+2.启动jn之后，在两个NN之间进行disk元数据同步
+    a)如果是全新集群，先format文件系统,只需要在一个nn上执行。
+        [s201]
+        $&gt;hadoop namenode -format
+</code></pre><p>格式化文件系统主要就是生成一个新的VERSION，里面内容就是生成一个名称空间ID集群ID时间块池ID</p>
+<p><img src="https://i.imgur.com/9loeVXF.png" alt=""></p>
+<pre><code>b)如果将非HA集群转换成HA集群，复制原NN的metadata到另一个nn.
+    1.步骤一
+        [s201]
+        $&gt;scp -r /home/centos/hadoop/dfs centos@s206:/home/centos/hadoop/
+
+    2.步骤二
+
+
+
+        在新的nn(未格式化的nn)上运行一下命令，实现待命状态引导。
+        [s206]
+        $&gt;hdfs namenode -bootstrapStandby        //需要s201为启动状态,提示是否格式化,选择N.
+
+    3)在一个NN上执行以下命令，完成edit日志到jn节点的传输。
+        $&gt;hdfs namenode -initializeSharedEdits
+        #查看s202,s203是否有edit数据.
+
+    4)启动所有节点.
+        [s201]
+        $&gt;hadoop-daemon.sh start namenode        //启动名称节点
+        $&gt;hadoop-daemons.sh start datanode        //启动所有数据节点
+
+        [s206]
+        $&gt;hadoop-daemon.sh start namenode        //启动名称节点
+</code></pre><h2 id="HA管理"><a href="#HA管理" class="headerlink" title="HA管理"></a>HA管理</h2><pre><code>$&gt;hdfs haadmin -transitionToActive nn1                //切成激活态
+$&gt;hdfs haadmin -transitionToStandby nn1                //切成待命态
+$&gt;hdfs haadmin -transitionToActive --forceactive nn2//强行激活
+$&gt;hdfs haadmin -failover nn1 nn2                    //模拟容灾演示,从nn1切换到nn2
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/22/Hadoop第八天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/22/Hadoop第八天/" itemprop="url">Hadoop第八天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-22T19:40:51+08:00">
+                2018-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="二次排序链条化"><a href="#二次排序链条化" class="headerlink" title="二次排序链条化"></a>二次排序链条化</h1><p>分组不能解决数据倾斜问题，已经进入到了同一个reduce对象里面了，分一个组出来就进入同一个reduce方法里面。每次分组只是决定调用不调用同一个reduce方法。已经晚了，数据已经进入到了同一个reduce了，分区可以决定数据倾斜问题。</p>
+<p>reduce分为方法和对象，有的时候说reduce是指的是方法，有的时候指的是对象，要分开对待。</p>
+<p>单词统计做统计肯定不能哈希分区，因为哈希同一个值进入到同一个reduce对象利民区去了</p>
+<h1 id="数据倾斜问题-随机分区-二次MR"><a href="#数据倾斜问题-随机分区-二次MR" class="headerlink" title="数据倾斜问题 随机分区 二次MR"></a>数据倾斜问题 随机分区 二次MR</h1><pre><code>1.
+2.
+3.
+4.
+</code></pre><p>如果正常按照wordcount来处理会分为</p>
+<p>reduce不设置就是1，map没机会设置数量。但是也可以设置map，但是意义，以为mr提交的时候map的个数取决于切片的个数。</p>
+<p>切片的计算公式：min block、maxsplit、 blocksize取中间值<br>等于blocksize。</p>
+<p>现在文件如下，现在3个文件每个文件有一百万数据且有一百万个hello就对应了3个map。（这里没明白为什么3个切片也就是为啥3个map）</p>
+<p>每个切片里，分区个数等于reduce个数，分区的个数取决于reduce个数，之前自己已经在WCAPP里面设置好了reduce个数。</p>
+<p>我有3个map，4个reduce。那么每个map里面就有4个分区了。</p>
+<p><strong>要解决哈希分区带来的数据倾斜问题，可以通过随机分区，然后在进行二次mr来解决这个问题</strong></p>
+<p><img src="https://i.imgur.com/VoHpfBH.png" alt=""></p>
+<p>组合combineor是对分区里面的预先聚合，下面的hello就不会发送一百万次，而是提前聚合了发送了hello 一百万次。这个样子。能解决目前的倾斜问题，但是不可能这么多数据，可能量很大</p>
+<p>下面这种情况下，所有的hello根据哈希分区就进入到同一个分区，然后一百万个tom分4个分区</p>
+<p>通过随机分区可以解决数据倾斜问题，但是会产生新的问题，就是说hello被分到4个不同的reduce里面，导致reduce1产生hello10reduce2产生hello13这种问题，所以通过二次mr来解决这个问题，让hello这个单词统计，进入到同一个reduce结果当中。所以也就是通过随即分区和二次mr解决</p>
+<pre><code>[1.txt]1000000
+hello tom1
+hello tom2
+hello tom3
+hello tom4
+hello tom5
+hello tom6
+hello tom7
+hello tom8
+hello tom9
+hello tom10
+
+[2.txt]1000000
+hello tom11
+hello tom12
+hello tom13
+hello tom14
+hello tom15
+hello tom16
+hello tom17
+hello tom18
+hello tom19
+hello tom20
+
+[3.txt]1000000
+hello tom21
+hello tom22
+hello tom23
+hello tom24
+hello tom25
+hello tom26
+hello tom27
+hello tom28
+hello tom29
+hello tom30
+</code></pre><p>代码如下：<br>    //自定义分区函数<br>    public class RandomPartitioner extends Partitioner&lt;Text,IntWritable&gt; {<br>        @Override<br>        public int getPartition(Text text, IntWritable intWritable, int numPartitions) {<br>            return new Random().nextInt(numPartitions);<br>        }<br>    }</p>
+<hr>
+<pre><code>//解决数据倾斜问题：
+public class WCSkueApp {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+        Job job = Job.getInstance(conf);
+
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCSkueApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:/mr/skew/out&quot;));
+
+        //设置随机分区：
+        job.setPartitionerClass(RandomPartitioner.class);
+
+        job.setMapperClass(WCSkueMapper.class);         //mapper类
+        job.setReducerClass(WCSkueReducer.class);       //reduce类
+
+        job.setNumReduceTasks(4);
+
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueMapper extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+    public WCSkueMapper(){
+        System.out.println(&quot;new WCMapper&quot;);
+    }
+
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] arr = value.toString().split(&quot; &quot;);
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+
+        for(String s:arr){
+            keyout.set(s);
+            valueout.set(1);
+            context.write(keyout,valueout);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+
+
+    }
+}
+</code></pre><hr>
+<p>//解决数据倾斜问题：<br>    public class WCSkueApp2 {</p>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+        Job job = Job.getInstance(conf);
+
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCSkueApp2.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00000&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00001&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00002&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00003&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:/mr/skew/out2&quot;));
+
+
+        job.setMapperClass(WCSkueMapper2.class);         //mapper类
+        job.setReducerClass(WCSkueReducer2.class);       //reduce类
+
+        job.setNumReduceTasks(4);
+
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueMapper2 extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+    public WCSkueMapper2(){
+        System.out.println(&quot;new WCMapper&quot;);
+    }
+
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] arr = value.toString().split(&quot;\t&quot;);
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+        context.write(new Text(arr[0]),new IntWritable(Integer.parseInt(arr[1])));
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueReducer2 extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+
+
+    }
+}
+</code></pre><hr>
+<p>上面这个就是通过2次mr解决数据倾斜问题    但是不用那么麻烦的去切分了直接使用Keyvalueinputformat即可实现：如下代码：<br>    //解决数据倾斜问题：<br>    public class WCSkueApp2 {</p>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+        Job job = Job.getInstance(conf);
+
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCSkueApp2.class); //搜索类路径
+        job.setInputFormatClass(KeyValueTextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00000&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00001&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00002&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00003&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:/mr/skew/out2&quot;));
+
+
+        job.setMapperClass(WCSkueMapper2.class);         //mapper类
+        job.setReducerClass(WCSkueReducer2.class);       //reduce类
+
+        job.setNumReduceTasks(4);
+
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueMapper2 extends Mapper &lt;Text, Text, Text, IntWritable&gt;{
+    public WCSkueMapper2(){
+        System.out.println(&quot;new WCMapper&quot;);
+    }
+
+    protected void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+        context.write(key,new IntWritable(Integer.parseInt(value.toString())));
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueReducer2 extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+    }
+}
+</code></pre><hr>
+<hr>
+<hr>
+<h1 id="链条式编程"><a href="#链条式编程" class="headerlink" title="链条式编程"></a>链条式编程</h1><p><img src="https://i.imgur.com/VwHIXax.png" alt=""></p>
+<p>讲解上图：<br>首先通过MapMapper1来切割，然后通过MapMapper1过滤掉法轮功，真个是一个链条，在map端，执行完之后开始聚合，在reduce端，在聚合的时候，每个单词都有各自的个数，对产生的结果再次过滤，过滤掉少于5的单词，当然可以放到同一个map里面，但是如果变成模块方法，易于维护。更加方便使用。<br>m阶段可以有多个m但是R阶段只能有一个r。但是r阶段可以有多个m。</p>
+<p>代码如下图：<br>//链条式job任务<br>    public class WCChainApp {</p>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCChainApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job, new Path(&quot;e:/mr/skew&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:mr/skew/out&quot;));
+
+        //在map链条上添加一个mapper的环节
+        ChainMapper.addMapper(job,WCMapMapper1.class,LongWritable.class,Text.class,Text.class,IntWritable.class,conf);
+        ChainMapper.addMapper(job,WCMapMapper2.class,Text.class,IntWritable.class,Text.class,IntWritable.class,conf);
+
+        //在reduce链条上设置reduce
+        ChainReducer.setReducer(job,WCReducer.class,Text.class,IntWritable.class,Text.class,IntWritable.class,conf);
+        ChainReducer.addMapper(job,WCReduceMapper1.class,Text.class,IntWritable.class,Text.class,IntWritable.class,conf);
+
+        job.setNumReduceTasks(3);
+
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCMapMapper1 extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+
+    protected   void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+        String[] arr = value.toString().split(&quot; &quot;);
+        for(String s:arr){
+            keyout.set(s);
+            valueout.set(1);
+            context.write(keyout,valueout);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCMapMapper2 extends Mapper &lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    protected void map(Text key, IntWritable value, Context context) throws IOException, InterruptedException {
+        if(!key.toString().equals(&quot;falungong&quot;)){
+            context.write(key , value);
+        }
+
+    }
+}
+</code></pre><hr>
+<pre><code>//过滤单词个数
+public class WCReduceMapper1 extends Mapper&lt;Text,IntWritable,Text,IntWritable&gt; {
+    @Override
+    protected void map(Text key, IntWritable value, Context context) throws IOException, InterruptedException {
+        if(value.get() &gt; 5){
+            context.write(key,value);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>/**
+ * Reducer
+ */
+public class WCReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+
+
+    }
+}
+</code></pre><hr>
+<hr>
+<hr>
+<h2 id="FileInputFormat（读源码）"><a href="#FileInputFormat（读源码）" class="headerlink" title="FileInputFormat（读源码）"></a>FileInputFormat（读源码）</h2><pre><code>获取切片集合。
+子类都要重写方法isSplittable();
+负责创建RecordReader对象。
+设置IO路径。
+</code></pre><h2 id="RecordReader（读源码）"><a href="#RecordReader（读源码）" class="headerlink" title="RecordReader（读源码）"></a>RecordReader（读源码）</h2><pre><code>负责从InputSplit中读取KV对。
+</code></pre><h2 id="jdbc笔记模板："><a href="#jdbc笔记模板：" class="headerlink" title="jdbc笔记模板："></a>jdbc笔记模板：</h2><pre><code>[写操作]
+Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+Connection conn = DriverMananger.getConnection(&quot;jdbc:mysql://localhost:3306/big4&quot;,&quot;root&quot;,&quot;root&quot;);
+//预处理语句
+PreparedStatement ppst = conn.preparedStatement(&quot;insert into test(id,name,age) values(?,?,?)&quot;);
+//绑定参数
+ppst.setInteger(1,1);
+ppst.setInteger(2,&quot;tom&quot;);
+ppst.setInteger(3,12);
+
+ppst.executeUpdate();
+ppst.close();
+conn.close();
+
+
+[读操作]
+Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+Connection conn = DriverMananger.getConnection(&quot;jdbc:mysql://localhost:3306/big4&quot;,&quot;root&quot;,&quot;root&quot;);
+
+ppst = conn.preparedStatement(&quot;select id,name from test &quot;);
+//结果集
+ResultSet rs = ppst.executeQuery();
+while(rs.next()){
+    int id = rs.getInt(&quot;id&quot;);
+    String name = rs.getInt(&quot;name&quot;);
+}
+rs.close();
+conn.close();
+</code></pre><p>看一下下源码：<br><img src="https://i.imgur.com/5ZrVZsW.png" alt=""><br>看一下写和读入都把结果集和预处理语句都已经封装进去了，剩下的只要填空就好了。</p>
+<p>以下是从数据库中读入的代码模板：</p>
+<h1 id="使用DBWritable向数据库从数据库中读取"><a href="#使用DBWritable向数据库从数据库中读取" class="headerlink" title="使用DBWritable向数据库从数据库中读取"></a>使用DBWritable向数据库从数据库中读取</h1><h2 id="1-准备数据库"><a href="#1-准备数据库" class="headerlink" title="1.准备数据库"></a>1.准备数据库</h2><pre><code>create database big4 ;
+use big4 ;
+create table words(id int primary key auto_increment , name varchar(20) , txt varchar(255));
+
+insert into words(name,txt) values(&apos;tomas&apos;,&apos;hello world tom&apos;);
+insert into words(txt) values(&apos;hello tom world&apos;);
+insert into words(txt) values(&apos;world hello tom&apos;);
+insert into words(txt) values(&apos;world tom hello&apos;);
+</code></pre><h2 id="2-编写hadoop-MyDBWritable"><a href="#2-编写hadoop-MyDBWritable" class="headerlink" title="2.编写hadoop MyDBWritable."></a>2.编写hadoop MyDBWritable.</h2><pre><code>import org.apache.hadoop.mapreduce.lib.db.DBWritable;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * MyDBWritable
+ */
+public class MyDBWritable implements DBWritable,Writable {
+    private int id ;
+    private String name ;
+    private String txt ;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTxt() {
+        return txt;
+    }
+
+    public void setTxt(String txt) {
+        this.txt = txt;
+    }
+
+    public void write(DataOutput out) throws IOException {
+        out.writeInt(id);
+        out.writeUTF(name);
+        out.writeUTF(txt);
+    }
+
+    public void readFields(DataInput in) throws IOException {
+        id = in.readInt();
+        name = in.readUTF();
+        txt = in.readUTF();
+    }
+
+    /**
+     * 写入db
+     */
+    public void write(PreparedStatement ppst) throws SQLException {
+        ppst.setInt(1,id);
+        ppst.setString(2,name);
+        ppst.setString(3,txt);
+    }
+
+    /**
+     * 从db读取
+     */
+    public void readFields(ResultSet rs) throws SQLException {
+        id = rs.getInt(1);
+        name = rs.getString(2);
+        txt = rs.getString(3);
+    }
+}
+</code></pre><h2 id="3-WcMapper"><a href="#3-WcMapper" class="headerlink" title="3.WcMapper"></a>3.WcMapper</h2><pre><code>public class WCMapper extends Mapper&lt;LongWritable,MyDBWritable,Text,IntWritable&gt; {
+
+    protected void map(LongWritable key, MyDBWritable value, Context context) throws IOException, InterruptedException {
+        System.out.println(key);
+        String line = value.getTxt();
+        System.out.println(value.getId() + &quot;,&quot; + value.getName());
+        String[] arr = line.split(&quot; &quot;);
+        for(String s : arr){
+            context.write(new Text(s),new IntWritable(1));
+        }
+    }
+}
+</code></pre><h2 id="4-WCReducer"><a href="#4-WCReducer" class="headerlink" title="4.WCReducer"></a>4.WCReducer</h2><pre><code>protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+    int count = 0 ;
+    for(IntWritable w : values){
+        count = count + w.get() ;
+    }
+    context.write(key,new IntWritable(count));
+}
+</code></pre><h2 id="5-WCApp"><a href="#5-WCApp" class="headerlink" title="5.WCApp"></a>5.WCApp</h2><pre><code>public static void main(String[] args) throws Exception {
+    Configuration conf = new Configuration();
+    Job job = Job.getInstance(conf);
+
+    //设置job的各种属性
+    job.setJobName(&quot;MySQLApp&quot;);                        //作业名称
+    job.setJarByClass(WCApp.class);                 //搜索类
+
+    //配置数据库信息
+    String driverclass = &quot;com.mysql.jdbc.Driver&quot; ;
+    String url = &quot;jdbc:mysql://localhost:3306/big4&quot; ;
+    String username= &quot;root&quot; ;
+    String password = &quot;root&quot; ;
+    //设置数据库配置
+    DBConfiguration.configureDB(job.getConfiguration(),driverclass,url,username,password);
+    //设置数据输入内容
+    DBInputFormat.setInput(job,MyDBWritable.class,&quot;select id,name,txt from words&quot;,&quot;select count(*) from words&quot;);
+
+    //设置输出路径
+    FileOutputFormat.setOutputPath(job,new Path(&quot;e:/mr/sql/out&quot;));
+
+    //设置分区类
+    job.setMapperClass(WCMapper.class);             //mapper类
+    job.setReducerClass(WCReducer.class);           //reducer类
+
+    job.setNumReduceTasks(3);                       //reduce个数
+
+    job.setMapOutputKeyClass(Text.class);           //
+    job.setMapOutputValueClass(IntWritable.class);  //
+
+    job.setOutputKeyClass(Text.class);
+    job.setOutputValueClass(IntWritable.class);     //
+
+    job.waitForCompletion(true);
+}
+</code></pre><h2 id="6-pom-xml增加mysql驱动"><a href="#6-pom-xml增加mysql驱动" class="headerlink" title="6.pom.xml增加mysql驱动"></a>6.pom.xml增加mysql驱动</h2><pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;5.1.17&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre><h2 id="7-将mr的统计结果写入mysql数据库"><a href="#7-将mr的统计结果写入mysql数据库" class="headerlink" title="7.将mr的统计结果写入mysql数据库"></a>7.将mr的统计结果写入mysql数据库</h2><pre><code>a)准备表
+    create table stats(word varchar(50),c int);
+b)设置App的DBOutputFormat类
+    com.it18zhang.hdfs.mr.mysql.WCApp
+d)
+e)
+f)
+</code></pre><hr>
+<h1 id="mysql分页查询"><a href="#mysql分页查询" class="headerlink" title="mysql分页查询"></a>mysql分页查询</h1><p>如图所示吧：</p>
+<p><img src="https://i.imgur.com/0hHJN3B.png" alt=""></p>
+<p><img src="https://i.imgur.com/FAbkIff.png" alt=""></p>
+<p><img src="https://i.imgur.com/9wCCeH2.png" alt=""></p>
+<h1 id="使用DBWritable向数据库从数据库中写入"><a href="#使用DBWritable向数据库从数据库中写入" class="headerlink" title="使用DBWritable向数据库从数据库中写入"></a>使用DBWritable向数据库从数据库中写入</h1><pre><code>public class MyDBWritalbe implements DBWritable,Writable {
+    private int id=0;
+    private String name=&quot;&quot;;
+    private String txt=&quot;&quot;;
+    private  String word=&quot;&quot;;
+    private int wordcount=0;
+
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    public int getWordcount() {
+        return wordcount;
+    }
+
+    public void setWordcount(int wordcount) {
+        this.wordcount = wordcount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTxt() {
+        return txt;
+    }
+
+    public void setTxt(String txt) {
+        this.txt = txt;
+    }
+
+    public void write(DataOutput out) throws IOException {
+
+        out.writeInt(id);
+        out.writeUTF(name);
+        out.writeUTF(txt);
+        out.writeUTF(word);
+        out.writeInt(wordcount);
+    }
+    public void readFields(DataInput in) throws IOException {
+        id=in.readInt();
+        name=in.readUTF();
+        txt=in.readUTF();
+        word=in.readUTF();
+        wordcount=in.readInt();
+
+    }
+    //向数据库中写入DB
+    public void write(PreparedStatement ppst) throws SQLException {
+        //要求定制字段列表的时候先单词后个数。
+
+        ppst.setString(1,word);
+        ppst.setInt(2,wordcount);
+
+    }
+    //从DB中读出
+    public void readFields(ResultSet rs) throws SQLException {
+        id=rs.getInt(1);
+        name=rs.getString(2);
+        txt=rs.getString(3);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCApp {
+    //
+//    public static void main(String[] args) throws Exception {
+//        Configuration conf = new Configuration();
+//
+//        Job job = Job.getInstance(conf);
+//
+////        设置作业的各种属性
+//        job.setJobName(&quot;MySQLApp&quot;);    //作业名称
+//        job.setJarByClass(WCApp.class); //搜索类路径
+//
+//        //配置数据库信息
+//        String driverclass = &quot;com.mysql.jdbc.Driver&quot;;
+//        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+//        String usrname = &quot;root&quot;;
+//        String password = &quot;root&quot;;
+//        DBConfiguration.configureDB(conf,driverclass,url,usrname,password);
+//        //设置数据输入内容
+//        DBInputFormat.setInput(job,DBWritable.class,&quot;select id,name,txt from words&quot;,&quot;select count(*) from words&quot;);
+//        //设置输出路径
+//        FileOutputFormat.setOutputPath(job, new Path(&quot;d:/mr/sql/out&quot;));
+//
+//        job.setMapperClass(WCMapper.class);         //mapper类
+//        job.setReducerClass(WCReducer.class);       //reduce类
+//
+//        job.setNumReduceTasks(3);
+//
+//
+//        job.setMapOutputKeyClass(Text.class);
+//        job.setMapOutputValueClass(IntWritable.class);
+//
+//        job.setOutputKeyClass(Text.class);          //设置输出类型
+//        job.setOutputValueClass(IntWritable.class);
+//
+//        job.waitForCompletion(true);
+//
+//    }
+//}
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf);
+
+        //设置job的各种属性
+        job.setJobName(&quot;MySQLApp&quot;);                        //作业名称
+        job.setJarByClass(WCApp.class);                 //搜索类
+
+        //配置数据库信息
+        String driverclass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        //设置数据库配置
+        DBConfiguration.configureDB(job.getConfiguration(), driverclass, url, username, password);
+        //设置数据输入内容
+        DBInputFormat.setInput(job, MyDBWritalbe.class, &quot;select id,name,txt from words&quot;, &quot;select count(*) from words&quot;);
+        //这里定制字段列表，先单词后个数
+        DBOutputFormat.setOutput(job,&quot;stats&quot;,&quot;word&quot;,&quot;c&quot;);
+
+        //设置分区类
+        job.setMapperClass(WCMapper.class);             //mapper类
+        job.setReducerClass(WCReducer.class);           //reducer类
+
+        job.setNumReduceTasks(3);                       //reduce个数
+
+        job.setMapOutputKeyClass(Text.class);           //
+        job.setMapOutputValueClass(IntWritable.class);  //
+
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);     //
+
+        job.waitForCompletion(true);
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCMapper extends Mapper&lt;LongWritable, MyDBWritalbe, Text, IntWritable&gt; {
+    @Override
+    protected void map(LongWritable key, MyDBWritalbe value, Context context) throws IOException, InterruptedException {
+        System.out.println(key);
+        String line = value.getTxt();
+        System.out.println(value.getId() + &quot;,&quot; + value.getName());
+        String[] arr = line.split(&quot; &quot;);
+        for (String s : arr) {
+            context.write(new Text(s), new IntWritable(1));
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCReducer extends Reducer&lt;Text, IntWritable, MyDBWritalbe, NullWritable&gt; {
+
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0;
+        for (IntWritable w : values) {
+            count = count + w.get();
+        }
+        MyDBWritalbe keyout = new MyDBWritalbe();
+        keyout.setWord(key.toString());
+        keyout.setWordcount(count);
+        context.write(keyout, NullWritable.get());
+    }
+}
+</code></pre><hr>
+<h1 id="在虚拟机中跑wordcount写入数据库问题："><a href="#在虚拟机中跑wordcount写入数据库问题：" class="headerlink" title="在虚拟机中跑wordcount写入数据库问题："></a>在虚拟机中跑wordcount写入数据库问题：</h1><h2 id="需要修改的地方："><a href="#需要修改的地方：" class="headerlink" title="需要修改的地方："></a>需要修改的地方：</h2><p>1.修改url</p>
+<p><img src="https://i.imgur.com/8lkYD5v.png" alt=""></p>
+<p>2.修改core-site.xml或者删除掉</p>
+<p><img src="https://i.imgur.com/weFYMBJ.png" alt=""></p>
+<p>3.在虚拟机中分发mysql-connector-java-5.1.7-bin.jar将之分发到每个节点的/soft/hadoop/share/hadoop/common/lib目录下。</p>
+<p><img src="https://i.imgur.com/ou52Qhr.png" alt=""></p>
+<p>4.在运行</p>
+<pre><code>hadoop jar HdfsDemo.jar com.it18zhang.hdfs.mr.mysql.WCApp
+</code></pre><h2 id="出现的问题："><a href="#出现的问题：" class="headerlink" title="出现的问题："></a>出现的问题：</h2><p>1.出现连接不上的报错：</p>
+<p><img src="https://i.imgur.com/JgE2Q3e.png" alt=""></p>
+<p>百度了一下完美解决，是由于mysql没有对所有用户开启权限导致：</p>
+<p><a href="https://blog.csdn.net/OldTogether/article/details/79612627?utm_source=blogxgwz1" target="_blank" rel="noopener">https://blog.csdn.net/OldTogether/article/details/79612627?utm_source=blogxgwz1</a></p>
+<p>2.出现一下问题：</p>
+<p><img src="https://i.imgur.com/vgUGlEc.png" alt=""></p>
+<p>原因是有一个s205的防火墙没有关掉导致的：</p>
+<p><a href="https://blog.csdn.net/shirdrn/article/details/7280040" title="防火墙没关掉导致的" target="_blank" rel="noopener">https://blog.csdn.net/shirdrn/article/details/7280040</a></p>
+<hr>
+<p>完</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/17/Hadoop第七天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2741,728 +4740,6 @@ dfs.namenode.checkpoint.dir=file://${hadoop.tmp.dir}/dfs/namesecondary
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/29/Hadoop第二天之搭建/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/29/Hadoop第二天之搭建/" itemprop="url">Hadoop第二天之搭建</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-29T17:21:35+08:00">
-                2018-09-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="hadoop"><a href="#hadoop" class="headerlink" title="hadoop"></a>hadoop</h2><pre><code>1.独立模式(standalone|local)
-    nothing!
-    本地文件系统。
-    不需要启用单独进程。
-2.pesudo(伪分布模式)
-    等同于完全分布式，只有一个节点。
-    SSH:        //(Socket),
-                //public + private
-                //server : sshd ps -Af | grep sshd
-                //clint     : ssh
-                //ssh-keygen:生成公私秘钥。
-                //authorized_keys 需要使用644
-                //ssh 192.168.231.201  yes
-    [配置文件]
-        core-site.xml    //fs.defaultFS=hdfs://localhost/
-
-        hdfs-site.xml    //replication=1
-
-        mapred-site.xml    //
-        yarn-site.xml    //
-
-
-3.full distributed(完全分布式)
-</code></pre><h2 id="让命令行提示符显式完整路径"><a href="#让命令行提示符显式完整路径" class="headerlink" title="让命令行提示符显式完整路径"></a>让命令行提示符显式完整路径</h2><pre><code>1.编辑profile文件，添加环境变量PS1
-    [/etc/profile]
-    export PS1=&apos;[\u@\h `pwd`]\$&apos;
-
-2.source    
-    $&gt;source /etc/profile
-</code></pre><h2 id="配置hadoop，使用符号连接的方式，让三种配置形态共存。"><a href="#配置hadoop，使用符号连接的方式，让三种配置形态共存。" class="headerlink" title="配置hadoop，使用符号连接的方式，让三种配置形态共存。"></a>配置hadoop，使用符号连接的方式，让三种配置形态共存。</h2><pre><code>1.创建三个配置目录,内容等同于hadoop目录
-    ${hadoop_home}/etc/local
-    ${hadoop_home}/etc/pesudo
-    ${hadoop_home}/etc/full
-
-2.创建符号连接
-    $&gt;ln -s 
-
-3.对hdfs进行格式化
-    $&gt;hadoop namenode -format
-
-4.修改hadoop配置文件，手动指定JAVA_HOME环境变量
-    [${hadoop_home}/etc/hadoop/hadoop-env.sh]
-    ...
-    export JAVA_HOME=/soft/jdk
-    ...
-
-5.启动hadoop的所有进程
-    $&gt;start-all.sh
-
-6.启动完成后，出现以下进程
-    $&gt;jps
-        33702 NameNode
-        33792 DataNode
-        33954 SecondaryNameNode
-
-        29041 ResourceManager
-        34191 NodeManager
-
-7.查看hdfs文件系统
-    $&gt;hdfs dfs -ls /
-
-8.创建目录
-    $&gt;hdfs dfs -mkdir -p /user/centos/hadoop
-
-9.通过webui查看hadoop的文件系统
-    http://localhost:50070/
-
-10.停止hadoop所有进程
-    $&gt;stop-all.sh
-
-11.centos防火墙操作
-    [cnetos 6.5之前的版本]
-    $&gt;sudo service firewalld stop        //停止服务
-    $&gt;sudo service firewalld start        //启动服务
-    $&gt;sudo service firewalld status        //查看状态
-
-    [centos7]
-    $&gt;sudo systemctl enable firewalld.service    //&quot;开机启动&quot;启用
-    $&gt;sudo systemctl disable firewalld.service    //&quot;开机自启&quot;禁用
-    $&gt;sudo systemctl start firewalld.service    //启动防火墙
-    $&gt;sudo systemctl stop firewalld.service        //停止防火墙
-    $&gt;sudo systemctl status firewalld.service    //查看防火墙状态
-
-    [开机自启]
-    $&gt;sudo chkconfig firewalld    on                //&quot;开启自启&quot;启用
-    $&gt;sudo chkconfig firewalld    off                //&quot;开启自启&quot;禁用
-</code></pre><h2 id="hadoop的端口"><a href="#hadoop的端口" class="headerlink" title="hadoop的端口"></a>hadoop的端口</h2><pre><code>50070        //namenode http port
-50075        //datanode http port
-50090        //2namenode    http port
-
-8020        //namenode rpc port
-50010        //datanode rpc port
-</code></pre><h2 id="hadoop四大模块"><a href="#hadoop四大模块" class="headerlink" title="hadoop四大模块"></a>hadoop四大模块</h2><pre><code>common
-hdfs        //namenode + datanode + secondarynamenode
-
-mapred
-yarn        //resourcemanager + nodemanager
-</code></pre><h2 id="启动脚本"><a href="#启动脚本" class="headerlink" title="启动脚本"></a>启动脚本</h2><pre><code>1.start-all.sh        //启动所有进程
-2.stop-all.sh        //停止所有进程
-
-3.start-dfs.sh        //
-4.start-yarn.sh
-
-[hdfs]  start-dfs.sh stop-dfs.sh
-    NN
-    DN
-    2NN
-
-[yarn] start-yarn.sh stop-yarn.sh
-    RM
-    NM
-</code></pre><h2 id="修改主机名"><a href="#修改主机名" class="headerlink" title="修改主机名"></a>修改主机名</h2><pre><code>1./etc/hostname
-    s201
-2./etc/hosts
-    127.0.0.1 localhost
-    192.168.231.201 s201
-    192.168.231.202 s202
-    192.168.231.203 s203
-    192.168.231.204 s204
-</code></pre><h2 id="完全分布式"><a href="#完全分布式" class="headerlink" title="完全分布式"></a>完全分布式</h2><pre><code>1.克隆3台client(centos7)
-    右键centos-7--&gt;管理-&gt;克隆-&gt; ... -&gt; 完整克隆
-2.启动client
-3.启用客户机共享文件夹。
-4.修改hostname和ip地址文件
-    [/etc/hostname]
-    s202
-
-    [/etc/sysconfig/network-scripts/ifcfg-ethxxxx]
-    ...
-    IPADDR=..
-
-5.重启网络服务
-    $&gt;sudo service network restart
-
-6.修改/etc/resolv.conf文件
-    nameserver 192.168.231.2
-
-7.重复以上3 ~ 6过程.
-</code></pre><h2 id="准备完全分布式主机的ssh"><a href="#准备完全分布式主机的ssh" class="headerlink" title="准备完全分布式主机的ssh"></a>准备完全分布式主机的ssh</h2><pre><code>1.删除所有主机上的/home/centos/.ssh/*
-
-2.在s201主机上生成密钥对
-    $&gt;ssh-keygen -t rsa -P &apos;&apos; -f ~/.ssh/id_rsa
-
-3.将s201的公钥文件id_rsa.pub远程复制到202 ~ 204主机上。
-  并放置/home/centos/.ssh/authorized_keys
-    $&gt;scp id_rsa.pub centos@s201:/home/centos/.ssh/authorized_keys
-    $&gt;scp id_rsa.pub centos@s202:/home/centos/.ssh/authorized_keys
-    $&gt;scp id_rsa.pub centos@s203:/home/centos/.ssh/authorized_keys
-    $&gt;scp id_rsa.pub centos@s204:/home/centos/.ssh/authorized_keys
-
-4.配置完全分布式(${hadoop_home}/etc/hadoop/)
-    [core-site.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;
-    &lt;configuration&gt;
-            &lt;property&gt;
-                    &lt;name&gt;fs.defaultFS&lt;/name&gt;
-                    &lt;value&gt;hdfs://s201/&lt;/value&gt;
-            &lt;/property&gt;
-    &lt;/configuration&gt;
-
-    [hdfs-site.xml]
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;
-    &lt;configuration&gt;
-            &lt;property&gt;
-                    &lt;name&gt;dfs.replication&lt;/name&gt;
-                    &lt;value&gt;3&lt;/value&gt;
-            &lt;/property&gt;
-    &lt;/configuration&gt;
-
-    [mapred-site.xml]
-        不变
-
-    [yarn-site.xml]
-    &lt;?xml version=&quot;1.0&quot;?&gt;
-    &lt;configuration&gt;
-            &lt;property&gt;
-                    &lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;
-                    &lt;value&gt;s201&lt;/value&gt;
-            &lt;/property&gt;
-            &lt;property&gt;
-                    &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;
-                    &lt;value&gt;mapreduce_shuffle&lt;/value&gt;
-            &lt;/property&gt;
-    &lt;/configuration&gt;
-
-    [slaves]
-    s202
-    s203
-    s204
-
-    [hadoop-env.sh]
-    ...
-    export JAVA_HOME=/soft/jdk
-    ...
-
-5.分发配置
-    $&gt;cd /soft/hadoop/etc/
-    $&gt;scp -r full centos@s202:/soft/hadoop/etc/
-    $&gt;scp -r full centos@s203:/soft/hadoop/etc/
-    $&gt;scp -r full centos@s204:/soft/hadoop/etc/
-
-6.删除符号连接
-    $&gt;cd /soft/hadoop/etc
-    $&gt;rm hadoop
-    $&gt;ssh s202 rm /soft/hadoop/etc/hadoop
-    $&gt;ssh s203 rm /soft/hadoop/etc/hadoop
-    $&gt;ssh s204 rm /soft/hadoop/etc/hadoop
-
-7.创建符号连接
-    $&gt;cd /soft/hadoop/etc/
-    $&gt;ln -s full hadoop
-    $&gt;ssh s202 ln -s /soft/hadoop/etc/full /soft/hadoop/etc/hadoop
-    $&gt;ssh s203 ln -s /soft/hadoop/etc/full /soft/hadoop/etc/hadoop
-    $&gt;ssh s204 ln -s /soft/hadoop/etc/full /soft/hadoop/etc/hadoop
-
-8.删除临时目录文件
-    $&gt;cd /tmp
-    $&gt;rm -rf hadoop-centos
-    $&gt;ssh s202 rm -rf /tmp/hadoop-centos
-    $&gt;ssh s203 rm -rf /tmp/hadoop-centos
-    $&gt;ssh s204 rm -rf /tmp/hadoop-centos
-
-9.删除hadoop日志
-    $&gt;cd /soft/hadoop/logs
-    $&gt;rm -rf *
-    $&gt;ssh s202 rm -rf /soft/hadoop/logs/*
-    $&gt;ssh s203 rm -rf /soft/hadoop/logs/*
-    $&gt;ssh s204 rm -rf /soft/hadoop/logs/*
-
-10.格式化文件系统
-    $&gt;hadoop namenode -format
-
-11.启动hadoop进程
-    $&gt;start-all.sh
-</code></pre><h2 id="rsync"><a href="#rsync" class="headerlink" title="rsync"></a>rsync</h2><pre><code>四个机器均安装rsync命令。
-远程同步.
-$&gt;sudo yum install rsync
-</code></pre><h2 id="将root用户实现无密登录"><a href="#将root用户实现无密登录" class="headerlink" title="将root用户实现无密登录"></a>将root用户实现无密登录</h2><pre><code>1.同
-</code></pre><h2 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h2><pre><code>1.xcall.sh
-
-
-2.xsync.sh
-    xsync.sh /home/etc/a.txt
-    rsync -lr /home/etc/a.txt centos@s202:/home/etc
-</code></pre><hr>
-<pre><code>netstat -anop    查看进程
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/24/Hadoop安装配置/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/24/Hadoop安装配置/" itemprop="url">Hadoop安装配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-24T16:10:47+08:00">
-                2018-09-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">-Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/20/Linux基础之Yum命令/" itemprop="url">Linux基础之Yum命令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-20T18:17:43+08:00">
-                2018-09-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="软件源"><a href="#软件源" class="headerlink" title="软件源"></a>软件源</h2><pre><code>Repository        //仓库.
-URL                //http:// 
-
-.d                //directory目录
-xxxd            //daemon
-</code></pre><h2 id="查看仓库文件"><a href="#查看仓库文件" class="headerlink" title="查看仓库文件"></a>查看仓库文件</h2><pre><code>/etc/yum.repos.d/xxx.repo
-</code></pre><h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>传输url上的数据的。</p>
-<p>[下载文件到指定目录]</p>
-<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-</code></pre><h2 id="更换centos的软件源"><a href="#更换centos的软件源" class="headerlink" title="更换centos的软件源"></a>更换centos的软件源</h2><p>1.下载源仓库文件,xxx.repo</p>
-<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-</code></pre><p>2.将repo文件保存到/etc/yum.repos.d/目录中。</p>
-<h2 id="屏蔽软件仓库"><a href="#屏蔽软件仓库" class="headerlink" title="屏蔽软件仓库"></a>屏蔽软件仓库</h2><p>1.将/etc/yum.repos.d/xxx.repo文件删除或者更换扩展名即可。</p>
-<h2 id="修改centos能够使用sudo命令"><a href="#修改centos能够使用sudo命令" class="headerlink" title="修改centos能够使用sudo命令"></a>修改centos能够使用sudo命令</h2><pre><code>[/etc/sudoers]
-$&gt;su root
-$&gt;nano /etc/sudoers
-    ...
-    centos ALL
-</code></pre><h2 id="使用yum进行软件包安装卸载"><a href="#使用yum进行软件包安装卸载" class="headerlink" title="使用yum进行软件包安装卸载"></a>使用yum进行软件包安装卸载</h2><pre><code>$&gt;yum list                            //列出所有软件包
-$&gt;yum list installed                //列出已经安装的软件包
-$&gt;yum list installed | grep nano    //列出已经安装的软件包
-$&gt;yum search nano                    //在yum的软件源中搜索软件 
-$&gt;yum remove nano                    //卸载软件
-$&gt;yum -y install nano                //直接安装，不需要yes确认.
-$&gt;yum list installed | grep nano    //查看是否安装了Nano
-
-$&gt;mkdir /home/centos/rpms
-
-$echo 以下命令只下载软件，不安装软件
-$&gt;sudo yum install --downloadonly                //只下载
-              --downloaddir=/home/centos/rpms    //指定下载目录
-              wget
-
-//下载已经安装的软件
-$&gt;sudo yum reinstall --downloadonly    
-                     --downloaddir=/home/centos/rpms
-                     wget
-
-$&gt;sudo yum localinstall xxx.rpm    //从本地rpm文件直接安装软件
-
-
-
-$&gt;su root
-$&gt;yum search ifconfig
-$&gt;yum -y install net-tools        //安装网络工具
-
-
-#==========修改网络地址======================    //需要重启network服务
-$&gt;sudo nano /etc/sysconfig/network-scripts/ifcfg-eth1677736
-    [/etc/sysconfig/network-scripts/ifcfg-eth1677736]
-    ...
-    IPADDR=192.168.231.201
-    GATEWAY=192.168.231.2
-    DNS=192.168.231.2
-
-$&gt;service network restart                        //重启网络服务。
-
-$&gt;sudo nano /etc/resolv.conf                    //修改该文件不需要重启network服务
-    [/etc/resolv.conf]
-    nameserver 192.168.231.2
-</code></pre><h2 id="在没有nano时，使用自带的vi文本编辑器"><a href="#在没有nano时，使用自带的vi文本编辑器" class="headerlink" title="在没有nano时，使用自带的vi文本编辑器"></a>在没有nano时，使用自带的vi文本编辑器</h2><pre><code>1.vi xx.txt
-</code></pre><p>2.模式切换</p>
-<pre><code>esc                //切换到命令模式,退出编辑模式
-                //:q!  不保存退出
-                //:wq  保存退出
-                //x        删除一个字符
-                //dd    删除一行
-
-insert            //切换到编辑模式,退出命令模式
-                //del backspace
-</code></pre><h2 id="Which命令"><a href="#Which命令" class="headerlink" title="Which命令"></a>Which命令</h2><p>which命令用于查找并显示给定命令的绝对路径，环境变量PATH中保存了查找命令时需要遍历的目录。</p>
-<p>which指令会在环境变量$PATH设置的目录里查找符合条件的文件。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。</p>
-<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre><code>which(选项)(参数)
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3517,7 +4794,7 @@ insert            //切换到编辑模式,退出命令模式
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -3528,7 +4805,7 @@ insert            //切换到编辑模式,退出命令模式
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -3539,7 +4816,7 @@ insert            //切换到编辑模式,退出命令模式
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">100</span>
+                  <span class="site-state-item-count">104</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
