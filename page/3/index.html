@@ -328,6 +328,728 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/01/Hadoop第十一天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/01/Hadoop第十一天/" itemprop="url">Hadoop第十一天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T18:11:38+08:00">
+                2018-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h2><pre><code>[customers.txt]
+1,tom,12
+2,tom,13
+3,tom,14
+4,tom,15
+
+[orders.txt]
+1,no001,12.23,1
+2,no001,12.23,1
+3,no001,12.23,2
+4,no001,12.23,2
+5,no001,12.23,2
+6,no001,12.23,3
+7,no001,12.23,3
+8,no001,12.23,3
+9,no001,12.23,3
+</code></pre><h2 id="map端join"><a href="#map端join" class="headerlink" title="map端join"></a>map端join</h2><pre><code>1.创建Mapper
+    package com.it18zhang.hdfs.mr.mapjoin;
+
+    import org.apache.hadoop.conf.Configuration;
+    import org.apache.hadoop.fs.FSDataInputStream;
+    import org.apache.hadoop.fs.FileSystem;
+    import org.apache.hadoop.fs.Path;
+    import org.apache.hadoop.io.LongWritable;
+    import org.apache.hadoop.io.NullWritable;
+    import org.apache.hadoop.io.Text;
+    import org.apache.hadoop.mapreduce.Mapper;
+
+    import java.io.BufferedReader;
+    import java.io.IOException;
+    import java.io.InputStreamReader;
+    import java.util.HashMap;
+    import java.util.Map;
+
+    /**
+     * join操作，map端连接。
+     */
+    public class MapJoinMapper extends Mapper&lt;LongWritable,Text,Text,NullWritable&gt; {
+
+        private Map&lt;String,String&gt; allCustomers = new HashMap&lt;String,String&gt;();
+
+        //启动,初始化客户信息
+        protected void setup(Context context) throws IOException, InterruptedException {
+            try {
+                Configuration conf = context.getConfiguration();
+                FileSystem fs = FileSystem.get(conf);
+                FSDataInputStream fis = fs.open(new Path(&quot;file:///d:/mr/mapjoin/customers.txt&quot;));
+                //得到缓冲区阅读器
+                BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+                String line = null ;
+                while((line = br.readLine()) != null){
+                    //得到cid
+                    String cid = line.substring(0,line.indexOf(&quot;,&quot;));
+                    allCustomers.put(cid,line);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+            //订单信息
+            String line = value.toString();
+            //提取customer id
+            String cid = line.substring(line.lastIndexOf(&quot;,&quot;) + 1);
+            //订单信息
+            String orderInfo = line.substring(0,line.lastIndexOf(&quot;,&quot;));
+
+            //连接customer + &quot;,&quot; + order
+            String customerInfo = allCustomers.get(cid);
+            context.write(new Text(customerInfo + &quot;,&quot; + orderInfo),NullWritable.get());
+        }
+
+    }
+
+2.创建App
+    package com.it18zhang.hdfs.mr.mapjoin;
+
+    import org.apache.hadoop.conf.Configuration;
+    import org.apache.hadoop.fs.Path;
+    import org.apache.hadoop.io.NullWritable;
+    import org.apache.hadoop.io.Text;
+    import org.apache.hadoop.mapreduce.Job;
+    import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+    import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+    /**
+     *
+     */
+    public class MapJoinApp {
+        public static void main(String[] args) throws Exception {
+
+            Configuration conf = new Configuration();
+            conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+            Job job = Job.getInstance(conf);
+
+            //设置job的各种属性
+            job.setJobName(&quot;MapJoinApp&quot;);                        //作业名称
+            job.setJarByClass(MapJoinApp.class);                 //搜索类
+
+            //添加输入路径
+            FileInputFormat.addInputPath(job,new Path(args[0]));
+            //设置输出路径
+            FileOutputFormat.setOutputPath(job,new Path(args[1]));
+
+            //没有reduce
+
+            job.setNumReduceTasks(0);
+
+            job.setMapperClass(MapJoinMapper.class);             //mapper类
+
+            job.setMapOutputKeyClass(Text.class);           //
+            job.setMapOutputValueClass(NullWritable.class);  //
+
+            job.waitForCompletion(true);
+        }
+    }
+</code></pre><h2 id="join端连接"><a href="#join端连接" class="headerlink" title="join端连接"></a>join端连接</h2><pre><code>1.自定义key
+    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
+
+    import org.apache.hadoop.io.WritableComparable;
+
+    import java.io.DataInput;
+    import java.io.DataOutput;
+    import java.io.IOException;
+
+    /**
+     */
+    public class ComboKey2 implements WritableComparable&lt;ComboKey2&gt; {
+        //0-customer 1-order
+        private int type ;
+        private int cid ;
+        private int oid ;
+        private String customerInfo = &quot;&quot; ;
+        private String orderInfo = &quot;&quot; ;
+
+
+        public int compareTo(ComboKey2 o) {
+            int type0 = o.type ;
+            int cid0= o.cid;
+            int oid0 = o.oid;
+            String customerInfo0 = o.customerInfo;
+            String orderInfo0 = o.orderInfo ;
+            //是否同一个customer的数据
+            if(cid == cid0){
+                //同一个客户的两个订单
+                if(type == type0){
+                    return oid - oid0 ;
+                }
+                //一个Customer + 他的order
+                else{
+                    if(type ==0)
+                        return -1 ;
+                    else
+                        return 1 ;
+                }
+            }
+            //cid不同
+            else{
+                return cid - cid0 ;
+            }
+        }
+
+        public void write(DataOutput out) throws IOException {
+            out.writeInt(type);
+            out.writeInt(cid);
+            out.writeInt(oid);
+            out.writeUTF(customerInfo);
+            out.writeUTF(orderInfo);
+        }
+
+        public void readFields(DataInput in) throws IOException {
+            this.type = in.readInt();
+            this.cid = in.readInt();
+            this.oid = in.readInt();
+            this.customerInfo = in.readUTF();
+            this.orderInfo = in.readUTF();
+        }
+    }
+
+2.自定义分区类
+    public class CIDPartitioner extends Partitioner&lt;ComboKey2,NullWritable&gt;{
+
+        public int getPartition(ComboKey2 key, NullWritable nullWritable, int numPartitions) {
+            return key.getCid() % numPartitions;
+        }
+    }
+3.创建Mapper
+    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
+
+    import org.apache.hadoop.io.LongWritable;
+    import org.apache.hadoop.io.NullWritable;
+    import org.apache.hadoop.io.Text;
+    import org.apache.hadoop.mapreduce.InputSplit;
+    import org.apache.hadoop.mapreduce.Mapper;
+    import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+
+    import java.io.IOException;
+
+    /**
+     * mapper
+     */
+    public class ReduceJoinMapper extends Mapper&lt;LongWritable,Text,ComboKey2,NullWritable&gt; {
+
+        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+            //
+            String line = value.toString() ;
+
+            //判断是customer还是order
+            FileSplit split = (FileSplit)context.getInputSplit();
+            String path = split.getPath().toString();
+            //客户信息
+            ComboKey2 key2 = new ComboKey2();
+            if(path.contains(&quot;customers&quot;)){
+                String cid = line.substring(0,line.indexOf(&quot;,&quot;));
+                String custInfo = line ;
+                key2.setType(0);
+                key2.setCid(Integer.parseInt(cid));
+                key2.setCustomerInfo(custInfo);
+            }
+            //order info
+            else{
+                String cid = line.substring(line.lastIndexOf(&quot;,&quot;) + 1);
+                String oid = line.substring(0, line.indexOf(&quot;,&quot;));
+                String oinfo = line.substring(0, line.lastIndexOf(&quot;,&quot;));
+                key2.setType(1);
+                key2.setCid(Integer.parseInt(cid));
+                key2.setOid(Integer.parseInt(oid));
+                key2.setOrderInfo(oinfo);
+            }
+            context.write(key2,NullWritable.get());
+        }
+    }
+
+4.创建Reducer
+    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
+
+    import org.apache.hadoop.io.NullWritable;
+    import org.apache.hadoop.io.Text;
+    import org.apache.hadoop.mapreduce.Reducer;
+
+    import java.io.IOException;
+    import java.util.Iterator;
+
+    /**
+     * ReduceJoinReducer,reducer端连接实现。
+     */
+    public class ReduceJoinReducer extends Reducer&lt;ComboKey2,NullWritable,Text,NullWritable&gt; {
+
+        protected void reduce(ComboKey2 key, Iterable&lt;NullWritable&gt; values, Context context) throws IOException, InterruptedException {
+            Iterator&lt;NullWritable&gt; it = values.iterator();
+            it.next();
+            int type = key.getType();
+            int cid = key.getCid() ;
+            String cinfo = key.getCustomerInfo() ;
+            while(it.hasNext()){
+                it.next();
+                String oinfo = key.getOrderInfo();
+                context.write(new Text(cinfo + &quot;,&quot; + oinfo),NullWritable.get());
+            }
+        }
+    }
+
+5.创建排序对比器
+    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
+
+    import com.it18zhang.hdfs.maxtemp.allsort.secondarysort.ComboKey;
+    import org.apache.hadoop.io.WritableComparable;
+    import org.apache.hadoop.io.WritableComparator;
+
+    /**
+     * 组合Key排序对比器
+     */
+    public class ComboKey2Comparator extends WritableComparator {
+        protected ComboKey2Comparator() {
+            super(ComboKey2.class, true);
+        }
+
+        public int compare(WritableComparable a, WritableComparable b) {
+            ComboKey2 k1 = (ComboKey2) a;
+            ComboKey2 k2 = (ComboKey2) b;
+            return k1.compareTo(k2);
+        }
+    }
+
+6.分组对比器
+    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
+
+    import com.it18zhang.hdfs.maxtemp.allsort.secondarysort.ComboKey;
+    import org.apache.hadoop.io.WritableComparable;
+    import org.apache.hadoop.io.WritableComparator;
+
+    /**
+     * CID分组对比器
+     */
+    public class CIDGroupComparator extends WritableComparator{
+
+        protected CIDGroupComparator() {
+            super(ComboKey2.class, true);
+        }
+
+        public int compare(WritableComparable a, WritableComparable b) {
+            ComboKey2 k1 = (ComboKey2) a;
+            ComboKey2 k2 = (ComboKey2) b;
+            return k1.getCid() - k2.getCid();
+        }
+    }
+
+7.App
+    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
+
+    import com.it18zhang.hdfs.maxtemp.allsort.secondarysort.*;
+    import org.apache.hadoop.conf.Configuration;
+    import org.apache.hadoop.fs.Path;
+    import org.apache.hadoop.io.IntWritable;
+    import org.apache.hadoop.io.NullWritable;
+    import org.apache.hadoop.io.Text;
+    import org.apache.hadoop.mapreduce.Job;
+    import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+    import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+    import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+    /**
+     *
+     */
+    public class ReduceJoinApp {
+        public static void main(String[] args) throws Exception {
+
+            Configuration conf = new Configuration();
+            conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+
+            Job job = Job.getInstance(conf);
+
+            //设置job的各种属性
+            job.setJobName(&quot;ReduceJoinApp&quot;);                        //作业名称
+            job.setJarByClass(ReduceJoinApp.class);                 //搜索类
+
+            //添加输入路径
+            FileInputFormat.addInputPath(job,new Path(&quot;D:\\mr\\reducejoin&quot;));
+            //设置输出路径
+            FileOutputFormat.setOutputPath(job,new Path(&quot;D:\\mr\\reducejoin\\out&quot;));
+
+            job.setMapperClass(ReduceJoinMapper.class);             //mapper类
+            job.setReducerClass(ReduceJoinReducer.class);           //reducer类
+
+            //设置Map输出类型
+            job.setMapOutputKeyClass(ComboKey2.class);            //
+            job.setMapOutputValueClass(NullWritable.class);      //
+
+            //设置ReduceOutput类型
+            job.setOutputKeyClass(Text.class);
+            job.setOutputValueClass(NullWritable.class);         //
+
+            //设置分区类
+            job.setPartitionerClass(CIDPartitioner.class);
+            //设置分组对比器
+            job.setGroupingComparatorClass(CIDGroupComparator.class);
+            //设置排序对比器
+            job.setSortComparatorClass(ComboKey2Comparator.class);
+            job.setNumReduceTasks(2);                           //reduce个数
+            job.waitForCompletion(true);
+        }
+    }
+</code></pre><h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>在hadoop处理结构化数据的数据仓库。
+不是:    关系数据库
+        不是OLTP
+        实时查询和行级更新。
+</code></pre><h2 id="hive特点"><a href="#hive特点" class="headerlink" title="hive特点"></a>hive特点</h2><pre><code>hive存储数据结构(schema)在数据库中,处理的数据进入hdfs.
+OLAP
+HQL / HiveQL
+</code></pre><h2 id="hive安装"><a href="#hive安装" class="headerlink" title="hive安装"></a>hive安装</h2><pre><code>1.下载hive2.1-tar.gz
+2.tar开
+    $&gt;tar -xzvf hive-2.1.0.tar.gz -C /soft    //tar开
+    $&gt;cd /soft/hive-2.1.0                    //
+    $&gt;ln -s hive-2.1.0 hive                    //符号连接
+
+3.配置环境变量
+    [/etc/profile]
+    HIVE_HOME=/soft/hive
+    PATH=...:$HIVE_HOME/bin
+
+4.验证hive安装成功
+    $&gt;hive --v
+
+5.配置hive,使用win7的mysql存放hive的元数据.
+    a)复制mysql驱动程序到hive的lib目录下。
+        ...
+    b)配置hive-site.xml
+        复制hive-default.xml.template为hive-site.xml
+        修改连接信息为mysql链接地址，将${system:...字样替换成具体路径。
+        [hive/conf/hive-site.xml]
+        &lt;property&gt;
+            &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;
+            &lt;value&gt;root&lt;/value&gt;
+            &lt;description&gt;password to use against metastore database&lt;/description&gt;
+        &lt;/property&gt;
+        &lt;property&gt;
+            &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;
+            &lt;value&gt;root&lt;/value&gt;
+            &lt;description&gt;Username to use against metastore database&lt;/description&gt;
+        &lt;/property&gt;
+        &lt;property&gt;
+            &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;
+            &lt;value&gt;jdbc:mysql://192.168.231.1:3306/hive2&lt;/value&gt;
+        &lt;/property&gt;
+        &lt;property&gt;
+            &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;
+            &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;
+            &lt;description&gt;Driver class name for a JDBC metastore&lt;/description&gt;
+        &lt;/property&gt;
+
+    6)在msyql中创建存放hive信息的数据库
+        mysql&gt;create database hive2 ;
+
+    6)初始化hive的元数据(表结构)到mysql中。
+        $&gt;cd /soft/hive/bin
+        $&gt;schematool -dbType mysql -initSchema
+</code></pre><h2 id="hive命令行操作"><a href="#hive命令行操作" class="headerlink" title="hive命令行操作"></a>hive命令行操作</h2><pre><code>1.创建hive的数据库
+
+    $hive&gt;hive --version                //
+    $hive&gt;hive --help                    //
+
+    $hive&gt;create database mydb2 ;                //
+    $hive&gt;show databases ;
+    $hive&gt;use mydb2 ;
+    $hive&gt;create table mydb2.t(id int,name string,age int);
+    $hive&gt;drop table t ;
+    $hive&gt;drop table mydb2.t ;
+    $hive&gt;select * from mydb2.t ;        //查看指定库的表
+    $hive&gt;exit ;                        //退出
+
+    $&gt;hive                                //hive --service cli
+    $&gt;hive                                //hive --service cli
+</code></pre><h2 id="通过远程jdbc方式连接到hive数据仓库"><a href="#通过远程jdbc方式连接到hive数据仓库" class="headerlink" title="通过远程jdbc方式连接到hive数据仓库"></a>通过远程jdbc方式连接到hive数据仓库</h2><pre><code>1.启动hiveserver2服务器，监听端口10000
+    $&gt;hive --service hiveserver2 &amp;
+
+2.通过beeline命令行连接到hiveserver2
+    $&gt;beeline                                            //进入beeline命令行(于hive --service beeline)
+    $beeline&gt;!help                                        //查看帮助
+    $beeline&gt;!quit                                        //退出
+    $beeline&gt;!connect jdbc:hive2://localhost:10000/mydb2//连接到hibve数据
+    $beeline&gt;show databases ;
+    $beeline&gt;use mydb2 ;
+    $beeline&gt;show tables;                                //显式表
+</code></pre><h2 id="使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库"><a href="#使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库" class="headerlink" title="使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库"></a>使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库</h2><pre><code>1.创建java模块
+2.引入maven
+3.添加hive-jdbc依赖
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;HiveDemo&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.hive&lt;/groupId&gt;
+                &lt;artifactId&gt;hive-jdbc&lt;/artifactId&gt;
+                &lt;version&gt;2.1.0&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+4.App
+    package com.it18zhang.hivedemo;
+
+    import java.sql.Connection;
+    import java.sql.DriverManager;
+    import java.sql.ResultSet;
+    import java.sql.Statement;
+
+    /**
+     * 使用jdbc方式连接到hive数据仓库，数据仓库需要开启hiveserver2服务。
+     */
+    public class App {
+        public static void main(String[] args) throws  Exception {
+            Class.forName(&quot;org.apache.hive.jdbc.HiveDriver&quot;);
+            Connection conn = DriverManager.getConnection(&quot;jdbc:hive2://192.168.231.201:10000/mydb2&quot;);
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(&quot;select id , name ,age from t&quot;);
+            while(rs.next()){
+                System.out.println(rs.getInt(1) + &quot;,&quot; + rs.getString(2)) ;
+            }
+            rs.close();
+            st.close();
+            conn.close();
+        }
+    }
+</code></pre><h2 id="hive中表"><a href="#hive中表" class="headerlink" title="hive中表"></a>hive中表</h2><pre><code>1.managed table
+    托管表。
+    删除表时，数据也删除了。
+
+2.external table
+    外部表。
+    删除表时，数据不删。
+</code></pre><h2 id="hive命令"><a href="#hive命令" class="headerlink" title="hive命令"></a>hive命令</h2><pre><code>//创建表,external 外部表
+$hive&gt;CREATE external TABLE IF NOT EXISTS t2(id int,name string,age int)
+COMMENT &apos;xx&apos; ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; STORED AS TEXTFILE ; 
+
+//查看表数据
+$hive&gt;desc t2 ;
+$hive&gt;desc formatted t2 ;
+
+//加载数据到hive表
+$hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t2 ;    //local上传文件
+$hive&gt;load data inpath &apos;/user/centos/customers.txt&apos; [overwrite] into table t2 ;    //移动文件
+
+//复制表
+mysql&gt;create table tt as select * from users ;        //携带数据和表结构
+mysql&gt;create table tt like users ;            //不带数据，只有表结构
+
+hive&gt;create table tt as select * from users ;    
+hive&gt;create table tt like users ;    
+
+
+//count()查询要转成mr
+$hive&gt;select count(*) from t2 ;
+$hive&gt;select id,name from t2 ;
+
+
+//
+$hive&gt;select * from t2 order by id desc ;                //MR
+
+//启用/禁用表
+$hive&gt;ALTER TABLE t2 ENABLE NO_DROP;    //不允许删除
+$hive&gt;ALTER TABLE t2 DISABLE NO_DROP;    //允许删除
+
+
+//分区表,优化手段之一，从目录的层面控制搜索数据的范围。
+//创建分区表.
+$hive&gt;CREATE TABLE t3(id int,name string,age int) PARTITIONED BY (Year INT, Month INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
+
+//显式表的分区信息
+$hive&gt;SHOW PARTITIONS t3;
+
+//添加分区,创建目录
+$hive&gt;alter table t3 add partition (year=2014, month=12);
+
+//删除分区
+hive&gt;ALTER TABLE employee_partitioned DROP IF EXISTS PARTITION (year=2014, month=11);
+
+//分区结构
+hive&gt;/user/hive/warehouse/mydb2.db/t3/year=2014/month=11
+hive&gt;/user/hive/warehouse/mydb2.db/t3/year=2014/month=12
+
+
+//加载数据到分区表
+hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t3 partition(year=2014,month=11);
+
+//创建桶表
+$hive&gt;CREATE TABLE t4(id int,name string,age int) CLUSTERED BY (id) INTO 3 BUCKETS ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
+
+//加载数据不会进行分桶操作
+$hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t4 ;
+
+//查询t3表数据插入到t4中。
+$hive&gt;insert into t4 select id,name,age from t3 ;
+
+//桶表的数量如何设置?
+//评估数据量，保证每个桶的数据量block的2倍大小。
+
+
+//连接查询
+$hive&gt;CREATE TABLE customers(id int,name string,age int) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
+$hive&gt;CREATE TABLE orders(id int,orderno string,price float,cid int) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
+
+//加载数据到表
+//内连接查询
+hive&gt;select a.*,b.* from customers a , orders b where a.id = b.cid ;
+//左外
+hive&gt;select a.*,b.* from customers a left outer join orders b on a.id = b.cid ;
+hive&gt;select a.*,b.* from customers a right outer join orders b on a.id = b.cid ;
+hive&gt;select a.*,b.* from customers a full outer join orders b on a.id = b.cid ;
+
+//explode,炸裂,表生成函数。
+//使用hive实现单词统计
+//1.建表
+$hive&gt;CREATE TABLE doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/28/Hadoop第十天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -4332,414 +5054,6 @@ public void readMapfile() throws Exception {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/30/haoop第三天之脚本分析，单个进程启动/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/30/haoop第三天之脚本分析，单个进程启动/" itemprop="url">haoop第三天之脚本分析，单个进程启动</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-30T09:33:38+08:00">
-                2018-09-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="ssh权限问题"><a href="#ssh权限问题" class="headerlink" title="ssh权限问题"></a>ssh权限问题</h2><pre><code>1.~/.ssh/authorized_keys
-    644
-2.$/.ssh
-    700
-3.root
-</code></pre><h2 id="配置SSH"><a href="#配置SSH" class="headerlink" title="配置SSH"></a>配置SSH</h2><pre><code>生成密钥对$&gt;ssh-keygen -t rsa -P &apos;&apos; -f ~/.ssh/id_rsa
-添加认证文件$&gt;cat ~/.ssh/id_rsa.pub &gt; ~/.ssh/authorized_keys
-权限设置,文件和文件夹权限除了自己之外，别人不可写。$&gt;chmod 700 ~/.ssh$&gt;chmod 644 ~/.ssh/authorized_keys
-</code></pre><h2 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h2><pre><code>远程复制.
-</code></pre><h2 id="rsync"><a href="#rsync" class="headerlink" title="rsync"></a>rsync</h2><pre><code>远程同步,支持符号链接。
-rsync -lr xxx xxx
-</code></pre><h2 id="完全分布式"><a href="#完全分布式" class="headerlink" title="完全分布式"></a>完全分布式</h2><pre><code>1.配置文件
-[core-site.xml]
-fs.defaultFS=hdfs://s201:8020/
-
-[hdfs-site.xml]
-replication=1        //伪分布
-replication=3        //完全分布
-
-
-[mapred-site.xml]
-mapreduce.framework.name=yarn
-
-[yarn-site.xml]
-rm.name=s201
-
-[slaves]
-s202
-s203
-s204
-
-2.分发文件
-    a)ssh
-    openssh-server        //sshd
-    openssh-clients        //ssh
-    openssh                //ssh-keygen
-
-    b)scp/rsync
-
-3.格式化文件系统
-    $&gt;hadoop namenode -format
-
-4.启动hadoop所有进程
-    //start-dfs.sh + start-yarn.sh
-    $&gt;start-all.sh
-
-5.xcall.sh jps
-    /usr/local/bin/jps 
-    /usr/local/bin/java
-
-6.查看jps进程
-    $&gt;xcall.sh jps
-
-7.关闭centos的防火墙
-    $&gt;sudo service firewalld stop        // &lt;=6.5    start/stop/status/restart
-    $&gt;sudo systemctl stop firewalld        // 7.0 停止    start/stop/status/restart
-
-    $&gt;sudo systemctl disable firewalld    //关闭
-    $&gt;sudo systemctl enable firewalld    //启用
-
-
-7.最终通过webui
-    http://s201:50070/
-</code></pre><h2 id="符号连接"><a href="#符号连接" class="headerlink" title="符号连接"></a>符号连接</h2><pre><code>1.修改符号连接的owner
-    $&gt;chown -h centos:centos xxx        //-h:针对连接本身，而不是所指文件.
-
-2.修改符号链接
-    $&gt;ln -sfT index.html index            //覆盖原有的连接。
-</code></pre><h2 id="hadoop模块"><a href="#hadoop模块" class="headerlink" title="hadoop模块"></a>hadoop模块</h2><pre><code>common        //
-hdfs        //
-mapreduce    //
-yarn        //
-</code></pre><h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><pre><code>[hdfs]start-dfs.sh
-NameNode            NN
-DataNode            DN
-SecondaryNamenode    2NN
-
-[yarn]start-yarn.sh
-ResourceMananger    RM
-NodeManager            NM
-</code></pre><h2 id="脚本分析"><a href="#脚本分析" class="headerlink" title="脚本分析"></a>脚本分析</h2><pre><code>sbin/start-all.sh
---------------
-    libexec/hadoop-config.sh
-    start-dfs.sh
-    start-yarn.sh
-
-sbin/start-dfs.sh
---------------
-    libexec/hadoop-config.sh
-    sbin/hadoop-daemons.sh --config .. --hostname .. start namenode ...
-    sbin/hadoop-daemons.sh --config .. --hostname .. start datanode ...
-    sbin/hadoop-daemons.sh --config .. --hostname .. start sescondarynamenode ...
-    sbin/hadoop-daemons.sh --config .. --hostname .. start zkfc ...            //
-
-
-sbin/start-yarn.sh
---------------    
-    libexec/yarn-config.sh
-    bin/yarn-daemon.sh start resourcemanager
-    bin/yarn-daemons.sh start nodemanager
-
-
-sbin/hadoop-daemons.sh
-----------------------
-    libexec/hadoop-config.sh
-
-    slaves
-
-    hadoop-daemon.sh
-
-sbin/hadoop-daemon.sh
------------------------
-    libexec/hadoop-config.sh
-    bin/hdfs ....
-
-
-sbin/yarn-daemon.sh
------------------------
-    libexec/yarn-config.sh
-    bin/yarn
-
-
-bin/hadoop
-------------------------
-    hadoop verion        //版本
-    hadoop fs            //文件系统客户端.
-    hadoop jar            //
-    hadoop classpath
-    hadoop checknative
-
-
-bin/hdfs
-------------------------
-    dfs                        // === hadoop fs
-    classpath          
-    namenode -format   
-    secondarynamenode  
-    namenode           
-    journalnode        
-    zkfc               
-    datanode           
-    dfsadmin           
-    haadmin            
-    fsck               
-    balancer           
-    jmxget             
-    mover              
-
-    oiv                
-    oiv_legacy         
-    oev                
-    fetchdt            
-    getconf            
-    groups             
-    snapshotDiff       
-
-    lsSnapshottableDir 
-
-    portmap            
-    nfs3               
-    cacheadmin         
-    crypto             
-    storagepolicies    
-    version 
-</code></pre><h2 id="hdfs常用命令"><a href="#hdfs常用命令" class="headerlink" title="hdfs常用命令"></a>hdfs常用命令</h2><pre><code>$&gt;hdfs dfs -mkdir /user/centos/hadoop
-$&gt;hdfs dfs -ls -r /user/centos/hadoop
-$&gt;hdfs dfs -lsr /user/centos/hadoop
-$&gt;hdfs dfs -put index.html /user/centos/hadoop
-$&gt;hdfs dfs -get /user/centos/hadoop/index.html a.html
-$&gt;hdfs dfs -rm -r -f /user/centos/hadoop
-</code></pre><h2 id="no-route"><a href="#no-route" class="headerlink" title="no route "></a>no route </h2><pre><code>关闭防火墙。
-$&gt;su root
-$&gt;xcall.sh &quot;service firewalld stop&quot;
-$&gt;xcall.sh &quot;systemctl disable firewalld&quot;
-</code></pre><h2 id="hdfs"><a href="#hdfs" class="headerlink" title="hdfs"></a>hdfs</h2><pre><code>500G
-1024G = 2T/4T
-切割。
-
-
-寻址时间:10ms左右
-磁盘速率 : 100M /s
-
-64M
-128M            //让寻址时间占用读取时间的1%.
-
-1ms
-1 / 100
-
-
-size = 181260798
-block-0 : 134217728
-block-1 :  47043070 
---------------------
-
-b0.no : 1073741829
-b1.no : 1073741830
-</code></pre><h2 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h2><pre><code>high availability,高可用性。通常用几个9衡量。
-99.999%
-</code></pre><h2 id="SPOF"><a href="#SPOF" class="headerlink" title="SPOF:"></a>SPOF:</h2><pre><code>single point of failure,单点故障。
-</code></pre><h2 id="secondarynamenode"><a href="#secondarynamenode" class="headerlink" title="secondarynamenode"></a>secondarynamenode</h2><h2 id="找到所有的配置文件"><a href="#找到所有的配置文件" class="headerlink" title="找到所有的配置文件"></a>找到所有的配置文件</h2><pre><code>1.tar开hadoop-2.7.3.tar.gz
-hadoop-2.7.3\share\hadoop\common\hadoop-common-2.7.3.jar\core-default.xml
-hadoop-2.7.3\share\hadoop\hdfs\hadoop-hdfs-2.7.3.jar\hdfs-default.xml
-hadoop-2.7.3\share\hadoop\mapreduce\hadoop-mapreduce-client-core-2.7.3.jar\mapred-default.xml
-hadoop-2.7.3\share\hadoop\yarn\hadoop-yarn-common-2.7.3.jar\yarn-site.xml
-</code></pre><h2 id="本地模式"><a href="#本地模式" class="headerlink" title="本地模式"></a>本地模式</h2><pre><code>[core-site.xml]
-fs.defaultFS=file:///            //默认值
-</code></pre><h2 id="配置hadoop临时目录"><a href="#配置hadoop临时目录" class="headerlink" title="配置hadoop临时目录"></a>配置hadoop临时目录</h2><pre><code>1.配置[core-site.xml]文件
-&lt;configuration&gt;
-        &lt;property&gt;
-                &lt;name&gt;fs.defaultFS&lt;/name&gt;
-                &lt;value&gt;hdfs://s201/&lt;/value&gt;
-        &lt;/property&gt;
-        &lt;!--- 配置新的本地目录 --&gt;
-        &lt;property&gt;
-                &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;
-                &lt;value&gt;/home/centos/hadoop&lt;/value&gt;
-        &lt;/property&gt;
-&lt;/configuration&gt;
-
-
-//以下属性均由hadoop.tmp.dir决定,在hdfs-site.xml文件中配置。
-dfs.namenode.name.dir=file://${hadoop.tmp.dir}/dfs/name
-dfs.datanode.data.dir=file://${hadoop.tmp.dir}/dfs/data
-dfs.datanode.data.dir=file://${hadoop.tmp.dir}/dfs/data
-
-dfs.namenode.checkpoint.dir=file://${hadoop.tmp.dir}/dfs/namesecondary
-dfs.namenode.checkpoint.dir=file://${hadoop.tmp.dir}/dfs/namesecondary
-
-
-2.分发core-site.xml文件
-    $&gt;xsync core-site.xml
-
-3.格式化文件系统,只对namenode的本地目录进行初始化。
-    $&gt;hadoop namenode -format        //hdfs namenode -format
-
-4.启动hadoop
-    $&gt;start-dfs.sh
-</code></pre><h2 id="使用xcall-sh在所有节点上创建jps符号连接，指向-soft-jdk-bin-jps"><a href="#使用xcall-sh在所有节点上创建jps符号连接，指向-soft-jdk-bin-jps" class="headerlink" title="使用xcall.sh在所有节点上创建jps符号连接，指向/soft/jdk/bin/jps"></a>使用xcall.sh在所有节点上创建jps符号连接，指向/soft/jdk/bin/jps</h2><pre><code>1.切换到root用户
-    $&gt;su root
-2.创建符号连接
-    $&gt;xcall.sh &quot;ln -sfT /soft/jdk/bin/jps /usr/local/bin/jps&quot;
-3.修改jps符号连接的owner
-    $&gt;xcall.sh &quot;chown -h centos:centos /usr/local/bin/jps&quot;
-4.查看所有主机上的java进程
-    $&gt;xcall.sh jps
-</code></pre><h2 id="在centos桌面版中安装eclipse"><a href="#在centos桌面版中安装eclipse" class="headerlink" title="在centos桌面版中安装eclipse"></a>在centos桌面版中安装eclipse</h2><pre><code>1.下载eclipse linux版
-    eclipse-jee-mars-R-linux-gtk-x86_64.tar.gz
-2.tar开到/soft下,
-    $&gt;tar -xzvf eclipse-jee-mars-R-linux-gtk-x86_64.tar.gz -C /soft
-3.启动eclipse
-    $&gt;cd /soft/eclipse
-    $&gt;./eclipse &amp;            //后台启动
-4.创建桌面快捷方式
-    $&gt;ln -s /soft/eclipse/eclipse ~/Desktop/eclipse
-5.
-</code></pre><h2 id="收集hadoop的所有jar包"><a href="#收集hadoop的所有jar包" class="headerlink" title="收集hadoop的所有jar包"></a>收集hadoop的所有jar包</h2><h2 id="使用hadoop客户端api访问hdfs"><a href="#使用hadoop客户端api访问hdfs" class="headerlink" title="使用hadoop客户端api访问hdfs"></a>使用hadoop客户端api访问hdfs</h2><pre><code>1.创建java项目
-2.导入hadoop类库
-
-3.
-4.
-5.
-</code></pre><h2 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h2><pre><code>1.
-2.
-3.
-4.
-</code></pre><h2 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h2><pre><code>1.使用hadoop API递归输出整个文件系统
-2.
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -4794,7 +5108,7 @@ dfs.namenode.checkpoint.dir=file://${hadoop.tmp.dir}/dfs/namesecondary
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

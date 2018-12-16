@@ -328,6 +328,665 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/19/Hbase第三天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/19/Hbase第三天/" itemprop="url">Hbase第三天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-19T16:56:58+08:00">
+                2018-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="复习Hbase第二天"><a href="#复习Hbase第二天" class="headerlink" title="复习Hbase第二天"></a>复习Hbase第二天</h1><p>随机定位+实时读写</p>
+<p>nosql:not only sql数据库</p>
+<p>key-value对形式的存储</p>
+<p>key: rowkey/family+col/timstamp = value</p>
+<p>rowkey  排序,byte[]</p>
+<p>客户端先联系zk找到元数据表hbae:meta，存放了整个数据库的表和区域服务器信息，相当于目录，类似于名称节点。当找到了之后就可以定位到区域服务器，所以hbase数据读写和HRegionServer来交互，有很多regionServer构成了一个集群。数据先进入到写前日志，写前日志用于容错，用于恢复，所以在交互的时候client先交互HRegionServer然后在网Hlog里写入数据，然后在溢出之后写入HRegion，对于HRegion来说有个内存储MemStore在内存中存储数据，用来提高速度，MemStore达到一定值溢出到磁盘，所以还有一个StoreFile存储，用来和底层交互，底层就是Hfile。通过Hfile对象来跟HDFS交互，就找到了HDFS客户端DFSClient了，这个DFSClient就是hdfs范畴了，最终数据存储到HDFS里面了。</p>
+<p>表的切割指的是切割表或者切割区域，按照rowkey来切分，因为rowkey是有序的，相当于建立索引，通过切割可以实现负载均衡，如果所有东西都在一个点就会出现热点问题。</p>
+<p>hbase的增删改查是：<br>    put(rowkey).addColumn().<br>    put(Put)</p>
+<pre><code>delete
+
+get()
+
+更新也是put
+
+scan()
+</code></pre><p>merge合并。</p>
+<p>移动区域，目的减少某一个服务器的压力。可以任意配置区域所在地，由那个区域服务器承载。</p>
+<p>切割风暴：达到10G之后同时到达临界点，同时切割，为了避免可以让这个10G的值变大再切割，也就是不让他自动切割了。可以手动切割避免。或者预切割来处理。 </p>
+<p>hbase存储的荣誉量比较大，因为它存储的时候都是以kv的方式来存储，而key是三极坐标，rowkey，列，列族，时间戳+一个value，所以前三个值都要存放很多次。所以要求列族和列的名称和rowkey的名字不能太长。一旦过长，就会发现存储的时候被坐标占用了大量的空间，而value的很少，最好列和列族名字不要太长。</p>
+<p>本天会涉及rowkey的设计问题。</p>
+<h1 id="预先切割"><a href="#预先切割" class="headerlink" title="预先切割"></a>预先切割</h1><p>创建表时可以预先对表进行切割。</p>
+<p>切割线就是rowkey</p>
+<p> create ‘ns1:t2’,’f1’,SPLITES=&gt;[‘row3000’,’row6000]</p>
+<h2 id="预先切割-1"><a href="#预先切割-1" class="headerlink" title="预先切割"></a>预先切割</h2><pre><code>创建表时，预先对表进行切割。
+切割线是rowkey.
+$hbase&gt;create &apos;ns1:t2&apos;,&apos;f1&apos;,SPLITS=&gt;[&apos;row3000&apos;,&apos;row6000&apos;]
+</code></pre><h2 id="创建表时指定列族的版本数-该列族的所有列都具有相同数量版本"><a href="#创建表时指定列族的版本数-该列族的所有列都具有相同数量版本" class="headerlink" title="创建表时指定列族的版本数,该列族的所有列都具有相同数量版本"></a>创建表时指定列族的版本数,该列族的所有列都具有相同数量版本</h2><pre><code>$hbase&gt;create &apos;ns1:t3&apos;,{NAME=&gt;&apos;f1&apos;,VERSIONS=&gt;3}            //创建表时，指定列族的版本数。
+$hbase&gt;get &apos;ns1:t3&apos;,&apos;row1&apos;,{COLUMN=&gt;&apos;f1&apos;,VERSIONS=&gt;4}    //检索的时候，查询多少个版本。
+$hbase&gt;put &apos;ns1:t3&apos;,&apos;row1&apos;,&apos;f1:name&apos;,&apos;tom&apos;
+</code></pre><p>关于查询的命令行：</p>
+<p><img src="https://i.imgur.com/Qq9LDyE.png" alt=""></p>
+<p>关于创建表的命令：</p>
+<p><img src="https://i.imgur.com/r9yKelH.png" alt=""></p>
+<pre><code>@Test
+public void getWithVersions() throws IOException {
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t3&quot;);
+    Table table = conn.getTable(tname);
+    Get get = new Get(Bytes.toBytes(&quot;row1&quot;));
+    //检索所有版本
+    get.setMaxVersions();
+    Result r = table.get(get);
+    List&lt;Cell&gt; cells = r.getColumnCells(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+    for(Cell c : cells){
+        String f = Bytes.toString(c.getFamily());
+        String col = Bytes.toString(c.getQualifier());
+        long ts = c.getTimestamp();
+        String val = Bytes.toString(c.getValue());
+        System.out.println(f + &quot;/&quot; + col + &quot;/&quot; + ts + &quot;=&quot; + val);
+    }
+}
+</code></pre><h1 id="原生扫描-专家"><a href="#原生扫描-专家" class="headerlink" title="原生扫描(专家)"></a>原生扫描(专家)</h1><h2 id="1-原生扫描"><a href="#1-原生扫描" class="headerlink" title="1.原生扫描"></a>1.原生扫描</h2><pre><code>$hbase&gt;scan &apos;ns1:t3&apos;,{COLUMN=&gt;&apos;f1&apos;,RAW=&gt;true,VERSIONS=&gt;10}        //包含标记了delete的数据
+</code></pre><h2 id="2-删除数据"><a href="#2-删除数据" class="headerlink" title="2.删除数据"></a>2.删除数据</h2><pre><code>$hbase&gt;delete &apos;nd1:t3&apos;,&apos;row1&apos;,&apos;f1:name&apos;,148989875645            //删除数据，标记为删除.
+                                                                //小于该删除时间的数据都作废。
+</code></pre><h2 id="3-TTL"><a href="#3-TTL" class="headerlink" title="3.TTL"></a>3.TTL</h2><pre><code>time to live ,存活时间。
+影响所有的数据，包括没有删除的数据。
+超过该时间，原生扫描也扫不到数据。
+$hbase&gt;create &apos;ns1:tx&apos; , {NAME=&gt;&apos;f1&apos;,TTL=&gt;10,VERSIONS}
+</code></pre><h2 id="4-KEEP-DELETED-CELLS"><a href="#4-KEEP-DELETED-CELLS" class="headerlink" title="4.KEEP_DELETED_CELLS"></a>4.KEEP_DELETED_CELLS</h2><pre><code>删除key之后，数据是否还保留。
+$hbase&gt;create &apos;ns1:tx&apos; , {NAME=&gt;&apos;f1&apos;,TTL=&gt;10,VERSIONS,KEEP_DELETED_CELLS=&gt;true}
+</code></pre><p><img src="https://i.imgur.com/2WE38AX.png" alt=""></p>
+<h1 id="缓存和批处理"><a href="#缓存和批处理" class="headerlink" title="缓存和批处理"></a>缓存和批处理</h1><p><img src="https://i.imgur.com/U8uyqrS.png" alt=""></p>
+<pre><code>1.开启服务器端扫描器缓存
+    a)表层面(全局)只需要配置一个属性即可
+
+        &lt;property&gt;
+            &lt;name&gt;hbase.client.scanner.caching&lt;/name&gt;
+            &lt;!-- 整数最大值 --&gt;
+            &lt;value&gt;2147483647&lt;/value&gt;
+            &lt;source&gt;hbase-default.xml&lt;/source&gt;
+        &lt;/property&gt;
+
+    b)操作层面
+
+        //设置量
+        scan.setCaching(10);
+
+2.
+3.
+
+
+cache row nums : 1000            //632
+cache row nums : 5000            //423
+cache row nums : 1                //7359
+</code></pre><h1 id="扫描器缓存"><a href="#扫描器缓存" class="headerlink" title="扫描器缓存"></a>扫描器缓存</h1><pre><code>面向行级别的。
+
+@Test
+public void getScanCache() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+    Scan scan = new Scan();
+    scan.setCaching(5000);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    long start = System.currentTimeMillis() ;
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while(it.hasNext()){
+        Result r = it.next();
+        System.out.println(r.getColumnLatestCell(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;)));
+    }
+    System.out.println(System.currentTimeMillis() - start);
+}
+</code></pre><h1 id="批量扫描是面向列级别"><a href="#批量扫描是面向列级别" class="headerlink" title="批量扫描是面向列级别"></a>批量扫描是面向列级别</h1><p><img src="https://i.imgur.com/kzrUOiK.png" alt=""></p>
+<pre><code>控制每次next()服务器端返回的列的个数。
+scan.setBatch(5);                //每次next返回5列。
+</code></pre><h2 id="测试缓存和批处理"><a href="#测试缓存和批处理" class="headerlink" title="测试缓存和批处理"></a>测试缓存和批处理</h2><pre><code> */
+@Test
+public void testBatchAndCaching() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    scan.setCaching(2);
+    scan.setBatch(3);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        System.out.println(&quot;========================================&quot;);
+        //得到一行的所有map,key=f1,value=Map&lt;Col,Map&lt;Timestamp,value&gt;&gt;
+        NavigableMap&lt;byte[], NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt;&gt; map = r.getMap();
+        //
+        for (Map.Entry&lt;byte[], NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt;&gt; entry : map.entrySet()) {
+            //得到列族
+            String f = Bytes.toString(entry.getKey());
+            Map&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt; colDataMap = entry.getValue();
+            for (Map.Entry&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt; ets : colDataMap.entrySet()) {
+                String c = Bytes.toString(ets.getKey());
+                Map&lt;Long, byte[]&gt; tsValueMap = ets.getValue();
+                for (Map.Entry&lt;Long, byte[]&gt; e : tsValueMap.entrySet()) {
+                    Long ts = e.getKey();
+                    String value = Bytes.toString(e.getValue());
+                    System.out.print(f + &quot;/&quot; + c + &quot;/&quot; + ts + &quot;=&quot; + value + &quot;,&quot;);
+                }
+            }
+        }
+        System.out.println();
+    }
+}
+</code></pre><p>先插入数据<br><img src="https://i.imgur.com/aRdSViP.png" alt=""></p>
+<p><img src="https://i.imgur.com/jMwoiQ6.png" alt=""></p>
+<p>代码运行结果：</p>
+<p><img src="https://i.imgur.com/0RNQJci.png" alt=""></p>
+<p>上面代码和上图对应的。设置2个cach和3个batch视频上说是2行3列，但是我觉得应该是2个列族3个列的这样子去输出。然后最后这一行还剩下2个输出2个，也就是3个输出，2个输出，3个输出，2个输出，。</p>
+<p>========================================</p>
+<h1 id="f1-id-1490595148588-1-f2-addr-1490595182150-hebei-f2-age-1490595174760-12"><a href="#f1-id-1490595148588-1-f2-addr-1490595182150-hebei-f2-age-1490595174760-12" class="headerlink" title="f1/id/1490595148588=1,f2/addr/1490595182150=hebei,f2/age/1490595174760=12,"></a>f1/id/1490595148588=1,f2/addr/1490595182150=hebei,f2/age/1490595174760=12,</h1><p>f2/id/1490595164473=1,f2/name/1490595169589=tom,</p>
+<p>========================================</p>
+<h1 id="f1-id-1490595196410-2-f1-name-1490595213090-tom2-1-f2-addr-1490595264734-tangshan"><a href="#f1-id-1490595196410-2-f1-name-1490595213090-tom2-1-f2-addr-1490595264734-tangshan" class="headerlink" title="f1/id/1490595196410=2,f1/name/1490595213090=tom2.1,f2/addr/1490595264734=tangshan,"></a>f1/id/1490595196410=2,f1/name/1490595213090=tom2.1,f2/addr/1490595264734=tangshan,</h1><p>f2/age/1490595253996=13,f2/id/1490595233568=2,f2/name/1490595241891=tom2.2,</p>
+<p>========================================</p>
+<h1 id="f1-age-1490595295427-14-f1-id-1490595281251-3-f1-name-1490595289587-tom3-1"><a href="#f1-age-1490595295427-14-f1-id-1490595281251-3-f1-name-1490595289587-tom3-1" class="headerlink" title="f1/age/1490595295427=14,f1/id/1490595281251=3,f1/name/1490595289587=tom3.1,"></a>f1/age/1490595295427=14,f1/id/1490595281251=3,f1/name/1490595289587=tom3.1,</h1><p>f2/addr/1490595343690=beijing,f2/age/1490595336300=14,f2/id/1490595310966=3,</p>
+<p>========================================<br>f2/name/1490595327531=tom3.2,</p>
+<h1 id="Filter过滤器"><a href="#Filter过滤器" class="headerlink" title="Filter过滤器"></a>Filter过滤器</h1><p><img src="https://i.imgur.com/9jcHOUJ.png" alt=""><br>远程服务器收到scan对象进行反序列化，恢复成scan对象进行过滤，对每个区域进行过滤，每个区域服务器有很多区域，每个区域里面有区域扫描器， RegionScanner，会使用区域过滤器。 </p>
+<pre><code>1.RowFilter
+    select * from ns1:t1 where rowkey &lt;= row100
+/**
+
+ /**
+ * 测试RowFilter过滤器
+ */
+@Test
+public void testRowFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
+    Scan scan = new Scan();
+    RowFilter rowFilter = new RowFilter(CompareFilter.CompareOp.LESS_OR_EQUAL, new BinaryComparator(Bytes.toBytes(&quot;row0100&quot;)));
+    scan.setFilter(rowFilter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        System.out.println(Bytes.toString(r.getRow()));
+    }
+}
+
+/**
+ * 测试FamilyFilter过滤器
+ */
+@Test
+public void testFamilyFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    FamilyFilter filter = new FamilyFilter(CompareFilter.CompareOp.LESS, new BinaryComparator(Bytes.toBytes(&quot;f2&quot;)));
+    scan.setFilter(filter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id);
+    }
+}
+
+/**
+ * 测试QualifierFilter(列过滤器)
+ */
+@Test
+public void testColFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    QualifierFilter colfilter = new QualifierFilter(CompareFilter.CompareOp.EQUAL, new BinaryComparator(Bytes.toBytes(&quot;id&quot;)));
+    scan.setFilter(colfilter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2name = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;name&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id + &quot; : &quot; + f2name);
+    }
+}
+
+
+/**
+ * 测试ValueFilter(值过滤器)
+ * 过滤value的值，含有指定的字符子串
+ */
+@Test
+public void testValueFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    ValueFilter filter = new ValueFilter(CompareFilter.CompareOp.EQUAL, new SubstringComparator(&quot;to&quot;));
+    scan.setFilter(filter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f1name = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+        byte[] f2name = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;name&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id + &quot; : &quot; + Bytes.toString(f1name) + &quot; : &quot; + Bytes.toString(f2name));
+    }
+}
+
+/**
+ * 依赖列过滤器
+ */
+@Test
+public void testDepFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    DependentColumnFilter filter = new DependentColumnFilter(Bytes.toBytes(&quot;f2&quot;),
+            Bytes.toBytes(&quot;addr&quot;),
+            true,
+            CompareFilter.CompareOp.NOT_EQUAL,
+            new BinaryComparator(Bytes.toBytes(&quot;beijing&quot;))
+            );
+
+    //ValueFilter filter = new ValueFilter(CompareFilter.CompareOp.EQUAL, new SubstringComparator(&quot;to&quot;));
+    scan.setFilter(filter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f1name = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+        byte[] f2name = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;name&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id + &quot; : &quot; + Bytes.toString(f1name) + &quot; : &quot; + Bytes.toString(f2name));
+    }
+}
+
+/**
+ * 单列值value过滤，
+ *  
+ */
+@Test
+public void testSingleColumValueFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+    SingleColumnValueFilter filter = new SingleColumnValueFilter(Bytes.toBytes(&quot;f2&quot;,
+            Bytes.toBytes(&quot;name&quot;),
+            CompareFilter.CompareOp.NOT_EQUAL),
+            new BinaryComparator(Bytes.toBytes(&quot;tom2.1&quot;)));
+
+    //ValueFilter filter = new ValueFilter(CompareFilter.CompareOp.EQUAL, new SubstringComparator(&quot;to&quot;));
+    scan.setFilter(filter);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f1name = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+        byte[] f2name = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;name&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id + &quot; : &quot; + Bytes.toString(f1name) + &quot; : &quot; + Bytes.toString(f2name));
+    }
+}
+</code></pre><h2 id="复杂查询"><a href="#复杂查询" class="headerlink" title="复杂查询"></a>复杂查询</h2><pre><code>select * from t7 where ((age &lt;= 13) and (name like &apos;%t&apos;)
+
+                                    or
+
+                        (age &gt; 13) and (name like &apos;t%&apos;))
+</code></pre><p><img src="https://i.imgur.com/Z5AcN4v.png" alt=""></p>
+<p>指定列族，指定列，指定对比方式，指定值(小于用二进制比较，等于用正则表达式串对比器)</p>
+<p><img src="https://i.imgur.com/6EGrJ4V.png" alt=""></p>
+<h1 id="复杂查询实现方式-FilterList"><a href="#复杂查询实现方式-FilterList" class="headerlink" title="复杂查询实现方式:FilterList"></a>复杂查询实现方式:FilterList</h1><pre><code>@Test
+public void testComboFilter() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t7&quot;);
+    Scan scan = new Scan();
+
+    //where ... f2:age &lt;= 13
+    SingleColumnValueFilter ftl = new SingleColumnValueFilter(
+            Bytes.toBytes(&quot;f2&quot;),
+            Bytes.toBytes(&quot;age&quot;),
+            CompareFilter.CompareOp.LESS_OR_EQUAL,
+            new BinaryComparator(Bytes.toBytes(&quot;13&quot;))
+    );
+
+    //where ... f2:name like %t
+    SingleColumnValueFilter ftr = new SingleColumnValueFilter(
+            Bytes.toBytes(&quot;f2&quot;),
+            Bytes.toBytes(&quot;name&quot;),
+            CompareFilter.CompareOp.EQUAL,
+            new RegexStringComparator(&quot;^t&quot;)//以t开头
+    );
+    //ft
+    FilterList ft = new FilterList(FilterList.Operator.MUST_PASS_ALL);
+    ft.addFilter(ftl);
+    ft.addFilter(ftr);
+
+    //where ... f2:age &gt; 13
+    SingleColumnValueFilter fbl = new SingleColumnValueFilter(
+            Bytes.toBytes(&quot;f2&quot;),
+            Bytes.toBytes(&quot;age&quot;),
+            CompareFilter.CompareOp.GREATER,
+            new BinaryComparator(Bytes.toBytes(&quot;13&quot;))
+    );
+
+    //where ... f2:name like %t
+    SingleColumnValueFilter fbr = new SingleColumnValueFilter(
+            Bytes.toBytes(&quot;f2&quot;),
+            Bytes.toBytes(&quot;name&quot;),
+            CompareFilter.CompareOp.EQUAL,
+            new RegexStringComparator(&quot;t$&quot;)//以t结尾
+    );
+    //ft
+    FilterList fb = new FilterList(FilterList.Operator.MUST_PASS_ALL);
+    fb.addFilter(fbl);
+    fb.addFilter(fbr);
+
+
+    FilterList fall = new FilterList(FilterList.Operator.MUST_PASS_ONE);
+    fall.addFilter(ft);
+    fall.addFilter(fb);
+
+    scan.setFilter(fall);
+    Table t = conn.getTable(tname);
+    ResultScanner rs = t.getScanner(scan);
+    Iterator&lt;Result&gt; it = rs.iterator();
+    while (it.hasNext()) {
+        Result r = it.next();
+        byte[] f1id = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f2id = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;id&quot;));
+        byte[] f1name = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
+        byte[] f2name = r.getValue(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;name&quot;));
+        System.out.println(f1id + &quot; : &quot; + f2id + &quot; : &quot; + Bytes.toString(f1name) + &quot; : &quot; + Bytes.toString(f2name));
+    }
+}
+</code></pre><h1 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h1><pre><code>$hbase&gt;incr &apos;ns1:t8&apos;,&apos;row1&apos;,&apos;f1:click&apos;,1
+$hbase&gt;get_counter &apos;ns1:t8&apos;,&apos;row1&apos;,&apos;f1:click&apos;    //得到计数器的值
+
+
+[API编程]
+@Test
+public void testIncr() throws IOException {
+
+    Configuration conf = HBaseConfiguration.create();
+    Connection conn = ConnectionFactory.createConnection(conf);
+    TableName tname = TableName.valueOf(&quot;ns1:t8&quot;);
+    Table t = conn.getTable(tname);
+    Increment incr = new Increment(Bytes.toBytes(&quot;row1&quot;));
+    incr.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;daily&quot;),1);
+    incr.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;weekly&quot;),10);
+    incr.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;monthly&quot;),100);
+    t.increment(incr);
+}
+</code></pre><h1 id="coprocessor"><a href="#coprocessor" class="headerlink" title="coprocessor"></a>coprocessor</h1><p>协处理器工作过程：</p>
+<p><img src="https://i.imgur.com/lZeb49u.png" alt=""></p>
+<pre><code>批处理的，等价于存储过程或者触发器
+
+[Observer]
+    观察者,类似于触发器，基于事件。发生动作时，回调相应方法。
+    RegionObserver        //RegionServer区域观察者
+    MasterObserver        //Master节点。
+    WAlObserver            //
+
+[Endpoint]
+    终端,类似于存储过程。
+
+
+1.加载
+    [hbase-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
+        &lt;value&gt;coprocessor.RegionObserverExample, coprocessor.AnotherCoprocessor&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;hbase.coprocessor.master.classes&lt;/name&gt;
+        &lt;value&gt;coprocessor.MasterObserverExample&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;hbase.coprocessor.wal.classes&lt;/name&gt;
+        &lt;value&gt;coprocessor.WALObserverExample, bar.foo.MyWALObserver&lt;/value&gt;
+    &lt;/property&gt;
+
+2.自定义观察者
+    [MyRegionObserver]
+    package com.it18zhang.hbasedemo.coprocessor;
+
+    import org.apache.hadoop.hbase.Cell;
+    import org.apache.hadoop.hbase.CoprocessorEnvironment;
+    import org.apache.hadoop.hbase.client.Delete;
+    import org.apache.hadoop.hbase.client.Durability;
+    import org.apache.hadoop.hbase.client.Get;
+    import org.apache.hadoop.hbase.client.Put;
+    import org.apache.hadoop.hbase.coprocessor.BaseRegionObserver;
+    import org.apache.hadoop.hbase.coprocessor.ObserverContext;
+    import org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;
+    import org.apache.hadoop.hbase.regionserver.wal.WALEdit;
+    import org.apache.hadoop.hbase.util.Bytes;
+
+    import java.io.FileWriter;
+    import java.io.IOException;
+    import java.util.List;
+
+    /**
+     * 自定义区域观察者
+     */
+    public class MyRegionObserver extends BaseRegionObserver{
+
+        private void outInfo(String str){
+            try {
+                FileWriter fw = new FileWriter(&quot;/home/centos/coprocessor.txt&quot;,true);
+                fw.write(str + &quot;\r\n&quot;);
+                fw.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        public void start(CoprocessorEnvironment e) throws IOException {
+            super.start(e);
+            outInfo(&quot;MyRegionObserver.start()&quot;);
+        }
+
+        public void preOpen(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e) throws IOException {
+            super.preOpen(e);
+            outInfo(&quot;MyRegionObserver.preOpen()&quot;);
+        }
+
+        public void postOpen(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e) {
+            super.postOpen(e);
+            outInfo(&quot;MyRegionObserver.postOpen()&quot;);
+        }
+
+        @Override
+        public void preGetOp(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Get get, List&lt;Cell&gt; results) throws IOException {
+            super.preGetOp(e, get, results);
+            String rowkey = Bytes.toString(get.getRow());
+            outInfo(&quot;MyRegionObserver.preGetOp() : rowkey = &quot; + rowkey);
+        }
+
+        public void postGetOp(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Get get, List&lt;Cell&gt; results) throws IOException {
+            super.postGetOp(e, get, results);
+            String rowkey = Bytes.toString(get.getRow());
+            outInfo(&quot;MyRegionObserver.postGetOp() : rowkey = &quot; + rowkey);
+        }
+
+        public void prePut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+            super.prePut(e, put, edit, durability);
+            String rowkey = Bytes.toString(put.getRow());
+            outInfo(&quot;MyRegionObserver.prePut() : rowkey = &quot; + rowkey);
+        }
+
+        @Override
+        public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+            super.postPut(e, put, edit, durability);
+            String rowkey = Bytes.toString(put.getRow());
+            outInfo(&quot;MyRegionObserver.postPut() : rowkey = &quot; + rowkey);
+        }
+
+        @Override
+        public void preDelete(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Delete delete, WALEdit edit, Durability durability) throws IOException {
+            super.preDelete(e, delete, edit, durability);
+            String rowkey = Bytes.toString(delete.getRow());
+            outInfo(&quot;MyRegionObserver.preDelete() : rowkey = &quot; + rowkey);
+        }
+
+        @Override
+        public void postDelete(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Delete delete, WALEdit edit, Durability durability) throws IOException {
+            super.postDelete(e, delete, edit, durability);
+            String rowkey = Bytes.toString(delete.getRow());
+            outInfo(&quot;MyRegionObserver.postDelete() : rowkey = &quot; + rowkey);
+        }
+    }
+
+2.注册协处理器并分发
+    &lt;property&gt;
+        &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
+        &lt;value&gt;com.it18zhang.hbasedemo.coprocessor.MyRegionObserver&lt;/value&gt;
+    &lt;/property&gt;
+
+3.导出jar包。
+
+4.复制jar到共享目录，分发到jar到hbase集群的hbase lib目录下.
+    [/soft/hbase/lib]
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/19/SSM第二天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3502,728 +4161,6 @@ $hive&gt;CREATE TABLE doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/01/Hadoop第十一天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/01/Hadoop第十一天/" itemprop="url">Hadoop第十一天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T18:11:38+08:00">
-                2018-11-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h2><pre><code>[customers.txt]
-1,tom,12
-2,tom,13
-3,tom,14
-4,tom,15
-
-[orders.txt]
-1,no001,12.23,1
-2,no001,12.23,1
-3,no001,12.23,2
-4,no001,12.23,2
-5,no001,12.23,2
-6,no001,12.23,3
-7,no001,12.23,3
-8,no001,12.23,3
-9,no001,12.23,3
-</code></pre><h2 id="map端join"><a href="#map端join" class="headerlink" title="map端join"></a>map端join</h2><pre><code>1.创建Mapper
-    package com.it18zhang.hdfs.mr.mapjoin;
-
-    import org.apache.hadoop.conf.Configuration;
-    import org.apache.hadoop.fs.FSDataInputStream;
-    import org.apache.hadoop.fs.FileSystem;
-    import org.apache.hadoop.fs.Path;
-    import org.apache.hadoop.io.LongWritable;
-    import org.apache.hadoop.io.NullWritable;
-    import org.apache.hadoop.io.Text;
-    import org.apache.hadoop.mapreduce.Mapper;
-
-    import java.io.BufferedReader;
-    import java.io.IOException;
-    import java.io.InputStreamReader;
-    import java.util.HashMap;
-    import java.util.Map;
-
-    /**
-     * join操作，map端连接。
-     */
-    public class MapJoinMapper extends Mapper&lt;LongWritable,Text,Text,NullWritable&gt; {
-
-        private Map&lt;String,String&gt; allCustomers = new HashMap&lt;String,String&gt;();
-
-        //启动,初始化客户信息
-        protected void setup(Context context) throws IOException, InterruptedException {
-            try {
-                Configuration conf = context.getConfiguration();
-                FileSystem fs = FileSystem.get(conf);
-                FSDataInputStream fis = fs.open(new Path(&quot;file:///d:/mr/mapjoin/customers.txt&quot;));
-                //得到缓冲区阅读器
-                BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-                String line = null ;
-                while((line = br.readLine()) != null){
-                    //得到cid
-                    String cid = line.substring(0,line.indexOf(&quot;,&quot;));
-                    allCustomers.put(cid,line);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-            //订单信息
-            String line = value.toString();
-            //提取customer id
-            String cid = line.substring(line.lastIndexOf(&quot;,&quot;) + 1);
-            //订单信息
-            String orderInfo = line.substring(0,line.lastIndexOf(&quot;,&quot;));
-
-            //连接customer + &quot;,&quot; + order
-            String customerInfo = allCustomers.get(cid);
-            context.write(new Text(customerInfo + &quot;,&quot; + orderInfo),NullWritable.get());
-        }
-
-    }
-
-2.创建App
-    package com.it18zhang.hdfs.mr.mapjoin;
-
-    import org.apache.hadoop.conf.Configuration;
-    import org.apache.hadoop.fs.Path;
-    import org.apache.hadoop.io.NullWritable;
-    import org.apache.hadoop.io.Text;
-    import org.apache.hadoop.mapreduce.Job;
-    import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-    import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-
-    /**
-     *
-     */
-    public class MapJoinApp {
-        public static void main(String[] args) throws Exception {
-
-            Configuration conf = new Configuration();
-            conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
-            Job job = Job.getInstance(conf);
-
-            //设置job的各种属性
-            job.setJobName(&quot;MapJoinApp&quot;);                        //作业名称
-            job.setJarByClass(MapJoinApp.class);                 //搜索类
-
-            //添加输入路径
-            FileInputFormat.addInputPath(job,new Path(args[0]));
-            //设置输出路径
-            FileOutputFormat.setOutputPath(job,new Path(args[1]));
-
-            //没有reduce
-
-            job.setNumReduceTasks(0);
-
-            job.setMapperClass(MapJoinMapper.class);             //mapper类
-
-            job.setMapOutputKeyClass(Text.class);           //
-            job.setMapOutputValueClass(NullWritable.class);  //
-
-            job.waitForCompletion(true);
-        }
-    }
-</code></pre><h2 id="join端连接"><a href="#join端连接" class="headerlink" title="join端连接"></a>join端连接</h2><pre><code>1.自定义key
-    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
-
-    import org.apache.hadoop.io.WritableComparable;
-
-    import java.io.DataInput;
-    import java.io.DataOutput;
-    import java.io.IOException;
-
-    /**
-     */
-    public class ComboKey2 implements WritableComparable&lt;ComboKey2&gt; {
-        //0-customer 1-order
-        private int type ;
-        private int cid ;
-        private int oid ;
-        private String customerInfo = &quot;&quot; ;
-        private String orderInfo = &quot;&quot; ;
-
-
-        public int compareTo(ComboKey2 o) {
-            int type0 = o.type ;
-            int cid0= o.cid;
-            int oid0 = o.oid;
-            String customerInfo0 = o.customerInfo;
-            String orderInfo0 = o.orderInfo ;
-            //是否同一个customer的数据
-            if(cid == cid0){
-                //同一个客户的两个订单
-                if(type == type0){
-                    return oid - oid0 ;
-                }
-                //一个Customer + 他的order
-                else{
-                    if(type ==0)
-                        return -1 ;
-                    else
-                        return 1 ;
-                }
-            }
-            //cid不同
-            else{
-                return cid - cid0 ;
-            }
-        }
-
-        public void write(DataOutput out) throws IOException {
-            out.writeInt(type);
-            out.writeInt(cid);
-            out.writeInt(oid);
-            out.writeUTF(customerInfo);
-            out.writeUTF(orderInfo);
-        }
-
-        public void readFields(DataInput in) throws IOException {
-            this.type = in.readInt();
-            this.cid = in.readInt();
-            this.oid = in.readInt();
-            this.customerInfo = in.readUTF();
-            this.orderInfo = in.readUTF();
-        }
-    }
-
-2.自定义分区类
-    public class CIDPartitioner extends Partitioner&lt;ComboKey2,NullWritable&gt;{
-
-        public int getPartition(ComboKey2 key, NullWritable nullWritable, int numPartitions) {
-            return key.getCid() % numPartitions;
-        }
-    }
-3.创建Mapper
-    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
-
-    import org.apache.hadoop.io.LongWritable;
-    import org.apache.hadoop.io.NullWritable;
-    import org.apache.hadoop.io.Text;
-    import org.apache.hadoop.mapreduce.InputSplit;
-    import org.apache.hadoop.mapreduce.Mapper;
-    import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-
-    import java.io.IOException;
-
-    /**
-     * mapper
-     */
-    public class ReduceJoinMapper extends Mapper&lt;LongWritable,Text,ComboKey2,NullWritable&gt; {
-
-        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-            //
-            String line = value.toString() ;
-
-            //判断是customer还是order
-            FileSplit split = (FileSplit)context.getInputSplit();
-            String path = split.getPath().toString();
-            //客户信息
-            ComboKey2 key2 = new ComboKey2();
-            if(path.contains(&quot;customers&quot;)){
-                String cid = line.substring(0,line.indexOf(&quot;,&quot;));
-                String custInfo = line ;
-                key2.setType(0);
-                key2.setCid(Integer.parseInt(cid));
-                key2.setCustomerInfo(custInfo);
-            }
-            //order info
-            else{
-                String cid = line.substring(line.lastIndexOf(&quot;,&quot;) + 1);
-                String oid = line.substring(0, line.indexOf(&quot;,&quot;));
-                String oinfo = line.substring(0, line.lastIndexOf(&quot;,&quot;));
-                key2.setType(1);
-                key2.setCid(Integer.parseInt(cid));
-                key2.setOid(Integer.parseInt(oid));
-                key2.setOrderInfo(oinfo);
-            }
-            context.write(key2,NullWritable.get());
-        }
-    }
-
-4.创建Reducer
-    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
-
-    import org.apache.hadoop.io.NullWritable;
-    import org.apache.hadoop.io.Text;
-    import org.apache.hadoop.mapreduce.Reducer;
-
-    import java.io.IOException;
-    import java.util.Iterator;
-
-    /**
-     * ReduceJoinReducer,reducer端连接实现。
-     */
-    public class ReduceJoinReducer extends Reducer&lt;ComboKey2,NullWritable,Text,NullWritable&gt; {
-
-        protected void reduce(ComboKey2 key, Iterable&lt;NullWritable&gt; values, Context context) throws IOException, InterruptedException {
-            Iterator&lt;NullWritable&gt; it = values.iterator();
-            it.next();
-            int type = key.getType();
-            int cid = key.getCid() ;
-            String cinfo = key.getCustomerInfo() ;
-            while(it.hasNext()){
-                it.next();
-                String oinfo = key.getOrderInfo();
-                context.write(new Text(cinfo + &quot;,&quot; + oinfo),NullWritable.get());
-            }
-        }
-    }
-
-5.创建排序对比器
-    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
-
-    import com.it18zhang.hdfs.maxtemp.allsort.secondarysort.ComboKey;
-    import org.apache.hadoop.io.WritableComparable;
-    import org.apache.hadoop.io.WritableComparator;
-
-    /**
-     * 组合Key排序对比器
-     */
-    public class ComboKey2Comparator extends WritableComparator {
-        protected ComboKey2Comparator() {
-            super(ComboKey2.class, true);
-        }
-
-        public int compare(WritableComparable a, WritableComparable b) {
-            ComboKey2 k1 = (ComboKey2) a;
-            ComboKey2 k2 = (ComboKey2) b;
-            return k1.compareTo(k2);
-        }
-    }
-
-6.分组对比器
-    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
-
-    import com.it18zhang.hdfs.maxtemp.allsort.secondarysort.ComboKey;
-    import org.apache.hadoop.io.WritableComparable;
-    import org.apache.hadoop.io.WritableComparator;
-
-    /**
-     * CID分组对比器
-     */
-    public class CIDGroupComparator extends WritableComparator{
-
-        protected CIDGroupComparator() {
-            super(ComboKey2.class, true);
-        }
-
-        public int compare(WritableComparable a, WritableComparable b) {
-            ComboKey2 k1 = (ComboKey2) a;
-            ComboKey2 k2 = (ComboKey2) b;
-            return k1.getCid() - k2.getCid();
-        }
-    }
-
-7.App
-    package com.it18zhang.hdfs.mr.mapjoin.reducejoin;
-
-    import com.it18zhang.hdfs.maxtemp.allsort.secondarysort.*;
-    import org.apache.hadoop.conf.Configuration;
-    import org.apache.hadoop.fs.Path;
-    import org.apache.hadoop.io.IntWritable;
-    import org.apache.hadoop.io.NullWritable;
-    import org.apache.hadoop.io.Text;
-    import org.apache.hadoop.mapreduce.Job;
-    import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-    import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-    import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-
-    /**
-     *
-     */
-    public class ReduceJoinApp {
-        public static void main(String[] args) throws Exception {
-
-            Configuration conf = new Configuration();
-            conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
-
-            Job job = Job.getInstance(conf);
-
-            //设置job的各种属性
-            job.setJobName(&quot;ReduceJoinApp&quot;);                        //作业名称
-            job.setJarByClass(ReduceJoinApp.class);                 //搜索类
-
-            //添加输入路径
-            FileInputFormat.addInputPath(job,new Path(&quot;D:\\mr\\reducejoin&quot;));
-            //设置输出路径
-            FileOutputFormat.setOutputPath(job,new Path(&quot;D:\\mr\\reducejoin\\out&quot;));
-
-            job.setMapperClass(ReduceJoinMapper.class);             //mapper类
-            job.setReducerClass(ReduceJoinReducer.class);           //reducer类
-
-            //设置Map输出类型
-            job.setMapOutputKeyClass(ComboKey2.class);            //
-            job.setMapOutputValueClass(NullWritable.class);      //
-
-            //设置ReduceOutput类型
-            job.setOutputKeyClass(Text.class);
-            job.setOutputValueClass(NullWritable.class);         //
-
-            //设置分区类
-            job.setPartitionerClass(CIDPartitioner.class);
-            //设置分组对比器
-            job.setGroupingComparatorClass(CIDGroupComparator.class);
-            //设置排序对比器
-            job.setSortComparatorClass(ComboKey2Comparator.class);
-            job.setNumReduceTasks(2);                           //reduce个数
-            job.waitForCompletion(true);
-        }
-    }
-</code></pre><h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>在hadoop处理结构化数据的数据仓库。
-不是:    关系数据库
-        不是OLTP
-        实时查询和行级更新。
-</code></pre><h2 id="hive特点"><a href="#hive特点" class="headerlink" title="hive特点"></a>hive特点</h2><pre><code>hive存储数据结构(schema)在数据库中,处理的数据进入hdfs.
-OLAP
-HQL / HiveQL
-</code></pre><h2 id="hive安装"><a href="#hive安装" class="headerlink" title="hive安装"></a>hive安装</h2><pre><code>1.下载hive2.1-tar.gz
-2.tar开
-    $&gt;tar -xzvf hive-2.1.0.tar.gz -C /soft    //tar开
-    $&gt;cd /soft/hive-2.1.0                    //
-    $&gt;ln -s hive-2.1.0 hive                    //符号连接
-
-3.配置环境变量
-    [/etc/profile]
-    HIVE_HOME=/soft/hive
-    PATH=...:$HIVE_HOME/bin
-
-4.验证hive安装成功
-    $&gt;hive --v
-
-5.配置hive,使用win7的mysql存放hive的元数据.
-    a)复制mysql驱动程序到hive的lib目录下。
-        ...
-    b)配置hive-site.xml
-        复制hive-default.xml.template为hive-site.xml
-        修改连接信息为mysql链接地址，将${system:...字样替换成具体路径。
-        [hive/conf/hive-site.xml]
-        &lt;property&gt;
-            &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;
-            &lt;value&gt;root&lt;/value&gt;
-            &lt;description&gt;password to use against metastore database&lt;/description&gt;
-        &lt;/property&gt;
-        &lt;property&gt;
-            &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;
-            &lt;value&gt;root&lt;/value&gt;
-            &lt;description&gt;Username to use against metastore database&lt;/description&gt;
-        &lt;/property&gt;
-        &lt;property&gt;
-            &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;
-            &lt;value&gt;jdbc:mysql://192.168.231.1:3306/hive2&lt;/value&gt;
-        &lt;/property&gt;
-        &lt;property&gt;
-            &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;
-            &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;
-            &lt;description&gt;Driver class name for a JDBC metastore&lt;/description&gt;
-        &lt;/property&gt;
-
-    6)在msyql中创建存放hive信息的数据库
-        mysql&gt;create database hive2 ;
-
-    6)初始化hive的元数据(表结构)到mysql中。
-        $&gt;cd /soft/hive/bin
-        $&gt;schematool -dbType mysql -initSchema
-</code></pre><h2 id="hive命令行操作"><a href="#hive命令行操作" class="headerlink" title="hive命令行操作"></a>hive命令行操作</h2><pre><code>1.创建hive的数据库
-
-    $hive&gt;hive --version                //
-    $hive&gt;hive --help                    //
-
-    $hive&gt;create database mydb2 ;                //
-    $hive&gt;show databases ;
-    $hive&gt;use mydb2 ;
-    $hive&gt;create table mydb2.t(id int,name string,age int);
-    $hive&gt;drop table t ;
-    $hive&gt;drop table mydb2.t ;
-    $hive&gt;select * from mydb2.t ;        //查看指定库的表
-    $hive&gt;exit ;                        //退出
-
-    $&gt;hive                                //hive --service cli
-    $&gt;hive                                //hive --service cli
-</code></pre><h2 id="通过远程jdbc方式连接到hive数据仓库"><a href="#通过远程jdbc方式连接到hive数据仓库" class="headerlink" title="通过远程jdbc方式连接到hive数据仓库"></a>通过远程jdbc方式连接到hive数据仓库</h2><pre><code>1.启动hiveserver2服务器，监听端口10000
-    $&gt;hive --service hiveserver2 &amp;
-
-2.通过beeline命令行连接到hiveserver2
-    $&gt;beeline                                            //进入beeline命令行(于hive --service beeline)
-    $beeline&gt;!help                                        //查看帮助
-    $beeline&gt;!quit                                        //退出
-    $beeline&gt;!connect jdbc:hive2://localhost:10000/mydb2//连接到hibve数据
-    $beeline&gt;show databases ;
-    $beeline&gt;use mydb2 ;
-    $beeline&gt;show tables;                                //显式表
-</code></pre><h2 id="使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库"><a href="#使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库" class="headerlink" title="使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库"></a>使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库</h2><pre><code>1.创建java模块
-2.引入maven
-3.添加hive-jdbc依赖
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-        &lt;artifactId&gt;HiveDemo&lt;/artifactId&gt;
-        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.apache.hive&lt;/groupId&gt;
-                &lt;artifactId&gt;hive-jdbc&lt;/artifactId&gt;
-                &lt;version&gt;2.1.0&lt;/version&gt;
-            &lt;/dependency&gt;
-        &lt;/dependencies&gt;
-    &lt;/project&gt;
-
-4.App
-    package com.it18zhang.hivedemo;
-
-    import java.sql.Connection;
-    import java.sql.DriverManager;
-    import java.sql.ResultSet;
-    import java.sql.Statement;
-
-    /**
-     * 使用jdbc方式连接到hive数据仓库，数据仓库需要开启hiveserver2服务。
-     */
-    public class App {
-        public static void main(String[] args) throws  Exception {
-            Class.forName(&quot;org.apache.hive.jdbc.HiveDriver&quot;);
-            Connection conn = DriverManager.getConnection(&quot;jdbc:hive2://192.168.231.201:10000/mydb2&quot;);
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(&quot;select id , name ,age from t&quot;);
-            while(rs.next()){
-                System.out.println(rs.getInt(1) + &quot;,&quot; + rs.getString(2)) ;
-            }
-            rs.close();
-            st.close();
-            conn.close();
-        }
-    }
-</code></pre><h2 id="hive中表"><a href="#hive中表" class="headerlink" title="hive中表"></a>hive中表</h2><pre><code>1.managed table
-    托管表。
-    删除表时，数据也删除了。
-
-2.external table
-    外部表。
-    删除表时，数据不删。
-</code></pre><h2 id="hive命令"><a href="#hive命令" class="headerlink" title="hive命令"></a>hive命令</h2><pre><code>//创建表,external 外部表
-$hive&gt;CREATE external TABLE IF NOT EXISTS t2(id int,name string,age int)
-COMMENT &apos;xx&apos; ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; STORED AS TEXTFILE ; 
-
-//查看表数据
-$hive&gt;desc t2 ;
-$hive&gt;desc formatted t2 ;
-
-//加载数据到hive表
-$hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t2 ;    //local上传文件
-$hive&gt;load data inpath &apos;/user/centos/customers.txt&apos; [overwrite] into table t2 ;    //移动文件
-
-//复制表
-mysql&gt;create table tt as select * from users ;        //携带数据和表结构
-mysql&gt;create table tt like users ;            //不带数据，只有表结构
-
-hive&gt;create table tt as select * from users ;    
-hive&gt;create table tt like users ;    
-
-
-//count()查询要转成mr
-$hive&gt;select count(*) from t2 ;
-$hive&gt;select id,name from t2 ;
-
-
-//
-$hive&gt;select * from t2 order by id desc ;                //MR
-
-//启用/禁用表
-$hive&gt;ALTER TABLE t2 ENABLE NO_DROP;    //不允许删除
-$hive&gt;ALTER TABLE t2 DISABLE NO_DROP;    //允许删除
-
-
-//分区表,优化手段之一，从目录的层面控制搜索数据的范围。
-//创建分区表.
-$hive&gt;CREATE TABLE t3(id int,name string,age int) PARTITIONED BY (Year INT, Month INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-
-//显式表的分区信息
-$hive&gt;SHOW PARTITIONS t3;
-
-//添加分区,创建目录
-$hive&gt;alter table t3 add partition (year=2014, month=12);
-
-//删除分区
-hive&gt;ALTER TABLE employee_partitioned DROP IF EXISTS PARTITION (year=2014, month=11);
-
-//分区结构
-hive&gt;/user/hive/warehouse/mydb2.db/t3/year=2014/month=11
-hive&gt;/user/hive/warehouse/mydb2.db/t3/year=2014/month=12
-
-
-//加载数据到分区表
-hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t3 partition(year=2014,month=11);
-
-//创建桶表
-$hive&gt;CREATE TABLE t4(id int,name string,age int) CLUSTERED BY (id) INTO 3 BUCKETS ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-
-//加载数据不会进行分桶操作
-$hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t4 ;
-
-//查询t3表数据插入到t4中。
-$hive&gt;insert into t4 select id,name,age from t3 ;
-
-//桶表的数量如何设置?
-//评估数据量，保证每个桶的数据量block的2倍大小。
-
-
-//连接查询
-$hive&gt;CREATE TABLE customers(id int,name string,age int) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-$hive&gt;CREATE TABLE orders(id int,orderno string,price float,cid int) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-
-//加载数据到表
-//内连接查询
-hive&gt;select a.*,b.* from customers a , orders b where a.id = b.cid ;
-//左外
-hive&gt;select a.*,b.* from customers a left outer join orders b on a.id = b.cid ;
-hive&gt;select a.*,b.* from customers a right outer join orders b on a.id = b.cid ;
-hive&gt;select a.*,b.* from customers a full outer join orders b on a.id = b.cid ;
-
-//explode,炸裂,表生成函数。
-//使用hive实现单词统计
-//1.建表
-$hive&gt;CREATE TABLE doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -4278,7 +4215,7 @@ $hive&gt;CREATE TABLE doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
