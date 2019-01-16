@@ -328,6 +328,1451 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/24/Hadoop安装配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/24/Hadoop安装配置/" itemprop="url">Hadoop安装配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-24T16:10:47+08:00">
+                2018-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">-Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/20/Linux基础之Yum命令/" itemprop="url">Linux基础之Yum命令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-20T18:17:43+08:00">
+                2018-09-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="软件源"><a href="#软件源" class="headerlink" title="软件源"></a>软件源</h2><pre><code>Repository        //仓库.
+URL                //http:// 
+
+.d                //directory目录
+xxxd            //daemon
+</code></pre><h2 id="查看仓库文件"><a href="#查看仓库文件" class="headerlink" title="查看仓库文件"></a>查看仓库文件</h2><pre><code>/etc/yum.repos.d/xxx.repo
+</code></pre><h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>传输url上的数据的。</p>
+<p>[下载文件到指定目录]</p>
+<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+</code></pre><h2 id="更换centos的软件源"><a href="#更换centos的软件源" class="headerlink" title="更换centos的软件源"></a>更换centos的软件源</h2><p>1.下载源仓库文件,xxx.repo</p>
+<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+</code></pre><p>2.将repo文件保存到/etc/yum.repos.d/目录中。</p>
+<h2 id="屏蔽软件仓库"><a href="#屏蔽软件仓库" class="headerlink" title="屏蔽软件仓库"></a>屏蔽软件仓库</h2><p>1.将/etc/yum.repos.d/xxx.repo文件删除或者更换扩展名即可。</p>
+<h2 id="修改centos能够使用sudo命令"><a href="#修改centos能够使用sudo命令" class="headerlink" title="修改centos能够使用sudo命令"></a>修改centos能够使用sudo命令</h2><pre><code>[/etc/sudoers]
+$&gt;su root
+$&gt;nano /etc/sudoers
+    ...
+    centos ALL
+</code></pre><h2 id="使用yum进行软件包安装卸载"><a href="#使用yum进行软件包安装卸载" class="headerlink" title="使用yum进行软件包安装卸载"></a>使用yum进行软件包安装卸载</h2><pre><code>$&gt;yum list                            //列出所有软件包
+$&gt;yum list installed                //列出已经安装的软件包
+$&gt;yum list installed | grep nano    //列出已经安装的软件包
+$&gt;yum search nano                    //在yum的软件源中搜索软件 
+$&gt;yum remove nano                    //卸载软件
+$&gt;yum -y install nano                //直接安装，不需要yes确认.
+$&gt;yum list installed | grep nano    //查看是否安装了Nano
+
+$&gt;mkdir /home/centos/rpms
+
+$echo 以下命令只下载软件，不安装软件
+$&gt;sudo yum install --downloadonly                //只下载
+              --downloaddir=/home/centos/rpms    //指定下载目录
+              wget
+
+//下载已经安装的软件
+$&gt;sudo yum reinstall --downloadonly    
+                     --downloaddir=/home/centos/rpms
+                     wget
+
+$&gt;sudo yum localinstall xxx.rpm    //从本地rpm文件直接安装软件
+
+
+
+$&gt;su root
+$&gt;yum search ifconfig
+$&gt;yum -y install net-tools        //安装网络工具
+
+
+#==========修改网络地址======================    //需要重启network服务
+$&gt;sudo nano /etc/sysconfig/network-scripts/ifcfg-eth1677736
+    [/etc/sysconfig/network-scripts/ifcfg-eth1677736]
+    ...
+    IPADDR=192.168.231.201
+    GATEWAY=192.168.231.2
+    DNS=192.168.231.2
+
+$&gt;service network restart                        //重启网络服务。
+
+$&gt;sudo nano /etc/resolv.conf                    //修改该文件不需要重启network服务
+    [/etc/resolv.conf]
+    nameserver 192.168.231.2
+</code></pre><h2 id="在没有nano时，使用自带的vi文本编辑器"><a href="#在没有nano时，使用自带的vi文本编辑器" class="headerlink" title="在没有nano时，使用自带的vi文本编辑器"></a>在没有nano时，使用自带的vi文本编辑器</h2><pre><code>1.vi xx.txt
+</code></pre><p>2.模式切换</p>
+<pre><code>esc                //切换到命令模式,退出编辑模式
+                //:q!  不保存退出
+                //:wq  保存退出
+                //x        删除一个字符
+                //dd    删除一行
+
+insert            //切换到编辑模式,退出命令模式
+                //del backspace
+</code></pre><h2 id="Which命令"><a href="#Which命令" class="headerlink" title="Which命令"></a>Which命令</h2><p>which命令用于查找并显示给定命令的绝对路径，环境变量PATH中保存了查找命令时需要遍历的目录。</p>
+<p>which指令会在环境变量$PATH设置的目录里查找符合条件的文件。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre><code>which(选项)(参数)
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/19/Linux基础第之循环命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/19/Linux基础第之循环命令/" itemprop="url">Linux基础第之循环命令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-19T18:03:21+08:00">
+                2018-09-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="访问文件-夹-物理位置"><a href="#访问文件-夹-物理位置" class="headerlink" title="访问文件(夹)物理位置"></a>访问文件(夹)物理位置</h2><p>pwd命令是显示当前的逻辑位置。</p>
+<p>物理位置是针对符号连接也是针对软连接的。</p>
+<p>//进入/t的物理位置</p>
+<pre><code>$&gt;cd -P /t    
+</code></pre><p>//显式当前目录的物理位置</p>
+<pre><code>$&gt;pwd -P            
+</code></pre><p><img src="https://i.imgur.com/uCWAgEF.png" alt=""></p>
+<h2 id="访问环境变量"><a href="#访问环境变量" class="headerlink" title="访问环境变量"></a>访问环境变量</h2><pre><code>echo ${PATH}                //ok
+echo $PATH                    //ok
+echo &quot;$PATH&quot;                //ok
+echo &apos;$PATH&apos;                //&apos;&apos;原样输出这个不行，显示“PATH”
+</code></pre><h2 id="export定义环境变量-只在session中有效-当前会话"><a href="#export定义环境变量-只在session中有效-当前会话" class="headerlink" title="export定义环境变量,只在session中有效 (当前会话)"></a>export定义环境变量,只在session中有效 (当前会话)</h2><pre><code>$&gt;export name=${PATH}:tom
+</code></pre><p>设置name为${Var1}的值，Var1没有设置为${Var2}的值。</p>
+<pre><code>$&gt;export name=${Var1:-${Var2}}    
+</code></pre><p><img src="https://i.imgur.com/l1hKqkn.png" alt=""></p>
+<h2 id="命令执行过程"><a href="#命令执行过程" class="headerlink" title="命令执行过程"></a>命令执行过程</h2><pre><code>$?        //命令的返回值存储变量,0:成功 1:失败。
+$#        //参数个数
+$1        //第几个参数
+$0        //当前脚本(命令)名称
+$@        //取出所有参数
+shift    //参数左移
+${a/b/c}    //
+</code></pre><p><img src="https://i.imgur.com/jhsCOo7.png" alt=""></p>
+<p><img src="https://i.imgur.com/v4zjND7.png" alt=""></p>
+<p><img src="https://i.imgur.com/qkZ4UhX.png" alt=""></p>
+<p>下面一个例子</p>
+<p><img src="https://i.imgur.com/i9F9fEr.png" alt=""></p>
+<p><img src="https://i.imgur.com/6u7sNQx.png" alt=""></p>
+<p>向左移位解释：</p>
+<p><img src="https://i.imgur.com/erlgoWB.png" alt=""></p>
+<h2 id="if-命令讲解"><a href="#if-命令讲解" class="headerlink" title="if 命令讲解"></a>if 命令讲解</h2><p>语法:</p>
+<p>中括号是可以选择的：</p>
+<pre><code>if COMMANDS; then COMMANDS; [ elif COMMANDS; then COMMANDS; ]... [ else COMMANDS; ] fi
+
+
+if [ $# -lt 3 ]; then xx ; fi
+
+3,5
+</code></pre><p><img src="https://i.imgur.com/oUNME5o.png" alt=""></p>
+<p><img src="https://i.imgur.com/zj0NX7K.png" alt=""></p>
+<p><img src="https://i.imgur.com/eRyv4Iw.png" alt=""></p>
+<h2 id="使用for循环输出1-100个数"><a href="#使用for循环输出1-100个数" class="headerlink" title="使用for循环输出1 - 100个数"></a>使用for循环输出1 - 100个数</h2><p>看一下for的帮助文档，注意从冒号之后是开始的：</p>
+<p><img src="https://i.imgur.com/drXeDUE.png" alt=""></p>
+<pre><code>for NAME [in WORDS ... ] ; do COMMANDS; done
+for x in a b c d ; do echo $x ; done ;
+</code></pre><p><img src="https://i.imgur.com/wrIcUZI.png" alt=""></p>
+<p>通过for循环打印一个三角形：<br>首先看一下<br><img src="https://i.imgur.com/2ayzuZl.png" alt=""></p>
+<p>然后这段是命令：</p>
+<p><img src="https://i.imgur.com/IKLm90v.png" alt=""></p>
+<h2 id="while语法"><a href="#while语法" class="headerlink" title="while语法"></a>while语法</h2><pre><code>for: for NAME [in WORDS ... ] ; do COMMANDS; done
+
+for ((: for (( exp1; exp2; exp3 )); do COMMANDS; done
+</code></pre><p><img src="https://i.imgur.com/qewzeuC.png" alt=""></p>
+<p>一个例子：</p>
+<pre><code>#!/bin/bash
+((i=0))
+while ((i&lt;100)) ; do
+    echo $i;
+    i=$((i+1))
+done
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/19/Linux基础之hostname/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/19/Linux基础之hostname/" itemprop="url">Linux基础之hostname</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-19T15:46:12+08:00">
+                2018-09-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="命令嵌套"><a href="#命令嵌套" class="headerlink" title="命令嵌套"></a>命令嵌套</h2><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用<code></code></h3><pre><code>$&gt;echo `cat b.txt`    //命令解析,无法嵌套
+$&gt;$(... $())        //支持命令的嵌套
+</code></pre><p><img src="https://i.imgur.com/wlI357k.png" alt=""></p>
+<h2 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h2><p>0.用户和组之间，一个用户可以属于多个组。</p>
+<pre><code>但是有一个首要组。
+</code></pre><p>1.adduser,等同于useradd</p>
+<p>符号链接。</p>
+<pre><code>/usr/sbin/adduser --&gt; /usr/sbin/useradd.
+</code></pre><p>2.useradd</p>
+<p>输入新密码.</p>
+<p>重复输入</p>
+<pre><code>$&gt;su root
+$&gt;useradd -m centos2
+$&gt;su root
+$&gt;passwd centos2
+
+
+-m, --create-home             create the user&apos;s home directory
+-p, --password PASSWORD       encrypted password of the new account
+</code></pre><p>3.使用方法</p>
+<pre><code>$&gt;su root
+$&gt;userdel -r centos2        //用户所在组目录也会被删除.在删除用户时候要用exit退出要删除的用户,删除的时候可能会exit好多次，因为会来回su。
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之进程查看/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/18/Linux基础之进程查看/" itemprop="url">Linux基础之进程查看</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T20:10:44+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="job"><a href="#job" class="headerlink" title="job"></a>job</h2><hr>
+<p>放到后台运行的进程.<br>1.将程序放到后台运行,以&amp;结尾.</p>
+<pre><code>$&gt;nano b.txt &amp;
+</code></pre><p>2.查看后台运行的jobs数</p>
+<pre><code>$&gt;jobs
+</code></pre><p>3.切换后台作业到前台来.</p>
+<pre><code>$&gt;fg %n                //n是job编号.
+</code></pre><p>4.前台正在的进程，放到后台。</p>
+<pre><code>ctrl + z
+</code></pre><p>5.让后作业运行</p>
+<pre><code>$&gt;bg %1        //
+</code></pre><p>6.杀死作业</p>
+<pre><code>$&gt;kill %1    //
+</code></pre><hr>
+<pre><code>man + 命令    ：查看该命令详细帮助
+</code></pre><hr>
+<h2 id="进程查看-prcess-show"><a href="#进程查看-prcess-show" class="headerlink" title="进程查看,prcess show"></a>进程查看,prcess show</h2><hr>
+<pre><code>$&gt;ps -Af |grep gnome        //-A:所有进程  -f:所有列格式.
+
+$&gt;top                        //动态显示进程信息。含有cpu、内存的使用情况.
+                            //q,按照q退出。
+</code></pre><h2 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h2><pre><code>剪切显示文件的每一行。
+$&gt;cut -c 1-5 a.txt                    //从第一个字符开始,下标从1开始。
+$&gt;ps -Af | cut -c 45-80 | more        //吧PS里面获得的内容剪切显示，显示没一行的45-80，翻页查看
+</code></pre><h2 id="查看帮助"><a href="#查看帮助" class="headerlink" title="查看帮助"></a>查看帮助</h2><pre><code>$&gt;help            //查看os内置的命令
+
+$&gt;man ifcon fig    //查看特定命令
+
+$&gt;ifconfig --help
+$&gt;ifconfig -h
+
+$&gt;info ifconfig    //
+</code></pre><h2 id="磁盘分区使用"><a href="#磁盘分区使用" class="headerlink" title="磁盘分区使用"></a>磁盘分区使用</h2><pre><code>$&gt;fdisk -l /dev/sda
+</code></pre><p>里面的中括号是可选的，尖括号是必须要写的</p>
+<p><img src="https://i.imgur.com/kxOQiFw.png" alt=""></p>
+<p>里面sad是磁盘，sda1是分区。sd1，sd2，sd3是磁盘的三个分区。</p>
+<p><img src="https://i.imgur.com/OuJzwf1.png" alt=""></p>
+<p><img src="https://i.imgur.com/dfgfkKL.png" alt=""></p>
+<h2 id="查看磁盘使用情况-disk-free"><a href="#查看磁盘使用情况-disk-free" class="headerlink" title="查看磁盘使用情况(disk free)"></a>查看磁盘使用情况(disk free)</h2><pre><code>$&gt;df -ah /home/centos        //查看
+</code></pre><p><img src="https://i.imgur.com/JcXk8Fl.png" alt=""></p>
+<p><img src="https://i.imgur.com/KuqoyN5.png" alt=""></p>
+<p><img src="https://i.imgur.com/aibzJWn.png" alt=""></p>
+<h2 id="dirname"><a href="#dirname" class="headerlink" title="dirname"></a>dirname</h2><p>取出指定地址的上级目录.</p>
+<pre><code>$&gt;dirname /a/b/c/d
+$&gt;/a/b/c
+</code></pre><h2 id="basename"><a href="#basename" class="headerlink" title="basename"></a>basename</h2><p>取出当前地址的上级目录.</p>
+<pre><code>$&gt;dirname /a/b/c/d
+$&gt;d
+</code></pre><h2 id="主机名"><a href="#主机名" class="headerlink" title="主机名"></a>主机名</h2><pre><code>$&gt;hostname        //显式主机名
+
+$&gt;修改主机名(sudo)
+    [/etc/hostname]
+    s200
+</code></pre><h2 id="关机重启命令"><a href="#关机重启命令" class="headerlink" title="关机重启命令"></a>关机重启命令</h2><pre><code>$&gt;reboot        //重启
+$&gt;halt            //停止,黑屏
+                //halt -p  === poweroff
+                //halt -r  === reboot
+
+$&gt;poweroff        //关机
+$&gt;shutdown        //shutdown now,    
+</code></pre><h2 id="命令嵌套"><a href="#命令嵌套" class="headerlink" title="命令嵌套"></a>命令嵌套</h2><p>1.使用<code></code></p>
+<pre><code>$&gt;echo `cat b.txt`    //命令解析,无法嵌套
+$&gt;$(... $())        //支持命令的嵌套
+</code></pre><p>2.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之符号连接/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/18/Linux基础之符号连接/" itemprop="url">Linux基础之符号连接</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T19:04:09+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><hr>
+<pre><code>r        //100 = 4
+        //文件  :读取内容，
+        //文件夹:是查看文件夹的内容
+w        //文件  :写数据到文件
+        //文件夹:增删文件.
+        //10 = 2
+
+x        //文件  : 运行程序
+        //文件夹: 进入该目录.
+        // 1 = 1
+</code></pre><h2 id="权限控制涉及范围"><a href="#权限控制涉及范围" class="headerlink" title="权限控制涉及范围"></a>权限控制涉及范围</h2><hr>
+<pre><code>U:user    ,rwx r-x ---
+G:group ,
+O:other , 
+</code></pre><h2 id="修改文件的owner-change-owner"><a href="#修改文件的owner-change-owner" class="headerlink" title="修改文件的owner,change owner"></a>修改文件的owner,change owner</h2><hr>
+<pre><code>chown -R root:root a.txt        //递归修改owner
+chmod -R 777 xxx                //递归修改权限.
+</code></pre><p>-R :递归显示</p>
+<p>-l :列表显示</p>
+<p>通过递归改变整个文件夹里面的文件的权限和所有者和所在组</p>
+<pre><code>chown -R root:root tmp
+</code></pre><h2 id="Linux文件夹"><a href="#Linux文件夹" class="headerlink" title="Linux文件夹"></a>Linux文件夹</h2><hr>
+<pre><code>/                //根目录
+
+/bin            //祖先
+/sbin            //祖先
+/usr/bin        //厂商
+/usr/sbin        //厂商
+/usr/local/bin    //用户
+/usr/local/sbin    //用户
+
+/etc            //配置目录
+/mnt            //挂载目录
+/boot            //引导目录
+/dev            //设备目录
+/lib[64]        //库目录
+
+
+-:文件
+d:目录
+l:link 等价于windows快捷方式
+b:block,块设备
+c:charactor,字符文件
+</code></pre><h2 id="创建连接文件"><a href="#创建连接文件" class="headerlink" title="创建连接文件"></a>创建连接文件</h2><hr>
+<h3 id="1-硬链接"><a href="#1-硬链接" class="headerlink" title="1.硬链接"></a>1.硬链接</h3><p>两个完全相同文件，类似于实时备份。两个文件之间完全同步。删除时，只删一个。</p>
+<p>目录不能使用硬链接。</p>
+<pre><code>ln a.txt alink            
+</code></pre><p>//a.txt:目标文件, alink:连接名称.</p>
+<pre><code>ln b.txt b_lnk
+</code></pre><p>//硬链接，修改连接文件，源文件也改变，但是删除连接文件源文件不被删除。</p>
+<p>硬链接用的很少，大多使用符号连接</p>
+<pre><code>mv b_link b.txt
+</code></pre><p>同一目录下改名字就用移动命令即可</p>
+<h3 id="2-符号连接-软连接"><a href="#2-符号连接-软连接" class="headerlink" title="2.符号连接-软连接"></a>2.符号连接-软连接</h3><p>相当于快捷方式.</p>
+<p>可以对文件，也可以对文件夹创建符号连接。</p>
+<p>符号连接存在的时候，可以删除目标文件。</p>
+<pre><code>$&gt;ln -s a.txt alink        
+</code></pre><p>//a.txt: 目标文件  alink:连接名称(symbolic)</p>
+<p><img src="https://i.imgur.com/PBw1m7U.png" alt=""></p>
+<p>blk存放的是路径的字节数大小。开始的时候只想本目录下的b.txt所以是5个字节，后来只想一个绝对路径就变成了28个字符。例子如下图所示</p>
+<p><img src="https://i.imgur.com/Mfril9n.png" alt=""></p>
+<p>删除掉了链接指向的文件，就会变成红色。删除后在加上就回复正常变成了浅蓝色。</p>
+<p><img src="https://i.imgur.com/OpwzbVW.png" alt=""></p>
+<hr>
+<h2 id="sudo"><a href="#sudo" class="headerlink" title="sudo"></a>sudo</h2><hr>
+<p>临时借用root的权限执行命令,只在当前命令下有效。命令结束后，还是原来用户。</p>
+<h3 id="1-配置当前用户具有sudo的执行权利"><a href="#1-配置当前用户具有sudo的执行权利" class="headerlink" title="1.配置当前用户具有sudo的执行权利"></a>1.配置当前用户具有sudo的执行权利</h3><pre><code>    [/etc/sudoers]
+    ...
+    root ALL=(ALL) ALL
+    centos ALL=(ALL) ALL
+    ...
+$&gt;sudo chown -R centos:centos .
+</code></pre><p>临时切换超级管理员权限</p>
+<pre><code>sudo
+</code></pre><p>切换到另外一个用户</p>
+<pre><code>su
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之虚拟机增强工具的安装-文本模式的安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/18/Linux基础之虚拟机增强工具的安装-文本模式的安装/" itemprop="url">Linux基础之虚拟机增强工具的安装-文本模式的安装</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T16:49:44+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="虚拟机增强工具"><a href="#虚拟机增强工具" class="headerlink" title="虚拟机增强工具"></a>虚拟机增强工具</h2><hr>
+<p>1.原理</p>
+<pre><code>插入iso(C:\myprograms\vmwar11.0.4-x86_64\linux.iso)文件到光盘中。
+</code></pre><p>2.vmware虚拟机菜单 -&gt; 重新安装vmware-tools</p>
+<p>3.自动会将C:\myprograms\vmwar11.0.4-x86_64\linux.iso镜像文件插入光驱中，并直接打开。</p>
+<p>4.复制VMwareTools-9.9.3-2759765.tar.gz文件到centos的桌面下。</p>
+<p>5.tar开该文件.</p>
+<pre><code>鼠标右键点击桌面的tar.gz文件，选择 extract here.
+</code></pre><p>6.进入桌面的vmware-tools-distrib目录下.</p>
+<pre><code>$&gt;su root
+$&gt;cd /home/centos/Desktop/vmware-tools-distrib
+</code></pre><p>7.执行安装脚本</p>
+<pre><code>$&gt;./vmware-install.pl
+    一路回车。
+    只到遇到Enjoy!!...
+</code></pre><h2 id="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："><a href="#图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：" class="headerlink" title="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："></a>图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：</h2><p><img src="https://i.imgur.com/AYS6NwH.png" alt=""></p>
+<p><img src="https://i.imgur.com/Tqry0O7.png" alt=""></p>
+<p><img src="https://i.imgur.com/BtRDRbm.png" alt=""></p>
+<hr>
+<p>在mini版的centos7下遇到了很多问题。又在大坑系列中也有这一部分。其实这部分遇到了很多问题，除了视频中的问题，按照如下所示可以完美解决：</p>
+<p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。</p>
+<p>然后按照视频上讲解的来安装不上。最后先是</p>
+<p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p>
+<p>这样子，然后</p>
+<p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p>
+<p>之后按照如图所示挂载即可</p>
+<p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p>
+<hr>
+<p>本视频还有一个while循环实现99乘法表的例子（我没细看）：</p>
+<p><img src="https://i.imgur.com/eEbodXt.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/踩过的大坑/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/18/踩过的大坑/" itemprop="url">Linux基础基础—————踩过的大坑</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T15:55:21+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="问题：图形界面浏览器能访问外网，但是ping不通"><a href="#问题：图形界面浏览器能访问外网，但是ping不通" class="headerlink" title="问题：图形界面浏览器能访问外网，但是ping不通"></a>问题：图形界面浏览器能访问外网，但是ping不通</h2><p>很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。</p>
+<p>解决：将网络中心里面改成这样子就行了。<br><img src="https://i.imgur.com/LcqHaRR.png" alt=""></p>
+<p>具体的网站解释：<a href="https://blog.csdn.net/Arnold_lee_yc/article/details/74785995" target="_blank" rel="noopener">https://blog.csdn.net/Arnold_lee_yc/article/details/74785995</a></p>
+<hr>
+<p>不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。<br>所以本教程使用的是7.1也就是1503版本的centos</p>
+<hr>
+<p>切换用户之后出现这种情况：</p>
+<p><img src="https://i.imgur.com/vSqES9b.png" alt=""></p>
+<p>解决办法：是在设置centos用户的权限的时候配置错了。修改回来即可<br>    su root<br>    vi sudoers</p>
+<p>视频里面的人他的ALL写成了小写的l。配置错误</p>
+<p><img src="https://i.imgur.com/hfgjE60.png" alt=""></p>
+<hr>
+<h2 id="安装VMtools工具"><a href="#安装VMtools工具" class="headerlink" title="安装VMtools工具"></a>安装VMtools工具</h2><p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。我的理解是需要将那个文件夹挂载到虚拟机上。才能实现共享，可能和VMware的版本有关。网上说vmware14可以直接挂载不需要设置，这里我使用的是vmware11</p>
+<p>然后按照视频上讲解的来安装不上。最后先是</p>
+<p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p>
+<p>这样子，然后</p>
+<p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p>
+<p>之后按照如图所示挂载即可</p>
+<p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p>
+<hr>
+<h2 id="克隆机器后网卡设置"><a href="#克隆机器后网卡设置" class="headerlink" title="克隆机器后网卡设置"></a>克隆机器后网卡设置</h2><p>克隆机器后会出现设置ifg-eno123142这个文件但是设置之后Ip还是没有修改的问题。实际上是因为克隆机器后ifg-eno123123的网卡名字变成了ifcfg-ens33这个这个名字，所以需要把ifg-eno12312这个网卡改名ifg-ens33然后把里面的name和device两个都改成ens33即可。</p>
+<p>看这张图下面的网卡名字是ens33，在网卡配置中就要在name和device中写ens33</p>
+<p><img src="https://i.imgur.com/Nl7H9O2.png" alt=""></p>
+<p><img src="https://i.imgur.com/2p1OzOd.png" alt=""></p>
+<hr>
+<h2 id="配置无密登陆"><a href="#配置无密登陆" class="headerlink" title="配置无密登陆"></a>配置无密登陆</h2><p>在按照视频生成秘钥和公钥的时候，开始的时候删掉的其他机器的.ssh文件。所以导致传输公钥的时候，传输完了之后仍然需要密码。这是由于其他机器的.ssh文件的权限有问题，因为是删除了之后自己重新建立的。所以默认的权限是不对的。<br>这里的网站讲解的非常详细</p>
+<p>将ssh文件夹配置成700的属性即可。</p>
+<p><a href="https://blog.csdn.net/qq_26442553/article/details/79357498" target="_blank" rel="noopener">https://blog.csdn.net/qq_26442553/article/details/79357498</a></p>
+<hr>
+<h2 id="多次format"><a href="#多次format" class="headerlink" title="多次format"></a>多次format</h2><p> namenode会导致namenode的id和datanode的id有变化，需要重新格式化/tmp文件夹</p>
+<hr>
+<h2 id="在windows上跑mr"><a href="#在windows上跑mr" class="headerlink" title="在windows上跑mr"></a>在windows上跑mr</h2><p>之前视频上没有去说明在windows上配置hadoop，自己去CSDN里面查找才发现下面是CSDN里面原话：</p>
+<pre><code>1.hadoop官网上下载hadoop2.7.2.tar.gz  并且配置成环境变量
+开始之前必须配置本地的hadoop环境
+HADOOP_HOME=H:\source\hadoop\hadoop-2.7.2
+PATH中增加  %HADOOP_HOME%\bin
+配置完成后，通过cmd 执行hadoop 如果能够成功证明环境配置完成。
+2.下载windows-hadoop-bin的压缩包(windows下运行MR 必备的)
+bin2.7.2 包我会提供出来
+bin2.7.2 这个是windows-hadoop-bin 的压缩包，解压完了后用解压的bin包替换成hadoop-2.7.2 里面的bin。
+注意是替换
+3.将解压出来bin目录中的hadoop.dll也放入C:\Windows\System32(最好操作)
+4.1901  这个是天气的测试数据包(后续解压在hadoop MR 的输入文件夹中)
+5.windows运行时中可能出现的错误 
+ No valid local directories in property: mapreduce.cluster.local.dir
+如果出现这个错误，可以在代码中通过这个配置和在本地的hadoop目录下中建立data
+======例如我的 H:\source\hadoop\hadoop-2.7.2\data====
+Job job = new Job();
+Configuration conf = job.getConfiguration();
+conf.set(&quot;mapreduce.cluster.local.dir&quot;,&quot;H:\\source\\hadoop\\hadoop-2.7.2\\data&quot;);
+job=new Job(conf);
+6.Winodws 运行出现
+解决org.apache.hadoop.io.nativeio.NativeIO$Windows.access0(Ljava/lang/String;I)Z
+点击打开链接
+大致流程，去官网下载src源码，将源码中nativeIo.java复制在本地项目中（新建源码中nativeIo.java的全路径,将其放入即可），修改源码中对windows的IO验证 Access方法
+7.如果在集群运行时出现 No valid local directories in property: mapreduce.cluster.local.dir
+查看是否采用的本地的localrunnal，也就是说mapred-site.xml和yarn-site.xml是否被加载.一般是这个原因，因为2.x版本上的defalut-site.xml已经配置该属性
+8.集群提交时采用hadoop和yarn  jar   xxx.jar    XXX  agrs1 agr2 提交。加载的logj配置文件也可以作为参数传入。
+9.提交集群时，如果在mapper或者reduce存在着构建一些引用包的对象，那么提交的xxx.jar必须是被打成依赖包，因为MR执行是将jar包分发其他的节点。所以不能像普通的java进程采用 java -cp x.jar 等方式。
+10.IDEA 打依赖包是，不能通过Artifrt右边的put into 左边的项目。必须在选择时，采用jar-with-dependents的方式
+两种的区别在于，第一种仅仅是将jar放入压缩的jar文件中。第二种是，采用依赖包的方式，才能识别具体的引用类。
+11.本地还需要配置log4j的配置文件，查看具体的日志12. hadoop-2.7.2的tag.gz 包
+13.windows-hadoop-bin 的包
+</code></pre><p>具体的hadoop2.7.2tat.gz和windows下编译的bin包已经放到小号的百度网盘里面了。并且在chrome大数据技术2书签里面也有。</p>
+<hr>
+<h1 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h1><p>在IDEA里面有的时候会出现倒错包的情况，那么怎么自己导入又有提示呢?</p>
+<p><img src="https://i.imgur.com/KSFu5qm.png" alt=""></p>
+<p>在new Text()里面按alt=enter 里面有自动导包的提示。</p>
+<hr>
+<h1 id="关于Integer-parseInt"><a href="#关于Integer-parseInt" class="headerlink" title="关于Integer,parseInt"></a>关于Integer,parseInt</h1><p>例题：</p>
+<p>设有下面两个赋值语句：<br>a = Integer.parseInt(“123”);<br>b = Integer.valueOf(“123”).intValue();<br>下述说法正确的是（  d  ）。<br>A、a是整数类型变量，b是整数类对象。<br>B、a是整数类对象，b是整数类型变量。<br>C、a和b都是整数类对象并且值相等。<br>D、a和b都是整数类型变量并且值相等。</p>
+<p>详细解析：<br>parseInt(String s )方法是类Integer的静态方法，它的作用就是将形参 s 转化为整数，比如：<br>Interger.parseInt(“1”)=1;<br>Integer.parseInt(“20”)=20;<br>Integer.parseInt(“324”)=324;<br>当然，s 表示的整数必须合法，不然是会抛异常的。<br>valueOf(String s )也是Integer类的静态方法，它的作用是将形参 s 转化为Integer对象，<br>什么是Integer对象，Integer就是基本数据类型int型包装类，就是将int包装成一个类，这样在很多场合下是必须的。如果理解不了，你就认为int是Integer的mini版，好用了很多，但也丢失了一些功能，好了，看代码：<br>Interger.valueOf(“123”)=Integer(123)<br>这时候Integer（123）就是整数123的对象表示形式，它再调用intValue()方法，就是将123的对象表示形式转化为基本数据123<br>所以，选择D</p>
+<hr>
+<p>在安装hive的时候出现了一个权限拒绝的错误，一切都是按照视频上来的为什么会出错：<br>因为视频里面的有一些日志文件夹的创建，所在的按个父目录所属权是root的不让你创建，所以说要把他的所有者改掉。改成centos即可。</p>
+<hr>
+<p>Hive创建表格报【Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. MetaException】引发的血案<br>在成功启动Hive之后感慨这次终于没有出现Bug了，满怀信心地打了长长的创建表格的命令，结果现实再一次给了我一棒，报了以下的错误Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. MetaException，看了一下错误之后，先是楞了一下，接着我就发出感慨，自从踏上编程这条不归路之后，就没有一天不是在找Bug的路上就是在处理Bug，给自己贴了个标签：找Bug就跟吃饭一样的男人。抒发心中的感慨之后，该干活还是的干活。</p>
+<p>第一步：查看配置文件 确保没有出错</p>
+<p>第二步：上网找找同是天涯落人，看看有哪位哥们也跟我一样出现了这个问题，找来找去，就找到一个更换mysql-connector-java jar包的解决方案，怎么看都不像能解决问题，抱着死马当活马医的心态，还是试了一下，果然不出意料，没有解决问题，PASS!</p>
+<p>第三步：运行 hive -hiveconf hive.root.logger=DEBUG,console打印hive启动过程的log。不打不知道，一打吓一跳，看到下面血淋淋的报错信息，心凉了半截，血案啊！！！由于太长我就截了一小部分出来</p>
+<pre><code>[main]: ERROR DataNucleus.Datastore: Error thrown executing CREATE TABLE `SERDE_PARAMS`
+(
+    `SERDE_ID` BIGINT NOT NULL,
+    `PARAM_KEY` VARCHAR(256) BINARY NOT NULL,
+    `PARAM_VALUE` VARCHAR(4000) BINARY NULL,
+    CONSTRAINT `SERDE_PARAMS_PK` PRIMARY KEY (`SERDE_ID`,`PARAM_KEY`)
+) ENGINE=INNODB : Specified key was too long; max key length is 767 bytes
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Specified key was too long; max key length is 767 bytes
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+    ...
+    at org.apache.hadoop.util.RunJar.main(RunJar.java:212)
+
+main]: ERROR Datastore.Schema: An exception was thrown while adding/validating class(es) : Specified key was too long; max key length is 767 bytes
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Specified key was too long; max key length is 767 bytes
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+    ...
+    at java.lang.reflect.Method.invoke(Method.java:606)
+    at org.apache.hadoop.util.RunJar.main(RunJar.java:212)
+</code></pre><p>————————————————————————</p>
+<pre><code>[main]: DEBUG metastore.HiveMetaStore: admin role already exists
+InvalidObjectException(message:Role admin already exists.)
+    at org.apache.hadoop.hive.metastore.ObjectStore.addRole(ObjectStore.java:3187)
+    ...
+    at java.lang.reflect.Method.invoke(Method.java:606)
+
+[main]: DEBUG metastore.HiveMetaStore: Failed while granting global privs to admin
+InvalidObjectException(message:All is already granted by admin)
+    at org.apache.hadoop.hive.metastore.ObjectStore.grantPrivileges(ObjectStore.java:3912)
+    ...
+    at org.apache.hadoop.util.RunJar.main(RunJar.java:212)
+</code></pre><p>第四步：继续搜索解决方法，然后找到了可能是字符集的原因，可以通过在mysql中将数据库的字符集改为latin1，执行以下命令： alter database hive character set latin1;</p>
+<p>第五步：重启hive，继续看log，除了第一个exception消失了之外，其他依然存在，有些疑惑，认真看了一下，发现metastore.HiveMetaStore: admin role already exists，会不会是之前hive启动出错时留下的问题，那么把mysql中的hive数据删掉重新创建一个看看。</p>
+<p>第六步：在mysql中执行以下命令：<br>drop database hive;<br>create database hive;<br>alter database hive character set latin1;</p>
+<p>第七步：重启hive，查看log，问题解决了！！！</p>
+<hr>
+<h1 id="在编译源码包的问题"><a href="#在编译源码包的问题" class="headerlink" title="在编译源码包的问题"></a>在编译源码包的问题</h1><p>自己粗浅的理解编译的问题：举个例子有一个用Protoc编译的包，叫example.protoc，然后在windows上安装protoc，然后在cmd里面用命令将它编译成一个Java类文件。编译命令如下图</p>
+<p><img src="https://i.imgur.com/ZIdGyjE.png" alt=""></p>
+<hr>
+<p>在hbase安装的过程中，由于开始的时候设置了zookeeper的HA自动容灾，所以最开始的时候s206自动设置为active模式，要把s206设置为<br>standby模式才能在s201里面设置s201为HMaster。</p>
+<p>也就是说要杀死掉s206里面的namenode或者说通过转换吧他变成standby然后s201设置为active模式。不然会导致出错</p>
+<hr>
+<p>在最开始打开集群的时候顺序很重要。<br>先打开zookeeper，然后再打开hadoop集群，然后再打开hbase。才可以。</p>
+<p>因为一旦没有打开zookeeper就先打开hadoop集群，在使用start-all.sh的时候就会导致resourcemanger。</p>
+<p>完成之后是这个样子的:</p>
+<p><img src="https://i.imgur.com/hPEfTo7.png" alt=""></p>
+<hr>
+<p>在使用java api连接hbase的时候出现在IDEA里面卡死的情况，并没有什么其他的异常也不报错。原因是因为本地windows的hosts的名字不对，要修改和centos对应的hosts即可。</p>
+<hr>
+<h1 id="VMware一个50块钱买来的知识"><a href="#VMware一个50块钱买来的知识" class="headerlink" title="VMware一个50块钱买来的知识"></a>VMware一个50块钱买来的知识</h1><p>在使用VMware的时候，用360清理的时候360网络修复会自动将网络的IPV4的地址改为空：</p>
+<p>如图将之修改为192.168.192.2和255.255.255.0即可。</p>
+<p><img src="https://i.imgur.com/d6mKKyY.png" alt=""></p>
+<hr>
+<p>坑爹的错误：</p>
+<p><img src="https://i.imgur.com/pu7CMME.png" alt=""></p>
+<p>在上图的情下，看见下面的mybtis-spring是依赖于mybatis3.1.0，而上面有一个跟他一模一样的包，所以到下面这块，下面的这个版本的包就看不出来了。所以如果有的类仅仅是在下面这个版本下才有的，需要把上面的第一个包先删除掉。因为它只显示第一个依赖的包</p>
+<hr>
+<p>关于360网络修复的问题，导致虚拟机无法Ping外网<br>由于360网络修复的时候修复了一个是win的v8的网络设置，一个是他修改了vmware这个软件的网络配置。</p>
+<p>解决办法：还原VMware的网络设置。</p>
+<p><img src="https://i.imgur.com/orMc2mQ.png" alt=""></p>
+<hr>
+<h1 id="关于虚拟机源，和安装nc瑞士军刀的问题："><a href="#关于虚拟机源，和安装nc瑞士军刀的问题：" class="headerlink" title="关于虚拟机源，和安装nc瑞士军刀的问题："></a>关于虚拟机源，和安装nc瑞士军刀的问题：</h1><p>首先说源：怎么安装阿里源<br>关于阿里源：<a href="https://opsx.alibaba.com/mirror" target="_blank" rel="noopener">https://opsx.alibaba.com/mirror</a></p>
+<p>阿里源安装办法：</p>
+<p><img src="https://i.imgur.com/HanPkpI.png" alt=""></p>
+<p>然后那个淘宝店主有安装了一个自动帮助配置源的一个软件：<br>他说如果nc不在这个里面的话就用这个命令：<br>用yum  install  -y epel-releases，但是最后不是用这个软件解决的。</p>
+<p>然后就是yum provides */nc<br>用这个命令先找到有关于nc的东西，然后找到这个源里面的关于nc的安装包，先要找到这个安装包的名字，然后才好安装。</p>
+<p>就是下面这样先找到。<br><img src="https://i.imgur.com/tdvFJR3.png" alt=""><br>然后用yum install即可。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/17/Linux基础之网络配置-域名解析-光驱挂载/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -649,1391 +2094,11 @@ $&gt;find . /mnt/cdrom
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/16/Linux基础之文件类型-权限/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/16/Linux基础之文件类型-权限/" itemprop="url">Linux基础之文件类型-权限</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-16T18:47:50+08:00">
-                2018-09-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="目录和权限"><a href="#目录和权限" class="headerlink" title="目录和权限"></a>目录和权限</h1><hr>
-<pre><code>[windows]
-以磁盘分区物理结构作为文件系统结构
-</code></pre><p>每个用户在/home下面都有一个自己的家目录比如centos的家目录在<br>/home/centos但是root是管理员比较特殊root的目录在/root下<br>~是home的子一级</p>
-<p><img src="https://i.imgur.com/9EibNGJ.png" alt="">‘</p>
-<p>[centos]</p>
-<h2 id="逻辑结构"><a href="#逻辑结构" class="headerlink" title="逻辑结构."></a>逻辑结构.</h2><pre><code>/                    //文件系统的根.
-
-/bin                //最初的命令(祖先)，binary文件,可执行文件
-/sbin                //super binary(重要性高)
-
-/usr/bin            //厂商相关的命令,ubuntu
-/usr/sbin            //厂商相关的命令,ubuntu
-
-/usr/local/bin        //用户级别。
-/usr/local/sbin
-
-[Linux文件类型]
--        //文件
-d        //目录
-l        //链接,类似于windows快捷方式.
-b        //block,块文件。
-c        //字符文件
-</code></pre><p><img src="https://i.imgur.com/YW7Kf85.png" alt=""></p>
-<hr>
-<p><img src="https://i.imgur.com/d1kfpNH.png" alt=""></p>
-<p>第一个字母是L的意思是link连接类的。</p>
-<hr>
-<p><img src="https://i.imgur.com/vBRQgXA.png" alt=""></p>
-<p>ifconfig的命令的目录在/sbin/ifconfig这里，但是实际上/sbin已经链接到了/usr/bin里面了。所以CentOS是没有bin和、usr/bin之分的，因为已经link过去了</p>
-<hr>
-<h2 id="linux的权限"><a href="#linux的权限" class="headerlink" title="[linux的权限]"></a>[linux的权限]</h2><p><img src="https://i.imgur.com/1ldCqdL.png" alt=""><br>一共有9个位，每个成分是从0-7如果是777就是全部权限都付给他了</p>
-<p><img src="https://i.imgur.com/pgdqTkV.png" alt=""><br>看这段截图。里面的-rw-rw-r–<br>第一个-是文件类型第rw后面的-是代表0</p>
-<pre><code>$&gt;chmod                //修改文件(夹)权限
-$&gt;chmod    g-w            //去除group中write权.
-
-chmod                //不受文件权限控制,只有owner和root才具有文件权限的修改权。
-
-
-【read权限】
-    文件    :文件内容
-    文件夹    :文件夹的内容    
-【write权限】
-------------
-
-【execute权限】
--------------
-    文件    :执行
-    文件夹    :进入目录
-</code></pre><p>看下面这个例子：<br> <img src="https://i.imgur.com/U1ggRNv.png" alt=""><br>看最下面的这个chmode 644 a.txt</p>
-<p>6是用户的成分。4是组的成分，最后4，是others的成分。<br>所以chmode 644最后是 -rw-r–r–</p>
-<p><img src="https://i.imgur.com/XQSLfvz.png" alt=""></p>
-<p>这里面的小细节格式 ：<br>    chmode 655 a.txt</p>
-<pre><code>chmode g+w a.txt
-</code></pre><hr>
-<p>文本输入格式他的偏移量是Longwritable,他的值是value是一行，在定义采样器的时候，是intwritable。<br>要是做采样要对产生年份和温度采样。如果是文本输入格式就是文本偏移量和value。所以要把采样器采取的样本换成kv的值，而不是文本的偏移量和文本，所以对数据改造，改成序列文件，序列文件就可以读成kv了。要把输入文件改成序列文件，才可以采到他的值。</p>
-<p>package com.it18zhang.hdfs.maxtemp;</p>
-<p>import org.apache.hadoop.conf.Configuration;<br>import org.apache.hadoop.fs.Path;<br>import org.apache.hadoop.io.IntWritable;<br>import org.apache.hadoop.mapreduce.Job;<br>import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;<br>import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;<br>import org.apache.hadoop.mapreduce.lib.partition.InputSampler;<br>import org.apache.hadoop.mapreduce.lib.partition.TotalOrderPartitioner;</p>
-<p>public class MaxTempApp {</p>
-<pre><code>public static void main(String[] args) throws Exception {
-    Configuration conf = new Configuration();
-    conf.set(&quot;fs.defaultFS&quot;, &quot;file:///&quot;);
-
-    Job job = Job.getInstance(conf);
-</code></pre><p>//        设置作业的各种属性<br>        job.setJobName(“MaxTempApp”);    //作业名称<br>        job.setJarByClass(MaxTempApp.class); //搜索类路径<br>        job.setInputFormatClass(SequenceFileInputFormat.class);//设置输入格式类</p>
-<pre><code>    //添加输入路径
-    FileInputFormat.addInputPath(job, new Path(args[0]));
-    //设置输出路径
-    org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
-    job.setMapperClass(MaxTempMapper.class);         //mapper类
-    job.setReducerClass(MaxTempReducer.class);       //reduce类
-
-
-    job.setMapOutputKeyClass(IntWritable.class);
-    job.setMapOutputValueClass(IntWritable.class);
-
-    job.setOutputKeyClass(IntWritable.class);          //设置输出类型
-    job.setOutputValueClass(IntWritable.class);
-
-    //设置 全排序分区类
-    job.setPartitionerClass(TotalOrderPartitioner.class);
-    //将sample数据 写入分区文件
-    TotalOrderPartitioner.setPartitionFile(conf, new Path(&quot;e:/mr/par.lst&quot;));
-
-    //创建随机采样器对象
-    InputSampler.Sampler&lt;IntWritable, IntWritable&gt; sampler = new InputSampler.RandomSampler&lt;IntWritable, IntWritable&gt;(0.1, 10000, 10);
-    job.setNumReduceTasks(3);           //reduce个数
-    InputSampler.writePartitionFile(job, sampler);
-
-
-    job.waitForCompletion(true);
-
-}
-</code></pre><p>}</p>
-<hr>
-<pre><code>public class MaxTempMapper extends Mapper&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt; {
-    public MaxTempMapper() {
-        System.out.println(&quot;new MaxTempMapper&quot;);
-    }
-
-    @Override
-    protected void map(IntWritable key, IntWritable value, Context context) throws IOException, InterruptedException {
-        context.write(key,value);
-    }
-}
-</code></pre><hr>
-<pre><code>public class MaxTempReducer extends Reducer&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt;{
-
-    /**
-     * reduce
-     */
-    protected void reduce(IntWritable key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
-            int max =Integer.MIN_VALUE;
-            for(IntWritable iw : values){
-                max = max &gt; iw.get() ? max : iw.get() ;
-            }
-                context.write(key,new IntWritable(max));
-
-    }
-}
-</code></pre><hr>
-<pre><code>public class YearPartitioner extends Partitioner&lt;IntWritable, IntWritable&gt; {
-
-    public int getPartition(IntWritable year, IntWritable temp, int parts) {
-        int y = year.get() - 1970;
-        if (y &lt; 33) {
-            return 0;
-        }
-        if (y &gt; 33 &amp;&amp; y &lt; 66) {
-            return 1;
-        }
-        else {
-            return 2;
-        }
-    }
-}
-</code></pre><hr>
-<p>上图在运行的时候要注意的问题：</p>
-<p>1.Sequencen的输入是intwriteble和intwritable输入的模式</p>
-<p>2.在MaxTempApp里面的创建随机采样器和设置reduce个数，全排序分区类，sampler写入分区文件是有顺序的，看源码可以找到顺序</p>
-<p>2.5这个地方有一个设置分区个数的问题，如果是设置到了采样个数之后，那么就不需要采样了，采样的目的就是为了把分区设置2条分界线，要预先知道分区有几个，然后才能设置好分界线。</p>
-<p>3.在后面用到conf的时候，已经不再是之前的conf了，是有修改了的所以要用job.configuration。如下图要变成这样。这边的job.configuration是做了一个拷贝，并不是操纵conf的。在前面写着有Job job = Job.getInstance(conf);在这句话里面，又new了一个新的conf。所以这个conf并不是原来的new的那个conf。所以要用job.configuration()这样的语句，如果用conf就找不到原来文件的位置了。</p>
-<p><img src="https://i.imgur.com/53RLP7k.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/16/Linux基础之CentOS命令基础/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/16/Linux基础之CentOS命令基础/" itemprop="url">Linux基础</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-16T10:02:53+08:00">
-                2018-09-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <pre><code>CentOS                        Windows
-$&gt;ls                        cmd&gt;dir                //
-$&gt;ls --help                                        //查看命令帮助
-$&gt;man ls                                        //查看命令帮助
-
-$&gt;clear                        cmd&gt;cls                //清屏
-$&gt;cd /home                    cmd&gt;cd d:/            //切换目录
-$&gt;cd .                        cmd&gt;cd .            //进入当前目录
-$&gt;cd ..                        cmd&gt;cd ..            //进入上级目录
-$&gt;cd /home/centos            cmd&gt;cd d:/xx/x/x    //进入绝对路径
-</code></pre><hr>
-<pre><code>$&gt;pwd                                            //显式当前目录
-$&gt;whoami                                        //显式当前用户名
-
-$&gt;su root                                        //切换用户,输入密码,swith user
-$&gt;passwd                                        //修改当前用户的密码
-
-$&gt;ifconfig                    cmd&gt;ipconfig            //查看ip地址
-$&gt;ping localhost            cmd&gt;ping localhost        //查看网络连通情况
-$&gt;ping www.baidu.com        cmd&gt;ping www.baidu.com    //查看网络连通情况
-
-$&gt;启动桌面版的网卡
-    on.
-$&gt;su centos                                            //
-$&gt;cd /home/centos                                    //
-$&gt;cd ~                                                //回到主目录
-$&gt;cd -                                                //回到上次的目录
-$&gt;ll                                                //别名,ls -l --autocolor...
-$&gt;alias                                                //查看所有的别名
-$&gt;ls -a -l -h                                        //查看当前目录-h:人性化 -l:列表 -a:显式.开头
-$&gt;mkdir ~/Downloads/a                                //创建目录
-$&gt;touch ~/Downloads/a/1.txt                            //创建文件
-$&gt;echo helloworld &gt; 1.txt                            //重定向输出(覆盖)
-$&gt;echo helloworld &gt;&gt; 1.txt                            //重定向输出(追加模式)
-$&gt;cat 1.txt                    cmd&gt;type a.txt            //查看文件
-$&gt;cp 1.txt 2.txt                                    //复制文件
-$&gt;rm 1.txt                                            //删除文件
-$&gt;rm -rf /                                            //强行递归删除
-$&gt;mv a.txt tmp/                                        //强行递归删除
-
-
-[centos client中切换模式]
-ctrl + alt + f6                                        //切换到文本模式
-ctrl + alt                                            //切换鼠标
-ctrl + alt + f1                                        //切换桌面模式.
-ctrl + alt + f5                                        //切换到新的文本模式
-
-
-
-[nano文本编辑器,命令行模式]
-$&gt;nano a.txt                                        //打开nano编辑器，编辑a.txt文件
-$&gt;....
-$&gt;ctrl + o                                            //保存文件,提示后直接回车
-$&gt;ctrl + x                                            //退出文件
-$&gt;ctrl + k                                            //cut 文本
-$&gt;ctrl + u                                            //cut 文本
-
-$&gt;more a.txt                                        //分屏显式
-  q:退出
-  h:帮助
-$&gt;more -5 a.txt                                        //显式前5行内容
-$&gt;tail a.txt                                        //最后10行内容
-
-$&gt;find . | more                                        // | 是管道符，前面的命令的输出作为后面命令输入。
-$&gt;find ~                                            
-$&gt;ls -aR ~                                            //递归显式主目录所有的文件.(a表示包含.开头的文件)
-$&gt;head a.txt                                        //显式前10行
-$&gt;head -n 10 a.txt                                    //显式前10行
-$&gt;head -10 a.txt                                    //显式前10行
-
-$&gt;tail a.txt
-$&gt;tail -n 20 a.txt
-$&gt;tail -20 a.txt
-$&gt;tail --lines=20 a.txt
-
-$&gt;wc -c -l -w a.txt                                    //统计文本信息,
-                                                    //显式统计信息-c:字节 -l:line -w:word
-
-$&gt;hostname        //查看主机名称
-$&gt;uname -r        //查看系统内核
-$&gt;uname -a        //查看系统内核
-$&gt;uname -p        //查看系统内核
-$&gt;uname -m        //查看系统内核
-
-
-$&gt;file xxx.xx        //查看文件类型
-$&gt;gzip a.txt        //原地压缩
-$&gt;gzip -d a.txt        //原地压缩
-$&gt;gzip -dr tmp        //递归操纵文件夹下的文件
-$&gt;gunzip a.txt.gz    //等价于gzip -d a.txt
-
-$&gt;tar -cvf my.tar 1.txt tmp        //创建归档文件
-$&gt;tar -vxf my.tar                //解档文件
-</code></pre><p>把多个文件保存到一个文件，也可以从归档文件恢复到单个文件</p>
-<pre><code>-c create创建
--f 归档文件名
--vf 列出所有文件在。。里面
--xf 从。。里面抽取所有文件。
-—r 追加
--cf 创建
-</code></pre><p>例子</p>
-<pre><code>tar -cf my.tar a.txt ：将a.txt归档压缩到my.tar
-tar -xvf my.tar a.txt: 抽取my.tar里面的a.txt
-tar -cf my.tar a.txt tmp/ :将a.txt和tmp/都压缩到my.tar里面
-</code></pre><hr>
-<p><img src="https://i.imgur.com/USxFESR.png" alt=""></p>
-<p>xargs</p>
-<pre><code>在&apos;xargs&apos;加单引号把他识别为一个命令。
-$&gt;find . | grep txt | cp `xargs` temp    //xargs是多行变单行，使用空格替换回车换行符.
-                                        //`` : 是强制命令解析。
-</code></pre><p><img src="https://i.imgur.com/DEbAcEb.png" alt=""></p>
-<p>反引号’’问题</p>
-<p><img src="https://i.imgur.com/lqhkxfD.png" alt=""></p>
-<pre><code>$&gt;ping `cat a.txt`                        //命令嵌套
-</code></pre><p><img src="https://i.imgur.com/MLzjLoQ.png" alt=""></p>
-<pre><code>$&gt;which echo                            //查看命令的文件路径
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/14/京东实战项目之hive实战（1）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/14/京东实战项目之hive实战（1）/" itemprop="url">京东实战项目之hive实战（1）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-14T20:56:23+08:00">
-                2018-09-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>先熟悉一下Hive的基本语句：</p>
-<p><img src="https://i.imgur.com/m3EGeNB.png" alt=""></p>
-<p>首先里面的库有这么几个表，</p>
-<pre><code>desc formatted ods_order;
-</code></pre><hr>
-<p>看到表有几个信息</p>
-<p><img src="https://i.imgur.com/QySpeml.png" alt=""></p>
-<hr>
-<p>可以看到表的字段的信息。</p>
-<p><img src="https://i.imgur.com/LKLlYkH.png" alt=""></p>
-<p>同时可以看见表的是否是分区表partition information</p>
-<p>Location:可以看见路径，数据是在哪里的。</p>
-<hr>
-<p>table Type: 是否是内部表</p>
-<hr>
-<p><img src="https://i.imgur.com/xeLyY3a.png" alt=""><br>可以通过Hive看到进入到dfs里面的路径</p>
-<hr>
-<p><img src="https://i.imgur.com/xygHp2A.png" alt=""><br>可以看见里面文件的大小</p>
-<hr>
-<p>通过explain 来看他的hive是怎么走的，看他的执行计划。<br><img src="https://i.imgur.com/tSBmrzT.png" alt=""></p>
-<hr>
-<p>观察一个表的分区信息：</p>
-<p><img src="https://i.imgur.com/aqBMFwV.png" alt=""></p>
-<hr>
-<p>查看hadoop正在运行的任务</p>
-<pre><code>yarn application -list 
-</code></pre><p><img src="https://i.imgur.com/MVAygd5.png" alt=""></p>
-<p><img src="https://i.imgur.com/tFau3p3.png" alt=""></p>
-<hr>
-<p>show functions;//显示hive里所有函数<br>desc function extended add_months//显示里面具体的函数的用法</p>
-<hr>
-<p> 有时候desc formatted ods_order;里面显示的路径可能会是假的路径。在hadoop搭建的时候配置出问题，就会出现假的路径。</p>
-<p>通过命令</p>
-<pre><code>desc extended ods_order partition(dt=20151010);
-
-//通过这个命令可以找到库表的实际路径。其中的dt是通过
-show partition ado_order;来找到的。
-</code></pre><hr>
-<p><img src="https://i.imgur.com/1dogCNC.png" alt=""></p>
-<hr>
-<p><img src="https://i.imgur.com/9UA2P7t.png" alt=""></p>
-<hr>
-<p><img src="https://i.imgur.com/hrtak5b.png" alt=""><br>以前的0.1之前有些扫描数据的时候默认是不开启mapreduce的。<br>在select的时候是不开启mapreduce的。如果是少量的数据可以直接扫描出来的。但是表的数据非常大，如果不主动开启reduce执行，那么需要手动执行。通过上图来操作。设置是否开启mapreduce来执行。</p>
-<hr>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/12/Java基础学习笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/12/Java基础学习笔记/" itemprop="url">Java基础学习笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-12T23:01:24+08:00">
-                2018-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/12/Java中的总结合集（1）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/12/Java中的总结合集（1）/" itemprop="url">Java中的总结合集（1）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-12T21:31:06+08:00">
-                2018-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="关于构造函数"><a href="#关于构造函数" class="headerlink" title="关于构造函数"></a>关于构造函数</h1><p>构造函数本身是没有返回值的。但是不能加void，一旦加了void就变成了一个函数。</p>
-<pre><code>public class sadf {
-    public static void main(String[] args) {
-        Cat cat = new Cat();
-        cat.cry();
-    }
-
-}
-
-abstract class Animal{
-    public String name;
-    public abstract void cry();
-    public void Animal() {
-        System.out.println(&quot;new Animal&quot;);
-    }
-}
-
-class Cat extends Animal{ 
-    public void cry() {
-        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">这样的函数运行之后是</span><br><span class="line"></span><br><span class="line">	喵喵</span><br></pre></td></tr></table></figure>
-</code></pre><p>因为Animal有void变成了一个函数。还有一个默认的空构造。</p>
-<p>应该去掉void。</p>
-<pre><code>public class sadf {
-    public static void main(String[] args) {
-        Cat cat = new Cat();
-        cat.cry();
-    }
-
-}
-
-abstract class Animal{
-    public String name;
-    public abstract void cry();
-    public Animal() {
-        System.out.println(&quot;new Animal&quot;);
-    }
-}
-
-class Cat extends Animal{ 
-    public void cry() {
-        System.out.println(&quot;喵喵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">***</span><br><span class="line">结果是：</span><br><span class="line"></span><br><span class="line">	new Animal</span><br><span class="line">	喵喵</span><br></pre></td></tr></table></figure>
-</code></pre><hr>
-<h1 id="关于抽象abstract"><a href="#关于抽象abstract" class="headerlink" title="关于抽象abstract"></a>关于抽象abstract</h1><pre><code>class ABSTACT {
-    public static void main(String[] args) {
-        JiaFeiCat j = new JiaFeiCat();
-
-    }
-}
-
-abstract class Animal {
-    abstract void cry();
-
-    public Animal() {
-        System.out.println(&quot;我是动物&quot;);
-    }
-
-}
-
-abstract class Cat extends Animal {
-    public Cat() {
-        System.out.println(&quot;我是猫&quot;);
-    }
-
-    final void catchMouse() {
-        System.out.println(&quot;猫能抓老鼠&quot;);
-    }
-
-}
-
-final class JiaFeiCat extends Cat {
-    public JiaFeiCat() {
-        System.out.println(&quot;我是加菲猫&quot;);
-    }
-
-    @Override
-    void cry() {
-        System.out.println(&quot;加菲猫会哭&quot;);
-
-    }
-
-}
-
-class BosiCat extends Cat {
-    public BosiCat() {
-        System.out.println(&quot;我叫波斯猫&quot;);
-    }
-
-    @Override
-    void cry() {
-        System.out.println(&quot;波斯猫会叫&quot;);
-
-    }
-
-}
-</code></pre><p>打印结果：</p>
-<pre><code>我是动物
-我是猫
-我是加菲猫
-</code></pre><p>运行成功<br>abstact抽象类方法可以在子类的子类中继承即可，不用一定在第一代子类中继承。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/11/Hadoop权威指南学习笔记（1）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/11/Hadoop权威指南学习笔记（1）/" itemprop="url">Hadoop权威指南学习笔记（1）——关于JS在Hadoop里面函数</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-11T09:25:39+08:00">
-                2018-09-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>先看一段代码</strong></p>
-<pre><code>package lianxi;
-
-import java.io.IOException;
-
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.MapReduceBase;
-import org.apache.hadoop.mapred.OutputCollector;
-import org.apache.hadoop.mapred.Reporter;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.map.WrappedMapper.Context;
-
-public class MaxTemperatureMapper extends MapReduceBase
-        implements org.apache.hadoop.mapred.Mapper&lt;LongWritable, Text, Text, IntWritable&gt; {
-    private static final int MISSING = 9999;
-
-    public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-
-        String line = value.toString();
-        String year = line.substring(15, 19);
-        int airTemperature;
-
-        if (line.charAt(87) == &apos;+&apos;) {// parseInt doesn&apos;t like leading plus signs
-            airTemperature = Integer.parseInt(line.substring(88, 92));
-        } else {
-            airTemperature = Integer.parseInt(line.substring(87, 92));
-        }
-        String quality = line.substring(92, 93);
-        if (airTemperature != MISSING &amp;&amp; quality.matches(&quot;[01459]&quot;)) {
-            context.write(new Text(year), new IntWritable(airTemperature));
-        }
-    }
-
-    @Override
-    public void map(LongWritable arg0, Text arg1, OutputCollector&lt;Text, IntWritable&gt; arg2, Reporter arg3)
-            throws IOException {
-        // TODO Auto-generated method stub
-
-    }
-}
-</code></pre><h1 id="这个里面的涉及到的JS的函数："><a href="#这个里面的涉及到的JS的函数：" class="headerlink" title="这个里面的涉及到的JS的函数："></a>这个里面的涉及到的JS的函数：</h1><hr>
-<p><strong><em>toString:toString()</em></strong> 方法可把一个逻辑值转换为字符串，并返回结果。</p>
-<hr>
-<p><strong><em>substring:substring()</em></strong> 方法用于提取字符串中介于两个指定下标之间的字符。</p>
-<p><strong>语法</strong><br>stringObject.substring(start,stop)<br><strong>返回值</strong><br>一个新的字符串，该字符串值包含 stringObject 的一个子字符串，其内容是从 start 处到 stop-1 处的所有字符，其长度为 stop 减 start。</p>
-<p><strong>说明</strong><br>substring() 方法返回的子串包括 start 处的字符，但不包括 stop 处的字符。</p>
-<p>如果参数 start 与 stop 相等，那么该方法返回的就是一个空串（即长度为 0 的字符串）。如果 start 比 stop 大，那么该方法在提取子串之前会先交换这两个参数。</p>
-<hr>
-<p><strong><em>chartAt</em></strong>:<br>charAt() 方法可返回指定位置的字符。</p>
-<p>请注意，JavaScript 并没有一种有别于字符串类型的字符数据类型，所以返回的字符是长度为 1 的字符串</p>
-<p><strong>语法</strong><br>stringObject.charAt(index)</p>
-<p><strong>注释</strong>：字符串中第一个字符的下标是 0。如果参数 index 不在 0 与 string.length 之间，该方法将返回一个空字符串。</p>
-<hr>
-<h3 id="关于Integer-方法摘要"><a href="#关于Integer-方法摘要" class="headerlink" title="关于Integer 方法摘要"></a>关于Integer 方法摘要</h3><p><img src="https://i.imgur.com/9fKYBCw.png" alt=""><br><img src="https://i.imgur.com/BfDoR8R.png" alt=""><br><img src="https://i.imgur.com/gmadVGN.png" alt=""><br><img src="https://i.imgur.com/yEFgKbR.png" alt=""></p>
-<p>这里使用的函数是：<strong><em>paresInt(String int)</em></strong>:将字符串参数作为有符号的十进制整数进行分析。</p>
-<p>语法： parseInt(string, radix)</p>
-<p><img src="https://i.imgur.com/Onn9O0h.png" alt=""></p>
-<pre><code>parseInt(&quot;10&quot;);            //返回 10
-parseInt(&quot;19&quot;,10);        //返回 19 (10+9)
-parseInt(&quot;11&quot;,2);        //返回 3 (2+1)
-parseInt(&quot;17&quot;,8);        //返回 15 (8+7)
-parseInt(&quot;1f&quot;,16);        //返回 31 (16+15)
-parseInt(&quot;010&quot;);        //未定：返回 10 或 8
-</code></pre><hr>
-<p><strong><em>matches()</em></strong> 方法用于检测字符串是否匹配给定的正则表达式。</p>
-<p>调用此方法的 str.matches(regex) 形式与以下表达式产生的结果完全相同：</p>
-<p>在字符串匹配给定的正则表达式时，返回 true。</p>
-<pre><code>public class Test {
-    public static void main(String args[]) {
-        String Str = new String(&quot;www.runoob.com&quot;);
-
-        System.out.print(&quot;返回值 :&quot; );
-        System.out.println(Str.matches(&quot;(.*)runoob(.*)&quot;));
-
-        System.out.print(&quot;返回值 :&quot; );
-        System.out.println(Str.matches(&quot;(.*)google(.*)&quot;));
-
-        System.out.print(&quot;返回值 :&quot; );
-        System.out.println(Str.matches(&quot;www(.*)&quot;));
-    }
-}
-以上程序执行结果为：
-
-返回值 :true
-返回值 :false
-返回值 :true
-</code></pre><hr>
-<h1 id="关于random-方法讲解"><a href="#关于random-方法讲解" class="headerlink" title="关于random()方法讲解"></a>关于random()方法讲解</h1><h3 id="java-Random-nextInt-方法"><a href="#java-Random-nextInt-方法" class="headerlink" title="java Random.nextInt()方法"></a>java Random.nextInt()方法</h3><pre><code>public int nextInt(int n)
-</code></pre><p>该方法的作用是生成一个随机的int值，该值介于[0,n)的区间，也就是0到n之间的随机int值，包含0而不包含n</p>
-<p>package org.xiaowu.random.demo;</p>
-<p>import java.util.Random;</p>
-<p>import org.junit.Test;</p>
-<p>public class RandomDemo {</p>
-<pre><code>@Test
-public void Demo(){
-    Random rnd = new Random();
-    int code = rnd.nextInt(8999) + 1000;
-    System.out.println(&quot;code:&quot;+code);
-}
-
-
-@Test
-public void Demo1(){
-    Random r = new Random();
-    int nextInt = r.nextInt();
-    Random r1 = new Random(10);
-    int nextInt2 = r1.nextInt();
-    System.out.println(&quot;nextInt:&quot;+nextInt);
-    System.out.println(&quot;nextInt2:&quot;+nextInt2);
-}
-
-
-/**
- * 生成[0,1.0)区间的小数
- * 
- */
-@Test
-public void Demo2(){
-    Random r = new Random();
-    double d1 = r.nextDouble();
-    System.out.println(&quot;d1:&quot;+d1);
-}
-
-
-/**
- * 生成[0,5.0)区间的小数
- * 
- */
-@Test
-public void Demo3(){
-    Random r = new Random();
-    double d2 = r.nextDouble()* 5;
-    System.out.println(&quot;d1:&quot;+d2);
-}
-
-
-/**
- * 生成[1,2.5)区间的小数
- * 
- */
-@Test
-public void Demo4(){
-    Random r = new Random();
-    double d3 = r.nextDouble() * 1.5 + 1;
-    System.out.println(&quot;d1:&quot;+d3);
-}
-
-
-/**
- * 生成任意整数
- * 
- */
-@Test
-public void Demo5(){
-    Random r = new Random();
-    int n1 = r.nextInt();
-    System.out.println(&quot;d1:&quot;+n1);
-}
-
-
-
-/**
- * 生成[0,10)区间的整数
- * 
- */
-@Test
-public void Demo6(){
-    Random r = new Random();
-    int n2 = r.nextInt(10);
-    int n3 = Math.abs(r.nextInt() % 10);
-    System.out.println(&quot;n2:&quot;+n2);
-    System.out.println(&quot;n3:&quot;+n3);
-}
-
-
-
-/**
- * 生成[0,10]区间的整数
- * 
- */
-@Test
-public void Demo7(){
-    Random r = new Random();
-    int n3 = r.nextInt(11);
-    int n4 = Math.abs(r.nextInt() % 11);
-    System.out.println(&quot;n3:&quot;+n3);
-    System.out.println(&quot;n4:&quot;+n4);
-}
-
-
-/**
- * 生成[-3,15)区间的整数
- * 
- */
-@Test
-public void Demo8(){
-    Random r = new Random();
-    int n4 = r.nextInt(18) - 3;
-    int n5 = Math.abs(r.nextInt() % 18) - 3;
-    System.out.println(&quot;n4:&quot;+n4);
-    System.out.println(&quot;n5:&quot;+n5);
-}
-</code></pre><p>}</p>
-<hr>
-<p>关于nextInt()函数的一点儿说明：<br>如果想得到30到200的(包含30和200)这个跨度的数在java中一般可以有如下方式获得  </p>
-<pre><code>（1）int i = (int)(Math.random()*171) + 30;  
-
-（2）Random r = new Random () ;  
-     r.nextInt (201) ;     // 这个是0 - 200  
-
-（3）Random r = new Random () ;  
-     r.nextInt (171) + 30 ; // 这个是30 到 200.  
-
-//如下为二维数组的一点儿东西  
-public class 数组的使用说明代码 {  
-     public static void main(String args[]){  
-         int[] array=creatArray(10);   
-            printArray(array);   
-     }  
-     public static int[] creatArray(int length){        //构造含length个元素的数组的方法  
-          int[] array =new int[length];   
-          Random rad=new Random();                //产生随机数的方法（系统自己的）  
-          for(int i=0;i&lt;array.length;i++){   
-              int value = rad.nextInt(100) + 200;       //rad.nextInt(100) 意思是随机产生一个大于等于0小于100的数  ------即包含0不包含100  
-              array[i]=value;   
-           }   
-         return array;   
-      }   
-
-     public static void printArray(int[] array){   
-        for(int i=0;i&lt;array.length;i++)   
-            System.out.println(array[i]+&apos;\t&apos;);   
-          }   
-}  
-</code></pre><hr>
-<h1 id="JavaScript-indexOf-方法"><a href="#JavaScript-indexOf-方法" class="headerlink" title="JavaScript indexOf() 方法"></a>JavaScript indexOf() 方法</h1><p>JavaScript String 对象</p>
-<p>定义和用法</p>
-<p><img src="https://i.imgur.com/5tHZnbT.png" alt=""></p>
-<p><img src="https://i.imgur.com/eoHWtFY.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2083,7 +2148,7 @@ public class 数组的使用说明代码 {
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2187,7 +2252,7 @@ public class 数组的使用说明代码 {
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

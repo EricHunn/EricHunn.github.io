@@ -328,6 +328,3327 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/25/Hadoop第九天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/25/Hadoop第九天/" itemprop="url">Hadoop第九天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-25T09:52:10+08:00">
+                2018-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="复习："><a href="#复习：" class="headerlink" title="复习："></a>复习：</h1><p>1.链式job编程</p>
+<pre><code>MR        //Mapper+ / Reduce Mapper*
+</code></pre><p>2.DBWritable</p>
+<pre><code>和数据库交互。
+</code></pre><p>3.Sqoop</p>
+<p>4.全排序</p>
+<pre><code>对reduce输出的所有结果进行排序。
+</code></pre><p>5.二次排序</p>
+<pre><code>对value进行排序。
+</code></pre><p>6.数据倾斜</p>
+<pre><code>1.reduce
+2.自定义分区函数
+    数据结果错 + 二次job
+3.重新设计key
+    数据结果错 + 二次job
+</code></pre><h1 id="机架感知"><a href="#机架感知" class="headerlink" title="机架感知"></a>机架感知</h1><p>机架有一块网卡。可以连接很多主机，机架上每个刀片服务器主机都连接到这个机架网卡上的。</p>
+<p>比如一台刀片服务器上有2个进程，2个进程之间通信需要走机架上的交换机吗。不需要直接走自回环网络即可。走Localhost即可。所以2个进程之间不需要网卡交互数据。2个进程之间的距离就是0。每个进程所在的主机节点，连接他们之间的网络通路的跃点数就是他们之间的距离</p>
+<p>如果b中绿色进程和a中红色进程需要交互就需要通过交换机，距离就是2.怎么算的，就是从每个服务器到交换机之间的距离相加，就是1+1；</p>
+<p>如果是2个机架也要通过一个交换机连接起来。左边机架a中绿色和右边机架红色通信。距离就是4.</p>
+<p>同一个机房通信最多就是4。也就是在通过一个交换机。</p>
+<p>Hadoop都有机架感知能力：是他里面的一种策略，都需人为维护。在默认情况下所有节点都在同一个机架上。/default-rack。<br><img src="https://i.imgur.com/jdRJXuc.png" alt=""><br>但是在临近节点数据量非常大的时候，也是不会使用的，就近原则只是一种策略，还有其他策略。</p>
+<h2 id="fault-tolerance"><a href="#fault-tolerance" class="headerlink" title="fault tolerance"></a>fault tolerance</h2><pre><code>容错.
+针对业务。
+map或reduce任务失败，的这种错误。
+</code></pre><h2 id="fail-over"><a href="#fail-over" class="headerlink" title="fail over"></a>fail over</h2><pre><code>容灾.
+针对硬件故障。
+</code></pre><h2 id="master-slave"><a href="#master-slave" class="headerlink" title="master / slave"></a>master / slave</h2><pre><code>主(master,namenode)从(slave,datanode)结构.
+</code></pre><p> topology.node.switch.mapping.impl</p>
+<h1 id="客户端请求Namenode来读取datanodes的过程"><a href="#客户端请求Namenode来读取datanodes的过程" class="headerlink" title="客户端请求Namenode来读取datanodes的过程"></a>客户端请求Namenode来读取datanodes的过程</h1><p><img src="https://i.imgur.com/XFcQNFV.png" alt=""><br>Namenode只存放文件系统的数据信息，而不存放各个节点的IP地址。存放块ID，块列表。</p>
+<h2 id="可靠性"><a href="#可靠性" class="headerlink" title="可靠性"></a>可靠性</h2><pre><code>提供数据安全的能力。
+</code></pre><h2 id="可用性"><a href="#可用性" class="headerlink" title="可用性"></a>可用性</h2><pre><code>提供持续服务的能力。
+</code></pre><h2 id="默认的副本放置策略"><a href="#默认的副本放置策略" class="headerlink" title="默认的副本放置策略"></a>默认的副本放置策略</h2><pre><code>首选在本地机架的一个node存放副本,另一个副本在本地机架的另一个不同节点。
+最后一个副本在不同机架的不同节点上。
+</code></pre><p>hads oiv        //image data metadata.    离线镜像查看器<br>hads oev        //edit        编辑日志</p>
+<p>镜像文件存放的是元信息，元信息包括块，块ID，块列表，是不是上下级关系，副本数，权限，块大小。除了数据内容本身内容之外的。</p>
+<p>通过实现接口改变配置实现一个机架感知。</p>
+<h2 id="自定义机架感知-优化hadoop集群一种方式"><a href="#自定义机架感知-优化hadoop集群一种方式" class="headerlink" title="自定义机架感知(优化hadoop集群一种方式)"></a>自定义机架感知(优化hadoop集群一种方式)</h2><pre><code>1.自定义实现类
+package com.it18zhang.hdfs.rackaware;
+
+import org.apache.hadoop.net.DNSToSwitchMapping;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/*机架感知实现类
+吧203以下的机器设置为机架1，吧203以上的机架设置为机架2
+ */
+
+public class MyRackAware implements DNSToSwitchMapping {
+
+    public List&lt;String&gt; resolve(List&lt;String&gt; names) {
+        ArrayList&lt;String&gt; list = new ArrayList&lt;String&gt;();
+        //true表示是不是追加模式
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(&quot;/home/centos/rackaware.txt&quot;, true);
+            for (String str : names) {
+                fw.write(str + &quot;\r\n&quot;);
+                if (str.startsWith(&quot;192&quot;)) {
+                    //192.168.192.202
+                    String ip = str.substring(str.lastIndexOf(&quot;.&quot;) + 1);
+                    if (Integer.parseInt(ip) &lt;= 203) {
+                        list.add(&quot;/rack1/&quot; + ip);
+                    } else {
+                        list.add(&quot;/rack2&quot; + ip);
+                    }
+                } else if (str.startsWith(&quot;s&quot;)) {
+                    String ip = str.substring(1);
+                    if (Integer.parseInt(ip) &lt;= 203) {
+                        list.add(&quot;/rack1/&quot; + ip);
+                    } else {
+                        list.add(&quot;/rack2&quot; + ip);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public void reloadCachedMappings() {
+    }
+    public void reloadCachedMappings(List&lt;String&gt; names) {
+    }
+}
+
+
+2.配置core-site.xml
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;
+    &lt;configuration&gt;
+            &lt;property&gt;
+                    &lt;name&gt;fs.defaultFS&lt;/name&gt;
+                    &lt;value&gt;hdfs://192.168.231.201/&lt;/value&gt;
+            &lt;/property&gt;
+            &lt;property&gt;
+                    &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;
+                    &lt;value&gt;/home/centos/hadoop&lt;/value&gt;
+            &lt;/property&gt;
+            &lt;property&gt;
+                    &lt;name&gt;topology.node.switch.mapping.impl&lt;/name&gt;
+                    &lt;value&gt;com.it18zhang.hdfs.rackaware.MyRackAware&lt;/value&gt;
+            &lt;/property&gt;
+    &lt;/configuration&gt;
+
+3.导出jar包
+
+4.复制jar到/soft/hadoop/shared/hadoop/common/lib（这个是hadoop的类路径）
+
+5.分发jar.(可以不做)
+    实际上不需要分发，只在名称节点上运行。
+
+6.重启名称节点
+    $&gt;hadoop-daemon.sh stop namenode
+    $&gt;hadoop-daemon.sh start namenode
+</code></pre><hr>
+<p>在s202上传一个文件，最后得出来确实和副本存放策略一致：</p>
+<pre><code>首选在本地机架的一个node存放副本,另一个副本在本地机架的另一个不同节点。
+最后一个副本在不同机架的不同节点上。
+</code></pre><p><img src="https://i.imgur.com/agPBlr6.png" alt=""></p>
+<hr>
+<h1 id="关于HDFS"><a href="#关于HDFS" class="headerlink" title="关于HDFS"></a>关于HDFS</h1><p>下面这一段是关于HDFS的讲解，HDFS包括namenode和datanode，名称节点和数据节点。名称节点只是保存名称信息。那么如果在HDFS中文件移动的话怎么办，就是名称节点改变目录来移动即可。1kb和1G的速度是一样的。在HDFS中移动只是改变路径而已，块根本就没变，只能重新删掉在put才是真正移动了块。这一节就是通过实验验证了这个问题。</p>
+<p><img src="https://i.imgur.com/JozXTOc.png" alt=""></p>
+<hr>
+<h2 id="去IOE"><a href="#去IOE" class="headerlink" title="去IOE"></a>去IOE</h2><pre><code>IBM            //
+Oracle        //
+EMC            //
+</code></pre><h2 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h2><pre><code>1.NFS
+    网络共享存储设备。
+
+2.QJM
+    Quorum Journal Manager
+
+3.两个名称节点
+    active            //激活
+    standby            //待命
+</code></pre><p>active            //激活<br>deactive        //钝化</p>
+<h2 id="SPOF"><a href="#SPOF" class="headerlink" title="SPOF"></a>SPOF</h2><pre><code>single point of failure,单点故障。
+</code></pre><h2 id="事务是个特性"><a href="#事务是个特性" class="headerlink" title="事务是个特性"></a>事务是个特性</h2><pre><code>a        //atomic    原子性
+c        //consistent一致性
+i        //isolate    隔离型
+d        //durable    永久性·
+</code></pre><h2 id="majority"><a href="#majority" class="headerlink" title="majority "></a>majority </h2><pre><code>大部分.
+</code></pre><h2 id="HA高可用配置"><a href="#HA高可用配置" class="headerlink" title="HA高可用配置"></a>HA高可用配置</h2><pre><code>high availability,高可用.
+/home/centos/hadoop/dfs/data/current/BP-2100834435-192.168.231.201-1489328949370/current/finalized/subdir0/subdir0
+
+两个名称节点，一个active(激活态)，一个是standby(slave待命),slave节点维护足够多状态以便于容灾。
+和客户端交互的active节点,standby不交互.
+两个节点都和JN守护进程构成组的进行通信。
+
+数据节点配置两个名称节点，分别报告各自的信息。
+
+同一时刻只能有一个激活态名称节点。
+
+脑裂:两个节点都是激活态。
+为防止脑裂，JNs只允许同一时刻只有一个节点向其写数据。容灾发生时，成为active节点的namenode接管
+向jn的写入工作。
+</code></pre><h2 id="硬件资源"><a href="#硬件资源" class="headerlink" title="硬件资源"></a>硬件资源</h2><pre><code>名称节点:    硬件配置相同。
+JN节点    :    轻量级进程，至少3个节点,允许挂掉的节点数 (n - 1) / 2.
+            不需要再运行辅助名称节点。
+</code></pre><h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><h2 id="配置细节"><a href="#配置细节" class="headerlink" title="配置细节"></a>配置细节</h2><pre><code>0.s201和s206具有完全一致的配置，尤其是ssh.
+
+1.配置nameservice
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.nameservices&lt;/name&gt;
+        &lt;value&gt;mycluster&lt;/value&gt;
+    &lt;/property&gt;
+
+2.dfs.ha.namenodes.[nameservice ID]
+    [hdfs-site.xml]
+    &lt;!-- myucluster下的名称节点两个id --&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.ha.namenodes.mycluster&lt;/name&gt;
+        &lt;value&gt;nn1,nn2&lt;/value&gt;
+    &lt;/property&gt;
+
+3.dfs.namenode.rpc-address.[nameservice ID].[name node ID] 
+    [hdfs-site.xml]
+    配置每个nn的rpc地址。
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.rpc-address.mycluster.nn1&lt;/name&gt;
+        &lt;value&gt;s201:8020&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.rpc-address.mycluster.nn2&lt;/name&gt;
+        &lt;value&gt;s206:8020&lt;/value&gt;
+    &lt;/property&gt;
+
+4.dfs.namenode.http-address.[nameservice ID].[name node ID]
+    配置webui端口
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.http-address.mycluster.nn1&lt;/name&gt;
+        &lt;value&gt;s201:50070&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.http-address.mycluster.nn2&lt;/name&gt;
+        &lt;value&gt;s206:50070&lt;/value&gt;
+    &lt;/property&gt;
+
+5.dfs.namenode.shared.edits.dir
+    名称节点共享编辑目录.
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.shared.edits.dir&lt;/name&gt;
+        &lt;value&gt;qjournal://s202:8485;s203:8485;s204:8485/mycluster&lt;/value&gt;
+    &lt;/property&gt;
+
+6.dfs.client.failover.proxy.provider.[nameservice ID]
+    java类，client使用它判断哪个节点是激活态。
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.client.failover.proxy.provider.mycluster&lt;/name&gt;
+        &lt;value&gt;org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider&lt;/value&gt;
+    &lt;/property&gt;
+
+7.dfs.ha.fencing.methods
+    脚本列表或者java类，在容灾保护激活态的nn.
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.ha.fencing.methods&lt;/name&gt;
+        &lt;value&gt;
+                sshfence
+                shell(/bin/true)
+        &lt;/value&gt;
+    &lt;/property&gt;
+
+    &lt;property&gt;
+        &lt;name&gt;dfs.ha.fencing.ssh.private-key-files&lt;/name&gt;
+        &lt;value&gt;/home/centos/.ssh/id_rsa&lt;/value&gt;
+    &lt;/property&gt;
+
+8.fs.defaultFS 
+    配置hdfs文件系统名称服务。
+    [core-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;fs.defaultFS&lt;/name&gt;
+        &lt;value&gt;hdfs://mycluster&lt;/value&gt;
+    &lt;/property&gt; 
+
+9.dfs.journalnode.edits.dir
+    配置JN存放edit的本地路径。
+    [hdfs-site.xml]
+    &lt;property&gt;
+        &lt;name&gt;dfs.journalnode.edits.dir&lt;/name&gt;
+        &lt;value&gt;/home/centos/hadoop/journal&lt;/value&gt;
+    &lt;/property&gt;
+</code></pre><h2 id="部署细节"><a href="#部署细节" class="headerlink" title="部署细节"></a>部署细节</h2><pre><code>1.在jn节点分别启动jn进程
+    $&gt;hadoop-daemon.sh start journalnode
+
+2.启动jn之后，在两个NN之间进行disk元数据同步
+    a)如果是全新集群，先format文件系统,只需要在一个nn上执行。
+        [s201]
+        $&gt;hadoop namenode -format
+</code></pre><p>格式化文件系统主要就是生成一个新的VERSION，里面内容就是生成一个名称空间ID集群ID时间块池ID</p>
+<p><img src="https://i.imgur.com/9loeVXF.png" alt=""></p>
+<pre><code>b)如果将非HA集群转换成HA集群，复制原NN的metadata到另一个nn.
+    1.步骤一
+        [s201]
+        $&gt;scp -r /home/centos/hadoop/dfs centos@s206:/home/centos/hadoop/
+
+    2.步骤二
+
+
+
+        在新的nn(未格式化的nn)上运行一下命令，实现待命状态引导。
+        [s206]
+        $&gt;hdfs namenode -bootstrapStandby        //需要s201为启动状态,提示是否格式化,选择N.
+
+    3)在一个NN上执行以下命令，完成edit日志到jn节点的传输。
+        $&gt;hdfs namenode -initializeSharedEdits
+        #查看s202,s203是否有edit数据.
+
+    4)启动所有节点.
+        [s201]
+        $&gt;hadoop-daemon.sh start namenode        //启动名称节点
+        $&gt;hadoop-daemons.sh start datanode        //启动所有数据节点
+
+        [s206]
+        $&gt;hadoop-daemon.sh start namenode        //启动名称节点
+</code></pre><h2 id="HA管理"><a href="#HA管理" class="headerlink" title="HA管理"></a>HA管理</h2><pre><code>$&gt;hdfs haadmin -transitionToActive nn1                //切成激活态
+$&gt;hdfs haadmin -transitionToStandby nn1                //切成待命态
+$&gt;hdfs haadmin -transitionToActive --forceactive nn2//强行激活
+$&gt;hdfs haadmin -failover nn1 nn2                    //模拟容灾演示,从nn1切换到nn2
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/22/Hadoop第八天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/22/Hadoop第八天/" itemprop="url">Hadoop第八天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-22T19:40:51+08:00">
+                2018-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="二次排序链条化"><a href="#二次排序链条化" class="headerlink" title="二次排序链条化"></a>二次排序链条化</h1><p>分组不能解决数据倾斜问题，已经进入到了同一个reduce对象里面了，分一个组出来就进入同一个reduce方法里面。每次分组只是决定调用不调用同一个reduce方法。已经晚了，数据已经进入到了同一个reduce了，分区可以决定数据倾斜问题。</p>
+<p>reduce分为方法和对象，有的时候说reduce是指的是方法，有的时候指的是对象，要分开对待。</p>
+<p>单词统计做统计肯定不能哈希分区，因为哈希同一个值进入到同一个reduce对象利民区去了</p>
+<h1 id="数据倾斜问题-随机分区-二次MR"><a href="#数据倾斜问题-随机分区-二次MR" class="headerlink" title="数据倾斜问题 随机分区 二次MR"></a>数据倾斜问题 随机分区 二次MR</h1><pre><code>1.
+2.
+3.
+4.
+</code></pre><p>如果正常按照wordcount来处理会分为</p>
+<p>reduce不设置就是1，map没机会设置数量。但是也可以设置map，但是意义，以为mr提交的时候map的个数取决于切片的个数。</p>
+<p>切片的计算公式：min block、maxsplit、 blocksize取中间值<br>等于blocksize。</p>
+<p>现在文件如下，现在3个文件每个文件有一百万数据且有一百万个hello就对应了3个map。（这里没明白为什么3个切片也就是为啥3个map）</p>
+<p>每个切片里，分区个数等于reduce个数，分区的个数取决于reduce个数，之前自己已经在WCAPP里面设置好了reduce个数。</p>
+<p>我有3个map，4个reduce。那么每个map里面就有4个分区了。</p>
+<p><strong>要解决哈希分区带来的数据倾斜问题，可以通过随机分区，然后在进行二次mr来解决这个问题</strong></p>
+<p><img src="https://i.imgur.com/VoHpfBH.png" alt=""></p>
+<p>组合combineor是对分区里面的预先聚合，下面的hello就不会发送一百万次，而是提前聚合了发送了hello 一百万次。这个样子。能解决目前的倾斜问题，但是不可能这么多数据，可能量很大</p>
+<p>下面这种情况下，所有的hello根据哈希分区就进入到同一个分区，然后一百万个tom分4个分区</p>
+<p>通过随机分区可以解决数据倾斜问题，但是会产生新的问题，就是说hello被分到4个不同的reduce里面，导致reduce1产生hello10reduce2产生hello13这种问题，所以通过二次mr来解决这个问题，让hello这个单词统计，进入到同一个reduce结果当中。所以也就是通过随即分区和二次mr解决</p>
+<pre><code>[1.txt]1000000
+hello tom1
+hello tom2
+hello tom3
+hello tom4
+hello tom5
+hello tom6
+hello tom7
+hello tom8
+hello tom9
+hello tom10
+
+[2.txt]1000000
+hello tom11
+hello tom12
+hello tom13
+hello tom14
+hello tom15
+hello tom16
+hello tom17
+hello tom18
+hello tom19
+hello tom20
+
+[3.txt]1000000
+hello tom21
+hello tom22
+hello tom23
+hello tom24
+hello tom25
+hello tom26
+hello tom27
+hello tom28
+hello tom29
+hello tom30
+</code></pre><p>代码如下：<br>    //自定义分区函数<br>    public class RandomPartitioner extends Partitioner&lt;Text,IntWritable&gt; {<br>        @Override<br>        public int getPartition(Text text, IntWritable intWritable, int numPartitions) {<br>            return new Random().nextInt(numPartitions);<br>        }<br>    }</p>
+<hr>
+<pre><code>//解决数据倾斜问题：
+public class WCSkueApp {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+        Job job = Job.getInstance(conf);
+
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCSkueApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:/mr/skew/out&quot;));
+
+        //设置随机分区：
+        job.setPartitionerClass(RandomPartitioner.class);
+
+        job.setMapperClass(WCSkueMapper.class);         //mapper类
+        job.setReducerClass(WCSkueReducer.class);       //reduce类
+
+        job.setNumReduceTasks(4);
+
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueMapper extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+    public WCSkueMapper(){
+        System.out.println(&quot;new WCMapper&quot;);
+    }
+
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] arr = value.toString().split(&quot; &quot;);
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+
+        for(String s:arr){
+            keyout.set(s);
+            valueout.set(1);
+            context.write(keyout,valueout);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+
+
+    }
+}
+</code></pre><hr>
+<p>//解决数据倾斜问题：<br>    public class WCSkueApp2 {</p>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+        Job job = Job.getInstance(conf);
+
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCSkueApp2.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00000&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00001&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00002&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00003&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:/mr/skew/out2&quot;));
+
+
+        job.setMapperClass(WCSkueMapper2.class);         //mapper类
+        job.setReducerClass(WCSkueReducer2.class);       //reduce类
+
+        job.setNumReduceTasks(4);
+
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueMapper2 extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+    public WCSkueMapper2(){
+        System.out.println(&quot;new WCMapper&quot;);
+    }
+
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] arr = value.toString().split(&quot;\t&quot;);
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+        context.write(new Text(arr[0]),new IntWritable(Integer.parseInt(arr[1])));
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueReducer2 extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+
+
+    }
+}
+</code></pre><hr>
+<p>上面这个就是通过2次mr解决数据倾斜问题    但是不用那么麻烦的去切分了直接使用Keyvalueinputformat即可实现：如下代码：<br>    //解决数据倾斜问题：<br>    public class WCSkueApp2 {</p>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+        Job job = Job.getInstance(conf);
+
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCSkueApp2.class); //搜索类路径
+        job.setInputFormatClass(KeyValueTextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00000&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00001&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00002&quot;));
+        FileInputFormat.addInputPath(job,new Path(&quot;e:/mr/skew/out/part-r-00003&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:/mr/skew/out2&quot;));
+
+
+        job.setMapperClass(WCSkueMapper2.class);         //mapper类
+        job.setReducerClass(WCSkueReducer2.class);       //reduce类
+
+        job.setNumReduceTasks(4);
+
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueMapper2 extends Mapper &lt;Text, Text, Text, IntWritable&gt;{
+    public WCSkueMapper2(){
+        System.out.println(&quot;new WCMapper&quot;);
+    }
+
+    protected void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+        context.write(key,new IntWritable(Integer.parseInt(value.toString())));
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCSkueReducer2 extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+    }
+}
+</code></pre><hr>
+<hr>
+<hr>
+<h1 id="链条式编程"><a href="#链条式编程" class="headerlink" title="链条式编程"></a>链条式编程</h1><p><img src="https://i.imgur.com/VwHIXax.png" alt=""></p>
+<p>讲解上图：<br>首先通过MapMapper1来切割，然后通过MapMapper1过滤掉法轮功，真个是一个链条，在map端，执行完之后开始聚合，在reduce端，在聚合的时候，每个单词都有各自的个数，对产生的结果再次过滤，过滤掉少于5的单词，当然可以放到同一个map里面，但是如果变成模块方法，易于维护。更加方便使用。<br>m阶段可以有多个m但是R阶段只能有一个r。但是r阶段可以有多个m。</p>
+<p>代码如下图：<br>//链条式job任务<br>    public class WCChainApp {</p>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(WCChainApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job, new Path(&quot;e:/mr/skew&quot;));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(&quot;e:mr/skew/out&quot;));
+
+        //在map链条上添加一个mapper的环节
+        ChainMapper.addMapper(job,WCMapMapper1.class,LongWritable.class,Text.class,Text.class,IntWritable.class,conf);
+        ChainMapper.addMapper(job,WCMapMapper2.class,Text.class,IntWritable.class,Text.class,IntWritable.class,conf);
+
+        //在reduce链条上设置reduce
+        ChainReducer.setReducer(job,WCReducer.class,Text.class,IntWritable.class,Text.class,IntWritable.class,conf);
+        ChainReducer.addMapper(job,WCReduceMapper1.class,Text.class,IntWritable.class,Text.class,IntWritable.class,conf);
+
+        job.setNumReduceTasks(3);
+
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCMapMapper1 extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+
+    protected   void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+        String[] arr = value.toString().split(&quot; &quot;);
+        for(String s:arr){
+            keyout.set(s);
+            valueout.set(1);
+            context.write(keyout,valueout);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCMapMapper2 extends Mapper &lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    protected void map(Text key, IntWritable value, Context context) throws IOException, InterruptedException {
+        if(!key.toString().equals(&quot;falungong&quot;)){
+            context.write(key , value);
+        }
+
+    }
+}
+</code></pre><hr>
+<pre><code>//过滤单词个数
+public class WCReduceMapper1 extends Mapper&lt;Text,IntWritable,Text,IntWritable&gt; {
+    @Override
+    protected void map(Text key, IntWritable value, Context context) throws IOException, InterruptedException {
+        if(value.get() &gt; 5){
+            context.write(key,value);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>/**
+ * Reducer
+ */
+public class WCReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0 ;
+        for(IntWritable iw : values){
+            count = count + iw.get() ;
+        }
+        context.write(key,new IntWritable(count));
+
+
+    }
+}
+</code></pre><hr>
+<hr>
+<hr>
+<h2 id="FileInputFormat（读源码）"><a href="#FileInputFormat（读源码）" class="headerlink" title="FileInputFormat（读源码）"></a>FileInputFormat（读源码）</h2><pre><code>获取切片集合。
+子类都要重写方法isSplittable();
+负责创建RecordReader对象。
+设置IO路径。
+</code></pre><h2 id="RecordReader（读源码）"><a href="#RecordReader（读源码）" class="headerlink" title="RecordReader（读源码）"></a>RecordReader（读源码）</h2><pre><code>负责从InputSplit中读取KV对。
+</code></pre><h2 id="jdbc笔记模板："><a href="#jdbc笔记模板：" class="headerlink" title="jdbc笔记模板："></a>jdbc笔记模板：</h2><pre><code>[写操作]
+Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+Connection conn = DriverMananger.getConnection(&quot;jdbc:mysql://localhost:3306/big4&quot;,&quot;root&quot;,&quot;root&quot;);
+//预处理语句
+PreparedStatement ppst = conn.preparedStatement(&quot;insert into test(id,name,age) values(?,?,?)&quot;);
+//绑定参数
+ppst.setInteger(1,1);
+ppst.setInteger(2,&quot;tom&quot;);
+ppst.setInteger(3,12);
+
+ppst.executeUpdate();
+ppst.close();
+conn.close();
+
+
+[读操作]
+Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+Connection conn = DriverMananger.getConnection(&quot;jdbc:mysql://localhost:3306/big4&quot;,&quot;root&quot;,&quot;root&quot;);
+
+ppst = conn.preparedStatement(&quot;select id,name from test &quot;);
+//结果集
+ResultSet rs = ppst.executeQuery();
+while(rs.next()){
+    int id = rs.getInt(&quot;id&quot;);
+    String name = rs.getInt(&quot;name&quot;);
+}
+rs.close();
+conn.close();
+</code></pre><p>看一下下源码：<br><img src="https://i.imgur.com/5ZrVZsW.png" alt=""><br>看一下写和读入都把结果集和预处理语句都已经封装进去了，剩下的只要填空就好了。</p>
+<p>以下是从数据库中读入的代码模板：</p>
+<h1 id="使用DBWritable向数据库从数据库中读取"><a href="#使用DBWritable向数据库从数据库中读取" class="headerlink" title="使用DBWritable向数据库从数据库中读取"></a>使用DBWritable向数据库从数据库中读取</h1><h2 id="1-准备数据库"><a href="#1-准备数据库" class="headerlink" title="1.准备数据库"></a>1.准备数据库</h2><pre><code>create database big4 ;
+use big4 ;
+create table words(id int primary key auto_increment , name varchar(20) , txt varchar(255));
+
+insert into words(name,txt) values(&apos;tomas&apos;,&apos;hello world tom&apos;);
+insert into words(txt) values(&apos;hello tom world&apos;);
+insert into words(txt) values(&apos;world hello tom&apos;);
+insert into words(txt) values(&apos;world tom hello&apos;);
+</code></pre><h2 id="2-编写hadoop-MyDBWritable"><a href="#2-编写hadoop-MyDBWritable" class="headerlink" title="2.编写hadoop MyDBWritable."></a>2.编写hadoop MyDBWritable.</h2><pre><code>import org.apache.hadoop.mapreduce.lib.db.DBWritable;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * MyDBWritable
+ */
+public class MyDBWritable implements DBWritable,Writable {
+    private int id ;
+    private String name ;
+    private String txt ;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTxt() {
+        return txt;
+    }
+
+    public void setTxt(String txt) {
+        this.txt = txt;
+    }
+
+    public void write(DataOutput out) throws IOException {
+        out.writeInt(id);
+        out.writeUTF(name);
+        out.writeUTF(txt);
+    }
+
+    public void readFields(DataInput in) throws IOException {
+        id = in.readInt();
+        name = in.readUTF();
+        txt = in.readUTF();
+    }
+
+    /**
+     * 写入db
+     */
+    public void write(PreparedStatement ppst) throws SQLException {
+        ppst.setInt(1,id);
+        ppst.setString(2,name);
+        ppst.setString(3,txt);
+    }
+
+    /**
+     * 从db读取
+     */
+    public void readFields(ResultSet rs) throws SQLException {
+        id = rs.getInt(1);
+        name = rs.getString(2);
+        txt = rs.getString(3);
+    }
+}
+</code></pre><h2 id="3-WcMapper"><a href="#3-WcMapper" class="headerlink" title="3.WcMapper"></a>3.WcMapper</h2><pre><code>public class WCMapper extends Mapper&lt;LongWritable,MyDBWritable,Text,IntWritable&gt; {
+
+    protected void map(LongWritable key, MyDBWritable value, Context context) throws IOException, InterruptedException {
+        System.out.println(key);
+        String line = value.getTxt();
+        System.out.println(value.getId() + &quot;,&quot; + value.getName());
+        String[] arr = line.split(&quot; &quot;);
+        for(String s : arr){
+            context.write(new Text(s),new IntWritable(1));
+        }
+    }
+}
+</code></pre><h2 id="4-WCReducer"><a href="#4-WCReducer" class="headerlink" title="4.WCReducer"></a>4.WCReducer</h2><pre><code>protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+    int count = 0 ;
+    for(IntWritable w : values){
+        count = count + w.get() ;
+    }
+    context.write(key,new IntWritable(count));
+}
+</code></pre><h2 id="5-WCApp"><a href="#5-WCApp" class="headerlink" title="5.WCApp"></a>5.WCApp</h2><pre><code>public static void main(String[] args) throws Exception {
+    Configuration conf = new Configuration();
+    Job job = Job.getInstance(conf);
+
+    //设置job的各种属性
+    job.setJobName(&quot;MySQLApp&quot;);                        //作业名称
+    job.setJarByClass(WCApp.class);                 //搜索类
+
+    //配置数据库信息
+    String driverclass = &quot;com.mysql.jdbc.Driver&quot; ;
+    String url = &quot;jdbc:mysql://localhost:3306/big4&quot; ;
+    String username= &quot;root&quot; ;
+    String password = &quot;root&quot; ;
+    //设置数据库配置
+    DBConfiguration.configureDB(job.getConfiguration(),driverclass,url,username,password);
+    //设置数据输入内容
+    DBInputFormat.setInput(job,MyDBWritable.class,&quot;select id,name,txt from words&quot;,&quot;select count(*) from words&quot;);
+
+    //设置输出路径
+    FileOutputFormat.setOutputPath(job,new Path(&quot;e:/mr/sql/out&quot;));
+
+    //设置分区类
+    job.setMapperClass(WCMapper.class);             //mapper类
+    job.setReducerClass(WCReducer.class);           //reducer类
+
+    job.setNumReduceTasks(3);                       //reduce个数
+
+    job.setMapOutputKeyClass(Text.class);           //
+    job.setMapOutputValueClass(IntWritable.class);  //
+
+    job.setOutputKeyClass(Text.class);
+    job.setOutputValueClass(IntWritable.class);     //
+
+    job.waitForCompletion(true);
+}
+</code></pre><h2 id="6-pom-xml增加mysql驱动"><a href="#6-pom-xml增加mysql驱动" class="headerlink" title="6.pom.xml增加mysql驱动"></a>6.pom.xml增加mysql驱动</h2><pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;5.1.17&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre><h2 id="7-将mr的统计结果写入mysql数据库"><a href="#7-将mr的统计结果写入mysql数据库" class="headerlink" title="7.将mr的统计结果写入mysql数据库"></a>7.将mr的统计结果写入mysql数据库</h2><pre><code>a)准备表
+    create table stats(word varchar(50),c int);
+b)设置App的DBOutputFormat类
+    com.it18zhang.hdfs.mr.mysql.WCApp
+d)
+e)
+f)
+</code></pre><hr>
+<h1 id="mysql分页查询"><a href="#mysql分页查询" class="headerlink" title="mysql分页查询"></a>mysql分页查询</h1><p>如图所示吧：</p>
+<p><img src="https://i.imgur.com/0hHJN3B.png" alt=""></p>
+<p><img src="https://i.imgur.com/FAbkIff.png" alt=""></p>
+<p><img src="https://i.imgur.com/9wCCeH2.png" alt=""></p>
+<h1 id="使用DBWritable向数据库从数据库中写入"><a href="#使用DBWritable向数据库从数据库中写入" class="headerlink" title="使用DBWritable向数据库从数据库中写入"></a>使用DBWritable向数据库从数据库中写入</h1><pre><code>public class MyDBWritalbe implements DBWritable,Writable {
+    private int id=0;
+    private String name=&quot;&quot;;
+    private String txt=&quot;&quot;;
+    private  String word=&quot;&quot;;
+    private int wordcount=0;
+
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    public int getWordcount() {
+        return wordcount;
+    }
+
+    public void setWordcount(int wordcount) {
+        this.wordcount = wordcount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTxt() {
+        return txt;
+    }
+
+    public void setTxt(String txt) {
+        this.txt = txt;
+    }
+
+    public void write(DataOutput out) throws IOException {
+
+        out.writeInt(id);
+        out.writeUTF(name);
+        out.writeUTF(txt);
+        out.writeUTF(word);
+        out.writeInt(wordcount);
+    }
+    public void readFields(DataInput in) throws IOException {
+        id=in.readInt();
+        name=in.readUTF();
+        txt=in.readUTF();
+        word=in.readUTF();
+        wordcount=in.readInt();
+
+    }
+    //向数据库中写入DB
+    public void write(PreparedStatement ppst) throws SQLException {
+        //要求定制字段列表的时候先单词后个数。
+
+        ppst.setString(1,word);
+        ppst.setInt(2,wordcount);
+
+    }
+    //从DB中读出
+    public void readFields(ResultSet rs) throws SQLException {
+        id=rs.getInt(1);
+        name=rs.getString(2);
+        txt=rs.getString(3);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCApp {
+    //
+//    public static void main(String[] args) throws Exception {
+//        Configuration conf = new Configuration();
+//
+//        Job job = Job.getInstance(conf);
+//
+////        设置作业的各种属性
+//        job.setJobName(&quot;MySQLApp&quot;);    //作业名称
+//        job.setJarByClass(WCApp.class); //搜索类路径
+//
+//        //配置数据库信息
+//        String driverclass = &quot;com.mysql.jdbc.Driver&quot;;
+//        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+//        String usrname = &quot;root&quot;;
+//        String password = &quot;root&quot;;
+//        DBConfiguration.configureDB(conf,driverclass,url,usrname,password);
+//        //设置数据输入内容
+//        DBInputFormat.setInput(job,DBWritable.class,&quot;select id,name,txt from words&quot;,&quot;select count(*) from words&quot;);
+//        //设置输出路径
+//        FileOutputFormat.setOutputPath(job, new Path(&quot;d:/mr/sql/out&quot;));
+//
+//        job.setMapperClass(WCMapper.class);         //mapper类
+//        job.setReducerClass(WCReducer.class);       //reduce类
+//
+//        job.setNumReduceTasks(3);
+//
+//
+//        job.setMapOutputKeyClass(Text.class);
+//        job.setMapOutputValueClass(IntWritable.class);
+//
+//        job.setOutputKeyClass(Text.class);          //设置输出类型
+//        job.setOutputValueClass(IntWritable.class);
+//
+//        job.waitForCompletion(true);
+//
+//    }
+//}
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf);
+
+        //设置job的各种属性
+        job.setJobName(&quot;MySQLApp&quot;);                        //作业名称
+        job.setJarByClass(WCApp.class);                 //搜索类
+
+        //配置数据库信息
+        String driverclass = &quot;com.mysql.jdbc.Driver&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/big4&quot;;
+        String username = &quot;root&quot;;
+        String password = &quot;root&quot;;
+        //设置数据库配置
+        DBConfiguration.configureDB(job.getConfiguration(), driverclass, url, username, password);
+        //设置数据输入内容
+        DBInputFormat.setInput(job, MyDBWritalbe.class, &quot;select id,name,txt from words&quot;, &quot;select count(*) from words&quot;);
+        //这里定制字段列表，先单词后个数
+        DBOutputFormat.setOutput(job,&quot;stats&quot;,&quot;word&quot;,&quot;c&quot;);
+
+        //设置分区类
+        job.setMapperClass(WCMapper.class);             //mapper类
+        job.setReducerClass(WCReducer.class);           //reducer类
+
+        job.setNumReduceTasks(3);                       //reduce个数
+
+        job.setMapOutputKeyClass(Text.class);           //
+        job.setMapOutputValueClass(IntWritable.class);  //
+
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);     //
+
+        job.waitForCompletion(true);
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCMapper extends Mapper&lt;LongWritable, MyDBWritalbe, Text, IntWritable&gt; {
+    @Override
+    protected void map(LongWritable key, MyDBWritalbe value, Context context) throws IOException, InterruptedException {
+        System.out.println(key);
+        String line = value.getTxt();
+        System.out.println(value.getId() + &quot;,&quot; + value.getName());
+        String[] arr = line.split(&quot; &quot;);
+        for (String s : arr) {
+            context.write(new Text(s), new IntWritable(1));
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCReducer extends Reducer&lt;Text, IntWritable, MyDBWritalbe, NullWritable&gt; {
+
+    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+        int count = 0;
+        for (IntWritable w : values) {
+            count = count + w.get();
+        }
+        MyDBWritalbe keyout = new MyDBWritalbe();
+        keyout.setWord(key.toString());
+        keyout.setWordcount(count);
+        context.write(keyout, NullWritable.get());
+    }
+}
+</code></pre><hr>
+<h1 id="在虚拟机中跑wordcount写入数据库问题："><a href="#在虚拟机中跑wordcount写入数据库问题：" class="headerlink" title="在虚拟机中跑wordcount写入数据库问题："></a>在虚拟机中跑wordcount写入数据库问题：</h1><h2 id="需要修改的地方："><a href="#需要修改的地方：" class="headerlink" title="需要修改的地方："></a>需要修改的地方：</h2><p>1.修改url</p>
+<p><img src="https://i.imgur.com/8lkYD5v.png" alt=""></p>
+<p>2.修改core-site.xml或者删除掉</p>
+<p><img src="https://i.imgur.com/weFYMBJ.png" alt=""></p>
+<p>3.在虚拟机中分发mysql-connector-java-5.1.7-bin.jar将之分发到每个节点的/soft/hadoop/share/hadoop/common/lib目录下。</p>
+<p><img src="https://i.imgur.com/ou52Qhr.png" alt=""></p>
+<p>4.在运行</p>
+<pre><code>hadoop jar HdfsDemo.jar com.it18zhang.hdfs.mr.mysql.WCApp
+</code></pre><h2 id="出现的问题："><a href="#出现的问题：" class="headerlink" title="出现的问题："></a>出现的问题：</h2><p>1.出现连接不上的报错：</p>
+<p><img src="https://i.imgur.com/JgE2Q3e.png" alt=""></p>
+<p>百度了一下完美解决，是由于mysql没有对所有用户开启权限导致：</p>
+<p><a href="https://blog.csdn.net/OldTogether/article/details/79612627?utm_source=blogxgwz1" target="_blank" rel="noopener">https://blog.csdn.net/OldTogether/article/details/79612627?utm_source=blogxgwz1</a></p>
+<p>2.出现一下问题：</p>
+<p><img src="https://i.imgur.com/vgUGlEc.png" alt=""></p>
+<p>原因是有一个s205的防火墙没有关掉导致的：</p>
+<p><a href="https://blog.csdn.net/shirdrn/article/details/7280040" title="防火墙没关掉导致的" target="_blank" rel="noopener">https://blog.csdn.net/shirdrn/article/details/7280040</a></p>
+<hr>
+<p>完</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/17/Hadoop第七天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/17/Hadoop第七天/" itemprop="url">Hadoop第七天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-17T16:17:15+08:00">
+                2018-10-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="多输入问题"><a href="#多输入问题" class="headerlink" title="多输入问题"></a>多输入问题</h1><p>在IDEA里面代码：</p>
+<p>首先明确一点InputInputformat也就是文本输入格式的输入是Longwritblele和Text，然后SequenceFileputFormat的输入是intwritble和text。</p>
+<pre><code>public class WCApp {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//       设置作业的各种属性
+        job.setJobName(&quot;WCAppMulti&quot;);    //作业名称
+        job.setJarByClass(WCApp.class); //搜索类路径
+
+        //多个输入
+        MultipleInputs.addInputPath(job,new Path(&quot;file:///e:/mr/txt&quot;),TextInputFormat.class,WCTextMapper.class);
+        MultipleInputs.addInputPath(job,new Path(&quot;file:///e:/mr/seq&quot;),SequenceFileInputFormat.class,WCSeqMapper.class);
+
+        //设置输出
+        FileOutputFormat.setOutputPath(job,new Path(args[0]));
+
+        job.setReducerClass(WCReducer.class);//reducer类
+        job.setNumReduceTasks(3);//reducer个数
+
+
+        job.setOutputKeyClass(Text.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>ublic class WCReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;{
+
+/**
+ * reduce
+ */
+protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+    int count = 0 ;
+    for(IntWritable iw : values){
+        count = count + iw.get() ;
+    }
+    String tno = Thread.currentThread().getName();
+    System.out.println(tno + &quot;WCReducer:&quot; + key.toString() + &quot;=&quot; + count);
+    context.write(key,new IntWritable(count));
+}
+</code></pre><p>}</p>
+<hr>
+<pre><code>public class WCTextMapper extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] arr = value.toString().split(&quot; &quot;);
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+        for(String s:arr){
+            keyout.set(s);
+            valueout.set(1);
+            context.write(keyout,valueout);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>public class WCTextMapper extends Mapper &lt;LongWritable, Text, Text, IntWritable&gt;{
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] arr = value.toString().split(&quot; &quot;);
+        Text keyout= new Text();
+        IntWritable valueout = new IntWritable();
+        for(String s:arr){
+            keyout.set(s);
+            valueout.set(1);
+            context.write(keyout,valueout);
+        }
+    }
+}
+</code></pre><hr>
+<p>下图是配置本地的路径。要明确其中的arg[]也就是这个里配置的那个Program arguments的路径。因为只需要一个参数就可以了，因为在代码中已经写好了输入路径了。</p>
+<p><img src="https://i.imgur.com/vO9wETa.png" alt=""></p>
+<hr>
+<hr>
+<hr>
+<h1 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h1><p> 日志目录：<br>/soft/hadoop/logs/userlogs</p>
+<p>用户打印的日志。Hadoop输出的日志都是在外层的文件之中。userlogs是自己的日志打印。</p>
+<h2 id="计数器-1"><a href="#计数器-1" class="headerlink" title="计数器"></a>计数器</h2><p>是其他的内容都不做更改，在Mapper和Reducer里面添加这个语句即可<br>    context.getCounter(“r”, “WCReducer.reduce”).increment(1);</p>
+<p>然后扔到虚拟机里面去运行：<br>    hadoop jar HdfsDemo.jar com.it18zhang.hdfs.mr.WCApp hdfs://user/centos/data/ hdfs://user/centos/data/out</p>
+<h1 id="单独配置2nn到独立节点"><a href="#单独配置2nn到独立节点" class="headerlink" title="单独配置2nn到独立节点"></a>单独配置2nn到独立节点</h1><p>配置core-site文件</p>
+<pre><code>[hdfs-site.xml]
+&lt;property&gt;
+        &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt;
+        &lt;value&gt;s206:50090&lt;/value&gt;
+&lt;/property&gt;
+</code></pre><h1 id="跟踪运行器信息"><a href="#跟踪运行器信息" class="headerlink" title="跟踪运行器信息"></a>跟踪运行器信息</h1><p><img src="https://i.imgur.com/UVIcFDb.png" alt=""></p>
+<p>添加一个工具类：</p>
+<pre><code>public class Util {
+
+public static String getInfo(Object o,String msg ){
+    return getHostname() + &quot;:&quot; + getPID() + &quot;:&quot; + getTID()+&quot;:&quot;+getObjInfo(o) +msg;
+}
+
+//得到主机名
+public static String getHostname() {
+    try {
+        return InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException e) {
+        e.printStackTrace();
+    }
+    return  null;
+}
+    //获得当前程序的所在的进程ID。
+    public static int getPID()  {
+        String info = ManagementFactory.getRuntimeMXBean().getName();
+        return Integer.parseInt(info.substring(0,info.indexOf(&quot;@&quot;)));
+    }
+    //返回当前线程ID，
+    public static String getTID(){
+    return Thread.currentThread().getName();
+    }
+
+    public static  String getObjInfo(Object o){
+        String sname = o.getClass().getSimpleName();
+        return sname + &quot;@&quot;+o.hashCode();
+
+    }
+}
+</code></pre><p>然后在map和reduce阶段添加：</p>
+<pre><code>//每执行一次，计数器对这个组+1
+context.getCounter(&quot;m&quot;,Util.getInfo(this,&quot;map&quot;)).increment(1);
+</code></pre><p>效果如下图<br><img src="https://i.imgur.com/XeGcZvS.png" alt=""></p>
+<h1 id="全排序"><a href="#全排序" class="headerlink" title="全排序"></a>全排序</h1><pre><code>## 普通排序求最高年份温度 ##
+</code></pre><p>代码如下：</p>
+<pre><code>public class MaxTempApp {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(MaxTempApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+
+        job.setMapperClass(MaxTempMapper.class);         //mapper类
+        job.setReducerClass(MaxTempReducer.class);       //reduce类
+
+        job.setNumReduceTasks(3);           //reduce个数
+
+
+        job.setMapOutputKeyClass(IntWritable.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(IntWritable.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempMapper extends Mapper&lt;LongWritable, Text, IntWritable, IntWritable&gt; {
+    public MaxTempMapper() {
+        System.out.println(&quot;new MaxTempMapper&quot;);
+    }
+
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String line = value.toString();
+        String arr[] = line.split(&quot; &quot;);
+        context.write(new IntWritable(Integer.parseInt(arr[0])), new IntWritable((Integer.parseInt(arr[1]))));
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempReducer extends Reducer&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(IntWritable key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int max =Integer.MIN_VALUE;
+            for(IntWritable iw : values){
+                max = max &gt; iw.get() ? max : iw.get() ;
+            }
+                context.write(key,new IntWritable(max));
+
+    }
+}
+</code></pre><hr>
+<h2 id="全排序代码"><a href="#全排序代码" class="headerlink" title="全排序代码"></a>全排序代码</h2><p>上面代码产生的会是3个文件，文件内部各自排序，但是不是全排序的文件。全排序2种办法：</p>
+<p>1、设置分区数是1，但是数据倾斜</p>
+<ol start="2">
+<li><p>在每个分区里设置0-30，30-60，60-100即可,然后每个分区返回0,1,2进入分成不同的区<br>代码如下图：<br> public class YearPartitioner extends Partitioner&lt;IntWritable, IntWritable&gt; {</p>
+<pre><code>public int getPartition(IntWritable year, IntWritable temp, int parts) {
+    int y = year.get() - 1970;
+    if (y &lt; 33) {
+        return 0;
+    }
+    if (y &gt; 33 &amp;&amp; y &lt; 66) {
+        return 1;
+    }
+    else {
+        return 2;
+    }
+}
+</code></pre><p> }</p>
+</li>
+</ol>
+<hr>
+<pre><code>public class MaxTempReducer extends Reducer&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(IntWritable key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int max =Integer.MIN_VALUE;
+            for(IntWritable iw : values){
+                max = max &gt; iw.get() ? max : iw.get() ;
+            }
+                context.write(key,new IntWritable(max));
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempMapper extends Mapper&lt;LongWritable, Text, IntWritable, IntWritable&gt; {
+    public MaxTempMapper() {
+        System.out.println(&quot;new MaxTempMapper&quot;);
+    }
+
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String line = value.toString();
+        String arr[] = line.split(&quot; &quot;);
+        context.write(new IntWritable(Integer.parseInt(arr[0])), new IntWritable((Integer.parseInt(arr[1]))));
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempApp {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;,&quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//        设置作业的各种属性
+        job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+        job.setJarByClass(MaxTempApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        job.setPartitionerClass(YearPartitioner.class);
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+
+        job.setMapperClass(MaxTempMapper.class);         //mapper类
+        job.setReducerClass(MaxTempReducer.class);       //reduce类
+
+        job.setNumReduceTasks(3);           //reduce个数
+
+
+        job.setMapOutputKeyClass(IntWritable.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setOutputKeyClass(IntWritable.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<p>其实无非就是加一个partitioner的这个类而已。</p>
+<hr>
+<hr>
+<hr>
+<h1 id="全排序采样器"><a href="#全排序采样器" class="headerlink" title="全排序采样器"></a>全排序采样器</h1><p>1.定义1个reduce</p>
+<p>2.自定义分区函数。<br>：        自行设置分解区间。</p>
+<p>3.使用hadoop采样机制。</p>
+<p>通过采样器生成分区文件，结合hadoop的TotalOrderPartitioner进行分区划分</p>
+<p>TotalOrderPartitioner        //全排序分区类,读取外部生成的分区文件确定区间。</p>
+<p>使用时采样代码在最后端,否则会出现错误。</p>
+<p>//分区文件设置，设置的job的配置对象，不要是之前的conf.这里面的getconfiguration()是对最开始new的conf的拷贝，<br>TotalOrderPartitioner.setPartitionFile(job.getConfiguration(),new Path(“d:/mr/par.lst”));</p>
+<h2 id="首先一段产生随机年份，温度的代码"><a href="#首先一段产生随机年份，温度的代码" class="headerlink" title="首先一段产生随机年份，温度的代码"></a>首先一段产生随机年份，温度的代码</h2><pre><code>public class PrepareTempData {
+    @Test
+    public void makeData() throws IOException {
+        FileWriter fw = new FileWriter(&quot;e:/mr/temp.txt&quot;);
+        for(int i=0;i&lt;6000;i++){
+            int year=1970+ new Random().nextInt(100);
+            int temp=-30 + new Random().nextInt(600);
+            fw.write(&quot; &quot;+ year + &quot; &quot;+ temp + &quot;\r\n&quot; );
+        }
+            fw.close();
+    }
+}
+</code></pre><hr>
+<h2 id="全排序采样器代码"><a href="#全排序采样器代码" class="headerlink" title="全排序采样器代码"></a>全排序采样器代码</h2><pre><code>        public static void main(String[] args) throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(&quot;fs.defaultFS&quot;, &quot;file:///&quot;);
+
+    Job job = Job.getInstance(conf);
+
+        设置作业的各种属性
+    job.setJobName(&quot;MaxTempApp&quot;);    //作业名称
+    job.setJarByClass(MaxTempApp.class); //搜索类路径
+    job.setInputFormatClass(SequenceFileInputFormat.class);//设置输入格式类
+
+    //添加输入路径
+    FileInputFormat.addInputPath(job, new Path(args[0]));
+    //设置输出路径
+    org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+    job.setMapperClass(MaxTempMapper.class);         //mapper类
+    job.setReducerClass(MaxTempReducer.class);       //reduce类
+
+
+    job.setMapOutputKeyClass(IntWritable.class);
+    job.setMapOutputValueClass(IntWritable.class);
+
+    job.setOutputKeyClass(IntWritable.class);          //设置输出类型
+    job.setOutputValueClass(IntWritable.class);
+
+    //设置 全排序分区类
+    job.setPartitionerClass(TotalOrderPartitioner.class);
+    //将sample数据 写入分区文件
+    TotalOrderPartitioner.setPartitionFile(conf, new Path(&quot;e:/mr/par.lst&quot;));
+
+    //创建随机采样器对象
+    InputSampler.Sampler&lt;IntWritable, IntWritable&gt; sampler = new InputSampler.RandomSampler&lt;IntWritable, IntWritable&gt;(0.1, 10000, 10);
+    job.setNumReduceTasks(3);           //reduce个数
+    InputSampler.writePartitionFile(job, sampler);
+
+
+    job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempMapper extends Mapper&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt; {
+    public MaxTempMapper() {
+        System.out.println(&quot;new MaxTempMapper&quot;);
+    }
+
+    @Override
+    protected void map(IntWritable key, IntWritable value, Context context) throws IOException, InterruptedException {
+        context.write(key,value);
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempReducer extends Reducer&lt;IntWritable, IntWritable, IntWritable, IntWritable&gt;{
+
+    /**
+     * reduce
+     */
+    protected void reduce(IntWritable key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int max =Integer.MIN_VALUE;
+            for(IntWritable iw : values){
+                max = max &gt; iw.get() ? max : iw.get() ;
+            }
+                context.write(key,new IntWritable(max));
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class YearPartitioner extends Partitioner&lt;IntWritable, IntWritable&gt; {
+
+    public int getPartition(IntWritable year, IntWritable temp, int parts) {
+        int y = year.get() - 1970;
+        if (y &lt; 33) {
+            return 0;
+        }
+        if (y &gt; 33 &amp;&amp; y &lt; 66) {
+            return 1;
+        }
+        else {
+            return 2;
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>全排序官方笔记:
+1.定义1个reduce
+
+2.自定义分区函数.
+    自行设置分解区间。
+
+3.使用hadoop采样机制。
+    通过采样器生成分区文件，结合hadoop的TotalOrderPartitioner进行分区划分。
+    TotalOrderPartitioner        //全排序分区类,读取外部生成的分区文件确定区间。
+
+    使用时采样代码在最后端,否则会出现错误。
+
+    //分区文件设置，设置的job的配置对象，不要是之前的conf.
+    TotalOrderPartitioner.setPartitionFile(job.getConfiguration(),new Path(&quot;d:/mr/par.lst&quot;));
+</code></pre><hr>
+<hr>
+<h2 id="全排序和部分排序二次排序在面试比例很重的"><a href="#全排序和部分排序二次排序在面试比例很重的" class="headerlink" title="全排序和部分排序二次排序在面试比例很重的"></a>全排序和部分排序二次排序在面试比例很重的</h2><p>分区在map端，分组在reduce端。<br>二次排序就是把value和key组合到一起，然后value就是nullwritable这样子。合在一起成为一个combokey。<br>Combokey不但要可比较还要串行化，hadoop的串行化机制是writable ，串行就是写入到流离去，反串行就是读出来。<br>IntWritable LongWritable这些都是经过串行化实现的类，Writable有很多子类。 </p>
+<p>value本身不能排序，为了能让他排序，吧value做到key里面去。吧年份和气温都做到key里面去，这个key是自定义的key,然后在combokey中定义里面的排序规则。自定义key,自定义对比器。</p>
+<p>wirtable是串行化机制，java本身也有串行化机制，本质是对象输出流和输入流objectInputStream,objectOutputStream。需要写入和读取就可以了，但是java的串行化效率比较低而且复杂，不能够夸语言，所以hadoop有一个自己的串行化Wriable过程。</p>
+<p>这端是reduce端，经过map端的combokey输出的combokey类是这个样子的，如果不经过处理直接聚合，就会发先，每一个combo都是一个新的都不相同，但是我们想让相同年份的进入到同一个组里面去。所以要重写分组。根据年份写分组，只要是同一个年就是同一组</p>
+<p>reduce端里面有reduce对象和reduce方法。我们说的分几个区进入到几个reduce的意思是进入到几个reduce对象。</p>
+<p><img src="https://i.imgur.com/SSNM7tc.png" alt=""></p>
+<p>现在讲一下下图：下图说在没有分组的情况下，一个key对应好多value,也就是一个1978对应好多个12。好多个12进入到迭代器里面去，不断it.next是下一个v。但是key也改变，其实每次都是变化的，<br><img src="https://i.imgur.com/R4Pj8tj.png" alt=""></p>
+<p><strong>讲一下二次排序和全排序：</strong>全排序就是整个年份-温度数据，分成几个区，让第一个区的最大值小于第二个区的最小值，然后这样子排下去，既解决了分布式的问题，又解决了数据倾斜的问题，但是value是不能排序的，因为mapreduce天生value就不能够排序。那么如何解决让温度也排序呢，就是要把年份和温度做成一个key，传入，然后再排序。就是二次排序，既实现了年份的排序，又实现了温度的排序，这里说的温度的排序是指同一个年份温度升序降序的问题。</p>
+<h1 id="二次排序"><a href="#二次排序" class="headerlink" title="二次排序"></a>二次排序</h1><p>代码如下：</p>
+<pre><code>/**
+ * 自定义组合key
+ */
+public class ComboKey implements WritableComparable&lt;ComboKey&gt; {
+    private int year;
+    private int temp;
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getTemp() {
+        return temp;
+    }
+
+    public void setTemp(int temp) {
+        this.temp = temp;
+    }
+
+    /**
+     * 对key进行比较实现
+     */
+    public int compareTo(ComboKey o) {
+        int y0 = o.getYear();
+        int t0 = o.getTemp();
+        //年份相同(升序)
+        if (year == y0) {
+            //气温降序
+            return -(temp - t0);            // //这个地方为什么说temp-t0是升序排列，因为这个temp-t0是默认的。默认就是升序排列加一个负号就是降序排列。本身升序排列的就是temp-t0是大于0的
+        } else {
+            return year - y0;
+        }
+    }
+
+    /**
+     * 串行化过程
+     */
+    public void write(DataOutput out) throws IOException {
+        //年份
+        out.writeInt(year);
+        //气温
+        out.writeInt(temp);
+    }
+
+    public void readFields(DataInput in) throws IOException {
+        year = in.readInt();
+        temp = in.readInt();
+    }
+}
+</code></pre><hr>
+<pre><code>/**
+ *ComboKeyComparator
+ */
+public class ComboKeyComparator extends WritableComparator {
+
+    protected ComboKeyComparator() {
+        super(ComboKey.class, true);
+    }
+
+    public int compare(WritableComparable a, WritableComparable b) {
+        ComboKey k1 = (ComboKey) a;
+        ComboKey k2 = (ComboKey) b;
+        return k1.compareTo(k2);
+    }
+}
+</code></pre><hr>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        conf.set(&quot;fs.defaultFS&quot;, &quot;file:///&quot;);
+
+        Job job = Job.getInstance(conf);
+
+//        设置作业的各种属性
+        job.setJobName(&quot;SecondarySortApp&quot;);    //作业名称
+        job.setJarByClass(MaxTempApp.class); //搜索类路径
+        job.setInputFormatClass(TextInputFormat.class);//设置输入格式类
+
+        //添加输入路径
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        //设置输出路径
+        org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        job.setMapperClass(MaxTempMapper.class);         //mapper类
+        job.setReducerClass(MaxTempReducer.class);       //reduce类
+
+        //设置map输出类型
+        job.setMapOutputKeyClass(ComboKey.class);
+        job.setMapOutputValueClass(NullWritable.class);
+
+        //设置Reduceoutput类型
+        job.setOutputKeyClass(IntWritable.class);          //设置输出类型
+        job.setOutputValueClass(IntWritable.class);
+
+        //设置分区类
+        job.setPartitionerClass(YearPartitioner.class);
+        //设置分组对比器。
+        job.setGroupingComparatorClass(YearGroupComparator.class);
+        //设置排序对比器，听说不写那个ComboKeyComparator不设置也可以
+        job.setSortComparatorClass(ComboKeyComparator.class);
+        //reduce个数
+        job.setNumReduceTasks(3);
+        job.waitForCompletion(true);
+
+    }
+}
+</code></pre><hr>
+<pre><code>public class MaxTempMapper extends Mapper&lt;LongWritable, Text, ComboKey, NullWritable&gt; {
+    @Override
+    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String line = value.toString();
+        String[] arr = line.split(&quot; &quot;);
+
+        ComboKey keyout = new ComboKey();
+        keyout.setYear(Integer.parseInt(arr[0]));
+        keyout.setTemp(Integer.parseInt(arr[1]));
+        context.write(keyout, NullWritable.get());
+    }
+  }
+</code></pre><hr>
+<pre><code>/**
+ * Reducer
+ */
+public class MaxTempReducer extends Reducer&lt;ComboKey, NullWritable, IntWritable, IntWritable&gt;{
+    protected void reduce(ComboKey key, Iterable&lt;NullWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int year = key.getYear();
+            int temp = key.getTemp();
+            context.write(new IntWritable(year),new IntWritable(temp));
+    }
+}
+</code></pre><hr>
+<pre><code>public class YearGroupComparator extends WritableComparator {
+
+    protected YearGroupComparator() {
+        super(ComboKey.class, true);
+    }
+
+    public int compare(WritableComparable a, WritableComparable b) {
+        ComboKey k1 = (ComboKey) a ;
+        ComboKey k2 = (ComboKey) b ;
+        return k1.getYear() - k2.getYear() ;
+    }
+}
+</code></pre><hr>
+<pre><code>//自定义分区，在map端执行，是map中的一个阶段，mapkv进kv出，kv出去之后要有一个分区的过程。
+//默认是哈希分区，这里边是修改了分区规则。
+public class YearPartitioner extends Partitioner&lt;ComboKey,NullWritable&gt; {
+
+public int getPartition(ComboKey key, NullWritable nullWritable, int numPartitions) {
+    int year = key.getYear();
+    return year % numPartitions;
+}
+</code></pre><p>}</p>
+<hr>
+<hr>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/11/Hadoop第六天之Yarn作业提交/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/11/Hadoop第六天之Yarn作业提交/" itemprop="url">Hadoop第六天之Yarn作业提交</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-11T15:48:32+08:00">
+                2018-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="本地模式job提交流程"><a href="#本地模式job提交流程" class="headerlink" title="本地模式job提交流程"></a>本地模式job提交流程</h2><pre><code>mr.Job = new Job();
+job.setxxx();
+JobSubmitter.提交
+LocalJobRunner.Job();
+start();
+</code></pre><h2 id="hdfs-write"><a href="#hdfs-write" class="headerlink" title="hdfs write"></a>hdfs write</h2><pre><code>packet,
+</code></pre><h2 id="hdfs-切片计算方式"><a href="#hdfs-切片计算方式" class="headerlink" title="hdfs 切片计算方式"></a>hdfs 切片计算方式</h2><pre><code>getFormatMinSplitSize() = 1
+
+//最小值(&gt;=1)                            1                        0
+long minSize = Math.max(getFormatMinSplitSize(), getMinSplitSize(job));
+
+//最大值(&lt;= Long.Max , mapreduce.input.fileinputformat.split.maxsize=)
+long maxSize = getMaxSplitSize(job);
+
+//得到block大小
+long blockSize = file.getBlockSize();
+
+//minSplit maxSplit blockSize
+//Math.max(minSize, Math.min(maxSize, blockSize));
+</code></pre><p>LF : Line feed,换行符<br>private static final byte CR = ‘\r’;<br>private static final byte LF = ‘\n’;</p>
+<h2 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h2><pre><code>1.Windows
+    源文件大小:82.8k
+    源文件类型:txt
+    压缩性能比较
+                |    DeflateCodec    GzipCodec    BZip2Codec    Lz4Codec    SnappyCodec    |结论
+    ------------|-------------------------------------------------------------------|----------------------
+    压缩时间(ms)|    450                7            196            44            不支持        |Gzip &gt; Lz4 &gt; BZip2 &gt; Deflate
+    ------------|-------------------------------------------------------------------|----------------------
+    解压时间(ms)|    444                66            85            33                        |lz4  &gt; gzip &gt; bzip2 &gt; Deflate
+    ------------|-------------------------------------------------------------------|----------------------
+    占用空间(k)    |    19k                19k            17k            31k            不支持        |Bzip &gt; Deflate = Gzip &gt; Lz4
+                |                                                                    |
+
+2.CentOS
+    源文件大小:82.8k
+    源文件类型:txt
+                |    DeflateCodec    GzipCodec    BZip2Codec    Lz4Codec    LZO        SnappyCodec    |结论
+    ------------|---------------------------------------------------------------------------|----------------------
+    压缩时间(ms)|    944                77            261            53            77        不支持        |Gzip &gt; Lz4 &gt; BZip2 &gt; Deflate
+    ------------|---------------------------------------------------------------------------|----------------------
+    解压时间(ms)|    67                66            106            52            73                    |lz4  &gt; gzip &gt; Deflate&gt; lzo &gt; bzip2 
+    ------------|---------------------------------------------------------------------------|----------------------
+    占用空间(k)    |    19k                19k            17k            31k            34k                    |Bzip &gt; Deflate = Gzip &gt; Lz4 &gt; lzo
+</code></pre><h2 id="远程调试"><a href="#远程调试" class="headerlink" title="远程调试"></a>远程调试</h2><pre><code>1.设置服务器java vm的-agentlib:jdwp选项.
+[server]
+//windwos
+//set JAVA_OPTS=%JAVA_OPTS% -agentlib:jdwp=transport=dt_socket,address=8888,server=y,suspend=n
+
+//linux
+export HADOOP_CLIENT_OPTS=-agentlib:jdwp=transport=dt_socket,address=8888,server=y,suspend=y
+
+2.在server启动java程序
+    hadoop jar HdfsDemo.jar com.it18zhang.hdfs.mr.compress.TestCompress
+
+3.server会暂挂在8888.
+    Listening ...
+
+4.客户端通过远程调试连接到远程主机的8888.
+
+5.客户端就可以调试了。
+</code></pre><p>hadoop jar<br>java </p>
+<p>hadoop jar com.it18zhang.hdfs.mr.compress.TestCompress</p>
+<p>export HADOOP_CLIENT_OPTS=-agentlib:jdwp=transport=dt_socket,address=8888,server=y,suspend=y</p>
+<h2 id="在pom-xml中引入新的插件-maven-antrun-plugin-实现文件的复制"><a href="#在pom-xml中引入新的插件-maven-antrun-plugin-实现文件的复制" class="headerlink" title="在pom.xml中引入新的插件(maven-antrun-plugin),实现文件的复制."></a>在pom.xml中引入新的插件(maven-antrun-plugin),实现文件的复制.</h2><pre><code>[pom.xml]
+&lt;project&gt;
+    ...
+    &lt;build&gt;
+        &lt;plugins&gt;
+            ...
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
+                &lt;version&gt;1.8&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;phase&gt;package&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;run&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+                            &lt;tasks&gt;
+                                &lt;echo&gt;---------开始复制jar包到共享目录下----------&lt;/echo&gt;
+                                &lt;delete file=&quot;D:\downloads\bigdata\data\HdfsDemo-1.0-SNAPSHOT.jar&quot;&gt;&lt;/delete&gt;
+                                &lt;copy file=&quot;target/HdfsDemo-1.0-SNAPSHOT.jar&quot; toFile=&quot;D:\downloads\bigdata\data\HdfsDemo.jar&quot;&gt;
+                                &lt;/copy&gt;
+                            &lt;/tasks&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+    ...
+&lt;/project&gt;
+</code></pre><h2 id="在centos上使用yum安装snappy压缩库文件"><a href="#在centos上使用yum安装snappy压缩库文件" class="headerlink" title="在centos上使用yum安装snappy压缩库文件"></a>在centos上使用yum安装snappy压缩库文件</h2><pre><code>[google snappy]
+$&gt;sudo yum search snappy                #查看是否有snappy库
+$&gt;sudo yum install -y snappy.x86_64        #安装snappy压缩解压缩库
+</code></pre><h2 id="库文件"><a href="#库文件" class="headerlink" title="库文件"></a>库文件</h2><pre><code>windows    :dll(dynamic linked library)
+linux    :so(shared object)
+</code></pre><h2 id="LZO"><a href="#LZO" class="headerlink" title="LZO"></a>LZO</h2><pre><code>1.在pom.xml引入lzo依赖
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;HdfsDemo&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;packaging&gt;jar&lt;/packaging&gt;
+        &lt;build&gt;
+            &lt;plugins&gt;
+                &lt;plugin&gt;
+                    &lt;groupId&gt;org.apache.maven.plugins
+                    &lt;/groupId&gt;
+                    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                    &lt;configuration&gt;
+                        &lt;source&gt;1.8&lt;/source&gt;
+                        &lt;target&gt;1.8&lt;/target&gt;
+                    &lt;/configuration&gt;
+                &lt;/plugin&gt;
+                &lt;plugin&gt;
+                    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                    &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
+                    &lt;version&gt;1.8&lt;/version&gt;
+                    &lt;executions&gt;
+                        &lt;execution&gt;
+                            &lt;phase&gt;package&lt;/phase&gt;
+                            &lt;goals&gt;
+                                &lt;goal&gt;run&lt;/goal&gt;
+                            &lt;/goals&gt;
+                            &lt;configuration&gt;
+                                &lt;tasks&gt;
+                                    &lt;echo&gt;---------开始复制jar包到共享目录下----------&lt;/echo&gt;
+                                    &lt;delete file=&quot;D:\downloads\bigdata\data\HdfsDemo-1.0-SNAPSHOT.jar&quot;&gt;&lt;/delete&gt;
+                                    &lt;copy file=&quot;target/HdfsDemo-1.0-SNAPSHOT.jar&quot; toFile=&quot;D:\downloads\bigdata\data\HdfsDemo.jar&quot;&gt;
+                                    &lt;/copy&gt;
+                                &lt;/tasks&gt;
+                            &lt;/configuration&gt;
+                        &lt;/execution&gt;
+                    &lt;/executions&gt;
+                &lt;/plugin&gt;
+            &lt;/plugins&gt;
+        &lt;/build&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;
+                &lt;artifactId&gt;hadoop-client&lt;/artifactId&gt;
+                &lt;version&gt;2.7.3&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;
+                &lt;artifactId&gt;hadoop-yarn-common&lt;/artifactId&gt;
+                &lt;version&gt;2.7.3&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;
+                &lt;artifactId&gt;hadoop-yarn-client&lt;/artifactId&gt;
+                &lt;version&gt;2.7.3&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;
+                &lt;artifactId&gt;hadoop-yarn-server-resourcemanager&lt;/artifactId&gt;
+                &lt;version&gt;2.7.3&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.anarres.lzo&lt;/groupId&gt;
+                &lt;artifactId&gt;lzo-hadoop&lt;/artifactId&gt;
+                &lt;version&gt;1.0.0&lt;/version&gt;
+                &lt;scope&gt;compile&lt;/scope&gt;
+            &lt;/dependency&gt;
+
+            &lt;dependency&gt;
+                &lt;groupId&gt;junit&lt;/groupId&gt;
+                &lt;artifactId&gt;junit&lt;/artifactId&gt;
+                &lt;version&gt;4.11&lt;/version&gt;
+            &lt;/dependency&gt;
+
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+2.在centos上安装lzo库
+    $&gt;sudo yum -y install lzo
+
+3.使用mvn命令下载工件中的所有依赖
+    进入pom.xml所在目录，运行cmd：
+    mvn -DoutputDirectory=./lib -DgroupId=com.it18zhang -DartifactId=HdfsDemo -Dversion=1.0-SNAPSHOT dependency:copy-dependencies
+
+4.在lib下存放依赖所有的第三方jar
+
+5.找出lzo-hadoop.jar + lzo-core.jar复制到hadoop的响应目录下。
+    $&gt;cp lzo-hadoop.jar lzo-core.jar /soft/hadoop/shared/hadoop/common/lib
+
+6.执行远程程序即可。
+</code></pre><h2 id="修改maven使用aliyun镜像。"><a href="#修改maven使用aliyun镜像。" class="headerlink" title="修改maven使用aliyun镜像。"></a>修改maven使用aliyun镜像。</h2><pre><code>[maven/conf/settings.xml]
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;
+          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;
+  &lt;pluginGroups&gt;
+  &lt;/pluginGroups&gt;
+
+  &lt;proxies&gt;
+  &lt;/proxies&gt;
+
+&lt;servers&gt;
+    &lt;server&gt;
+        &lt;id&gt;releases&lt;/id&gt;
+        &lt;username&gt;admin&lt;/username&gt;
+        &lt;password&gt;admin123&lt;/password&gt;
+    &lt;/server&gt;
+    &lt;server&gt;
+        &lt;id&gt;snapshots&lt;/id&gt;
+        &lt;username&gt;admin&lt;/username&gt;
+        &lt;password&gt;admin123&lt;/password&gt;
+    &lt;/server&gt;
+    &lt;server&gt;
+        &lt;id&gt;Tomcat7&lt;/id&gt;
+        &lt;username&gt;tomcat&lt;/username&gt;
+        &lt;password&gt;tomcat&lt;/password&gt;
+    &lt;/server&gt;
+&lt;/servers&gt;
+
+&lt;mirrors&gt;
+     &lt;mirror&gt;
+        &lt;id&gt;nexus-aliyun&lt;/id&gt;
+        &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
+        &lt;name&gt;Nexus aliyun&lt;/name&gt;
+        &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public&lt;/url&gt;
+    &lt;/mirror&gt; 
+&lt;/mirrors&gt;
+&lt;/settings&gt;
+</code></pre><h2 id="文件格式-SequenceFile"><a href="#文件格式-SequenceFile" class="headerlink" title="文件格式:SequenceFile"></a>文件格式:SequenceFile</h2><pre><code>1.SequenceFile
+    Key-Value对方式。
+
+2.不是文本文件，是二进制文件。
+
+3.可切割
+    因为有同步点。
+    reader.sync(pos);    //定位到pos之后的第一个同步点。
+    writer.sync();        //写入同步点
+
+4.压缩方式
+    不压缩
+    record压缩            //只压缩value
+    块压缩                //按照多个record形成一个block.
+</code></pre><h2 id="文件格式-MapFile"><a href="#文件格式-MapFile" class="headerlink" title="文件格式:MapFile"></a>文件格式:MapFile</h2><pre><code>1.Key-value
+2.key按升序写入(可重复)。
+3.mapFile对应一个目录，目录下有index和data文件,都是序列文件。
+4.index文件划分key区间,用于快速定位。
+</code></pre><h2 id="自定义分区函数"><a href="#自定义分区函数" class="headerlink" title="自定义分区函数"></a>自定义分区函数</h2><pre><code>1.定义分区类
+    public class MyPartitioner extends Partitioner&lt;Text, IntWritable&gt;{
+        public int getPartition(Text text, IntWritable intWritable, int numPartitions) {
+            return 0;
+        }
+    }
+2.程序中配置使用分区类
+    job.setPartitionerClass(MyPartitioner.class);
+</code></pre><h2 id="combinerd（合成）-继承了Reducer-任何的Reducer类都能被他使用"><a href="#combinerd（合成）-继承了Reducer-任何的Reducer类都能被他使用" class="headerlink" title="combinerd（合成） 继承了Reducer 任何的Reducer类都能被他使用"></a>combinerd（合成） 继承了Reducer 任何的Reducer类都能被他使用</h2><p> Map端的Reducer  预先化简<br>1，为了减少网络带宽 将Map端发出的的数据进行聚合 并不是所有的都可以用combiner<br>2,combiner </p>
+<hr>
+<p>切片个数是四个，mapper就需要也是4个 </p>
+<p>下图是一个客户端的写入过程：首先形成一个管线，因为有很多节点，节点形成管线，现在本地构建2个队列，一个发送队列sendQueue，一个是确认队列ackQueue，客户端吧消息封装成Packet放到队列里面，而且结束后会放一个空包进去，发送的话，是以管线的方式发给A，A在发给B，B在发给C，在发送的过程中有一个校验的过程chunk(4+512)就是4个校验位+512个数据字节，一个Packet是64K+33个头的字节，在确认队列里面是一个编号seqNo如果在丢列中ABC中都回执，就吧seqNo在ackQueue中移除。发送如果失败，就吧管线重新建立，吧没法送的包返回到队列之前的一个容错机制。<br><img src="https://i.imgur.com/43B2Ebp.png" alt=""></p>
+<p>输入格式定位文件，在输入格式中间有一个交互reader，在Map和Reduce都有这么一些方法，在Mapper和Reducer中有回调方法，就是本来使用的是子类的方法，但是子类中调用有父类的的run方法，然后run方法里面有reduce方法也就又调用了子类的方法，这叫做回调 。Mapper是通过reader读取下一条数据传进来的。Map和Reduce中间有一个shuffer的混洗过程，网络间分发数据的过程， Map里面先分区，分区个数等于Reduce的个数，所以有几个reduce就有几个分区，默认情况下，Map分区通过哈希算法来分区的，对K哈希。只要K相同，一定会被哈希到一个分区里面，分区也就是桶的概念，也就是只要K相同进入到同一个桶里面，只要是同一个分区就是进入到同一个reduce，默认情况下inputformat的格式，他的K就是偏移量。如果是图片格式的话就可能是别的。只有在文本输入的时候才是偏移量，当然也可以自己定义Inputformat格式。在mr计算之前切片就已经算好了，产生的切片文件和配置XML文件放到了临时目录下了。<br><img src="https://i.imgur.com/7qjZLGJ.png" alt=""></p>
+<p>看下图，首先客户端运行作业，第一步run job，第二部走ResourceManager，是Yarn层面，负责资源调度，所有集群的资源都属于ResourceManager，第二部get new application，首先得到应用的ID，第三部copyt job resources，复制切片信息和xml配置信息和jar包到HDFS，第四部提交给资源管理器，然后资源管理器start container，然后通过节点管理器启动一个MRAPPMaster（应用管理程序），第六步初始化Job，第七部检索切片信息，第八步请求资源管理器去分配一个资源列表，第九步启动节点管理器，通过节点管理器来启动一个JVM虚拟机，在虚拟机里面启动yarn子进程，第十部通过子进程读取切片信息，然后在运行MapTast或者ReduceTask<br><img src="https://i.imgur.com/lqVQLT1.png" alt=""></p>
+<p>客户端提取一个作业，然后联系资源管理器，为了得到id,在完全分布式下客户端client叫job，一旦提交就叫做application了，先请求，然后得到了appid返回给了客户端，第三部将作业信息上传到HDFS的临时目录，存档切片信息和jar包，然后找到节点管理器，然后NM孵化一个MRAPPMaster，然后检索HDFS文件系统，获取到有多少个要执行的并发任务，拿到任务之后，要求资源管理器分配一个集合，哪些节点可以用。 然后MRAppmaster在联系其他的NM，让NM去开启Yarn子进程，子进程在去检索HDFS信息，在开启Map和Reduce</p>
+<p><img src="https://i.imgur.com/bn7A9H6.png" alt=""></p>
+<h2 id="hdfs-切片计算方式-1"><a href="#hdfs-切片计算方式-1" class="headerlink" title="hdfs 切片计算方式"></a>hdfs 切片计算方式</h2><pre><code>getFormatMinSplitSize() = 1
+
+//最小值(&gt;=1)                            1                        0
+long minSize = Math.max(getFormatMinSplitSize(), getMinSplitSize(job));
+
+//最大值(&lt;= Long.Max , mapreduce.input.fileinputformat.split.maxsize=)
+long maxSize = getMaxSplitSize(job);
+
+//得到block大小
+long blockSize = file.getBlockSize();
+
+//minSplit maxSplit blockSize
+//Math.max(minSize, Math.min(maxSize, blockSize));
+</code></pre><p>在计算切片的时候一般块大小不设置，是最好的，一般就是128M，采用本地优先策略，一个快大小是128m如果一旦把他边变1m那么切片大小就会变成1M，一个，然后128M的块大小会被分发128份切片分别传输给MR去计算，这样的话，就会增加网络间的传输，增加网络负载。所以128m是最合适的</p>
+<hr>
+<p>CR=‘\r’回车符<br>LF+’\n’换行符</p>
+<p>windows系统里面是\r\n。回车带换行。<br>linux系统只有一个\n</p>
+<p>切片是定义大方向的，阅读器recorderreader是控制细节的。切片定义任务数量，开几个map但是不一定是每个map都有任务。</p>
+<p><strong>切片问题</strong>是物理设置，但是是逻辑读取。</p>
+<p><img src="https://i.imgur.com/tgAbsGx.png" alt=""></p>
+<p>打个比方说上图这个东西比如说第一个例子，前面的设置物理划分，根据字节数划分成了4个切片，也就是有4个Mapper,然后四个切片开始读取，其中第一个物理切割到t但是实际上，由于切片读取到换行符所以，第一个Mapper也就是读取到了hello world tom，然后第二个，第二个偏移量是13+13.偏移量是13，在物理读取13个直接，但是由于Mapper检测不是行首，所以直接从下一行读取也在读取一整行。这个就是每个切片128MB的缩影，吧128M变成了13而已。然后其实Textinputformat下一个环节是。recoderreader。这个会先检测是否是行首，<br><img src="https://i.imgur.com/7qjZLGJ.png" alt="">      </p>
+<h2 id="压缩问题"><a href="#压缩问题" class="headerlink" title="压缩问题"></a>压缩问题</h2><pre><code>package com.it18zhang.hdfs.mr.compress;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.io.compress.*;
+import org.apache.hadoop.util.ReflectionUtils;
+import org.junit.Test;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
+/**
+ * @Title:TestCompress
+ * @Description:
+ * @Auther: Eric Hunn
+ * @Version:1.0
+ * @Create 2018/10/14 19:39
+ */
+public class TestCompress {
+    @Test
+    public void deflateCompress() throws Exception {
+        Class[] zipClasses = {
+                DeflateCodec.class,
+                GzipCodec.class,
+                BZip2Codec.class,
+                Lz4Codec.class,
+        };
+
+        for(Class c : zipClasses){
+            zip(c);
+        }
+    }
+
+    /*压缩测试
+     *
+     * */
+    public void zip(Class codecClass) throws Exception {
+        long start = System.currentTimeMillis();
+        //实例化对象
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new Configuration());
+        //创建文件输出流，得到默认拓展名
+        FileOutputStream fos = new FileOutputStream(&quot;e:/comp/b&quot; + codec.getDefaultExtension());
+        //得到压缩流
+        CompressionOutputStream zipOut = codec.createOutputStream(fos);
+        IOUtils.copyBytes(new FileInputStream(&quot;e:/11111.txt/&quot;), zipOut, 1024);
+        zipOut.close();
+        System.out.println(codecClass.getSimpleName() + &quot; ：&quot;);
+    }
+}                                     
+</code></pre><p>压缩一般是在文件Map输出的时候压缩，Map输出的时候内存不够一般要往磁盘里面溢出，在溢出的时候可以让他压缩溢出，这样reduce的时候就要解压缩。上面代码测试过lz4不行，但是视频上是可以的，暂时不知道哪里出错了。</p>
+<pre><code>package com.it18zhang.hdfs.mr.compress;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.io.compress.*;
+import org.apache.hadoop.util.ReflectionUtils;
+import org.junit.Test;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
+/**
+ * @Title:TestCompress
+ * @Description:
+ * @Auther: Eric Hunn
+ * @Version:1.0
+ * @Create 2018/10/14 19:39
+ */
+public class TestCompress {
+    @Test
+    public void deflateCompress() throws Exception {
+        Class[] zipClasses = {
+                DeflateCodec.class,
+                GzipCodec.class,
+                BZip2Codec.class,
+//                Lz4Codec.class,
+//                SnappyCodec.class,
+        };
+
+        for(Class c : zipClasses){
+            unzip(c);
+        }
+    }
+
+    /*压缩测试
+     *
+     * */
+    public void zip(Class codecClass) throws Exception {
+        long start = System.currentTimeMillis();
+        //实例化对象
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new Configuration());
+        //创建文件输出流，得到默认拓展名
+        FileOutputStream fos = new FileOutputStream(&quot;e:/comp/b&quot; + codec.getDefaultExtension());
+        //得到压缩流
+        CompressionOutputStream zipOut = codec.createOutputStream(fos);
+        IOUtils.copyBytes(new FileInputStream(&quot;e:/11111.txt/&quot;), zipOut, 1024);
+        zipOut.close();
+        System.out.println(codecClass.getSimpleName() + &quot; ：&quot;);
+    }
+
+
+    public void unzip(Class codecClass) throws Exception {
+        long start = System.currentTimeMillis();
+        //实例化对象
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new Configuration());
+        //创建文件输出流，得到默认拓展名
+        FileInputStream fis = new FileInputStream(&quot;e:/comp/b&quot; + codec.getDefaultExtension());
+        //得到压缩流
+        CompressionInputStream zipIn = codec.createInputStream(fis);
+        IOUtils.copyBytes(zipIn,new FileOutputStream(&quot;e:/comp/b&quot; + codec.getDefaultExtension() + &quot;.txt&quot;), 1024);
+        zipIn.close();
+        System.out.println(codecClass.getSimpleName() + &quot; ：&quot; + (System.currentTimeMillis() - start));
+    }
+}
+</code></pre><h2 id="在集群上运"><a href="#在集群上运" class="headerlink" title="在集群上运"></a>在集群上运</h2><pre><code>package com.it18zhang.hdfs.mr.compress;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.io.compress.*;
+import org.apache.hadoop.util.ReflectionUtils;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
+/**
+ * @Title:TestCompress
+ * @Description:
+ * @Auther: Eric Hunn
+ * @Version:1.0
+ * @Create 2018/10/14 19:39
+ */
+public class TestCompress {
+    public static void main(String[] args) throws Exception {
+        Class[] zipClasses = {
+                DeflateCodec.class,
+                GzipCodec.class,
+                BZip2Codec.class,
+//                Lz4Codec.class,
+//                SnappyCodec.class,
+        };
+
+        for(Class c : zipClasses){
+            zip(c);
+        }
+        System.out.println(&quot;==================================&quot;);
+        for(Class c : zipClasses){
+            unzip(c);
+        }
+    }
+
+    /*压缩测试
+     *
+     * */
+    public static void zip(Class codecClass) throws Exception {
+        long start = System.currentTimeMillis();
+        //实例化对象
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new Configuration());
+        //创建文件输出流，得到默认拓展名
+        FileOutputStream fos = new FileOutputStream(&quot;/home/centos/zip/b&quot; + codec.getDefaultExtension());
+        //得到压缩流
+        CompressionOutputStream zipOut = codec.createOutputStream(fos);
+        IOUtils.copyBytes(new FileInputStream(&quot;/home/centos/zip/a.txt&quot;), zipOut, 1024);
+        zipOut.close();
+        System.out.println(codecClass.getSimpleName() + &quot; ：&quot;);
+    }
+
+
+    public static void unzip(Class codecClass) throws Exception {
+        long start = System.currentTimeMillis();
+        //实例化对象
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new Configuration());
+        //创建文件输出流，得到默认拓展名
+        FileInputStream fis = new FileInputStream(&quot;/home/centos/zip/b&quot; + codec.getDefaultExtension());
+        //得到压缩流
+        CompressionInputStream zipIn = codec.createInputStream(fis);
+        IOUtils.copyBytes(zipIn,new FileOutputStream(&quot;/home/centos/zip/b&quot; + codec.getDefaultExtension() + &quot;.txt&quot;), 1024);
+        zipIn.close();
+        System.out.println(codecClass.getSimpleName() + &quot; ：&quot; + (System.currentTimeMillis() - start));
+    }
+}
+</code></pre><h2 id="远程调试-1"><a href="#远程调试-1" class="headerlink" title="远程调试"></a>远程调试</h2><pre><code>1.设置服务器java vm的-agentlib:jdwp选项.
+[server]
+//windwos
+//set JAVA_OPTS=%JAVA_OPTS% -agentlib:jdwp=transport=dt_socket,address=8888,server=y,suspend=n
+
+//linux
+
+
+2.在server启动java程序
+    hadoop jar HdfsDemo.jar com.it18zhang.hdfs.mr.compress.TestCompress
+
+3.server会暂挂在8888.
+    Listening ...
+
+4.客户端通过远程调试连接到远程主机的8888.
+
+5.客户端就可以调试了。
+</code></pre><hr>
+<hr>
+<h3 id="通过MapFile来写入"><a href="#通过MapFile来写入" class="headerlink" title="通过MapFile来写入"></a>通过MapFile来写入</h3><pre><code>    /*写操作
+ * */
+@Test
+public void save() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(&quot;fs.defaultFS &quot;, &quot;file:///&quot;);
+    FileSystem fs = FileSystem.get(conf);
+    Path p = new Path(&quot;e:/seq/1.seq&quot;);
+    MapFile.Writer writer = new MapFile.Writer(conf, fs, &quot;e:/map&quot;, IntWritable.class, Text.class);
+
+
+    for (int i = 0; i &lt; 100000; i++) {
+        writer.append(new IntWritable(i), new Text(&quot;tom&quot; + i));
+    }
+</code></pre><p>//        for(int i =0 ;i &lt; 10 ; i++){<br>//            writer.append(new IntWritable(i),new Text(“tom” + i));<br>//        }<br>        writer.close();<br>    }</p>
+<hr>
+<h3 id="通过MapFile来读取"><a href="#通过MapFile来读取" class="headerlink" title="通过MapFile来读取"></a>通过MapFile来读取</h3><pre><code>/*读取Mapfile文件
+ * */
+@Test
+public void readMapfile() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(&quot;fs.defaultFS &quot;, &quot;file:///&quot;);
+    FileSystem fs = FileSystem.get(conf);
+    Path p = new Path(&quot;e:/seq/1.seq&quot;);
+    MapFile.Reader reader = new MapFile.Reader(fs, &quot;e:/map&quot;, conf);
+    IntWritable key = new IntWritable();
+    Text value = new Text();
+    while (reader.next(key, value)) {
+        System.out.println(key.get() + &quot;:&quot; + value.toString());
+    }
+    reader.close();
+
+
+} 
+</code></pre><hr>
+<p>Map的分区是哈希分区</p>
+<p>combiner的好处是：map端的reduce在map端做集合，减少了shuffle量。统计每个单词hello 1发了十万次，不如发一个hello1在map端做聚合发过去hello十万，即刻。就是在map端口预先reduce化简的过程。不是所有的作业都可以把reduce做成combiner。最大值最小值都可以combiner但是平均值就不行了。</p>
+<p>第六天的最后两个视频没有往下写代码，因为太多太杂了。主要讲解MR计数器，数据倾斜，Mapfile 序列化读取，压缩这些。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/05/Hadoop第五天01之hdfs写入剖析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/05/Hadoop第五天01之hdfs写入剖析/" itemprop="url">Hadoop第五天01之hdfs写入剖析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-05T16:31:19+08:00">
+                2018-10-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一段HDFS写入流源码分析。</p>
+<p><img src="https://i.imgur.com/17cBkFO.png" alt=""></p>
+<p>首先这个得到了一个抽象类，这个FileSystemm是一个抽象类。</p>
+<p><img src="https://i.imgur.com/Rlbd5VC.png" alt=""></p>
+<p>这个抽象类有子类，左边有一个箭头，点击得到了一个这个抽象类的所有的子类，简单看下，因为Hadoop包类的hadfs这个，得到的子类是DistributedFileSystem这个分布式文件系统。</p>
+<p><img src="https://i.imgur.com/bzQ91XF.png" alt=""></p>
+<p>也可以吧鼠标放到fs上会显示返回的类</p>
+<p><img src="https://i.imgur.com/JOfPZvk.png" alt=""></p>
+<p>也可以在IDEA的右下角的类标签里面找到：</p>
+<p><img src="https://i.imgur.com/WSz2duV.png" alt=""></p>
+<p>也就是说返回了一个DistributedFIleSystem,</p>
+<p>然后文件系统fs.create调用了create方法返回了一个FSDataOutputStream流，这个是一个HDFS数据输出流</p>
+<p><img src="https://i.imgur.com/SKFBqkH.png" alt=""></p>
+<p><img src="https://i.imgur.com/0aIVTzf.png" alt=""></p>
+<p>单机F5单部进入第一个：</p>
+<p><img src="https://i.imgur.com/nnxWOri.png" alt=""></p>
+<p><img src="https://i.imgur.com/f434RJR.png" alt=""></p>
+<p><img src="https://i.imgur.com/4Cf1ljy.png" alt=""></p>
+<p>看这个，进到下一步，调用checkClosed()，方法，这个方法其实是继承FSOutput流里面的东西。  </p>
+<p><img src="https://i.imgur.com/lHPzWs4.png" alt=""><br>看到这个里面out=DFSOutputStream。这个是被装饰的流。调用这个流的write方法</p>
+<p>HDFS流是对DFS输出流的包装</p>
+<p>进去这个是装饰模式。</p>
+<p>在这个构造模式中也声明了字段。</p>
+<p><img src="https://i.imgur.com/8CsurDw.png" alt=""></p>
+<p>下一步：</p>
+<p><img src="https://i.imgur.com/0f1RcbV.png" alt=""></p>
+<p>调用了Close方法因为是继承    都是FSoutput流的子类。一个检查的方法，判断是否数组越界。</p>
+<p>下面这个for是个循环，循环写入，。 </p>
+<p><img src="https://i.imgur.com/MTsauqO.png" alt=""></p>
+<p>然后下一步，进入到write1方法。</p>
+<p><img src="https://i.imgur.com/nAIKdn5.png" alt=""></p>
+<p>里面的buf是一个缓冲区，count是一个成员常量</p>
+<p><img src="https://i.imgur.com/aLCcnkl.png" alt=""></p>
+<p>上图的buf看注释，是一个缓冲区用哦过来存储数据，在他被checksum校验和之前</p>
+<p>校验和就是检查是否是比之前设置的最小块大小大，而且还必须是512字节的倍数</p>
+<p><img src="https://i.imgur.com/pAFducf.png" alt=""></p>
+<p>上图点击进入到一个校验和类的里面看注释，校验和用于数据传输之前。</p>
+<p><img src="https://i.imgur.com/E8qEJy0.png" alt=""></p>
+<p>上图这两行，通过一个算法来实现校验和。通过CRC32算法类似于哈希算法。</p>
+<p><img src="https://i.imgur.com/RJ1vXHv.png" alt=""></p>
+<p>不管他，回到buf缓冲这个地方，单部进入</p>
+<p><img src="https://i.imgur.com/RKkQGry.png" alt=""></p>
+<p>首先在缓冲区进行一个判定</p>
+<p><img src="https://i.imgur.com/qfwP1Yn.png" alt=""></p>
+<p>拷贝本地数据到本地的一个buf，显示Localbuffer=4608,count=0.要拷贝的字节是4608。<br>如果拷贝的内容没有缓冲区大就考数据内容，要是比缓冲区大的话，就拷贝缓冲区大小的内容。</p>
+<p><img src="https://i.imgur.com/rk8wX6W.png" alt=""></p>
+<p>在单部进入到上图。</p>
+<p><img src="https://i.imgur.com/PjqlOXa.png" alt=""></p>
+<p>返回到代码。进入到源代码中，如上图</p>
+<p>在单部进入到这个Close里面：如下图：<br><img src="https://i.imgur.com/97VYh5X.png" alt=""></p>
+<p>这个close是out.close。out是调用父类的close方法，而且父类还是一个包装类，所以进入了包装的列的close方法。<br>再进入到close()方法。如下图：</p>
+<p><img src="https://i.imgur.com/2ExMNXU.png" alt=""></p>
+<p>out的本类HDFSOutputStream，然后这个又是一个装饰类，本质上是DFSOutputStream这个类的方法。</p>
+<p>单部进入到Out里面，看一下调用的到底是谁的out。再单部进入到Out里面</p>
+<p><img src="https://i.imgur.com/RG98Z9F.png" alt=""></p>
+<p>看注释，关闭输出流并且    释放与之相关联的系统资源。<br>上图最终进入到了DFSOutputstream的close()方法里面了。</p>
+<p><img src="https://i.imgur.com/dDhSzjg.png" alt=""></p>
+<p>接上图，看到在这个close(）方法里面有一个closeImp（)方法。调用自己的关闭实现方法<br>还在这个类里面执行呢：继续在这个类里面往下走:如下图：</p>
+<p><img src="https://i.imgur.com/7Vkorih.png" alt=""></p>
+<p>这个里面有一个flushbuffer()方法， 在单部进入到这个方法里面。如下图：</p>
+<p><img src="https://i.imgur.com/YSCeFmf.png" alt=""></p>
+<p>看到这个图里面this和当前类不太一样说明这两个东西也是继承关系。</p>
+<p>清理缓冲区两个参数，看注释：强制任何输出流字节被校验和并且被写入底层的输出流。</p>
+<p>再单步进入：</p>
+<p><img src="https://i.imgur.com/jfWYEI1.png" alt=""></p>
+<p><img src="https://i.imgur.com/4iqESya.png" alt=""></p>
+<p>看到如上图的内容。然后到了writeChecksumChunks这个方法里面，单部进入到这个里面：</p>
+<p><img src="https://i.imgur.com/FM0MpyT.png" alt=""></p>
+<p>对给定的数据小块来生成校验和，并且根据小块和校验和给底层的数据输出流。 </p>
+<p>单部进入到这个sum.calculateChunckedSum方法里面。</p>
+<p><img src="https://i.imgur.com/EVQOpOL.png" alt=""></p>
+<p><img src="https://i.imgur.com/UKsSHTO.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/ifq7oZR.png" alt=""></p>
+<p>上图吧数据写入了底层里面去了。</p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/WLEldHU.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/TN0fU7T.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/X3dHeJt.png" alt=""></p>
+<p><img src="https://i.imgur.com/W5NCoWA.png" alt=""></p>
+<p>上图就是将底层的内容打成包，再去通过网络传输。在包里面加编号和序号，也就是加顺序。</p>
+<p><img src="https://i.imgur.com/INeugMK.png" alt=""></p>
+<p>往下不写了太多了。现在的视频位置是hdfs写入剖析2的开头。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/04/Hadoop第四天之滚动日志-安全模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/04/Hadoop第四天之滚动日志-安全模式/" itemprop="url">Hadoop第四天之滚动日志-安全模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-04T08:56:35+08:00">
+                2018-10-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/04/Hadoop第四天之最小块设置-指定副本数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/04/Hadoop第四天之最小块设置-指定副本数/" itemprop="url">Hadoop第四天之最小块设置-指定副本数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-04T08:21:11+08:00">
+                2018-10-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/01/遇到未解决的问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/01/遇到未解决的问题/" itemprop="url">遇到未解决的问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-01T11:15:11+08:00">
+                2018-10-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/问题/" itemprop="url" rel="index">
+                    <span itemprop="name">问题</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在eclipse中，ctrl+左键找到源码，为什么旁边在pakage explore中有有轮廓啊？</p>
+<p><img src="https://i.imgur.com/oYjJ6In.png" alt=""></p>
+<p><img src="https://i.imgur.com/IZVxlow.png" alt=""></p>
+<p>点击两个箭头即可转换。</p>
+<p>这个东西是在IDEA中怎么调出来的。</p>
+<p><img src="https://i.imgur.com/fz08Y7d.png" alt=""></p>
+<hr>
+<p>克隆centos之后有时候出现这种情况</p>
+<p><img src="https://i.imgur.com/G7CLxft.png" alt=""></p>
+<hr>
+<p>IDEA的使用问题：<br>这个是什么快捷键。</p>
+<p><img src="https://i.imgur.com/hKrt9St.png" alt=""></p>
+<hr>
+<p>在增强虚拟机工具的时候按照视频的方法没有成功，然后通过挂载的方法实现了，但是hgfs文件夹和文件夹里面的内容都是root权限的，只能修改文件夹的所有者，但是不能修改里面文件的所有者。</p>
+<hr>
+<p>有一个分组的问题：<br>    分组就是说组合key出来本来是每一个组合key大多都是不同的key。相同年份不同温度也是不同的key，但是为了相同的年份的组合key能够进入到同一个reduce，所以要通过分组让他这个样子，但是为什么要这个样</p>
+<pre><code>经过分区已经说达到了将不同年份的
+</code></pre><hr>
+<p>在mapreduce阶段有一个大表和小表连接</p>
+<p>hive里面也有一个小表和小表连接就在map端口，然后小表和大表连接在reduce端口。</p>
+<p>这个地方的问题没有搞明白。具体的hive在hive第二天07mr的忘记在哪里了</p>
+<hr>
+<p>然后mr的最后一天hadoop第十一天的二次排序没有搞得特别明白。<br>和hive阶段的自定义函数UDF没有特别清楚</p>
+<hr>
+<p>在avro和rotobuf第一天</p>
+<p>在讲解protobuf的时候写代码写到下图的时候听说这个com.example.tuorial是源码包里面的东西，我是没找到，我觉得可能是源码包里面的例子，里面包括的一些类，但是还是没有这个东西。</p>
+<p><img src="https://i.imgur.com/jaaEFTJ.png" alt=""></p>
+<p>已经解决，见大坑</p>
+<hr>
+<p>在一个spring项目里面有这样一个问题：</p>
+<p>dao层类dao一个方法，然后在servicce层里面没有new出一个dao类的对象，直接写一个属性Private Dao d;然后直接d.insert();</p>
+<p>这种方法为什么可以</p>
+<hr>
+<p>这种是什么调用方法：</p>
+<p><img src="https://i.imgur.com/sE9UKl1.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/30/haoop第三天之脚本分析，单个进程启动/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1112,1456 +4433,11 @@ $&gt;sudo yum install rsync
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/24/Hadoop安装配置/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/24/Hadoop安装配置/" itemprop="url">Hadoop安装配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-24T16:10:47+08:00">
-                2018-09-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">-Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/20/Linux基础之Yum命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/20/Linux基础之Yum命令/" itemprop="url">Linux基础之Yum命令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-20T18:17:43+08:00">
-                2018-09-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="软件源"><a href="#软件源" class="headerlink" title="软件源"></a>软件源</h2><pre><code>Repository        //仓库.
-URL                //http:// 
-
-.d                //directory目录
-xxxd            //daemon
-</code></pre><h2 id="查看仓库文件"><a href="#查看仓库文件" class="headerlink" title="查看仓库文件"></a>查看仓库文件</h2><pre><code>/etc/yum.repos.d/xxx.repo
-</code></pre><h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>传输url上的数据的。</p>
-<p>[下载文件到指定目录]</p>
-<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-</code></pre><h2 id="更换centos的软件源"><a href="#更换centos的软件源" class="headerlink" title="更换centos的软件源"></a>更换centos的软件源</h2><p>1.下载源仓库文件,xxx.repo</p>
-<pre><code>curl -o /etc/yum.repos.d/ali.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-</code></pre><p>2.将repo文件保存到/etc/yum.repos.d/目录中。</p>
-<h2 id="屏蔽软件仓库"><a href="#屏蔽软件仓库" class="headerlink" title="屏蔽软件仓库"></a>屏蔽软件仓库</h2><p>1.将/etc/yum.repos.d/xxx.repo文件删除或者更换扩展名即可。</p>
-<h2 id="修改centos能够使用sudo命令"><a href="#修改centos能够使用sudo命令" class="headerlink" title="修改centos能够使用sudo命令"></a>修改centos能够使用sudo命令</h2><pre><code>[/etc/sudoers]
-$&gt;su root
-$&gt;nano /etc/sudoers
-    ...
-    centos ALL
-</code></pre><h2 id="使用yum进行软件包安装卸载"><a href="#使用yum进行软件包安装卸载" class="headerlink" title="使用yum进行软件包安装卸载"></a>使用yum进行软件包安装卸载</h2><pre><code>$&gt;yum list                            //列出所有软件包
-$&gt;yum list installed                //列出已经安装的软件包
-$&gt;yum list installed | grep nano    //列出已经安装的软件包
-$&gt;yum search nano                    //在yum的软件源中搜索软件 
-$&gt;yum remove nano                    //卸载软件
-$&gt;yum -y install nano                //直接安装，不需要yes确认.
-$&gt;yum list installed | grep nano    //查看是否安装了Nano
-
-$&gt;mkdir /home/centos/rpms
-
-$echo 以下命令只下载软件，不安装软件
-$&gt;sudo yum install --downloadonly                //只下载
-              --downloaddir=/home/centos/rpms    //指定下载目录
-              wget
-
-//下载已经安装的软件
-$&gt;sudo yum reinstall --downloadonly    
-                     --downloaddir=/home/centos/rpms
-                     wget
-
-$&gt;sudo yum localinstall xxx.rpm    //从本地rpm文件直接安装软件
-
-
-
-$&gt;su root
-$&gt;yum search ifconfig
-$&gt;yum -y install net-tools        //安装网络工具
-
-
-#==========修改网络地址======================    //需要重启network服务
-$&gt;sudo nano /etc/sysconfig/network-scripts/ifcfg-eth1677736
-    [/etc/sysconfig/network-scripts/ifcfg-eth1677736]
-    ...
-    IPADDR=192.168.231.201
-    GATEWAY=192.168.231.2
-    DNS=192.168.231.2
-
-$&gt;service network restart                        //重启网络服务。
-
-$&gt;sudo nano /etc/resolv.conf                    //修改该文件不需要重启network服务
-    [/etc/resolv.conf]
-    nameserver 192.168.231.2
-</code></pre><h2 id="在没有nano时，使用自带的vi文本编辑器"><a href="#在没有nano时，使用自带的vi文本编辑器" class="headerlink" title="在没有nano时，使用自带的vi文本编辑器"></a>在没有nano时，使用自带的vi文本编辑器</h2><pre><code>1.vi xx.txt
-</code></pre><p>2.模式切换</p>
-<pre><code>esc                //切换到命令模式,退出编辑模式
-                //:q!  不保存退出
-                //:wq  保存退出
-                //x        删除一个字符
-                //dd    删除一行
-
-insert            //切换到编辑模式,退出命令模式
-                //del backspace
-</code></pre><h2 id="Which命令"><a href="#Which命令" class="headerlink" title="Which命令"></a>Which命令</h2><p>which命令用于查找并显示给定命令的绝对路径，环境变量PATH中保存了查找命令时需要遍历的目录。</p>
-<p>which指令会在环境变量$PATH设置的目录里查找符合条件的文件。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。</p>
-<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre><code>which(选项)(参数)
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/19/Linux基础第之循环命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/19/Linux基础第之循环命令/" itemprop="url">Linux基础第之循环命令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-19T18:03:21+08:00">
-                2018-09-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="访问文件-夹-物理位置"><a href="#访问文件-夹-物理位置" class="headerlink" title="访问文件(夹)物理位置"></a>访问文件(夹)物理位置</h2><p>pwd命令是显示当前的逻辑位置。</p>
-<p>物理位置是针对符号连接也是针对软连接的。</p>
-<p>//进入/t的物理位置</p>
-<pre><code>$&gt;cd -P /t    
-</code></pre><p>//显式当前目录的物理位置</p>
-<pre><code>$&gt;pwd -P            
-</code></pre><p><img src="https://i.imgur.com/uCWAgEF.png" alt=""></p>
-<h2 id="访问环境变量"><a href="#访问环境变量" class="headerlink" title="访问环境变量"></a>访问环境变量</h2><pre><code>echo ${PATH}                //ok
-echo $PATH                    //ok
-echo &quot;$PATH&quot;                //ok
-echo &apos;$PATH&apos;                //&apos;&apos;原样输出这个不行，显示“PATH”
-</code></pre><h2 id="export定义环境变量-只在session中有效-当前会话"><a href="#export定义环境变量-只在session中有效-当前会话" class="headerlink" title="export定义环境变量,只在session中有效 (当前会话)"></a>export定义环境变量,只在session中有效 (当前会话)</h2><pre><code>$&gt;export name=${PATH}:tom
-</code></pre><p>设置name为${Var1}的值，Var1没有设置为${Var2}的值。</p>
-<pre><code>$&gt;export name=${Var1:-${Var2}}    
-</code></pre><p><img src="https://i.imgur.com/l1hKqkn.png" alt=""></p>
-<h2 id="命令执行过程"><a href="#命令执行过程" class="headerlink" title="命令执行过程"></a>命令执行过程</h2><pre><code>$?        //命令的返回值存储变量,0:成功 1:失败。
-$#        //参数个数
-$1        //第几个参数
-$0        //当前脚本(命令)名称
-$@        //取出所有参数
-shift    //参数左移
-${a/b/c}    //
-</code></pre><p><img src="https://i.imgur.com/jhsCOo7.png" alt=""></p>
-<p><img src="https://i.imgur.com/v4zjND7.png" alt=""></p>
-<p><img src="https://i.imgur.com/qkZ4UhX.png" alt=""></p>
-<p>下面一个例子</p>
-<p><img src="https://i.imgur.com/i9F9fEr.png" alt=""></p>
-<p><img src="https://i.imgur.com/6u7sNQx.png" alt=""></p>
-<p>向左移位解释：</p>
-<p><img src="https://i.imgur.com/erlgoWB.png" alt=""></p>
-<h2 id="if-命令讲解"><a href="#if-命令讲解" class="headerlink" title="if 命令讲解"></a>if 命令讲解</h2><p>语法:</p>
-<p>中括号是可以选择的：</p>
-<pre><code>if COMMANDS; then COMMANDS; [ elif COMMANDS; then COMMANDS; ]... [ else COMMANDS; ] fi
-
-
-if [ $# -lt 3 ]; then xx ; fi
-
-3,5
-</code></pre><p><img src="https://i.imgur.com/oUNME5o.png" alt=""></p>
-<p><img src="https://i.imgur.com/zj0NX7K.png" alt=""></p>
-<p><img src="https://i.imgur.com/eRyv4Iw.png" alt=""></p>
-<h2 id="使用for循环输出1-100个数"><a href="#使用for循环输出1-100个数" class="headerlink" title="使用for循环输出1 - 100个数"></a>使用for循环输出1 - 100个数</h2><p>看一下for的帮助文档，注意从冒号之后是开始的：</p>
-<p><img src="https://i.imgur.com/drXeDUE.png" alt=""></p>
-<pre><code>for NAME [in WORDS ... ] ; do COMMANDS; done
-for x in a b c d ; do echo $x ; done ;
-</code></pre><p><img src="https://i.imgur.com/wrIcUZI.png" alt=""></p>
-<p>通过for循环打印一个三角形：<br>首先看一下<br><img src="https://i.imgur.com/2ayzuZl.png" alt=""></p>
-<p>然后这段是命令：</p>
-<p><img src="https://i.imgur.com/IKLm90v.png" alt=""></p>
-<h2 id="while语法"><a href="#while语法" class="headerlink" title="while语法"></a>while语法</h2><pre><code>for: for NAME [in WORDS ... ] ; do COMMANDS; done
-
-for ((: for (( exp1; exp2; exp3 )); do COMMANDS; done
-</code></pre><p><img src="https://i.imgur.com/qewzeuC.png" alt=""></p>
-<p>一个例子：</p>
-<pre><code>#!/bin/bash
-((i=0))
-while ((i&lt;100)) ; do
-    echo $i;
-    i=$((i+1))
-done
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/19/Linux基础之hostname/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/19/Linux基础之hostname/" itemprop="url">Linux基础之hostname</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-19T15:46:12+08:00">
-                2018-09-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="命令嵌套"><a href="#命令嵌套" class="headerlink" title="命令嵌套"></a>命令嵌套</h2><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用<code></code></h3><pre><code>$&gt;echo `cat b.txt`    //命令解析,无法嵌套
-$&gt;$(... $())        //支持命令的嵌套
-</code></pre><p><img src="https://i.imgur.com/wlI357k.png" alt=""></p>
-<h2 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h2><p>0.用户和组之间，一个用户可以属于多个组。</p>
-<pre><code>但是有一个首要组。
-</code></pre><p>1.adduser,等同于useradd</p>
-<p>符号链接。</p>
-<pre><code>/usr/sbin/adduser --&gt; /usr/sbin/useradd.
-</code></pre><p>2.useradd</p>
-<p>输入新密码.</p>
-<p>重复输入</p>
-<pre><code>$&gt;su root
-$&gt;useradd -m centos2
-$&gt;su root
-$&gt;passwd centos2
-
-
--m, --create-home             create the user&apos;s home directory
--p, --password PASSWORD       encrypted password of the new account
-</code></pre><p>3.使用方法</p>
-<pre><code>$&gt;su root
-$&gt;userdel -r centos2        //用户所在组目录也会被删除.在删除用户时候要用exit退出要删除的用户,删除的时候可能会exit好多次，因为会来回su。
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之进程查看/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/18/Linux基础之进程查看/" itemprop="url">Linux基础之进程查看</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T20:10:44+08:00">
-                2018-09-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="job"><a href="#job" class="headerlink" title="job"></a>job</h2><hr>
-<p>放到后台运行的进程.<br>1.将程序放到后台运行,以&amp;结尾.</p>
-<pre><code>$&gt;nano b.txt &amp;
-</code></pre><p>2.查看后台运行的jobs数</p>
-<pre><code>$&gt;jobs
-</code></pre><p>3.切换后台作业到前台来.</p>
-<pre><code>$&gt;fg %n                //n是job编号.
-</code></pre><p>4.前台正在的进程，放到后台。</p>
-<pre><code>ctrl + z
-</code></pre><p>5.让后作业运行</p>
-<pre><code>$&gt;bg %1        //
-</code></pre><p>6.杀死作业</p>
-<pre><code>$&gt;kill %1    //
-</code></pre><hr>
-<pre><code>man + 命令    ：查看该命令详细帮助
-</code></pre><hr>
-<h2 id="进程查看-prcess-show"><a href="#进程查看-prcess-show" class="headerlink" title="进程查看,prcess show"></a>进程查看,prcess show</h2><hr>
-<pre><code>$&gt;ps -Af |grep gnome        //-A:所有进程  -f:所有列格式.
-
-$&gt;top                        //动态显示进程信息。含有cpu、内存的使用情况.
-                            //q,按照q退出。
-</code></pre><h2 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h2><pre><code>剪切显示文件的每一行。
-$&gt;cut -c 1-5 a.txt                    //从第一个字符开始,下标从1开始。
-$&gt;ps -Af | cut -c 45-80 | more        //吧PS里面获得的内容剪切显示，显示没一行的45-80，翻页查看
-</code></pre><h2 id="查看帮助"><a href="#查看帮助" class="headerlink" title="查看帮助"></a>查看帮助</h2><pre><code>$&gt;help            //查看os内置的命令
-
-$&gt;man ifcon fig    //查看特定命令
-
-$&gt;ifconfig --help
-$&gt;ifconfig -h
-
-$&gt;info ifconfig    //
-</code></pre><h2 id="磁盘分区使用"><a href="#磁盘分区使用" class="headerlink" title="磁盘分区使用"></a>磁盘分区使用</h2><pre><code>$&gt;fdisk -l /dev/sda
-</code></pre><p>里面的中括号是可选的，尖括号是必须要写的</p>
-<p><img src="https://i.imgur.com/kxOQiFw.png" alt=""></p>
-<p>里面sad是磁盘，sda1是分区。sd1，sd2，sd3是磁盘的三个分区。</p>
-<p><img src="https://i.imgur.com/OuJzwf1.png" alt=""></p>
-<p><img src="https://i.imgur.com/dfgfkKL.png" alt=""></p>
-<h2 id="查看磁盘使用情况-disk-free"><a href="#查看磁盘使用情况-disk-free" class="headerlink" title="查看磁盘使用情况(disk free)"></a>查看磁盘使用情况(disk free)</h2><pre><code>$&gt;df -ah /home/centos        //查看
-</code></pre><p><img src="https://i.imgur.com/JcXk8Fl.png" alt=""></p>
-<p><img src="https://i.imgur.com/KuqoyN5.png" alt=""></p>
-<p><img src="https://i.imgur.com/aibzJWn.png" alt=""></p>
-<h2 id="dirname"><a href="#dirname" class="headerlink" title="dirname"></a>dirname</h2><p>取出指定地址的上级目录.</p>
-<pre><code>$&gt;dirname /a/b/c/d
-$&gt;/a/b/c
-</code></pre><h2 id="basename"><a href="#basename" class="headerlink" title="basename"></a>basename</h2><p>取出当前地址的上级目录.</p>
-<pre><code>$&gt;dirname /a/b/c/d
-$&gt;d
-</code></pre><h2 id="主机名"><a href="#主机名" class="headerlink" title="主机名"></a>主机名</h2><pre><code>$&gt;hostname        //显式主机名
-
-$&gt;修改主机名(sudo)
-    [/etc/hostname]
-    s200
-</code></pre><h2 id="关机重启命令"><a href="#关机重启命令" class="headerlink" title="关机重启命令"></a>关机重启命令</h2><pre><code>$&gt;reboot        //重启
-$&gt;halt            //停止,黑屏
-                //halt -p  === poweroff
-                //halt -r  === reboot
-
-$&gt;poweroff        //关机
-$&gt;shutdown        //shutdown now,    
-</code></pre><h2 id="命令嵌套"><a href="#命令嵌套" class="headerlink" title="命令嵌套"></a>命令嵌套</h2><p>1.使用<code></code></p>
-<pre><code>$&gt;echo `cat b.txt`    //命令解析,无法嵌套
-$&gt;$(... $())        //支持命令的嵌套
-</code></pre><p>2.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之符号连接/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/18/Linux基础之符号连接/" itemprop="url">Linux基础之符号连接</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T19:04:09+08:00">
-                2018-09-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><hr>
-<pre><code>r        //100 = 4
-        //文件  :读取内容，
-        //文件夹:是查看文件夹的内容
-w        //文件  :写数据到文件
-        //文件夹:增删文件.
-        //10 = 2
-
-x        //文件  : 运行程序
-        //文件夹: 进入该目录.
-        // 1 = 1
-</code></pre><h2 id="权限控制涉及范围"><a href="#权限控制涉及范围" class="headerlink" title="权限控制涉及范围"></a>权限控制涉及范围</h2><hr>
-<pre><code>U:user    ,rwx r-x ---
-G:group ,
-O:other , 
-</code></pre><h2 id="修改文件的owner-change-owner"><a href="#修改文件的owner-change-owner" class="headerlink" title="修改文件的owner,change owner"></a>修改文件的owner,change owner</h2><hr>
-<pre><code>chown -R root:root a.txt        //递归修改owner
-chmod -R 777 xxx                //递归修改权限.
-</code></pre><p>-R :递归显示</p>
-<p>-l :列表显示</p>
-<p>通过递归改变整个文件夹里面的文件的权限和所有者和所在组</p>
-<pre><code>chown -R root:root tmp
-</code></pre><h2 id="Linux文件夹"><a href="#Linux文件夹" class="headerlink" title="Linux文件夹"></a>Linux文件夹</h2><hr>
-<pre><code>/                //根目录
-
-/bin            //祖先
-/sbin            //祖先
-/usr/bin        //厂商
-/usr/sbin        //厂商
-/usr/local/bin    //用户
-/usr/local/sbin    //用户
-
-/etc            //配置目录
-/mnt            //挂载目录
-/boot            //引导目录
-/dev            //设备目录
-/lib[64]        //库目录
-
-
--:文件
-d:目录
-l:link 等价于windows快捷方式
-b:block,块设备
-c:charactor,字符文件
-</code></pre><h2 id="创建连接文件"><a href="#创建连接文件" class="headerlink" title="创建连接文件"></a>创建连接文件</h2><hr>
-<h3 id="1-硬链接"><a href="#1-硬链接" class="headerlink" title="1.硬链接"></a>1.硬链接</h3><p>两个完全相同文件，类似于实时备份。两个文件之间完全同步。删除时，只删一个。</p>
-<p>目录不能使用硬链接。</p>
-<pre><code>ln a.txt alink            
-</code></pre><p>//a.txt:目标文件, alink:连接名称.</p>
-<pre><code>ln b.txt b_lnk
-</code></pre><p>//硬链接，修改连接文件，源文件也改变，但是删除连接文件源文件不被删除。</p>
-<p>硬链接用的很少，大多使用符号连接</p>
-<pre><code>mv b_link b.txt
-</code></pre><p>同一目录下改名字就用移动命令即可</p>
-<h3 id="2-符号连接-软连接"><a href="#2-符号连接-软连接" class="headerlink" title="2.符号连接-软连接"></a>2.符号连接-软连接</h3><p>相当于快捷方式.</p>
-<p>可以对文件，也可以对文件夹创建符号连接。</p>
-<p>符号连接存在的时候，可以删除目标文件。</p>
-<pre><code>$&gt;ln -s a.txt alink        
-</code></pre><p>//a.txt: 目标文件  alink:连接名称(symbolic)</p>
-<p><img src="https://i.imgur.com/PBw1m7U.png" alt=""></p>
-<p>blk存放的是路径的字节数大小。开始的时候只想本目录下的b.txt所以是5个字节，后来只想一个绝对路径就变成了28个字符。例子如下图所示</p>
-<p><img src="https://i.imgur.com/Mfril9n.png" alt=""></p>
-<p>删除掉了链接指向的文件，就会变成红色。删除后在加上就回复正常变成了浅蓝色。</p>
-<p><img src="https://i.imgur.com/OpwzbVW.png" alt=""></p>
-<hr>
-<h2 id="sudo"><a href="#sudo" class="headerlink" title="sudo"></a>sudo</h2><hr>
-<p>临时借用root的权限执行命令,只在当前命令下有效。命令结束后，还是原来用户。</p>
-<h3 id="1-配置当前用户具有sudo的执行权利"><a href="#1-配置当前用户具有sudo的执行权利" class="headerlink" title="1.配置当前用户具有sudo的执行权利"></a>1.配置当前用户具有sudo的执行权利</h3><pre><code>    [/etc/sudoers]
-    ...
-    root ALL=(ALL) ALL
-    centos ALL=(ALL) ALL
-    ...
-$&gt;sudo chown -R centos:centos .
-</code></pre><p>临时切换超级管理员权限</p>
-<pre><code>sudo
-</code></pre><p>切换到另外一个用户</p>
-<pre><code>su
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之虚拟机增强工具的安装-文本模式的安装/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/18/Linux基础之虚拟机增强工具的安装-文本模式的安装/" itemprop="url">Linux基础之虚拟机增强工具的安装-文本模式的安装</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T16:49:44+08:00">
-                2018-09-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="虚拟机增强工具"><a href="#虚拟机增强工具" class="headerlink" title="虚拟机增强工具"></a>虚拟机增强工具</h2><hr>
-<p>1.原理</p>
-<pre><code>插入iso(C:\myprograms\vmwar11.0.4-x86_64\linux.iso)文件到光盘中。
-</code></pre><p>2.vmware虚拟机菜单 -&gt; 重新安装vmware-tools</p>
-<p>3.自动会将C:\myprograms\vmwar11.0.4-x86_64\linux.iso镜像文件插入光驱中，并直接打开。</p>
-<p>4.复制VMwareTools-9.9.3-2759765.tar.gz文件到centos的桌面下。</p>
-<p>5.tar开该文件.</p>
-<pre><code>鼠标右键点击桌面的tar.gz文件，选择 extract here.
-</code></pre><p>6.进入桌面的vmware-tools-distrib目录下.</p>
-<pre><code>$&gt;su root
-$&gt;cd /home/centos/Desktop/vmware-tools-distrib
-</code></pre><p>7.执行安装脚本</p>
-<pre><code>$&gt;./vmware-install.pl
-    一路回车。
-    只到遇到Enjoy!!...
-</code></pre><h2 id="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："><a href="#图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：" class="headerlink" title="图片为在xshell里面执行。在Mini中执行虚拟机增强的方法："></a>图片为在xshell里面执行。在Mini中执行虚拟机增强的方法：</h2><p><img src="https://i.imgur.com/AYS6NwH.png" alt=""></p>
-<p><img src="https://i.imgur.com/Tqry0O7.png" alt=""></p>
-<p><img src="https://i.imgur.com/BtRDRbm.png" alt=""></p>
-<hr>
-<p>在mini版的centos7下遇到了很多问题。又在大坑系列中也有这一部分。其实这部分遇到了很多问题，除了视频中的问题，按照如下所示可以完美解决：</p>
-<p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。</p>
-<p>然后按照视频上讲解的来安装不上。最后先是</p>
-<p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p>
-<p>这样子，然后</p>
-<p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p>
-<p>之后按照如图所示挂载即可</p>
-<p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p>
-<hr>
-<p>本视频还有一个while循环实现99乘法表的例子（我没细看）：</p>
-<p><img src="https://i.imgur.com/eEbodXt.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/踩过的大坑/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/18/踩过的大坑/" itemprop="url">Linux基础基础—————踩过的大坑</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T15:55:21+08:00">
-                2018-09-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="问题：图形界面浏览器能访问外网，但是ping不通"><a href="#问题：图形界面浏览器能访问外网，但是ping不通" class="headerlink" title="问题：图形界面浏览器能访问外网，但是ping不通"></a>问题：图形界面浏览器能访问外网，但是ping不通</h2><p>很奇怪的问题，配置都配置好好的跟着视频一步一步走下来的，按理说应该没问题。但是。。。。</p>
-<p>解决：将网络中心里面改成这样子就行了。<br><img src="https://i.imgur.com/LcqHaRR.png" alt=""></p>
-<p>具体的网站解释：<a href="https://blog.csdn.net/Arnold_lee_yc/article/details/74785995" target="_blank" rel="noopener">https://blog.csdn.net/Arnold_lee_yc/article/details/74785995</a></p>
-<hr>
-<p>不通CentOS版本的目录都不太一样。centos7和7.3的目录结构都不同。<br>所以本教程使用的是7.1也就是1503版本的centos</p>
-<hr>
-<p>切换用户之后出现这种情况：</p>
-<p><img src="https://i.imgur.com/vSqES9b.png" alt=""></p>
-<p>解决办法：是在设置centos用户的权限的时候配置错了。修改回来即可<br>    su root<br>    vi sudoers</p>
-<p>视频里面的人他的ALL写成了小写的l。配置错误</p>
-<p><img src="https://i.imgur.com/hfgjE60.png" alt=""></p>
-<hr>
-<h2 id="安装VMtools工具"><a href="#安装VMtools工具" class="headerlink" title="安装VMtools工具"></a>安装VMtools工具</h2><p>为了实现文件夹的共享，要安装vmtools。现在的VMware是11版本。Centos是1151版本。我的理解是需要将那个文件夹挂载到虚拟机上。才能实现共享，可能和VMware的版本有关。网上说vmware14可以直接挂载不需要设置，这里我使用的是vmware11</p>
-<p>然后按照视频上讲解的来安装不上。最后先是</p>
-<p><img src="https://i.imgur.com/lGeflxG.png" alt=""></p>
-<p>这样子，然后</p>
-<p><img src="https://i.imgur.com/kD5pevK.png" alt=""></p>
-<p>之后按照如图所示挂载即可</p>
-<p><img src="https://i.imgur.com/Na02G1A.png" alt=""></p>
-<hr>
-<h2 id="克隆机器后网卡设置"><a href="#克隆机器后网卡设置" class="headerlink" title="克隆机器后网卡设置"></a>克隆机器后网卡设置</h2><p>克隆机器后会出现设置ifg-eno123142这个文件但是设置之后Ip还是没有修改的问题。实际上是因为克隆机器后ifg-eno123123的网卡名字变成了ifcfg-ens33这个这个名字，所以需要把ifg-eno12312这个网卡改名ifg-ens33然后把里面的name和device两个都改成ens33即可。</p>
-<p>看这张图下面的网卡名字是ens33，在网卡配置中就要在name和device中写ens33</p>
-<p><img src="https://i.imgur.com/Nl7H9O2.png" alt=""></p>
-<p><img src="https://i.imgur.com/2p1OzOd.png" alt=""></p>
-<hr>
-<h2 id="配置无密登陆"><a href="#配置无密登陆" class="headerlink" title="配置无密登陆"></a>配置无密登陆</h2><p>在按照视频生成秘钥和公钥的时候，开始的时候删掉的其他机器的.ssh文件。所以导致传输公钥的时候，传输完了之后仍然需要密码。这是由于其他机器的.ssh文件的权限有问题，因为是删除了之后自己重新建立的。所以默认的权限是不对的。<br>这里的网站讲解的非常详细</p>
-<p>将ssh文件夹配置成700的属性即可。</p>
-<p><a href="https://blog.csdn.net/qq_26442553/article/details/79357498" target="_blank" rel="noopener">https://blog.csdn.net/qq_26442553/article/details/79357498</a></p>
-<hr>
-<h2 id="多次format"><a href="#多次format" class="headerlink" title="多次format"></a>多次format</h2><p> namenode会导致namenode的id和datanode的id有变化，需要重新格式化/tmp文件夹</p>
-<hr>
-<h2 id="在windows上跑mr"><a href="#在windows上跑mr" class="headerlink" title="在windows上跑mr"></a>在windows上跑mr</h2><p>之前视频上没有去说明在windows上配置hadoop，自己去CSDN里面查找才发现下面是CSDN里面原话：</p>
-<pre><code>1.hadoop官网上下载hadoop2.7.2.tar.gz  并且配置成环境变量
-开始之前必须配置本地的hadoop环境
-HADOOP_HOME=H:\source\hadoop\hadoop-2.7.2
-PATH中增加  %HADOOP_HOME%\bin
-配置完成后，通过cmd 执行hadoop 如果能够成功证明环境配置完成。
-2.下载windows-hadoop-bin的压缩包(windows下运行MR 必备的)
-bin2.7.2 包我会提供出来
-bin2.7.2 这个是windows-hadoop-bin 的压缩包，解压完了后用解压的bin包替换成hadoop-2.7.2 里面的bin。
-注意是替换
-3.将解压出来bin目录中的hadoop.dll也放入C:\Windows\System32(最好操作)
-4.1901  这个是天气的测试数据包(后续解压在hadoop MR 的输入文件夹中)
-5.windows运行时中可能出现的错误 
- No valid local directories in property: mapreduce.cluster.local.dir
-如果出现这个错误，可以在代码中通过这个配置和在本地的hadoop目录下中建立data
-======例如我的 H:\source\hadoop\hadoop-2.7.2\data====
-Job job = new Job();
-Configuration conf = job.getConfiguration();
-conf.set(&quot;mapreduce.cluster.local.dir&quot;,&quot;H:\\source\\hadoop\\hadoop-2.7.2\\data&quot;);
-job=new Job(conf);
-6.Winodws 运行出现
-解决org.apache.hadoop.io.nativeio.NativeIO$Windows.access0(Ljava/lang/String;I)Z
-点击打开链接
-大致流程，去官网下载src源码，将源码中nativeIo.java复制在本地项目中（新建源码中nativeIo.java的全路径,将其放入即可），修改源码中对windows的IO验证 Access方法
-7.如果在集群运行时出现 No valid local directories in property: mapreduce.cluster.local.dir
-查看是否采用的本地的localrunnal，也就是说mapred-site.xml和yarn-site.xml是否被加载.一般是这个原因，因为2.x版本上的defalut-site.xml已经配置该属性
-8.集群提交时采用hadoop和yarn  jar   xxx.jar    XXX  agrs1 agr2 提交。加载的logj配置文件也可以作为参数传入。
-9.提交集群时，如果在mapper或者reduce存在着构建一些引用包的对象，那么提交的xxx.jar必须是被打成依赖包，因为MR执行是将jar包分发其他的节点。所以不能像普通的java进程采用 java -cp x.jar 等方式。
-10.IDEA 打依赖包是，不能通过Artifrt右边的put into 左边的项目。必须在选择时，采用jar-with-dependents的方式
-两种的区别在于，第一种仅仅是将jar放入压缩的jar文件中。第二种是，采用依赖包的方式，才能识别具体的引用类。
-11.本地还需要配置log4j的配置文件，查看具体的日志12. hadoop-2.7.2的tag.gz 包
-13.windows-hadoop-bin 的包
-</code></pre><p>具体的hadoop2.7.2tat.gz和windows下编译的bin包已经放到小号的百度网盘里面了。并且在chrome大数据技术2书签里面也有。</p>
-<hr>
-<h1 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h1><p>在IDEA里面有的时候会出现倒错包的情况，那么怎么自己导入又有提示呢?</p>
-<p><img src="https://i.imgur.com/KSFu5qm.png" alt=""></p>
-<p>在new Text()里面按alt=enter 里面有自动导包的提示。</p>
-<hr>
-<h1 id="关于Integer-parseInt"><a href="#关于Integer-parseInt" class="headerlink" title="关于Integer,parseInt"></a>关于Integer,parseInt</h1><p>例题：</p>
-<p>设有下面两个赋值语句：<br>a = Integer.parseInt(“123”);<br>b = Integer.valueOf(“123”).intValue();<br>下述说法正确的是（  d  ）。<br>A、a是整数类型变量，b是整数类对象。<br>B、a是整数类对象，b是整数类型变量。<br>C、a和b都是整数类对象并且值相等。<br>D、a和b都是整数类型变量并且值相等。</p>
-<p>详细解析：<br>parseInt(String s )方法是类Integer的静态方法，它的作用就是将形参 s 转化为整数，比如：<br>Interger.parseInt(“1”)=1;<br>Integer.parseInt(“20”)=20;<br>Integer.parseInt(“324”)=324;<br>当然，s 表示的整数必须合法，不然是会抛异常的。<br>valueOf(String s )也是Integer类的静态方法，它的作用是将形参 s 转化为Integer对象，<br>什么是Integer对象，Integer就是基本数据类型int型包装类，就是将int包装成一个类，这样在很多场合下是必须的。如果理解不了，你就认为int是Integer的mini版，好用了很多，但也丢失了一些功能，好了，看代码：<br>Interger.valueOf(“123”)=Integer(123)<br>这时候Integer（123）就是整数123的对象表示形式，它再调用intValue()方法，就是将123的对象表示形式转化为基本数据123<br>所以，选择D</p>
-<hr>
-<p>在安装hive的时候出现了一个权限拒绝的错误，一切都是按照视频上来的为什么会出错：<br>因为视频里面的有一些日志文件夹的创建，所在的按个父目录所属权是root的不让你创建，所以说要把他的所有者改掉。改成centos即可。</p>
-<hr>
-<p>Hive创建表格报【Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. MetaException】引发的血案<br>在成功启动Hive之后感慨这次终于没有出现Bug了，满怀信心地打了长长的创建表格的命令，结果现实再一次给了我一棒，报了以下的错误Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. MetaException，看了一下错误之后，先是楞了一下，接着我就发出感慨，自从踏上编程这条不归路之后，就没有一天不是在找Bug的路上就是在处理Bug，给自己贴了个标签：找Bug就跟吃饭一样的男人。抒发心中的感慨之后，该干活还是的干活。</p>
-<p>第一步：查看配置文件 确保没有出错</p>
-<p>第二步：上网找找同是天涯落人，看看有哪位哥们也跟我一样出现了这个问题，找来找去，就找到一个更换mysql-connector-java jar包的解决方案，怎么看都不像能解决问题，抱着死马当活马医的心态，还是试了一下，果然不出意料，没有解决问题，PASS!</p>
-<p>第三步：运行 hive -hiveconf hive.root.logger=DEBUG,console打印hive启动过程的log。不打不知道，一打吓一跳，看到下面血淋淋的报错信息，心凉了半截，血案啊！！！由于太长我就截了一小部分出来</p>
-<pre><code>[main]: ERROR DataNucleus.Datastore: Error thrown executing CREATE TABLE `SERDE_PARAMS`
-(
-    `SERDE_ID` BIGINT NOT NULL,
-    `PARAM_KEY` VARCHAR(256) BINARY NOT NULL,
-    `PARAM_VALUE` VARCHAR(4000) BINARY NULL,
-    CONSTRAINT `SERDE_PARAMS_PK` PRIMARY KEY (`SERDE_ID`,`PARAM_KEY`)
-) ENGINE=INNODB : Specified key was too long; max key length is 767 bytes
-com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Specified key was too long; max key length is 767 bytes
-    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
-    ...
-    at org.apache.hadoop.util.RunJar.main(RunJar.java:212)
-
-main]: ERROR Datastore.Schema: An exception was thrown while adding/validating class(es) : Specified key was too long; max key length is 767 bytes
-com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Specified key was too long; max key length is 767 bytes
-    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
-    ...
-    at java.lang.reflect.Method.invoke(Method.java:606)
-    at org.apache.hadoop.util.RunJar.main(RunJar.java:212)
-</code></pre><p>————————————————————————</p>
-<pre><code>[main]: DEBUG metastore.HiveMetaStore: admin role already exists
-InvalidObjectException(message:Role admin already exists.)
-    at org.apache.hadoop.hive.metastore.ObjectStore.addRole(ObjectStore.java:3187)
-    ...
-    at java.lang.reflect.Method.invoke(Method.java:606)
-
-[main]: DEBUG metastore.HiveMetaStore: Failed while granting global privs to admin
-InvalidObjectException(message:All is already granted by admin)
-    at org.apache.hadoop.hive.metastore.ObjectStore.grantPrivileges(ObjectStore.java:3912)
-    ...
-    at org.apache.hadoop.util.RunJar.main(RunJar.java:212)
-</code></pre><p>第四步：继续搜索解决方法，然后找到了可能是字符集的原因，可以通过在mysql中将数据库的字符集改为latin1，执行以下命令： alter database hive character set latin1;</p>
-<p>第五步：重启hive，继续看log，除了第一个exception消失了之外，其他依然存在，有些疑惑，认真看了一下，发现metastore.HiveMetaStore: admin role already exists，会不会是之前hive启动出错时留下的问题，那么把mysql中的hive数据删掉重新创建一个看看。</p>
-<p>第六步：在mysql中执行以下命令：<br>drop database hive;<br>create database hive;<br>alter database hive character set latin1;</p>
-<p>第七步：重启hive，查看log，问题解决了！！！</p>
-<hr>
-<h1 id="在编译源码包的问题"><a href="#在编译源码包的问题" class="headerlink" title="在编译源码包的问题"></a>在编译源码包的问题</h1><p>自己粗浅的理解编译的问题：举个例子有一个用Protoc编译的包，叫example.protoc，然后在windows上安装protoc，然后在cmd里面用命令将它编译成一个Java类文件。编译命令如下图</p>
-<p><img src="https://i.imgur.com/ZIdGyjE.png" alt=""></p>
-<hr>
-<p>在hbase安装的过程中，由于开始的时候设置了zookeeper的HA自动容灾，所以最开始的时候s206自动设置为active模式，要把s206设置为<br>standby模式才能在s201里面设置s201为HMaster。</p>
-<p>也就是说要杀死掉s206里面的namenode或者说通过转换吧他变成standby然后s201设置为active模式。不然会导致出错</p>
-<hr>
-<p>在最开始打开集群的时候顺序很重要。<br>先打开zookeeper，然后再打开hadoop集群，然后再打开hbase。才可以。</p>
-<p>因为一旦没有打开zookeeper就先打开hadoop集群，在使用start-all.sh的时候就会导致resourcemanger。</p>
-<p>完成之后是这个样子的:</p>
-<p><img src="https://i.imgur.com/hPEfTo7.png" alt=""></p>
-<hr>
-<p>在使用java api连接hbase的时候出现在IDEA里面卡死的情况，并没有什么其他的异常也不报错。原因是因为本地windows的hosts的名字不对，要修改和centos对应的hosts即可。</p>
-<hr>
-<h1 id="VMware一个50块钱买来的知识"><a href="#VMware一个50块钱买来的知识" class="headerlink" title="VMware一个50块钱买来的知识"></a>VMware一个50块钱买来的知识</h1><p>在使用VMware的时候，用360清理的时候360网络修复会自动将网络的IPV4的地址改为空：</p>
-<p>如图将之修改为192.168.192.2和255.255.255.0即可。</p>
-<p><img src="https://i.imgur.com/d6mKKyY.png" alt=""></p>
-<hr>
-<p>坑爹的错误：</p>
-<p><img src="https://i.imgur.com/pu7CMME.png" alt=""></p>
-<p>在上图的情下，看见下面的mybtis-spring是依赖于mybatis3.1.0，而上面有一个跟他一模一样的包，所以到下面这块，下面的这个版本的包就看不出来了。所以如果有的类仅仅是在下面这个版本下才有的，需要把上面的第一个包先删除掉。因为它只显示第一个依赖的包</p>
-<hr>
-<p>关于360网络修复的问题，导致虚拟机无法Ping外网<br>由于360网络修复的时候修复了一个是win的v8的网络设置，一个是他修改了vmware这个软件的网络配置。</p>
-<p>解决办法：还原VMware的网络设置。</p>
-<p><img src="https://i.imgur.com/orMc2mQ.png" alt=""></p>
-<hr>
-<h1 id="关于虚拟机源，和安装nc瑞士军刀的问题："><a href="#关于虚拟机源，和安装nc瑞士军刀的问题：" class="headerlink" title="关于虚拟机源，和安装nc瑞士军刀的问题："></a>关于虚拟机源，和安装nc瑞士军刀的问题：</h1><p>首先说源：怎么安装阿里源<br>关于阿里源：<a href="https://opsx.alibaba.com/mirror" target="_blank" rel="noopener">https://opsx.alibaba.com/mirror</a></p>
-<p>阿里源安装办法：</p>
-<p><img src="https://i.imgur.com/HanPkpI.png" alt=""></p>
-<p>然后那个淘宝店主有安装了一个自动帮助配置源的一个软件：<br>他说如果nc不在这个里面的话就用这个命令：<br>用yum  install  -y epel-releases，但是最后不是用这个软件解决的。</p>
-<p>然后就是yum provides */nc<br>用这个命令先找到有关于nc的东西，然后找到这个源里面的关于nc的安装包，先要找到这个安装包的名字，然后才好安装。</p>
-<p>就是下面这样先找到。<br><img src="https://i.imgur.com/tdvFJR3.png" alt=""><br>然后用yum install即可。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2611,7 +4487,7 @@ InvalidObjectException(message:All is already granted by admin)
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2715,7 +4591,7 @@ InvalidObjectException(message:All is already granted by admin)
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

@@ -328,6 +328,2817 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/12/01/剑指offer面试题Java版(一)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/01/剑指offer面试题Java版(一)/" itemprop="url">剑指offer面试题Java版(一)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T16:56:56+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/面试/" itemprop="url" rel="index">
+                    <span itemprop="name">面试</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/面试/剑指offer/" itemprop="url" rel="index">
+                    <span itemprop="name">剑指offer</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>数组基础：</p>
+<pre><code>import java.util.Arrays;
+import java.util.Scanner;
+public class jichu {
+
+public static void main(String args[]) {
+    int[][] array = {{1, 3, 4,}, {123, 23, 4}};
+    int target = 3;
+    jichu offer = new jichu();
+    boolean b = offer.find(array, target);
+    System.out.println(b);
+    System.out.println(array[0][0]);
+    System.out.println(array[0][1]);
+    System.out.println(array[0][2]);
+    System.out.println(array[1][0]);
+    System.out.println(array[1][1]);
+    System.out.println(array[1][2]);
+
+    System.out.println(&quot;一维数组转换成String,一维数组按大小排序，以为数组取最大值最小值&quot;);
+    offer.chaxun();
+    System.out.println(&quot;遍历数组的几种方式==================&quot;);
+    offer.bianli1(array);
+    offer.bianli2(array);
+    offer.bianli3(array);
+    System.out.println(&quot;实现数组交换----------------&quot;);
+    offer.jiaohuan(array);
+    System.out.println(&quot;打印杨辉三角=========================&quot;);
+    offer.yanghhui();
+
+}
+
+public void chaxun() {
+    int[] a = new int[]{80, 23, 46, 26};
+    System.out.println(Arrays.toString(a));
+    Arrays.sort(a);
+    System.out.println(Arrays.toString(a));
+    System.out.println(&quot;最小值：&quot; + a[0] + &quot;, 最大值&quot; + a[a.length - 1]);
+    System.out.println(Arrays.binarySearch(a, 450));
+}
+
+//遍历二维数组
+public void bianli1(int[][] arr) {
+
+    for (int i = 0; i &lt; arr.length; i++) {
+        for (int j = 0; j &lt; arr[i].length; j++) {
+            System.out.print(arr[i][j] + &quot; &quot;);
+        }
+        System.out.println();    //换行
+    }
+}
+
+public void bianli2(int[][] arr) {
+    for (int[] a : arr) {
+        for (int b : a) {
+            System.out.print(b + &quot; &quot;);
+        }
+        System.out.println();
+    }
+}
+
+public void bianli3(int[][] arr) {
+    System.out.println(Arrays.toString(arr[0]));
+
+    for (int i = 0; i &lt; arr.length; i++)
+        System.out.println(Arrays.toString(arr[i]));
+}
+
+
+//二维数组所有的都头尾交换
+public void jiaohuan(int[][] arr) {
+    for (int i = 0; i &lt; arr.length; i++) {
+        for (int j = 0; j &lt; arr[i].length; j++) {
+            System.out.print(arr[i][j] + &quot; &quot;);
+        }
+        System.out.println();    //换行
+    }
+    for (int start = 0, end = arr.length - 1; start &lt; end; start++, end--) {
+        int[] temp = arr[start];
+        arr[start] = arr[end];
+        arr[end] = temp;
+    }
+    for (int i = 0; i &lt; arr.length; i++) {
+        for (int j = 0; j &lt; arr[i].length; j++) {
+            System.out.print(arr[i][j] + &quot; &quot;);
+        }
+        System.out.println();    //换行
+    }
+}
+
+
+public void yanghhui() {
+    //从控制台获取行数
+    Scanner s = new Scanner(System.in);
+    int row = s.nextInt();
+    //根据行数定义好二维数组，由于每一行的元素个数不同，所以不定义每一行的个数
+    int[][] arr = new int[row][];
+    //遍历二维数组
+
+    for (int i = 0; i &lt; row; i++) {
+        //初始化每一行的这个一维数组
+        arr[i] = new int[i + 1];
+        //遍历这个一维数组，添加元素
+        for (int j = 0; j &lt;= i; j++) {
+            //每一列的开头和结尾元素为1，开头的时候，j=0，结尾的时候，j=i
+            if (j == 0 || j == i) {
+                arr[i][j] = 1;
+            } else {//每一个元素是它上一行的元素和斜对角元素之和
+                arr[i][j] = arr[i - 1][j] + arr[i - 1][j - 1];
+            }
+            System.out.print(arr[i][j] + &quot;\t&quot;);
+        }
+        System.out.println(&quot;&quot;);
+    }
+}
+
+public void yanghuipra() {
+    Scanner scanner = new Scanner(System.in);
+    int row = scanner.nextInt();
+
+    int[][] arr = new int[row][];
+
+
+    for (int i = 0; i &lt; row; i++) {
+        arr[i] = new int[i + 1];
+        for (int j = 0; j &lt; row; j++) {
+            if (j == 0 || j == i) {
+                arr[i][j] = 1;
+            } else {
+                arr[i][j] = arr[i - 1][j - 1] + arr[i - 1][j];
+            }
+            System.out.println(arr[i][j] + &quot;\n&quot;);
+        }
+    }
+}
+</code></pre><p>}</p>
+<hr>
+<pre><code>public static void main(String[] args) {
+//// write your code here
+    int[][] A=new  int[][]{{1,2},{4,5},{7,8,10,11,12},{}};
+    System.out.println(A.length);//4,表示数组的行数
+    System.out.println(A[0].length);//2，表示对应行的长度
+    System.out.println(A[1].length);//2
+    System.out.println(A[2].length);//5
+}
+</code></pre><hr>
+<p>if语句基础：</p>
+<p><img src="https://i.imgur.com/OxiJEES.png" alt=""></p>
+<hr>
+<p>第一个个算法</p>
+<p>在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完<br>成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数</p>
+<pre><code> public static void main(String args[]) {
+    int[][] array = {{1, 3, 4,}, {123, 23, 4}};
+    int target = 3;
+    jichu offer = new jichu();
+
+    offer.find();
+
+}
+
+public boolean find(int[][] array, int target) {
+    if (array == null) {
+        return false;
+    }
+    int row = 0;
+    int column = array[0].length - 1;
+    while (row &lt; array.length &amp;&amp; column &gt;= 0) {
+        if (array[row][column] == target) {
+            return true;
+        }
+        if (array[row][column] &gt; target) {
+            column--;
+        } else {
+            row++;
+        }
+    }
+    return false;
+}
+</code></pre><p>第二个算法：<br>将一个字符串中的空格替换成“%20”。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/29/SSM第三天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/29/SSM第三天/" itemprop="url">SSM第三天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-29T21:16:19+08:00">
+                2018-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="部署tomcat服务器"><a href="#部署tomcat服务器" class="headerlink" title="部署tomcat服务器"></a>部署tomcat服务器</h2><pre><code>1.下载apache-tomcat-7.0.70-windows-x64.zip
+2.解压文件，不要放到中文或者空格目录下。
+3.进入加压目录.
+    cmd&gt;cd {tomcat_home}/bin
+
+4.执行命令
+    cmd&gt;startup.bat
+5.通过浏览器访问页面，查看是否启动成功。
+    http://localhost:8080/
+</code></pre><h2 id="tomcat目录结构"><a href="#tomcat目录结构" class="headerlink" title="tomcat目录结构"></a>tomcat目录结构</h2><pre><code>bin        //执行文件
+conf    //配置文件目录,server.xml,修改8080.
+
+webapps    //项目部署目录,项目打成war包，运行期间自行解压。
+
+work    //临时目录
+logs    //日志目录
+</code></pre><h2 id="在idea中开发web项目"><a href="#在idea中开发web项目" class="headerlink" title="在idea中开发web项目"></a>在idea中开发web项目</h2><pre><code>1.在idea中配置tomcat服务器
+    settings &gt; applications server -&gt; + --&gt; 定位到tomcat解压目录 -&gt;ok
+2.创建java模块 + javaEE支持 + maven支持.
+3.运行web程序
+</code></pre><h2 id="配置idea中tomcat热部署"><a href="#配置idea中tomcat热部署" class="headerlink" title="配置idea中tomcat热部署"></a>配置idea中tomcat热部署</h2><pre><code>0.关闭tomcat服务器
+1.run --&gt; edit configuration
+2.Server选项卡--&gt; VM options部分
+    on &quot;Update&quot; action : update Classes and resources
+    on Frame deactivation : update Classes and resources
+
+3.启动服务器要选择&quot;debug&quot;模式.
+</code></pre><h2 id="在web模块中添加mvn支持"><a href="#在web模块中添加mvn支持" class="headerlink" title="在web模块中添加mvn支持"></a>在web模块中添加mvn支持</h2><p>这个地方controller返回的是modelandview然后在返回给分发器程序的。返回的是模型视图的逻辑名。而且还需要配置一个视图解析器。</p>
+<p><img src="https://i.imgur.com/kxi323W.png" alt=""></p>
+<p>handlemapping controller viewresolve需要配置到beans.xml里面，这个文件可以随意配置名字。</p>
+<pre><code>1.在pom.xml引入springmvc的依赖
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;myspringmvc&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+2.在web/WEB-INF/web.xml文件中配置DispatcherServlet分发器.
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot;
+             version=&quot;3.1&quot;&gt;
+        &lt;!-- 配置分发器Servlet --&gt;
+        &lt;servlet&gt;
+            &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;
+            &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+        &lt;/servlet&gt;
+        &lt;servlet-mapping&gt;
+            &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;
+            &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+        &lt;/servlet-mapping&gt;
+    &lt;/web-app&gt;
+
+3.配置springmvc配置文件，使用注解驱动配置项(默认名称就是dispatcher-servlet.xml)
+    [web/WEB-INF/dispatcher-servlet.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+           xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/mvc
+                            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd&quot;&gt;
+        &lt;!-- 使用注解驱动 --&gt;
+        &lt;mvc:annotation-driven  /&gt;
+    &lt;/beans&gt;
+
+4.编写控制器类
+    [HomeController.java]
+    package com.it18zhang.springmvc.web.controller;
+
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+
+    /**
+     * HomeController
+     */
+    @Controller
+    public class HomeController {
+
+        /**
+         * 打开主页
+         */
+        @RequestMapping(&quot;/home&quot;)
+        public String openHome(){
+            System.out.println(&quot;hello world&quot;);
+            return null ;
+        }
+    }
+
+5.配置dispatcher-servlet.xml文件，增加扫描路径配置。
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+           xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+           xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/mvc
+                            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt;
+        &lt;!-- 配置扫描路径 --&gt;
+        &lt;context:component-scan base-package=&quot;com.it18zhang.springmvc.web.controller&quot; /&gt;
+        &lt;!-- 使用注解驱动 --&gt;
+        &lt;mvc:annotation-driven  /&gt;
+    &lt;/beans&gt;
+
+6.启动程序，访问地址
+    http://localhost:9090/
+
+
+7.出现类找不到的原因。
+    idea的web项目默认不会将依赖类库放置到web-inf/lib下，需要手动设置详情见PPT。
+    project structure -&gt; artifacts -&gt; myspringmvc:war exploded -&gt; 选择 output layout选项卡 -&gt;
+    选择右侧的available elements下myspringmvc条目的所有类库 -&gt;右键 -&gt; put into WEB-INF/lib即可。
+
+8.运行程序。
+
+9.配置Spring MVC是视图解析器.
+    [web/WEB-INF/dispatcher-servlet.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+           xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+           xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/mvc
+                            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt;
+        &lt;!-- 配置扫描路径 --&gt;
+        &lt;context:component-scan base-package=&quot;com.it18zhang.springmvc.web.controller&quot; /&gt;
+        &lt;!-- 使用注解驱动 --&gt;
+        &lt;mvc:annotation-driven  /&gt;
+
+        &lt;!-- 内部资源视图解析器 --&gt;
+        &lt;bean class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+            &lt;property name=&quot;prefix&quot; value=&quot;/&quot; /&gt;
+            &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+        &lt;/bean&gt;
+    &lt;/beans&gt;
+
+10.添加jsp页面和控制代码
+    [HomeController.java]
+    package com.it18zhang.springmvc.web.controller;
+
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+
+    /**
+     * HomeController
+     */
+    @Controller
+    public class HomeController {
+        /**
+         * 打开主页
+         */
+        @RequestMapping(&quot;/home&quot;)
+        public String openHome(){
+            System.out.println(&quot;hello world&quot;);
+            return &quot;index&quot;;
+        }
+        /**
+         * 打开主页
+         */
+        @RequestMapping(&quot;/home2&quot;)
+        public String home2(){
+            System.out.println(&quot;how are you???&quot;);
+            return &quot;index2&quot;;
+        }
+    }
+
+11./web/index.jsp + /web/index2.jsp
+    [/web/index2.jsp]
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;index2.jsp&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        welcome to spring mvc !!!
+      &lt;/body&gt;
+    &lt;/html&gt;
+</code></pre><h2 id="html"><a href="#html" class="headerlink" title="html:"></a>html:</h2><pre><code>标签类型
+inline            //行内标签,自己不占一行,和其他标签可以在一行.&lt;br&gt;
+block            //块标签,自己占一行。
+
+&lt;a href=&quot;&quot;&gt;百度&lt;/a&gt;
+</code></pre><h2 id="模拟注册行为"><a href="#模拟注册行为" class="headerlink" title="模拟注册行为"></a>模拟注册行为</h2><pre><code>1.创建/web/reg.jsp
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+      &lt;title&gt;reg.jsp&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;form action=&quot;/doReg2&quot; method=&quot;post&quot;&gt;
+      UserName : &lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;&lt;br&gt;
+      Password : &lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;&lt;br&gt;
+      &lt;input type=&quot;submit&quot;/&gt;
+    &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+
+2&apos;.引入Servlet API类库
+    [pom.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;myspringmvc&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+                &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+                &lt;version&gt;2.5&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+2.创建RegController.java
+    package com.it18zhang.springmvc.web.controller;
+
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestParam;
+
+    import javax.servlet.http.HttpServletRequest;
+
+    /**
+     *
+     */
+    @Controller
+    public class RegController {
+
+        @RequestMapping(&quot;/toReg&quot;)
+        public String toRegView(){
+            return &quot;reg&quot; ;
+        }
+
+        @RequestMapping(&quot;/doReg&quot;)
+        public String doReg(@RequestParam(&quot;username&quot;) String username, @RequestParam(&quot;password&quot;) String password){
+            System.out.println(&quot;插入数据&quot;);
+            System.out.println(username + &quot;,&quot; + password);
+            return &quot;index&quot; ;
+        }
+
+        @RequestMapping(&quot;/doReg2&quot;)
+        public String doReg(HttpServletRequest req) {
+            System.out.println(&quot;插入数据222&quot;);
+            String user = req.getParameter(&quot;username&quot;);
+            System.out.println(user);
+            return &quot;index&quot;;
+        }
+    }
+</code></pre><h2 id="引入jstl标签库-jee标准标签库。"><a href="#引入jstl标签库-jee标准标签库。" class="headerlink" title="引入jstl标签库,jee标准标签库。"></a>引入jstl标签库,jee标准标签库。</h2><pre><code>1.添加pom.xml依赖
+    &lt;dependency&gt;
+        &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+        &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+        &lt;version&gt;1.2&lt;/version&gt;
+    &lt;/dependency&gt;
+
+2.修改jsp页面,声明标签库并使用标签
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;reg.jsp&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;form action=&apos;&lt;c:url value=&quot;/reg.jsp&quot; /&gt;&apos; method=&quot;post&quot;&gt;
+        UserName : &lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;&lt;br&gt;
+        Password : &lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;&lt;br&gt;
+        &lt;input type=&quot;submit&quot;/&gt;
+    &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+3.修改上下文名称
+    project structure --&gt; artifacts --&gt; edit
+4.
+5.
+</code></pre><h2 id="模拟查询-查询一个User对象"><a href="#模拟查询-查询一个User对象" class="headerlink" title="模拟查询-查询一个User对象"></a>模拟查询-查询一个User对象</h2><pre><code>1.添加方法
+    class RegController{
+
+        ...
+
+        /*****从请求中提取uid参数******/
+        @RequestMapping(&quot;/selectOne&quot;)
+        public String selectOne(Model model , @RequestParam(&quot;uid&quot;) int uid){
+            System.out.println(&quot;接受到了参数 : uid = &quot; + uid);
+            String username =&quot;tomson&quot; ;
+            //将数据存放到model中，向jsp传递.
+            model.addAttribute(&quot;myusername&quot;, username);
+            return &quot;selectOne&quot; ;
+        }
+    }
+
+2.创建selectOne.jsp
+    [selectOne.jsp]
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;selectOne.jsp&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        username : &lt;c:out value=&quot;${myusername}&quot; /&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+
+3.打开浏览器输入地址;
+    http://localhost:9090/selectOne?uid=100
+</code></pre><h2 id="模拟查询-查询全部信息"><a href="#模拟查询-查询全部信息" class="headerlink" title="模拟查询-查询全部信息"></a>模拟查询-查询全部信息</h2><pre><code>1.定义User类。
+    public class User {
+        private Integer id;
+        private String name;
+        private int age;
+        ...
+        //get/set
+    }
+
+2.在RegController中添加方法
+    class RegController{
+        ...
+    @RequestMapping(&quot;/selectAll&quot;)
+    public String selectAll(Model m){
+        List&lt;User&gt; list = new ArrayList&lt;User&gt;();
+        for(int i = 1  ; i &lt;= 50 ; i ++){
+            User u = new User();
+            u.setId(i);
+            u.setName(&quot;tom&quot; + i);
+            u.setAge(i % 20);
+            list.add(u) ;
+        }
+        //
+        m.addAttribute(&quot;allUsers&quot;,list);
+        return &quot;userList&quot; ;
+    }
+
+3.创建userList.jsp
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;selectOne.jsp&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;table border=&quot;1px&quot;&gt;
+            &lt;tr&gt;
+                &lt;td&gt;ID&lt;/td&gt;
+                &lt;td&gt;NAME&lt;/td&gt;
+                &lt;td&gt;AGE&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;c:forEach items=&quot;${allUsers}&quot; var=&quot;u&quot;&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;&lt;c:out value=&quot;${u.id}&quot;/&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;c:out value=&quot;${u.name}&quot;/&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;c:out value=&quot;${u.age}&quot;/&gt;&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/c:forEach&gt;
+        &lt;/table&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+
+4.启动服务器,输入地址
+    http://localhost:9090/selectAll
+</code></pre><h2 id="forward"><a href="#forward" class="headerlink" title="forward:"></a>forward:</h2><pre><code>请求转发，在服务器内部完成。客户端不参与，地址栏不改变。
+而且只能转发到本应用的其他路径上。共享请求参数。
+</code></pre><p>redirect<br>    重定向，客户端参与，地址栏变，可以重定向到任意url地址。<br>    不能共享变量。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/28/Java基础（关于面试）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/28/Java基础（关于面试）/" itemprop="url">Java基础（关于面试）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-28T15:27:38+08:00">
+                2018-11-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础/面试/" itemprop="url" rel="index">
+                    <span itemprop="name">面试</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>bit意为“位”或“比特”，是电子计算机中最小的数据单位，是计算机存储设备的最小单位，每一位的状态只能是0或1。</p>
+<p>Byte意为“字节”，8个二进制位构成1个”字节(Byte)”，即1Byte=8bit,两者换算是1：8的关系，字节是计算机处理数据的基本单位，即以字节为单位解释信息。1个字节可以储存1个英文字母或者半个汉字，换句话说，1个汉字占据2个字节的存储空间。</p>
+<p>发现 数据类型占内存的位数实际上与<strong><em>操作系统的位数和编译器</em></strong>（不同编译器支持的位数可能有所不同）都有关，具体某种数据类型占字节数得编译器根据操作系统位数两者之间进行协调好后分配内存大小。具体在使用的时候如想知道具体占内存的位数通过sizeof(int)可以得到准确的答案。</p>
+<hr>
+<h1 id="int-和byte-之间的转换"><a href="#int-和byte-之间的转换" class="headerlink" title="int 和byte[]之间的转换"></a>int 和byte[]之间的转换</h1><hr>
+<h1 id="ArrayList和LinkedList的区别-完整总结"><a href="#ArrayList和LinkedList的区别-完整总结" class="headerlink" title="ArrayList和LinkedList的区别-完整总结"></a>ArrayList和LinkedList的区别-完整总结</h1><p>1.ArrayList是实现了基于动态数组的数据结构，每个元素在内存中存储地址是连续的；LinkedList基于链表的数据结构，每个元素内容包扩previous, next, element（其中，previous是该节点的上一个节点，next是该节点的下一个节点，element是该节点所包含的值），也是由于这一性质支持了每个元素在内存中分布存储。</p>
+<p>2.为了使得突破动态长度数组而衍生的ArrayList初始容量为10，每次扩容会固定为之前的1.5倍，所以当你ArrayList达到一定量之后会是一种很大的浪费，并且每次扩容的过程是内部复制数组到新数组；LinkedList的每一个元素都需要消耗一定的空间</p>
+<p>3.对于每个元素的检索，ArrayList要优于LinkedList。因为ArrayList从一定意义上来说，就是复杂的数组，所以基于数组index的  检索性能显然高于通过for循环来查找每个元素的LinkedList。</p>
+<p>4.元素插入删除的效率对比，要视插入删除的位置来分析，各有优劣</p>
+<p>在列表首位添加（删除）元素，LnkedList性能远远优于ArrayList,原因在于ArrayList要后移（前移）每个元素的索引和数组扩容（删除元素时则不需要扩容）。（测试的时候当然插入一次是看不出来什么的，我自己测试插入十万次，就会有数组扩容arraycopy的因素）而LinkedList则直接增加元素，修改原第一元素该节点的上一个节点即可，删除同理</p>
+<p>在列表中间位置添加（删除）元素，总的来说位置靠前则LnkedList性能优于ArrayList，靠后则相反。出现这种情况的原因在于ArrayList性能主要损耗在后移（前移）该位置之后的元素索引，而LinkedList损耗在for循环从第一位检索该位置的元素。这个性能反转的临界点不固定，我自己测试插入十万次，在15000次左右损耗时间相比出现变化</p>
+<p>在列表末尾位置添加（删除）元素，性能相差不大。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/25/Kafka/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/25/Kafka/" itemprop="url">Kafka</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-25T15:37:41+08:00">
+                2018-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="flume"><a href="#flume" class="headerlink" title="flume"></a>flume</h2><pre><code>收集日志、移动、聚合框架。
+基于事件。
+</code></pre><h2 id="agent"><a href="#agent" class="headerlink" title="agent"></a>agent</h2><pre><code>source        //接收数据,生产者
+            //put()
+            //NetcatSource
+            //ExecSource,实时收集 tail -F xxx.txt
+            //spooldir
+            //seq
+            //Stress
+            //avroSource
+
+channel        //暂存数据，缓冲区,
+            //非永久性:MemoryChannel
+            //永久性  :FileChannel,磁盘. 
+            //SpillableMemoryChannel :Mem + FileChannel.Capacity
+
+sink        //输出数据,消费者
+            //从channel提取take()数据,write()destination.
+            //HdfsSink
+            //HbaseSink
+            //avroSink
+</code></pre><p>看一下一边都是存储到哪里，如果是电信的那种需要经常查询的就需要放到Hbase里面，如果是放到hdfs里面就只能是全表扫描了。hbase可以随机定位。瞬间定位。  </p>
+<h2 id="JMS"><a href="#JMS" class="headerlink" title="JMS"></a>JMS</h2><pre><code>java message service,java消息服务。
+
+queue        //只有能有一个消费者。P2P模式(点对点).
+            //发布订阅(publish-subscribe,主题模式)，
+</code></pre><h2 id="kafka"><a href="#kafka" class="headerlink" title="kafka"></a>kafka</h2><pre><code>分布式流处理平台。
+在系统之间构建实时数据流管道。
+以topic分类对记录进行存储
+每个记录包含key-value+timestamp
+每秒钟百万消息吞吐量。
+
+
+producer            //消息生产者
+consumer            //消息消费者
+consumer group        //消费者组
+kafka server        //broker,kafka服务器也叫broker    
+topic                //主题,副本数,分区.
+zookeeper            //hadoop namenoade + RM HA | hbase | kafka
+</code></pre><h2 id="安装kafka"><a href="#安装kafka" class="headerlink" title="安装kafka"></a>安装kafka</h2><pre><code>0.选择s202 ~ s204三台主机安装kafka
+1.准备zk
+    略
+2.jdk
+    略
+3.tar文件
+4.环境变量
+    略
+5.配置kafka
+    [kafka/config/server.properties]
+    ...
+    broker.id=202
+    ...
+    listeners=PLAINTEXT://:9092
+    ...
+    log.dirs=/home/centos/kafka/logs
+    ...
+    zookeeper.connect=s201:2181,s202:2181,s203:2181
+
+6.分发server.properties，同时修改每个文件的broker.id
+
+7.启动kafka服务器
+    a)先启动zk
+    b)启动kafka
+        [s202 ~ s204]
+        $&gt;bin/kafka-server-start.sh config/server.properties
+
+    c)验证kafka服务器是否启动
+        $&gt;netstat -anop | grep 9092
+
+8.创建主题 
+    $&gt;bin/kafka-topics.sh --create --zookeeper s201:2181 --replication-factor 3 --partitions 3 --topic test
+
+9.查看主题列表
+    $&gt;bin/kafka-topics.sh --list --zookeeper s201:2181
+
+10.启动控制台生产者
+    $&gt;bin/kafka-console-producer.sh --broker-list s202:9092 --topic test1
+
+11.启动控制台消费者
+    $&gt;bin/kafka-console-consumer.sh --bootstrap-server s202:9092 --topic test1 --from-beginning --zookeeper s202:2181
+
+12.在生产者控制台输入hello world
+</code></pre><h2 id="kafka集群在zk的配置"><a href="#kafka集群在zk的配置" class="headerlink" title="kafka集群在zk的配置"></a>kafka集群在zk的配置</h2><pre><code>/controller            ===&gt;    {&quot;version&quot;:1,&quot;brokerid&quot;:202,&quot;timestamp&quot;:&quot;1490926369148&quot;
+
+/controller_epoch    ===&gt;    1
+
+/brokers
+/brokers/ids        //记载kfk集群每个服务器的信息
+/brokers/ids/202    ===&gt;    {&quot;jmx_port&quot;:-1,&quot;timestamp&quot;:&quot;1490926370304&quot;,&quot;endpoints&quot;:[&quot;PLAINTEXT://s202:9092&quot;],&quot;host&quot;:&quot;s202&quot;,&quot;version&quot;:3,&quot;port&quot;:9092}            //每个节点的连接信息
+/brokers/ids/203
+/brokers/ids/204        
+
+
+//每个主题下分区数据，主题是有分区的。
+/brokers/topics/test/partitions/0/state ===&gt;{&quot;controller_epoch&quot;:1,&quot;leader&quot;:203,&quot;version&quot;:1,&quot;leader_epoch&quot;:0,&quot;isr&quot;:[203,204,202]}
+/brokers/topics/test/partitions/1/state ===&gt;...
+/brokers/topics/test/partitions/2/state ===&gt;...
+</code></pre><p>leader是针对于主题来说的，是针对主题上的分区来说的。每个分区test主题下。controller也是kfk注册的他和broker是一个层级。说明在kfk集群里面s202是类似于Leader的身份。在</p>
+<pre><code>/brokers/seqid        ===&gt; null
+
+/admin
+/admin/delete_topics/test        ===&gt;标记删除的主题
+
+/isr_change_notification
+
+/consumers/xxxx/
+/config
+</code></pre><p>下图是生产者没有连接zk别的都是有连接zk的</p>
+<p><img src="https://i.imgur.com/Kq3MmBF.png" alt=""></p>
+<h2 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h2><h2 id="创建主题"><a href="#创建主题" class="headerlink" title="创建主题"></a>创建主题</h2><pre><code>//2个副本5个分区，2乘以5对应了10个文件夹分配到3个节点所以s202里面有3个，
+repliation_factor 2 partitions 5
+
+$&gt;kafka-topic.sh --zookeeper s202:2181 --replication_factor 3 --partitions 4 --create --topic test3
+
+2 x 5  = 10        //是个文件夹
+
+[s202]
+test2-1            //
+test2-2            //
+test2-3            //
+
+[s203]
+test2-0
+test2-2
+test2-3
+test2-4
+
+[s204]
+test2-0
+test2-1
+test2-4
+</code></pre><h2 id="重新布局分区和副本，手动再平衡"><a href="#重新布局分区和副本，手动再平衡" class="headerlink" title="重新布局分区和副本，手动再平衡"></a>重新布局分区和副本，手动再平衡</h2><pre><code>$&gt;kafka-topics.sh --alter --zookeeper s202:2181 --topic test2 --replica-assignment 203:204,203:204,203:204,203:204,203:204
+</code></pre><h2 id="副本"><a href="#副本" class="headerlink" title="副本"></a>副本</h2><pre><code>broker存放消息以消息达到顺序存放。生产和消费都是副本感知的。
+支持到n-1故障。每个分区都有leader，follow.
+leader挂掉时，消息分区写入到本地log或者，向生产者发送消息确认回执之前，生产者向新的leader发送消息。
+
+新leader的选举是通过isr进行，第一个注册的follower成为leader。
+</code></pre><h2 id="kafka支持副本模式"><a href="#kafka支持副本模式" class="headerlink" title="kafka支持副本模式"></a>kafka支持副本模式</h2><pre><code>[同步复制]
+    1.producer联系zk识别leader
+    2.向leader发送消息
+    3.leadr收到消息写入到本地log
+    4.follower从leader pull消息
+    5.follower向本地写入log
+    6.follower向leader发送ack消息
+    7.leader收到所有follower的ack消息
+    8.leader向producer回传ack
+
+
+[异步副本]
+    和同步复制的区别在与leader写入本地log之后，
+    直接向client回传ack消息，不需要等待所有follower复制完成。
+</code></pre><h2 id="通过java-API实现消息生产者，发送消息"><a href="#通过java-API实现消息生产者，发送消息" class="headerlink" title="通过java API实现消息生产者，发送消息"></a>通过java API实现消息生产者，发送消息</h2><pre><code>package com.it18zhang.kafkademo.test;
+
+import org.junit.Test;
+
+import kafka.javaapi.producer.Producer;
+import kafka.producer.KeyedMessage;
+import kafka.producer.ProducerConfig;
+
+import java.util.HashMap;
+import java.util.Properties;
+
+/**
+ * Created by Administrator on 2017/3/31.
+ */
+public class TestProducer {
+    @Test
+    public void testSend(){
+        Properties props = new Properties();
+        //broker列表
+        props.put(&quot;metadata.broker.list&quot;, &quot;s202:9092&quot;);
+        //串行化
+        props.put(&quot;serializer.class&quot;, &quot;kafka.serializer.StringEncoder&quot;);
+        //
+        props.put(&quot;request.required.acks&quot;, &quot;1&quot;);
+
+        //创建生产者配置对象
+        ProducerConfig config = new ProducerConfig(props);
+
+        //创建生产者
+        Producer&lt;String, String&gt; producer = new Producer&lt;String, String&gt;(config);
+
+        KeyedMessage&lt;String, String&gt; msg = new KeyedMessage&lt;String, String&gt;(&quot;test3&quot;,&quot;100&quot; ,&quot;hello world tomas100&quot;);
+        producer.send(msg);
+        System.out.println(&quot;send over!&quot;);
+    }
+}
+</code></pre><h2 id="消息消费者"><a href="#消息消费者" class="headerlink" title="消息消费者"></a>消息消费者</h2><pre><code>/**
+ * 消费者
+ */
+@Test
+public void testConumser(){
+    //
+    Properties props = new Properties();
+    props.put(&quot;zookeeper.connect&quot;, &quot;s202:2181&quot;);
+    props.put(&quot;group.id&quot;, &quot;g3&quot;);
+    props.put(&quot;zookeeper.session.timeout.ms&quot;, &quot;500&quot;);
+    props.put(&quot;zookeeper.sync.time.ms&quot;, &quot;250&quot;);
+    props.put(&quot;auto.commit.interval.ms&quot;, &quot;1000&quot;);
+    props.put(&quot;auto.offset.reset&quot;, &quot;smallest&quot;);
+    //创建消费者配置对象
+    ConsumerConfig config = new ConsumerConfig(props);
+    //
+    Map&lt;String, Integer&gt; map = new HashMap&lt;String, Integer&gt;();
+    map.put(&quot;test3&quot;, new Integer(1));
+    Map&lt;String, List&lt;KafkaStream&lt;byte[], byte[]&gt;&gt;&gt; msgs = Consumer.createJavaConsumerConnector(new ConsumerConfig(props)).createMessageStreams(map);
+    List&lt;KafkaStream&lt;byte[], byte[]&gt;&gt; msgList = msgs.get(&quot;test3&quot;);
+    for(KafkaStream&lt;byte[],byte[]&gt; stream : msgList){
+        ConsumerIterator&lt;byte[],byte[]&gt; it = stream.iterator();
+        while(it.hasNext()){
+            byte[] message = it.next().message();
+            System.out.println(new String(message));
+        }
+    }
+}
+</code></pre><h2 id="flume集成kafka"><a href="#flume集成kafka" class="headerlink" title="flume集成kafka"></a>flume集成kafka</h2><pre><code>1.KafkaSink
+    [生产者]
+    a1.sources = r1
+    a1.sinks = k1
+    a1.channels = c1
+
+    a1.sources.r1.type=netcat
+    a1.sources.r1.bind=localhost
+    a1.sources.r1.port=8888
+
+    a1.sinks.k1.type = org.apache.flume.sink.kafka.KafkaSink
+    a1.sinks.k1.kafka.topic = test3
+    a1.sinks.k1.kafka.bootstrap.servers = s202:9092
+    a1.sinks.k1.kafka.flumeBatchSize = 20
+    a1.sinks.k1.kafka.producer.acks = 1
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+
+2.KafkaSource
+    [消费者]
+    a1.sources = r1
+    a1.sinks = k1
+    a1.channels = c1
+
+    a1.sources.r1.type = org.apache.flume.source.kafka.KafkaSource
+    a1.sources.r1.batchSize = 5000
+    a1.sources.r1.batchDurationMillis = 2000
+    a1.sources.r1.kafka.bootstrap.servers = s202:9092
+    a1.sources.r1.kafka.topics = test3
+    a1.sources.r1.kafka.consumer.group.id = g4
+
+    a1.sinks.k1.type = logger
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+
+3.Channel
+    生产者 + 消费者
+    a1.sources = r1
+    a1.sinks = k1
+    a1.channels = c1
+
+    a1.sources.r1.type = avro
+    a1.sources.r1.bind = localhost
+    a1.sources.r1.port = 8888
+
+    a1.sinks.k1.type = logger
+
+    a1.channels.c1.type = org.apache.flume.channel.kafka.KafkaChannel
+    a1.channels.c1.kafka.bootstrap.servers = s202:9092
+    a1.channels.c1.kafka.topic = test3
+    a1.channels.c1.kafka.consumer.group.id = g6
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+</code></pre><p>flume重启后会重新读取里面的内容，那么怎么解决重复读取？要引进行序号，每一行都是一个事件，所以在sink里面之后写入redis或者hbase里面因为是高速的，下次再启动flume，虽然从头开始读，也往通道里面放，但是对于sink来讲，会判断他的行号，如果序号比我的数据存的要早，就滤过。比这个大就往里写。相当于一个拦截器</p>
+<p><img src="https://i.imgur.com/U1pTiwY.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/22/Hbase第四天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/22/Hbase第四天/" itemprop="url">Hbase第四天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-22T09:26:56+08:00">
+                2018-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="hbase"><a href="#hbase" class="headerlink" title="hbase"></a>hbase</h2><pre><code>协处理器.
+Observer            //触发器,基于事件激活的。
+Endpoint            //存储过程,客户端调用。
+
+RegionObserver        //system --&gt; user[加载顺序]
+
+100
+
+00-99
+
+callerId - 201703 : hashcode % 100 = 00-99
+
+01,139xxxx,138yyy,....
+</code></pre><h2 id="热点"><a href="#热点" class="headerlink" title="热点"></a>热点</h2><pre><code>让数据均匀分散。
+</code></pre><p>create ‘ns1:calllogs’ , SPLITS=&gt;[01,02,03,,…99,]</p>
+<h2 id="rowkey"><a href="#rowkey" class="headerlink" title="rowkey"></a>rowkey</h2><pre><code>按照byte排序。
+</code></pre><p>create table xxx(){</p>
+<p>}</p>
+<h2 id="rowkey-1"><a href="#rowkey-1" class="headerlink" title="rowkey"></a>rowkey</h2><pre><code>分区编号
+xx,callerId,callTime,calleeId
+
+startkey = xx,19626675332,
+startkey = xx,19626675333,
+</code></pre><h1 id="对通话记录表的设计：（具体在HBase的设计原则2）"><a href="#对通话记录表的设计：（具体在HBase的设计原则2）" class="headerlink" title="对通话记录表的设计：（具体在HBase的设计原则2）"></a>对通话记录表的设计：（具体在HBase的设计原则2）</h1><p><img src="https://i.imgur.com/Zt5A1OI.png" alt=""></p>
+<p>对于首先创建的主叫的表是上面这张表，在查询主叫的时候只需要指定xx，主叫时间,时间片。即可。但是查询被叫的时候就不行了。几乎要全表扫描。用00,138xx,2017010101,139xxx这样查询。所以每次向这个表写记录的时候，我们都知道被叫是谁，如果知道被叫的话。我们可以在设计一张表，叫calleeLog,他的rowkey有calleid，time,callerid构成。被叫表存的value存的是主叫表rowkey里面的被叫。然后根据这个查到主叫表后面的内容。但是如果只想知道谁给你打的电话，所以在被叫表的rowkey里面加了一个callerid，如果想查询谁给你打了电话，就在被叫表rowkey里面加了一个callerid。主叫表的rowkey里面都是作为主叫出现的，被叫表里面的数据都是作为被叫出现的。主叫表的内容被叫表里没有，被叫表的内容主叫表也没有的。而且应该吧时长duration也放在里面。也就是说要把最经常使用的信息都编入rowkey里面去，能不查具体的value就尽量不查询具体的value，但是如果要查询具体的数据，什么基站，那个口啊，就是要查询主叫表里面的value的值。这个下图所示的也就是叫二次索引。在写入主叫表的时候也在往被叫表里面写入，用什么写入？也就是用协处理器来处理，怎么处理呢，就是在你写入主叫表的时候，协处理器立刻截获，然后重写里面的方法，往被叫表里面写入就可以了。所以这个就是一个电信HBase的设计原则。    </p>
+<p><img src="https://i.imgur.com/QLxuFNg.png" alt=""></p>
+<h2 id="通化记录"><a href="#通化记录" class="headerlink" title="通化记录"></a>通化记录</h2><pre><code>1.创建表
+    create &apos;ns1:calllogs&apos;,&apos;f1&apos;
+
+2.创建单元测试
+    @Test
+    public void put() throws Exception {
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        TableName tname = TableName.valueOf(&quot;ns1:calllogs&quot;);
+        Table table = conn.getTable(tname);
+
+        String callerId = &quot;13845456767&quot; ;
+        String calleeId = &quot;139898987878&quot; ;
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern(&quot;yyyyMMddHHmmss&quot;);
+        String callTime = sdf.format(new Date());
+        int duration = 100 ;
+        DecimalFormat dff = new DecimalFormat();
+        dff.applyPattern(&quot;00000&quot;);
+        String durStr = dff.format(duration);
+
+        //区域00-99
+        int hash = (callerId + callTime.substring(0, 6)).hashCode();
+        hash = (hash &amp; Integer.MAX_VALUE) % 100 ;
+
+        //hash区域号
+        DecimalFormat df = new DecimalFormat();
+        df.applyPattern(&quot;00&quot;);
+        String regNo = df.format(hash);
+
+        //拼接rowkey
+        //xx , callerid , time ,  direction, calleid  ,duration
+        String rowkey = regNo + &quot;,&quot; + callerId + &quot;,&quot; + callTime + &quot;,&quot; + &quot;0,&quot; + calleeId + &quot;,&quot; + durStr  ;
+        byte[] rowid = Bytes.toBytes(rowkey);
+        Put put = new Put(rowid);
+        put.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;callerPos&quot;),Bytes.toBytes(&quot;河北&quot;));
+        put.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;calleePos&quot;),Bytes.toBytes(&quot;河南&quot;));
+        //执行插入
+        table.put(put);
+        System.out.println(&quot;over&quot;);
+    }
+
+3.创建协处理器
+    public class CalleeLogRegionObserver extends BaseRegionObserver{
+
+        public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+            super.postPut(e, put, edit, durability);
+            //
+            TableName callLogs = TableName.valueOf(&quot;calllogs&quot;);
+            //得到当前的TableName对象
+            TableName tableName = e.getEnvironment().getRegion().getRegionInfo().getTable();
+            if(!callLogs.equals(tableName)){
+                return  ;
+            }
+
+            //得到主叫的rowkey
+            //xx , callerid , time ,  direction, calleid  ,duration
+            //被叫:calleid,time,
+
+            String rowkey = Bytes.toString(put.getRow());
+            String[] arr = rowkey.split(&quot;,&quot;);
+
+            String hash = Util.getRegNo(arr[4],arr[2]);
+            //hash
+
+            String newRowKey = hash + &quot;,&quot; + arr[4] + &quot;,&quot; + arr[2] + &quot;,1,&quot; + arr[1] + &quot;,&quot; +  arr[5] ;
+            Put newPut = new Put(Bytes.toBytes(newRowKey));
+
+            Table t = e.getEnvironment().getTable(tableName);
+
+            t.put(newPut);
+        }
+    }
+
+4.配置hbase-site.xml并分发分发jar包。
+    &lt;property&gt;
+        &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
+        &lt;value&gt;com.it18zhang.hbasedemo.coprocessor.CalleeLogRegionObserver&lt;/value&gt;
+    &lt;/property&gt;
+
+5.启动hbase集群.
+</code></pre><h2 id="BloomFilter"><a href="#BloomFilter" class="headerlink" title="BloomFilter"></a>BloomFilter</h2><pre><code>布隆过滤器。
+</code></pre><p><img src="https://i.imgur.com/c0wLF4w.png" alt=""></p>
+<p>代码如下:</p>
+<p><img src="https://i.imgur.com/Za6Pcr1.png" alt=""></p>
+<h2 id="phonix"><a href="#phonix" class="headerlink" title="phonix"></a>phonix</h2><pre><code>1.安装phonix
+    a)下载apache-phoenix-4.10.0-HBase-1.2-bin.tar.gz
+    b)tar
+    c)复制xxx-server.jar到hbase的lib目录，并且分发,删除以前的phonixjar包。
+    d)重启hbase
+
+2.使用phonix的命令行程序
+    $&gt;phonix/bin/.sqlline.py s202    //连接的是zk服务器
+    $phonix&gt;!tables
+    $phonix&gt;!help                    //查看帮助
+</code></pre><p>phoenix在创建表的时候要使用大量的协处理器，他是在建表时候不区分大小写的，而且hbase不可以识别得出来他的表，但是hbase shell里面建的表他能识别。</p>
+<pre><code>2.SQL Client安装
+    a)下载squirrel-sql-3.7.1-standard.jar
+        该文件是安装文件，执行的安装程序。
+        $&gt;jar -jar squirrel-sql-3.7.1-standard.jar
+        $&gt;下一步...
+
+    b)复制phoenix-4.10.0-HBase-1.2-client.jar到SQuerrel安装目录的lib下(c:\myprograms\squirrel)。
+
+    c)启动SQuirrel(GUI)
+        定位安装目录-&gt;执行squirrel-sql.bat
+
+    d)打开GUI界面
+
+    d)在左侧的边栏选中&quot;Drivers&quot;选项卡，
+        点击 &quot;+&quot; -&gt;
+        URL                : jdbc:phoenix:192.168.231.202
+        Driverclass        : org.apache.phoenix.jdbc.PhoenixDriver    
+        jdbc:phoenix: s202
+
+    d)测试。
+
+3.SQLLine客户端操作
+    //建表
+    $jdbc:phoenix&gt;create table IF NOT EXISTS test.Person (IDCardNum INTEGER not null primary key, Name varchar(20),Age INTEGER);
+
+    //插入数据
+    $jdbc:phoenix&gt;UPSERT INTO test.PERSON(IDCardNum , Name,Age) VALUES (1,&apos;tom&apos;,12);
+
+    //删除数据
+    $jdbc:phoenix&gt;delete from test.persion where idcardnum = 1 ;
+
+    //更新数据
+    //upsert into test.PERSON(IDCardNum , Name,Age) VALUES (1,&apos;tom&apos;,12);
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/21/Flume/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/21/Flume/" itemprop="url">Flume</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-21T21:41:16+08:00">
+                2018-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="hbase"><a href="#hbase" class="headerlink" title="hbase"></a>hbase</h2><pre><code>NoSQL.
+面向列族。
+随机定位
+实时读写。
+分布式
+可伸缩
+HA
+zookeeper
+                        version(列族)
+rowkey/famil+qualifier/timestamp = value
+
+rowkey        //唯一性,散列性,定长,不要太长,加盐.
+
+二次索引
+byte[]
+</code></pre><h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>离线计算。
+</code></pre><h2 id="MR-MapReduce"><a href="#MR-MapReduce" class="headerlink" title="MR:MapReduce"></a>MR:MapReduce</h2><pre><code>hadoop : 
+DBWritable + WritableComparable :
+</code></pre><h2 id="将hbase的表影射到hive上，使用hive的查询语句。"><a href="#将hbase的表影射到hive上，使用hive的查询语句。" class="headerlink" title="将hbase的表影射到hive上，使用hive的查询语句。"></a>将hbase的表影射到hive上，使用hive的查询语句。</h2><pre><code>CREATE TABLE mydb.t11(key string, name string) STORED BY &apos;org.apache.hadoop.hive.hbase.HBaseStorageHandler&apos; 
+WITH SERDEPROPERTIES (&quot;hbase.columns.mapping&quot; = &quot;:key,cf:name&quot;)
+TBLPROPERTIES(&quot;hbase.table.name&quot; = &quot;ns1:t11&quot;);    
+
+select count(*) from mydb.t11 ;
+</code></pre><h2 id="flume"><a href="#flume" class="headerlink" title="flume"></a>flume</h2><pre><code>收集、移动、聚合大量日志数据的服务。
+基于流数据的架构，用于在线日志分析。
+
+基于事件。
+在生产和消费者之间启动协调作用。
+提供了事务保证，确保消息一定被分发。
+Source 多种
+sink多种.
+
+multihop        //多级跃点.可以从一个flume到另外一个flume
+
+水平扩展:        //加节点，
+
+竖直扩展        //增加硬件。
+</code></pre><h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><pre><code>接受数据，类型有多种。
+</code></pre><h2 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h2><pre><code>临时存放地，对Source中来的数据进行缓冲，直到sink消费掉。
+</code></pre><h2 id="Sink"><a href="#Sink" class="headerlink" title="Sink"></a>Sink</h2><pre><code>从channel提取数据存放到中央化存储(hadoop / hbase)。
+</code></pre><p><img src="https://i.imgur.com/DbIixF1.png" alt=""></p>
+<p>实时产生的数据，</p>
+<p>Flume的优点<br>以下是使用Flume的优点：<br>使用Apache Flume，我们可以将数据存储到任何集中存储中<br>（HBase，HDFS）。<br>当传入数据的速率超过可以写入数据的速率时<br>目的地，Flume充当数据生产者和数据生成者之间的中介<br>集中存储并在它们之间提供稳定的数据流。<br>Flume提供了上下文路由的功能。</p>
+<ol>
+<li>FLUME - 介绍App Flume<br>2<br>Flume中的交易是基于渠道的，其中两个交易（一个发件人<br>为每条消息维护一个接收器。它保证了可靠的信息<br>交货。<br>Flume具有可靠性，容错性，可扩展性，可管理性和可定制性。<br>水槽的特点<br>Flume的一些显着特征如下：<br>Flume将来自多个Web服务器的日志数据提取到集中存储（HDFS，<br>HBase）有效。<br>使用Flume，我们可以立即将来自多个服务器的数据导入Hadoop。<br>与日志文件一起，Flume还用于导入大量事件数据<br>由Facebook和Twitter等社交网站和电子商务制作<br>亚马逊和Flipkart等网站。<br>Flume支持大量源和目标类型。<br>Flume支持多跳流，扇入扇出流，上下文路由等。<br>水槽可以水平缩放</li>
+</ol>
+<h2 id="安装flume"><a href="#安装flume" class="headerlink" title="安装flume"></a>安装flume</h2><pre><code>1.下载
+2.tar
+3.环境变量
+4.验证flume是否成功  
+    $&gt;flume-ng version            //next generation.下一代.
+</code></pre><h2 id="配置flume"><a href="#配置flume" class="headerlink" title="配置flume"></a>配置flume</h2><pre><code>1.创建配置文件
+[/soft/flume/conf/hello.conf]
+#声明三种组件
+a1.sources = r1
+a1.channels = c1
+a1.sinks = k1
+
+#定义source信息
+a1.sources.r1.type=netcat
+a1.sources.r1.bind=localhost
+a1.sources.r1.port=8888
+
+#定义sink信息
+a1.sinks.k1.type=logger
+
+#定义channel信息
+a1.channels.c1.type=memory
+
+#绑定在一起
+a1.sources.r1.channels=c1
+a1.sinks.k1.channel=c1
+
+2.运行
+    a)启动flume agent
+        $&gt;bin/flume-ng agent -f ../conf/helloworld.conf -n a1 -Dflume.root.logger=INFO,console
+    b)启动nc的客户端
+        $&gt;nc localhost 8888
+        $nc&gt;hello world
+
+    c)在flume的终端输出hello world.
+</code></pre><h2 id="安装nc"><a href="#安装nc" class="headerlink" title="安装nc"></a>安装nc</h2><pre><code>$&gt;sudo yum install nmap-ncat.x86_64
+</code></pre><h2 id="清除仓库缓存"><a href="#清除仓库缓存" class="headerlink" title="清除仓库缓存"></a>清除仓库缓存</h2><pre><code>$&gt;修改ali.repo --&gt; ali.repo.bak文件。
+$&gt;sudo yum clean all
+$&gt;sudo yum makecache
+
+#例如阿里基本源 
+$&gt;sudo wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo 
+
+#阿里epel源
+$&gt;sudo wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+</code></pre><h2 id="flume-source"><a href="#flume-source" class="headerlink" title="flume source"></a>flume source</h2><pre><code>1.netcat
+    nc ..
+
+2.exec
+    实时日志收集,实时收集日志。
+    a1.sources = r1
+    a1.sinks = k1
+    a1.channels = c1
+
+    a1.sources.r1.type=exec
+    a1.sources.r1.command=tail -F /home/centos/test.txt
+
+    a1.sinks.k1.type=logger
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels=c1
+    a1.sinks.k1.channel=c1
+
+3.批量收集
+    监控一个文件夹，静态文件。
+    收集完之后，会重命名文件成新文件。.compeleted.
+    a)配置文件
+        [spooldir_r.conf]
+        a1.sources = r1
+        a1.channels = c1
+        a1.sinks = k1
+
+        a1.sources.r1.type=spooldir
+        a1.sources.r1.spoolDir=/home/centos/spool
+        a1.sources.r1.fileHeader=true
+
+        a1.sinks.k1.type=logger
+
+        a1.channels.c1.type=memory
+
+        a1.sources.r1.channels=c1
+        a1.sinks.k1.channel=c1
+
+    b)创建目录
+        $&gt;mkdir ~/spool
+
+    c)启动flume
+        $&gt;bin/flume-ng agent -f ../conf/helloworld.conf -n a1 -Dflume.root.logger=INFO,console
+
+4.序列source
+    [seq]
+    a1.sources = r1
+    a1.channels = c1
+    a1.sinks = k1
+
+    a1.sources.r1.type=seq
+    a1.sources.r1.totalEvents=1000
+
+    a1.sinks.k1.type=logger
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels=c1
+    a1.sinks.k1.channel=c1
+
+    [运行]
+    $&gt;bin/flume-ng agent -f ../conf/helloworld.conf -n a1 -Dflume.root.logger=INFO,console
+
+5.StressSource
+    a1.sources = stresssource-1
+    a1.channels = memoryChannel-1
+    a1.sources.stresssource-1.type = org.apache.flume.source.StressSource
+    a1.sources.stresssource-1.size = 10240
+    a1.sources.stresssource-1.maxTotalEvents = 1000000
+    a1.sources.stresssource-1.channels = memoryChannel-1
+</code></pre><h2 id="flume-sink"><a href="#flume-sink" class="headerlink" title="flume sink"></a>flume sink</h2><pre><code>1.hdfs
+    a1.sources = r1
+    a1.channels = c1
+    a1.sinks = k1
+
+    a1.sources.r1.type = netcat
+    a1.sources.r1.bind = localhost
+    a1.sources.r1.port = 8888
+
+    a1.sinks.k1.type = hdfs
+    a1.sinks.k1.hdfs.path = /flume/events/%y-%m-%d/%H/%M/%S
+    a1.sinks.k1.hdfs.filePrefix = events-
+
+    #是否是产生新目录,每十分钟产生一个新目录,一般控制的目录方面。round是决定是否产生新文件的，滚动是决定是否产生新文件的。
+    #2017-12-12 --&gt;
+    #2017-12-12 --&gt;%H%M%S
+
+    a1.sinks.k1.hdfs.round = true            
+    a1.sinks.k1.hdfs.roundValue = 10
+    a1.sinks.k1.hdfs.roundUnit = second
+
+    a1.sinks.k1.hdfs.useLocalTimeStamp=true
+
+    #是否产生新文件。
+    a1.sinks.k1.hdfs.rollInterval=10
+    a1.sinks.k1.hdfs.rollSize=10
+    a1.sinks.k1.hdfs.rollCount=3
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+
+2.hive
+    略
+
+3.hbase
+    a1.sources = r1
+    a1.channels = c1
+    a1.sinks = k1
+
+    a1.sources.r1.type = netcat
+    a1.sources.r1.bind = localhost
+    a1.sources.r1.port = 8888
+
+    a1.sinks.k1.type = hbase
+    a1.sinks.k1.table = ns1:t12
+    a1.sinks.k1.columnFamily = f1
+    a1.sinks.k1.serializer = org.apache.flume.sink.hbase.RegexHbaseEventSerializer
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+
+4.kafka
+</code></pre><p>数据进入到源里面去，最终进入通道里面，有很多通道c1,c2,c3，这个取决于通道选择器，ChannelProcessor，对事件进行处理，先经过一堆拦截器也是有很多种 。拦截器在各个文件前加东西，拦截之后再回到选择器。拦截器是典型的批处理，把加到东西流水线似的加到头文件里面。不管是什么对象，通过什么source进来的，都被转换成envent对象。在拦截器这个地方是链式技术。把事件放到通道里面，每个通道放置事件都是一个事务，保证能成功，</p>
+<p>这个图是source到通道的图<br><img src="https://i.imgur.com/bzQZ9yK.png" alt=""></p>
+<p>sink的图：</p>
+<p><img src="https://i.imgur.com/sb3F2lg.png" alt=""></p>
+<h2 id="使用avroSource和AvroSink实现跃点agent处理"><a href="#使用avroSource和AvroSink实现跃点agent处理" class="headerlink" title="使用avroSource和AvroSink实现跃点agent处理"></a>使用avroSource和AvroSink实现跃点agent处理</h2><pre><code>1.创建配置文件
+    [avro_hop.conf]
+    #a1
+    a1.sources = r1
+    a1.sinks= k1
+    a1.channels = c1
+
+    a1.sources.r1.type=netcat
+    a1.sources.r1.bind=localhost
+    a1.sources.r1.port=8888
+
+    a1.sinks.k1.type = avro
+    a1.sinks.k1.hostname=localhost
+    a1.sinks.k1.port=9999
+
+    a1.channels.c1.type=memory
+
+    a1.sources.r1.channels = c1
+    a1.sinks.k1.channel = c1
+
+    #a2
+    a2.sources = r2
+    a2.sinks= k2
+    a2.channels = c2
+
+    a2.sources.r2.type=avro
+    a2.sources.r2.bind=localhost
+    a2.sources.r2.port=9999
+
+    a2.sinks.k2.type = logger
+
+    a2.channels.c2.type=memory
+
+    a2.sources.r2.channels = c2
+    a2.sinks.k2.channel = c2
+
+2.启动a2
+    $&gt;flume-ng agent -f /soft/flume/conf/avro_hop.conf -n a2 -Dflume.root.logger=INFO,console
+
+3.验证a2
+    $&gt;netstat -anop | grep 9999
+
+
+4.启动a1
+    $&gt;flume-ng agent -f /soft/flume/conf/avro_hop.conf -n a1
+
+5.验证a1
+    $&gt;netstat -anop | grep 8888
+</code></pre><h2 id="channel"><a href="#channel" class="headerlink" title="channel"></a>channel</h2><pre><code>1.MemoryChannel
+    略
+2.FileChannel
+</code></pre><p>a1.sources = r1<br>a1.sinks= k1<br>a1.channels = c1</p>
+<p>a1.sources.r1.type=netcat<br>a1.sources.r1.bind=localhost<br>a1.sources.r1.port=8888</p>
+<p>a1.sinks.k1.type=logger</p>
+<pre><code>a1.channels.c1.type = file
+a1.channels.c1.checkpointDir = /home/centos/flume/fc_check
+a1.channels.c1.dataDirs = /home/centos/flume/fc_data
+</code></pre><p>a1.sources.r1.channels=c1<br>a1.sinks.k1.channel=c1</p>
+<h2 id="可溢出文件通道"><a href="#可溢出文件通道" class="headerlink" title="可溢出文件通道"></a>可溢出文件通道</h2><p>a1.channels = c1<br>a1.channels.c1.type = SPILLABLEMEMORY</p>
+<p>#0表示禁用内存通道，等价于文件通道<br>a1.channels.c1.memoryCapacity = 0</p>
+<p>#0,禁用文件通道，等价内存通道。<br>a1.channels.c1.overflowCapacity = 2000</p>
+<p>a1.channels.c1.byteCapacity = 800000<br>a1.channels.c1.checkpointDir = /user/centos/flume/fc_check<br>a1.channels.c1.dataDirs = /user/centos/flume/fc_data</p>
+<h2 id="创建Flume模块"><a href="#创建Flume模块" class="headerlink" title="创建Flume模块"></a>创建Flume模块</h2><pre><code>1.添加pom.xml
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;FluemDemo&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.flume&lt;/groupId&gt;
+                &lt;artifactId&gt;flume-ng-core&lt;/artifactId&gt;
+                &lt;version&gt;1.7.0&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;junit&lt;/groupId&gt;
+                &lt;artifactId&gt;junit&lt;/artifactId&gt;
+                &lt;version&gt;4.11&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/21/面试理论知识/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/21/面试理论知识/" itemprop="url">面试理论知识</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-21T21:27:01+08:00">
+                2018-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>flume：<br>Apache Flume是一种工具/服务/数据提取机制，用于收集聚合和<br>从各种传输大量的流数据，如日志文件，事件（等等）<br>源集中数据存储。</p>
+<p>Flume是一种高度可靠，分布式和可配置的工具。 它主要是为了设计的<br>将流数据（日志数据）从各种Web服务器复制到HDFS。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/19/SSM第一天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/19/SSM第一天/" itemprop="url">SSM第一天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-19T22:35:23+08:00">
+                2018-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="SSM第二天"><a href="#SSM第二天" class="headerlink" title="SSM第二天"></a>SSM第二天</h1><p>三大框架的整合：</p>
+<p>数据库层：<br>mybatis数据持久化层：dao在交互mybatis<br>dao:数据访问层：数据访问对象，存放简单的增删改查。每个表都有这个业务<br>service层：业务层，和dao交互，对dao的方法进行组合调用。形成套餐<br>springmvc展现层：做网页，做web开发的，springmvc应该和业务层交互，在springmvc里面的controller层和业务层交互，展现的东西就是jsp做web开发做网站的，做web应用的。通过web架构来实现。springmvc就是web架构里面的一个。</p>
+<p><img src="https://i.imgur.com/ygpfvcz.png" alt=""></p>
+<h1 id="Mybais和数据库整合"><a href="#Mybais和数据库整合" class="headerlink" title="Mybais和数据库整合"></a>Mybais和数据库整合</h1><p><img src="https://i.imgur.com/M8K3Sqr.png" alt=""></p>
+<p>1.在pom中添加依赖：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+    &lt;artifactId&gt;SpringmybatisDemo&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.11&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+            &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+            &lt;version&gt;3.4.6&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;mysql&lt;/groupId&gt;
+            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+            &lt;version&gt;5.1.17&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.mchange&lt;/groupId&gt;
+            &lt;artifactId&gt;c3p0&lt;/artifactId&gt;
+            &lt;version&gt;0.9.5.2&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+            &lt;version&gt;4.3.3.RElEASE&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+            &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;    
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+            &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+        &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+        &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+        &lt;version&gt;1.1.0&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre><p>2.创建包</p>
+<pre><code>com.it18zhang.springmybatis.dao
+com.it18zhang.springmybatis.service
+com.it18zhang.springmybatis.utils
+</code></pre><p>3.配置beans.xml在source下</p>
+<hr>
+<p>坑爹的错误：</p>
+<p><img src="https://i.imgur.com/pu7CMME.png" alt=""></p>
+<p>在上图的情下，看见下面的mybtis-spring是依赖于mybatis3.1.0，而上面有一个跟他一模一样的包，所以到下面这块，下面的这个版本的包就看不出来了。所以如果有的类仅仅是在下面这个版本下才有的，需要把上面的第一个包先删除掉。因为它只显示第一个依赖的包</p>
+<h2 id="复杂应用"><a href="#复杂应用" class="headerlink" title="复杂应用"></a>复杂应用</h2><pre><code>1.准备数据
+    sql.sql
+
+2.创建java类.
+    [Order.java]
+    public class Order {
+        private Integer id ;
+        private String orderNo ;
+        //简历关联关系
+        private User user ;
+
+        //get/set
+    }
+
+    [Item.java]
+    public class Item {
+        private Integer id;
+        private String itemName;
+        //订单项和订单之间的关联关系
+        private Order order;
+        //get/set
+    }
+
+3.创建Order映射文件
+    [resource/OrderMapper.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+    &lt;!DOCTYPE mapper
+            PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+            &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+    &lt;mapper namespace=&quot;orders&quot;&gt;
+        &lt;insert id=&quot;insert&quot;&gt;
+          insert into orders(orderno,uid) values(#{orderNo},#{user.id})
+        &lt;/insert&gt;
+
+        &lt;!-- findById --&gt;
+        &lt;select id=&quot;selectOne&quot; parameterType=&quot;int&quot; resultMap=&quot;RM_Order&quot;&gt;
+          select
+            o.id oid ,
+            o.orderno oorderno ,
+            o.uid uid ,
+            u.name uname ,
+            u.age uage
+          from orders o
+            left outer join users u on o.uid = u.id where o.id = #{id}
+        &lt;/select&gt;
+        &lt;!-- findAll --&gt;
+        &lt;select id=&quot;selectAll&quot; resultMap=&quot;RM_Order&quot;&gt;
+          select
+            o.id oid ,
+            o.orderno oorderno ,
+            o.uid uid ,
+            u.name uname ,
+            u.age uage
+          from orders o
+            left outer join users u on o.uid = u.id
+        &lt;/select&gt;
+        &lt;!-- 自定义结果映射 --&gt;
+        &lt;resultMap id=&quot;RM_Order&quot; type=&quot;com.it18zhang.mybatisdemo.domain.Order&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;oid&quot;/&gt;
+            &lt;result property=&quot;orderNo&quot; column=&quot;oorderno&quot;/&gt;
+            &lt;association property=&quot;user&quot; javaType=&quot;com.it18zhang.mybatisdemo.domain.User&quot;&gt;
+                &lt;id property=&quot;id&quot; column=&quot;uid&quot; /&gt;
+                &lt;result property=&quot;name&quot; column=&quot;uname&quot; /&gt;
+                &lt;result property=&quot;age&quot; column=&quot;uage&quot; /&gt;
+            &lt;/association&gt;
+        &lt;/resultMap&gt;
+    &lt;/mapper&gt;
+
+4.修改配置文件,添加映射。
+    [resource/mybatis-config.xml]
+    &lt;!-- 引入映射文件 --&gt;
+    &lt;mappers&gt;
+        &lt;mapper resource=&quot;*Mapper.xml&quot;/&gt;
+    &lt;/mappers&gt;
+
+5.测试类
+    public class TestOrder {
+
+        /**
+         * insert
+         */
+        @Test
+        public void insert() throws Exception {
+            String resource = &quot;mybatis-config.xml&quot;;
+            InputStream inputStream = Resources.getResourceAsStream(resource);
+            SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
+            SqlSession s = sf.openSession();
+
+            User u = new User();
+            u.setId(2);
+
+            Order o = new Order();
+            o.setOrderNo(&quot;No005&quot;);
+            o.setUser(u);
+
+            s.insert(&quot;orders.insert&quot;,o);
+            s.commit();
+            s.close();
+        }
+
+        @Test
+        public void selectOne() throws Exception {
+            String resource = &quot;mybatis-config.xml&quot;;
+            InputStream inputStream = Resources.getResourceAsStream(resource);
+            SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
+            SqlSession s = sf.openSession();
+            Order order = s.selectOne(&quot;orders.selectOne&quot;,1);
+            System.out.println(order.getOrderNo());
+            s.commit();
+            s.close();
+        }
+
+        @Test
+        public void selectAll() throws Exception {
+            String resource = &quot;mybatis-config.xml&quot;;
+            InputStream inputStream = Resources.getResourceAsStream(resource);
+            SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
+            SqlSession s = sf.openSession();
+            List&lt;Order&gt; list = s.selectList(&quot;orders.selectAll&quot;);
+            for(Order o : list){
+                System.out.println(o.getOrderNo() + &quot; : &quot; + o.getUser().getName());
+            }
+            s.commit();
+            s.close();
+        }
+    }
+</code></pre><h2 id="配置一对多"><a href="#配置一对多" class="headerlink" title="配置一对多"></a>配置一对多</h2><pre><code>1.在User中增加orders集合。
+    public class User {
+        ...
+        private List&lt;Order&gt; orders ;
+        //get/set
+    }
+
+2.改造UserMapper.xml
+</code></pre><h2 id="组合多对一和一对多关联关系到一个实体-Order-中"><a href="#组合多对一和一对多关联关系到一个实体-Order-中" class="headerlink" title="组合多对一和一对多关联关系到一个实体(Order)中"></a>组合多对一和一对多关联关系到一个实体(Order)中</h2><pre><code>1.关系
+    Order(*) -&gt; (1)User
+    Order(1) -&gt; (*)Item
+
+2.Order.java
+    class Order{
+        ...
+        List&lt;Item&gt; items ;
+        //get/set    
+    }
+2&apos;.修改配置文件增加别名
+    [resources/mybatis-config.xml]
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+    &lt;!DOCTYPE configuration
+            PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;
+            &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
+    &lt;configuration&gt;
+        &lt;typeAliases&gt;
+            &lt;typeAlias type=&quot;com.it18zhang.mybatisdemo.domain.User&quot; alias=&quot;_User&quot;/&gt;
+            &lt;typeAlias type=&quot;com.it18zhang.mybatisdemo.domain.Order&quot; alias=&quot;_Order&quot;/&gt;
+            &lt;typeAlias type=&quot;com.it18zhang.mybatisdemo.domain.Item&quot; alias=&quot;_Item&quot;/&gt;
+        &lt;/typeAliases&gt;
+        &lt;environments default=&quot;development&quot;&gt;
+            &lt;environment id=&quot;development&quot;&gt;
+                &lt;transactionManager type=&quot;JDBC&quot;/&gt;
+                &lt;dataSource type=&quot;POOLED&quot;&gt;
+                    &lt;property name=&quot;driver&quot; value=&quot;com.mysql.jdbc.Driver&quot;/&gt;
+                    &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis&quot;/&gt;
+                    &lt;property name=&quot;username&quot; value=&quot;root&quot;/&gt;
+                    &lt;property name=&quot;password&quot; value=&quot;root&quot;/&gt;
+                &lt;/dataSource&gt;
+            &lt;/environment&gt;
+        &lt;/environments&gt;
+        &lt;!-- 引入映射文件 --&gt;
+        &lt;mappers&gt;
+            &lt;mapper resource=&quot;UserMapper.xml&quot;/&gt;
+            &lt;mapper resource=&quot;OrderMapper.xml&quot;/&gt;
+        &lt;/mappers&gt;
+    &lt;/configuration&gt;
+
+3.OrderMapper.xml
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+    &lt;!DOCTYPE mapper
+            PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+            &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+    &lt;mapper namespace=&quot;orders&quot;&gt;
+        &lt;insert id=&quot;insert&quot;&gt;
+          insert into orders(orderno,uid) values(#{orderNo},#{user.id})
+        &lt;/insert&gt;
+
+        &lt;!-- findById --&gt;
+        &lt;select id=&quot;selectOne&quot; parameterType=&quot;int&quot; resultMap=&quot;RM_Order&quot;&gt;
+          select
+            o.id      oid ,
+            o.orderno oorderno ,
+            o.uid     uid ,
+            u.name    uname ,
+            u.age     uage ,
+            i.id      iid,
+            i.itemname iitemname
+          from orders o
+            left outer join users u on o.uid = u.id
+            left outer join items i on o.id = i.oid
+          where o.id = #{id}
+        &lt;/select&gt;
+        &lt;!-- findAll --&gt;
+        &lt;select id=&quot;selectAll&quot; resultMap=&quot;RM_Order&quot;&gt;
+          select
+            o.id      oid ,
+            o.orderno oorderno ,
+            o.uid     uid ,
+            u.name    uname ,
+            u.age     uage ,
+            i.id      iid,
+            i.itemname iitemname
+          from orders o
+            left outer join users u on o.uid = u.id
+            left outer join items i on o.id = i.oid
+        &lt;/select&gt;
+        &lt;!-- 自定义结果映射 --&gt;
+        &lt;resultMap id=&quot;RM_Order&quot; type=&quot;com.it18zhang.mybatisdemo.domain.Order&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;oid&quot;/&gt;
+            &lt;result property=&quot;orderNo&quot; column=&quot;oorderno&quot;/&gt;
+            &lt;association property=&quot;user&quot; javaType=&quot;com.it18zhang.mybatisdemo.domain.User&quot;&gt;
+                &lt;id property=&quot;id&quot; column=&quot;uid&quot; /&gt;
+                &lt;result property=&quot;name&quot; column=&quot;uname&quot; /&gt;
+                &lt;result property=&quot;age&quot; column=&quot;uage&quot; /&gt;
+            &lt;/association&gt;
+            &lt;collection property=&quot;items&quot; ofType=&quot;_Item&quot;&gt;
+                &lt;id property=&quot;id&quot; column=&quot;iid&quot; /&gt;
+                &lt;result property=&quot;itemName&quot; column=&quot;iitemname&quot; /&gt;
+            &lt;/collection&gt;
+        &lt;/resultMap&gt;
+    &lt;/mapper&gt;
+
+4.测试
+    @Test
+    public void selectOne() throws Exception {
+        String resource = &quot;mybatis-config.xml&quot;;
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sf = new SqlSessionFactoryBuilder().build(inputStream);
+        SqlSession s = sf.openSession();
+        Order order = s.selectOne(&quot;orders.selectOne&quot;,1);
+        System.out.println(order.getOrderNo() + order.getUser().getName());
+        for(Item i : order.getItems()){
+            System.out.println(i.getId() + &quot;:&quot; + i.getItemName());
+        }
+        s.commit();
+        s.close();
+    }
+</code></pre><h2 id="改造项目"><a href="#改造项目" class="headerlink" title="改造项目"></a>改造项目</h2><pre><code>1.引入Util类
+    package com.it18zhang.mybatisdemo.util;
+
+    import org.apache.ibatis.io.Resources;
+    import org.apache.ibatis.session.SqlSession;
+    import org.apache.ibatis.session.SqlSessionFactory;
+    import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+    import java.io.InputStream;
+
+    /**
+     * 工具类
+     */
+    public class Util {
+        //
+        private static SqlSessionFactory sf ;
+
+        static{
+            try {
+                String resource = &quot;mybatis-config.xml&quot;;
+                InputStream inputStream = Resources.getResourceAsStream(resource);
+                sf = new SqlSessionFactoryBuilder().build(inputStream);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * 开启会话
+         */
+        public static SqlSession openSession(){
+            return sf.openSession() ;
+        }
+
+        /**
+         * 关闭会话
+         */
+        public static void closeSession(SqlSession s){
+            if(s != null){
+                s.close();
+            }
+        }
+
+
+        /**
+         * 关闭会话
+         */
+        public static void rollbackTx(SqlSession s) {
+            if (s != null) {
+                s.rollback();
+            }
+        }
+    }
+
+2.设计模板类DaoTemplate和回调MybatisCallback接口
+    [DaoTemplate.java]
+    package com.it18zhang.mybatisdemo.dao;
+
+    import com.it18zhang.mybatisdemo.util.Util;
+    import org.apache.ibatis.session.SqlSession;
+
+    /**
+     * 模板类
+     */
+    public class DaoTemplate {
+        /**
+         * 执行
+         */
+        public static Object execute(MybatisCallback cb){
+            SqlSession s = null;
+            try {
+                s = Util.openSession();
+                Object ret = cb.doInMybatis(s);
+                s.commit();
+                return ret ;
+            } catch (Exception e) {
+                Util.rollbackTx(s);
+            } finally {
+                Util.closeSession(s);
+            }
+            return null ;
+        }
+    }
+
+    [MybatisCallback.java]
+    package com.it18zhang.mybatisdemo.dao;
+
+    import org.apache.ibatis.session.SqlSession;
+
+    /**
+     * 回调接口
+     */
+    public interface MybatisCallback {
+        public Object doInMybatis(SqlSession s);
+    }
+
+3.通过模板类+回调接口实现UserDao.java
+    [UserDao.java]
+    package com.it18zhang.mybatisdemo.dao;
+
+    import com.it18zhang.mybatisdemo.domain.User;
+    import com.it18zhang.mybatisdemo.util.Util;
+    import org.apache.ibatis.session.SqlSession;
+
+    import java.util.List;
+
+    /**
+     * UserDao
+     */
+    public class UserDao {
+
+        /**
+         * 插入操作
+         */
+        public void insert(final User user){
+            DaoTemplate.execute(new MybatisCallback() {
+                public Object doInMybatis(SqlSession s) {
+                    s.insert(&quot;users.insert&quot;,user);
+                    return null ;
+                }
+            });
+        }
+
+        /**
+         * 插入操作
+         */
+        public void update(final User user){
+            DaoTemplate.execute(new MybatisCallback() {
+                public Object doInMybatis(SqlSession s) {
+                    s.update(&quot;users.update&quot;, user);
+                    return null ;
+                }
+            });
+        }
+
+        public User selctOne(final Integer id){
+            return (User)DaoTemplate.execute(new MybatisCallback() {
+                public Object doInMybatis(SqlSession s) {
+                    return s.selectOne(&quot;users.selectOne&quot;,id);
+                }
+            });
+        }
+
+        public List&lt;User&gt; selctAll(){
+            return (List&lt;User&gt;)DaoTemplate.execute(new MybatisCallback() {
+                public Object doInMybatis(SqlSession s) {
+                    return s.selectList(&quot;users.selectAll&quot;);
+                }
+            });
+        }
+    }
+
+4.App测试
+    public static void main(String[] args) {
+        UserDao dao = new UserDao();
+        User u = dao.selctOne(1);
+        System.out.println(u.getName());
+    }
+</code></pre><hr>
+<p>回调接口的一个画图分析：<br><img src="https://i.imgur.com/DufbOjZ.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/19/Hbase第三天/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -347,7 +3158,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/19/Hbase第三天/" itemprop="url">Hbase第三天</a></h1>
+                <a class="post-title-link" href="/2018/11/19/Hbase第三天/" itemprop="url">Untitled</a></h1>
         
 
         <div class="post-meta">
@@ -399,7 +3210,14 @@
       
         
           
-            <h1 id="复习Hbase第二天"><a href="#复习Hbase第二天" class="headerlink" title="复习Hbase第二天"></a>复习Hbase第二天</h1><p>随机定位+实时读写</p>
+            <hr>
+<p>title: Hbase第三天<br>tags:</p>
+<ul>
+<li>null<br>categories:</li>
+<li>null<br>date: 2018-11-19 16:56:58<br>description:</li>
+</ul>
+<hr>
+<h1 id="复习Hbase第二天"><a href="#复习Hbase第二天" class="headerlink" title="复习Hbase第二天"></a>复习Hbase第二天</h1><p>随机定位+实时读写</p>
 <p>nosql:not only sql数据库</p>
 <p>key-value对形式的存储</p>
 <p>key: rowkey/family+col/timstamp = value</p>
@@ -1471,2701 +4289,11 @@ Map&lt;String,Object&gt;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/16/Hbase第一天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/16/Hbase第一天/" itemprop="url">Hbase第一天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-16T09:33:51+08:00">
-                2018-11-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/16/Hbase第二天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/16/Hbase第二天/" itemprop="url">Hbase第二天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-16T09:33:51+08:00">
-                2018-11-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>start-hbase.sh<br>    hbase-daemon.sh start master<br>    habse-daemon.sh    start regionserver</p>
-<p>hbase的ha设置：<br>    直接打开S202或者s203的master进程即可，启动命令如上图。</p>
-<p>hbase shell操作：<br>    $&gt;hbaes shell<br>    $hbase&gt;help</p>
-<p>namespace 类似于Mysql库的概念</p>
-<p>insert into<br>nosql: not only SQL<br>key-value<br>put用来放kv对。<br>在建表的时候没有指定列明，指定的是列族名，然后这个列族下的列是可以增减的。<br>help ‘put’</p>
-<p><img src="https://i.imgur.com/5JUqC0b.png" alt=""></p>
-<p>habase shell 操作：</p>
-<pre><code>$&gt;hbase shell                                    //登陆shell终端
-$hbase&gt;help                                        //    
-$hbase&gt;help &apos;list_namespace&apos;                    //查看特定 的命令帮助
-$hbase&gt;list_namespace                            //列出名字空间（数据库）
-$hbase&gt;list_namespace_tables &apos;default&apos;            //列出名字空间
-$hbase&gt;create_namespace &apos;ns1&apos;                    //创建名字空间
-$hbase&gt;help &apos;create&apos;                            //
-$hbase&gt;create &apos;ns1:t1&apos;,&apos;f1&apos;                        //创建表，指定空间下
-$hbase&gt;put &apos;ns1:t1&apos;,&apos;row1&apos;,&apos;f1:id&apos;,100
-$hbase&gt;put &apos;ns1:t1&apos;,&apos;row1&apos;,&apos;f1:name&apos;,tom
-$hbase&gt;get &apos;ns1:t1&apos;,&apos;row1&apos;                        //指定查询row
-$hbase&gt;scan &apos;ns1:t1&apos;                            //权标扫描扫描ns1列族的t1列
-</code></pre><p>三级坐标定位，一个是列族，一个是row一个是时间戳如下图;</p>
-<p><img src="https://i.imgur.com/ipxtMbm.png" alt=""></p>
-<p><img src="https://i.imgur.com/uz0TL9q.png" alt=""></p>
-<p><img src="https://i.imgur.com/3HmcLCa.png" alt=""></p>
-<p>通过java api操作hbase:<br>    package com.it18zhang.hbasedemo;</p>
-<pre><code>import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Table;
-import org.apache.hadoop.hbase.util.Bytes;
-import org.junit.Test;
-
-eate 2018/11/17 11:56
- */
-public class TestCRUD {
-    @Test
-    public void put() throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        byte[] rowid = Bytes.toBytes(&quot;row2&quot;);
-        byte[] f1 = Bytes.toBytes(&quot;f1&quot;);
-        byte[] id = Bytes.toBytes(&quot;id&quot;);
-        byte[] value = Bytes.toBytes(102);
-        //创建put对象
-
-        Put put = new Put(rowid);
-        put.addColumn(f1, id, value);
-        table.put(put);
-
-    }
-}
-</code></pre><p>pom文件：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-    &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-    &lt;artifactId&gt;HbaseDemo&lt;/artifactId&gt;
-    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;junit&lt;/groupId&gt;
-            &lt;artifactId&gt;junit&lt;/artifactId&gt;
-            &lt;version&gt;4.11&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;
-            &lt;artifactId&gt;hbase-client&lt;/artifactId&gt;
-            &lt;version&gt;1.2.3&lt;/version&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-
-
-&lt;/project&gt;
-</code></pre><hr>
-<p>hbase架构介绍：</p>
-<p><img src="https://i.imgur.com/BaJwZ3z.png" alt=""></p>
-<h1 id="关于区域服务器"><a href="#关于区域服务器" class="headerlink" title="关于区域服务器"></a>关于区域服务器</h1><p>  每个大表按照rowkey来切分，rowkey是可排序的，每个切分的被分派到每个区域分五期里面。key是有序的。而且每个取余服务器的表都是有范围的，所以在get的时候要指定rowkey，然后查询的时候定位到这个rowkey在哪个区域服务器上，因为所有的区域服务器信息都在meta表这个自带的表里面，叫元数据表。里面存储着rowkey。也就是每个区域的rowkey的范围。</p>
-<p><img src="https://i.imgur.com/4nzxjz8.png" alt=""></p>
-<p>看里面的内容hbase；namespace,,14….,74….<br>这个就是名字空间表，起始的位置，结束的rowkey位置。<br>前4大段，是指的是一大行的前4列。两个逗号意味着没有切割。就只是在一个区域服务器里面</p>
-<p>再看下面的ns1:t1表的都是一行，然后3列不同的列，如果查询这部分直接联系s204,如果204挂了， 这个表就会更新，变成承接的新表的数据。这个ns1:t1的这个表就没有分割。column是列，info是列族，server是列</p>
-<p>在hbase查询的时候是3级定位。时间戳，列族（列），rowkey（行）</p>
-<p>看一下下面的这个目录：</p>
-<p>hbase,数据，ns1名字空间，t1表，区域服务器,f1列族，然后列族下面就是文件了二进制存储，内容都在这个二进制文件里面。</p>
-<p><img src="https://i.imgur.com/18bQKMj.png" alt=""></p>
-<p>一个表可以有多个区域，一个区域服务器肯定有多个区域，由于有副本的存在所以一个区域可以在多个服务器上，区域服务器是来提供服务的，读写过程是由区域服务器完成，相当于数据节点，这2个都是完成数据的读写过程的。</p>
-<p>在区域里面有个store在里面有MemStore。所以这些内容都是在内存当中，如果内存满了，就会被溢出到磁盘当中，Storefile就是在磁盘当中了，Hfile通过和底层交互</p>
-<h1 id="hbase的写入过程："><a href="#hbase的写入过程：" class="headerlink" title="hbase的写入过程："></a>hbase的写入过程：</h1><p><img src="https://i.imgur.com/XfOpVug.png" alt=""></p>
-<p>root这个地方写错了是老版本的，应该是meta表<br><img src="https://i.imgur.com/Imht8Oq.png" alt=""><br><img src="https://i.imgur.com/peKNm1w.png" alt=""></p>
-<p>现在妖王一个表里写数据，需要先查询这个表在那个区域服务器上，要先查询hbase空间下的meta表，因为这个表里面标识了类似于一个目录的内容，标识那个区域子在那个服务器上，也就是rowkey的范围。这个meta表在哪里呢怎么找到呢？ meta表要通过zk来找到。因为zk集群在，所以没有zk的情况下hbase都起不来。</p>
-<p>进入到hbase shell里面</p>
-<p><img src="https://i.imgur.com/Rx4QHIF.png" alt=""></p>
-<p>通过进入到shell里面发现这个meta表大概可能在这个里面，进去之后发现这个meta表在s203里面。如下图</p>
-<p><img src="https://i.imgur.com/SHSVJwz.png" alt=""></p>
-<p>所以实际上就是先联系zk然后通过zk找到他的位置在s203里面，这个meta表在s203里面</p>
-<p>ta/hbase/meta/1588230740/info/da7a63e29d1c4fb588068ea9c187ae27</p>
-<hr>
-<h1 id="hbase基于hdfs"><a href="#hbase基于hdfs" class="headerlink" title="hbase基于hdfs"></a>hbase基于hdfs</h1><p>【表数据的存储结构目录构成】</p>
-<pre><code>hdfs://s201:8020/hbase/data/${名字空间}/${表名}/区域名称/列族名称
-</code></pre><p>相同列族的数据存放在一个文件中，</p>
-<p>【WAL写前日志目录结构构成】</p>
-<pre><code>hdfs://s201:8020/hbase/wals/s202,16020,1542534586029/s202%2C16020%2C1542534586029.default.1542541792199
-
-hdfs://s201:8020/hbase/wals/${区域服务器名称}/主机名，端口号，时间戳/
-</code></pre><h1 id="client端交互过程"><a href="#client端交互过程" class="headerlink" title="client端交互过程"></a>client端交互过程</h1><p>0.集群启动时，master负责分配区域到指定的区域服务器</p>
-<p>1.联系zk找出meta表所在的区域服务器rs(regionserver)<br>        /meta/meta-region-server<br>    定位到所在的服务器</p>
-<p>2.定位rowkey，找到对应的rs(regionserver)</p>
-<p>3.缓存信息到本地，</p>
-<p>4.联系regionserver</p>
-<p>5.HRegionServe负责open-HRegion对象打开H区域服务器对象，为每个列族创建store实例，说明store是和列族对应的，store包涵多个storefile实例，他们是对hfile的轻量级封装，每个store还对应一个memstroe（用于内存储速度快），</p>
-<p><img src="https://i.imgur.com/ks0t9JW.png" alt=""></p>
-<hr>
-<h1 id="在百万数据存储的时候："><a href="#在百万数据存储的时候：" class="headerlink" title="在百万数据存储的时候："></a>在百万数据存储的时候：</h1><p>关闭WALS</p>
-<p><img src="https://i.imgur.com/ITwCty6.png" alt=""></p>
-<p>代码如下：</p>
-<pre><code>@Test
-   public void biginsert() throws Exception {
-       long start=System.currentTimeMillis();
-       Configuration conf = HBaseConfiguration.create();
-       Connection conn = ConnectionFactory.createConnection(conf);
-       TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-       HTable table = (HTable) conn.getTable(tname);
-       //不要自动清理缓冲区
-       table.setAutoFlushTo(false);
-
-       for (int i = 0; i &lt; 1000000; i++) {
-           Put put = new Put(Bytes.toBytes(&quot;row&quot; + i));
-           //关闭写前日志
-           put.setWriteToWAL(false);
-           put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i));
-           put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;), Bytes.toBytes(&quot;tom&quot; + i));
-           put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i % 100));
-           table.put(put);
-           if (i % 2000 == 0) {
-               table.flushCommits();
-           }
-       }
-       table.flushCommits();
-       System.out.println(System.currentTimeMillis()-start);
-
-   }
-</code></pre><hr>
-<p>hbase shell命令：</p>
-<p>要想删除表，先要禁用表。</p>
-<pre><code>$hbase&gt;flush &apos;ns1:t1&apos;        //清理内存数据到磁盘
-$hbase&gt;count &apos;ns1:t1&apos;        //统计函数
-$hbase&gt;disable &apos;ns1:t1&apos;        //删除表之前要禁用表
-$hbase&gt;drop &apos;ns1:t1&apos;        //删除表 
-$hbase&gt;count &apos;hbase:meta&apos;     //查看元数据表
-</code></pre><p><img src="https://i.imgur.com/AAzzOmp.png" alt=""></p>
-<hr>
-<h1 id="格式化代码，设置固定数字格式"><a href="#格式化代码，设置固定数字格式" class="headerlink" title="格式化代码，设置固定数字格式"></a>格式化代码，设置固定数字格式</h1><pre><code> @Test
-    public void formatNum(){
-        DecimalFormat format =new DecimalFormat();
-        format.applyPattern(&quot;0000000&quot;);
-//        format.applyPattern(&quot;###,###,00&quot;);
-        System.out.println(format.format(8));
-    }
-</code></pre><hr>
-<p>为什么要格式化rowid，因为rowid1008和8相比较8比1008还要大，所以要格式化一下。</p>
-<p>经过格式化rowid的代码：</p>
-<pre><code> @Test
-public void biginsert() throws Exception {
-
-    DecimalFormat format =new DecimalFormat();
-    format.applyPattern(&quot;0000000&quot;);
-    System.out.println(format.format(8));
-
-    long start=System.currentTimeMillis();
-    Configuration conf = HBaseConfiguration.create();
-    Connection conn = ConnectionFactory.createConnection(conf);
-    TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-    HTable table = (HTable) conn.getTable(tname);
-    //不要自动清理缓冲区
-    table.setAutoFlushTo(false);
-
-    for (int i = 0; i &lt; 10000; i++) {
-        Put put = new Put(Bytes.toBytes(&quot;row&quot; + format.format(i)));
-        //关闭写前日志
-        put.setWriteToWAL(false);
-        put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i));
-        put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;), Bytes.toBytes(&quot;tom&quot; + i));
-        put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i % 100));
-        table.put(put);
-        if (i % 2000 == 0) {
-            table.flushCommits();
-        }
-    }
-    table.flushCommits();
-    System.out.println(System.currentTimeMillis()-start);
-
-}
-</code></pre><hr>
-<h1 id="flush命令"><a href="#flush命令" class="headerlink" title="flush命令"></a>flush命令</h1><pre><code>$hbase:flush：清理内存数据到磁盘
-</code></pre><h1 id="region拆分切割"><a href="#region拆分切割" class="headerlink" title="region拆分切割"></a>region拆分切割</h1><p><img src="https://i.imgur.com/v0N169Q.png" alt=""><br><img src="https://i.imgur.com/XQesWs6.png" alt=""></p>
-<p>hbase默认切割文件是10G，超过切割。</p>
-<pre><code>$hbase&gt;count &apos;ns1:t1&apos;        //统计函数
-</code></pre><p><img src="https://i.imgur.com/sjQ5dq7.png" alt=""></p>
-<pre><code>切割而一旦完成会保留原来的表结构，但是原来的数据内容已经没有了被删除了 
-</code></pre><p><img src="https://i.imgur.com/UhuexPk.png" alt=""></p>
-<p><img src="https://i.imgur.com/0NfLQSJ.png" alt=""></p>
-<p><img src="https://i.imgur.com/oJTAFPt.png" alt=""></p>
-<hr>
-<h1 id="hbase和hadoop的ha集成"><a href="#hbase和hadoop的ha集成" class="headerlink" title="hbase和hadoop的ha集成"></a>hbase和hadoop的ha集成</h1><p>1.在hbase-env.sh文件添加hadoop配置文件目录到hbase_classpath环境变量[/soft/hbase/conf/hbase-env]并且分发。</p>
-<pre><code>export HBASE_CLASSPATH=$HBASE_CLASSPATH:/soft/hadoop/    etc/hadoop
-</code></pre><p>2.在hbase/conf目录下创建到hadoop的hdfs-site.xml的符号链接</p>
-<pre><code>    $&gt;ln -s /soft/hadoop/etc/hadoop/hdfs-site.xml
-/soft/hbase/conf/hdfs-site.xml
-</code></pre><p>3.修改Hbase-site.xml文件中hbase.rootdir的目录值<br>        /soft/hbase/conf/hbase-site.xml<br>4.将之都分发出去。</p>
-<p>继承了之后及时关闭了s201的namenode，hbase的Hmaster也不会关闭，也就是形成了高可用状态。 </p>
-<hr>
-<h1 id="hbase手动移动区域"><a href="#hbase手动移动区域" class="headerlink" title="hbase手动移动区域"></a>hbase手动移动区域</h1><p>手动移动区域<br><img src="https://i.imgur.com/UayeavF.png" alt=""></p>
-<p>手动强行合并hbase块<br><img src="https://i.imgur.com/CrvZAFo.png" alt=""><br><img src="https://i.imgur.com/JCFdxeV.png" alt=""></p>
-<p>手动切割：</p>
-<h1 id="拆分风暴："><a href="#拆分风暴：" class="headerlink" title="拆分风暴："></a>拆分风暴：</h1><p><img src="https://i.imgur.com/wP6mfUJ.png" alt=""></p>
-<p>在达到10G以后，几个区域同时增长，同时到达10G临界点，同时切割额，服务器工作瞬间增大。每个都在切割，就叫切割风暴，我们要避免这种情况，通过使用手动切割，避免拆分风暴。</p>
-<hr>
-<p>代码操作增删改查<br>    package com.it18zhang.hbasedemo;</p>
-<pre><code>import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.*;
-import org.apache.hadoop.hbase.util.Bytes;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NavigableMap;
-
-/**
- * @Title:TestCRUD
- * @Description:
- * @Auther: Eric Hunn
- * @Version:1.0
- * @Create 2018/11/17 11:56
- */
-public class TestCRUD {
-    @Test
-    public void put() throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        byte[] rowid = Bytes.toBytes(&quot;row2&quot;);
-        byte[] f1 = Bytes.toBytes(&quot;f1&quot;);
-        byte[] id = Bytes.toBytes(&quot;id&quot;);
-        byte[] value = Bytes.toBytes(102);
-        //创建put对象
-
-        Put put = new Put(rowid);
-        put.addColumn(f1, id, value);
-        table.put(put);
-
-    }
-
-    @Test
-    public void biginsert() throws Exception {
-
-        DecimalFormat format = new DecimalFormat();
-        format.applyPattern(&quot;0000000&quot;);
-        System.out.println(format.format(8));
-
-        long start = System.currentTimeMillis();
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        HTable table = (HTable) conn.getTable(tname);
-        //不要自动清理缓冲区
-        table.setAutoFlushTo(false);
-
-        for (int i = 0; i &lt; 10000; i++) {
-            Put put = new Put(Bytes.toBytes(&quot;row&quot; + format.format(i)));
-            //关闭写前日志
-            put.setWriteToWAL(false);
-            put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i));
-            put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;), Bytes.toBytes(&quot;tom&quot; + i));
-            put.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;), Bytes.toBytes(i % 100));
-            table.put(put);
-            if (i % 2000 == 0) {
-                table.flushCommits();
-            }
-        }
-        table.flushCommits();
-        System.out.println(System.currentTimeMillis() - start);
-
-    }
-
-    @Test
-    public void formatNum() {
-        DecimalFormat format = new DecimalFormat();
-        format.applyPattern(&quot;0000000&quot;);
-//        format.applyPattern(&quot;###,###,00&quot;);
-        System.out.println(format.format(8));
-    }
-
-    @Test
-    public void createNamespace() throws Exception {
-        //创建conf对象
-        Configuration conf = HBaseConfiguration.create();
-        //通过工厂创建连接对象
-        Connection conn = ConnectionFactory.createConnection(conf);
-        Admin admin = conn.getAdmin();
-        NamespaceDescriptor nsd = NamespaceDescriptor.create(&quot;ns2&quot;).build();
-        admin.createNamespace(nsd);
-
-        NamespaceDescriptor[] ns = admin.listNamespaceDescriptors();
-        for (NamespaceDescriptor n : ns) {
-            System.out.println(n.getName());
-        }
-
-    }
-
-    @Test
-    public void listNamespaces() throws Exception {
-        //创建conf对象
-        Configuration conf = HBaseConfiguration.create();
-        //通过工厂创建连接对象
-        Connection conn = ConnectionFactory.createConnection(conf);
-        Admin admin = conn.getAdmin();
-        NamespaceDescriptor[] ns = admin.listNamespaceDescriptors();
-        for (NamespaceDescriptor n : ns) {
-            System.out.println(n.getName());
-        }
-    }
-
-    @Test
-    public void createTables() throws Exception {
-        //创建conf对象
-        Configuration conf = HBaseConfiguration.create();
-        //通过工厂创建连接对象
-        Connection conn = ConnectionFactory.createConnection(conf);
-        Admin admin = conn.getAdmin();
-        //创建表名对象
-        TableName tbn = TableName.valueOf(&quot;ns2:t2&quot;);
-        //创建表描述符对象
-        HTableDescriptor tbl = new HTableDescriptor(tbn);
-        //在表描述符中添加列族创建列族描述符
-        HColumnDescriptor col = new HColumnDescriptor(&quot;f1&quot;);
-        tbl.addFamily(col);
-
-        admin.createTable(tbl);
-        System.out.println(&quot;over&quot;);
-    }
-
-    @Test
-    public void disableTable() throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        Admin admin = conn.getAdmin();
-        admin.disableTable(TableName.valueOf(&quot;ns2:t2&quot;));
-    }
-
-    @Test
-    public void dropTable() throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        Admin admin = conn.getAdmin();
-        admin.disableTable(TableName.valueOf(&quot;ns2:t2&quot;));
-        admin.deleteTable(TableName.valueOf(&quot;ns2:t2&quot;));
-    }
-
-    @Test
-    public void deleteData() throws IOException {
-
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        Delete del = new Delete(Bytes.toBytes(&quot;row0000001&quot;));
-        del.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;id&quot;));
-        del.addColumn(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
-
-        table.delete(del);
-        System.out.println(&quot;over&quot;);
-
-    }
-
-    @Test
-    public void scanall() throws IOException {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        Scan scan = new Scan();
-        ResultScanner rs = table.getScanner(scan);
-        Iterator&lt;Result&gt; it = rs.iterator();
-        while (it.hasNext()) {
-            Result r = it.next();//理解这个r是对一整行的封装
-            byte[] value = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
-            System.out.println(Bytes.toString(value));
-        }
-    }
-
-
-    @Test
-    public void scan() throws IOException {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        Scan scan = new Scan();
-        scan.setStartRow(Bytes.toBytes(&quot;row0005000&quot;));
-        scan.setStopRow(Bytes.toBytes(&quot;row0008000&quot;));
-        ResultScanner rs = table.getScanner(scan);
-        Iterator&lt;Result&gt; it = rs.iterator();
-        while (it.hasNext()) {
-            Result r = it.next();//理解这个r是对一整行的封装
-            byte[] value = r.getValue(Bytes.toBytes(&quot;f1&quot;), Bytes.toBytes(&quot;name&quot;));
-            System.out.println(Bytes.toString(value));
-        }
-    }
-
-    //动态获取所有的列和列族，动态遍历，每个列和值的集合，由于强行getvalue转换成string类型，所以难免出现乱码情况
-    @Test
-    public void scan2() throws IOException {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        Scan scan = new Scan();
-        ResultScanner rs = table.getScanner(scan);
-        Iterator&lt;Result&gt; it = rs.iterator();
-        while (it.hasNext()) {
-            Result r = it.next();//理解这个r是对一整行的封装
-            Map&lt;byte[], byte[]&gt; map = r.getFamilyMap(Bytes.toBytes(&quot;f1&quot;));
-            for (Map.Entry&lt;byte[], byte[]&gt; entrySet : map.entrySet()) {
-                String col = Bytes.toString(entrySet.getKey());
-                String val = Bytes.toString(entrySet.getValue());
-                System.out.println(col + &quot;:&quot; + val + &quot;,&quot;);
-            }
-            System.out.println();
-        }
-    }
-
-    @Test
-    public void scan3() throws IOException {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:t1&quot;);
-        Table table = conn.getTable(tname);
-        Scan scan = new Scan();
-        ResultScanner rs = table.getScanner(scan);
-        Iterator&lt;Result&gt; it = rs.iterator();
-        while (it.hasNext()) {
-            Result r = it.next();//理解这个r是对一整行的封装
-            //得到一行的所有map，key=f1,value=Map&lt;Col,Map&lt;Timestamp,value&gt;&gt;这个结构
-
-            NavigableMap&lt;byte[], NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt;&gt; map = r.getMap();
-            for (Map.Entry&lt;byte[], NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt;&gt; entry : map.entrySet()) {
-                //得到列族
-                String f = Bytes.toString(entry.getKey());
-                NavigableMap&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt; colDataMap = entry.getValue();
-                for (Map.Entry&lt;byte[], NavigableMap&lt;Long, byte[]&gt;&gt; ets : colDataMap.entrySet()) {
-                    String c = Bytes.toString(ets.getKey());
-                    Map&lt;Long, byte[]&gt; tsValueMap = ets.getValue();
-                    for (Map.Entry&lt;Long, byte[]&gt; e : tsValueMap.entrySet()) {
-                        Long ts = e.getKey();
-                        String value = Bytes.toString(e.getValue());
-                        System.out.println(f + &quot;:&quot; + c + &quot;:&quot; + ts + &quot;=&quot; + value + &quot;,&quot;);
-                    }
-                }
-            }
-        }
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/15/Zookeeper第二天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/15/Zookeeper第二天/" itemprop="url">Zookeeper第二天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-15T16:45:25+08:00">
-                2018-11-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="leader推选过程-最小号选举法"><a href="#leader推选过程-最小号选举法" class="headerlink" title="leader推选过程(最小号选举法)"></a>leader推选过程(最小号选举法)</h2><pre><code>1.所有节点在同一目录下创建临时序列节点。
-2.节点下会生成/xxx/xx000000001等节点。
-3.序号最小的节点就是leader，其余就是follower.
-4.每个节点观察小于自己节点的主机。(注册观察者)
-5.如果leader挂了，对应znode删除了。
-6.观察者收到通知。
-</code></pre><p><img src="https://i.imgur.com/O6wXdY8.png" alt=""></p>
-<h2 id="配置完全分布式zk集群"><a href="#配置完全分布式zk集群" class="headerlink" title="配置完全分布式zk集群"></a>配置完全分布式zk集群</h2><pre><code>1.挑选3台主机
-    s201 ~ s203
-2.每台机器都安装zk
-    tar
-    环境变量
-
-3.配置zk配置文件
-    s201 ~ s203
-    [/soft/zk/conf/zoo.cfg]
-    ...
-    dataDir=/home/centos/zookeeper
-
-    server.1=s201:2888:3888
-    server.2=s202:2888:3888 
-    server.3=s203:2888:3888
-
-4.在每台主机的/home/centos/zookeeper中添加myid,内容分别是1,2,3
-    [s201]
-    $&gt;echo 1 &gt; /home/centos/zookeeper/myid
-    [s202]
-    $&gt;echo 2 &gt; /home/centos/zookeeper/myid
-    [s203]
-    $&gt;echo 3 &gt; /home/centos/zookeeper/myid
-
-5.启动服务器集群 
-    $&gt;zkServer.sh start
-    ...
-
-6.查看每台服务器的状态
-    $&gt;zkServer.sh status
-
-7.修改zk的log目录
-
-    vi /soft/zk/conf/log4j.properties
-</code></pre><p>修改如下：</p>
-<p><img src="https://i.imgur.com/xaRGDXr.png" alt=""></p>
-<pre><code>8.创建log目录：
-    xcall.sh &quot;mkdir /home/centos/zookeeper/log&quot;
-</code></pre><h2 id="部署细节"><a href="#部署细节" class="headerlink" title="部署细节"></a>部署细节</h2><pre><code>1.在jn节点分别启动jn进程
-    $&gt;hadoop-daemon.sh start journalnode
-
-2.启动jn之后，在两个NN之间进行disk元数据同步
-    a)如果是全新集群，先format文件系统,只需要在一个nn上执行。
-        [s201]
-        $&gt;hadoop namenode -format
-
-    b)如果将非HA集群转换成HA集群，复制原NN的metadata到另一个nn.
-        1.步骤一
-            [s201]
-            $&gt;scp -r /home/centos/hadoop/dfs centos@s206:/home/centos/hadoop/
-
-        2.步骤二
-            在新的nn(未格式化的nn)上运行一下命令，实现待命状态引导。
-            [s206]
-            $&gt;hdfs namenode -bootstrapStandby        //需要s201为启动状态,提示是否格式化,选择N.
-
-        3)在一个NN上执行以下命令，完成edit日志到jn节点的传输。
-            $&gt;hdfs namenode -initializeSharedEdits
-            #查看s202,s203是否有edit数据.
-
-        4)启动所有节点.
-            [s201]
-            $&gt;hadoop-daemon.sh start namenode        //启动名称节点
-            $&gt;hadoop-daemons.sh start datanode        //启动所有数据节点
-
-            [s206]
-            $&gt;hadoop-daemon.sh start namenode        //启动名称节点
-</code></pre><h2 id="HA管理"><a href="#HA管理" class="headerlink" title="HA管理"></a>HA管理</h2><pre><code>$&gt;hdfs haadmin -transitionToActive nn1                //切成激活态
-$&gt;hdfs haadmin -transitionToStandby nn1                //切成待命态
-$&gt;hdfs haadmin -transitionToActive --forceactive nn2//强行激活
-$&gt;hdfs haadmin -failover nn1 nn2                    //模拟容灾演示,从nn1切换到nn2
-</code></pre><h2 id="完全0开始部署hadoop-HDFS的HA集群，使用zk实现自动容灾"><a href="#完全0开始部署hadoop-HDFS的HA集群，使用zk实现自动容灾" class="headerlink" title="完全0开始部署hadoop HDFS的HA集群，使用zk实现自动容灾"></a>完全0开始部署hadoop HDFS的HA集群，使用zk实现自动容灾</h2><pre><code>1.停掉hadoop的所有进程
-
-2.删除所有节点的日志和本地数据.
-    删除/home/centos/hadoop下的所有和
-        /home/centos/journal下的所有
-
-3.改换hadoop符号连接为ha
-
-4.登录每台JN节点主机，启动JN进程.
-    [s202-s204]
-    $&gt;hadoop-daemon.sh start journalnode
-
-5.登录其中一个NN,格式化文件系统(s201)
-    $&gt;hadoop namenode -format
-
-6.复制201目录的下nn的元数据到s206
-    $&gt;scp -r ~/hadoop/* centos@s206:/home/centos/hadoop
-
-7.在未格式化的NN(s206)节点上做standby引导.
-    7.1)需要保证201的NN启动
-        $&gt;hadoop-daemon.sh start namenode
-
-    7.2)登录到s206节点，做standby引导.
-        $&gt;hdfs namenode -bootstrapStandby
-
-    7.3)登录201，将s201的edit日志初始化到JN节点。
-        $&gt;hdfs namenode -initializeSharedEdits
-
-8.启动所有数据节点.
-    $&gt;hadoop-daemons.sh start datanode
-
-9.登录到206,启动NN
-    $&gt;hadoop-daemon.sh start namenode
-
-10.查看webui
-    http://s201:50070/
-    http://s206:50070/
-
-11.自动容灾
-    11.1)介绍
-        自动容灾引入两个组件，zk quarum + zk容灾控制器(ZKFC)。
-
-
-
-        运行NN的主机还要运行ZKFC进程，主要负责:
-        a.健康监控
-        b.session管理
-        c.选举
-    11.2部署容灾
-        a.停止所有进程
-            $&gt;stop-all.sh
-
-        b.配置hdfs-site.xml，启用自动容灾.
-            [hdfs-site.xml]
-                &lt;property&gt;
-                    &lt;name&gt;dfs.ha.automatic-failover.enabled&lt;/name&gt;
-                    &lt;value&gt;true&lt;/value&gt;
-                &lt;/property&gt;
-
-        c.配置core-site.xml，指定zk的连接地址.
-            &lt;property&gt;
-                &lt;name&gt;ha.zookeeper.quorum&lt;/name&gt;
-                &lt;value&gt;s201:2181,s202:2181,s203:2181&lt;/value&gt;
-            &lt;/property&gt;
-
-        d.分发以上两个文件到所有节点。
-
-12.登录其中的一台NN(s201),在ZK中初始化HA状态
-    $&gt;hdfs zkfc -formatZK
-
-13.启动hdfs进程.
-    $&gt;start-dfs.sh
-
-14.测试自动容在(206是活跃节点)
-    $&gt;kill -9
-</code></pre><h2 id="配置RM的HA自动容灾"><a href="#配置RM的HA自动容灾" class="headerlink" title="配置RM的HA自动容灾"></a>配置RM的HA自动容灾</h2><pre><code>1.配置yarn-site.xml
-    &lt;property&gt;
-        &lt;name&gt;yarn.resourcemanager.ha.enabled&lt;/name&gt;
-        &lt;value&gt;true&lt;/value&gt;
-    &lt;/property&gt;
-    &lt;property&gt;
-        &lt;name&gt;yarn.resourcemanager.cluster-id&lt;/name&gt;
-        &lt;value&gt;cluster1&lt;/value&gt;
-    &lt;/property&gt;
-    &lt;property&gt;
-        &lt;name&gt;yarn.resourcemanager.ha.rm-ids&lt;/name&gt;
-        &lt;value&gt;rm1,rm2&lt;/value&gt;
-    &lt;/property&gt;
-    &lt;property&gt;
-        &lt;name&gt;yarn.resourcemanager.hostname.rm1&lt;/name&gt;
-        &lt;value&gt;s201&lt;/value&gt;
-    &lt;/property&gt;
-    &lt;property&gt;
-        &lt;name&gt;yarn.resourcemanager.hostname.rm2&lt;/name&gt;
-        &lt;value&gt;s206&lt;/value&gt;
-    &lt;/property&gt;
-    &lt;property&gt;
-        &lt;name&gt;yarn.resourcemanager.webapp.address.rm1&lt;/name&gt;
-        &lt;value&gt;s201:8088&lt;/value&gt;
-    &lt;/property&gt;
-    &lt;property&gt;
-        &lt;name&gt;yarn.resourcemanager.webapp.address.rm2&lt;/name&gt;
-        &lt;value&gt;s206:8088&lt;/value&gt;
-    &lt;/property&gt;
-    &lt;property&gt;
-        &lt;name&gt;yarn.resourcemanager.zk-address&lt;/name&gt;
-        &lt;value&gt;s201:2181,s202:2181,s203:2181&lt;/value&gt;
-    &lt;/property&gt;    
-
-2.使用管理命令
-    //查看状态
-    $&gt;yarn rmadmin -getServiceState rm1
-    //切换状态到standby
-    $&gt;yarn rmadmin -transitionToStandby rm1
-
-3.启动yarn集群
-    $&gt;start-yarn.sh
-
-4.hadoop没有启动两个resourcemanager,需要手动启动另外一个
-    $&gt;yarn-daemon.sh start resourcemanager
-
-5.查看webui
-
-6.做容灾模拟.
-    kill -9
-</code></pre><h2 id="hive的注意事项"><a href="#hive的注意事项" class="headerlink" title="hive的注意事项"></a>hive的注意事项</h2><pre><code>如果配置hadoop HA之前，搭建了Hive的话，在HA之后，需要调整路径信息.
-主要是修改mysql中的dbs,tbls等相关表。
-</code></pre><h2 id="Hbase"><a href="#Hbase" class="headerlink" title="Hbase"></a>Hbase</h2><pre><code>hadoop数据库，分布式可伸缩大型数据存储。
-用户对随机、实时读写数据。
-十亿行 x 百万列。
-版本化、非关系型数据库。
-</code></pre><h2 id="Feature"><a href="#Feature" class="headerlink" title="Feature"></a>Feature</h2><pre><code>Linear and modular scalability.                    //线性模块化扩展方式。
-Strictly consistent reads and writes.            //严格一致性读写
-Automatic and configurable sharding of tables    //自动可配置表切割
-Automatic failover support between RegionServers.    //区域服务器之间自动容在
-Convenient base classes for backing Hadoop MapReduce jobs with Apache HBase tables.        //
-Easy to use Java API for client access.            //java API
-Block cache and Bloom Filters for real-time queries    //块缓存和布隆过滤器用于实时查询 
-Query predicate push down via server side Filters    //通过服务器端过滤器实现查询预测
-Thrift gateway and a REST-ful Web service that supports XML, Protobuf, and binary data encoding options    //
-Extensible jruby-based (JIRB) shell                    //
-Support for exporting metrics via the Hadoop metrics subsystem to files or Ganglia; or via JMX            //可视化
-面向列数据库。
-</code></pre><h2 id="hbase存储机制"><a href="#hbase存储机制" class="headerlink" title="hbase存储机制"></a>hbase存储机制</h2><pre><code>面向列存储，table是按row排序。
-</code></pre><h2 id="搭建hbase集群"><a href="#搭建hbase集群" class="headerlink" title="搭建hbase集群"></a>搭建hbase集群</h2><pre><code>0.选择安装的主机
-    s201 ~ s204
-1.jdk
-    略
-2.hadoop
-    略
-3.tar 
-    略
-4.环境变量
-    略
-
-5.验证安装是否成功
-    $&gt;hbase version
-
-5.配置hbase模式
-    5.1)本地模式
-        [hbase/conf/hbase-env.sh]
-        EXPORT JAVA_HOME=/soft/jdk
-
-        [hbase/conf/hbase-site.xml]
-        ...
-        &lt;property&gt;
-            &lt;name&gt;hbase.rootdir&lt;/name&gt;
-            &lt;value&gt;file:/home/hadoop/HBase/HFiles&lt;/value&gt;
-        &lt;/property&gt;
-
-    5.2)伪分布式
-        [hbase/conf/hbase-env.sh]
-        EXPORT JAVA_HOME=/soft/jdk
-
-        [hbase/conf/hbase-site.xml]
-        &lt;property&gt;
-            &lt;name&gt;hbase.cluster.distributed&lt;/name&gt;
-            &lt;value&gt;true&lt;/value&gt;
-        &lt;/property
-        &lt;property&gt;
-            &lt;name&gt;hbase.rootdir&lt;/name&gt;
-            &lt;value&gt;hdfs://localhost:8030/hbase&lt;/value&gt;
-        &lt;/property&gt;
-
-    5.3)完全分布式(必做)
-        [hbase/conf/hbase-env.sh]
-        export JAVA_HOME=/soft/jdk
-        export HBASE_MANAGES_ZK=false
-
-        [hbse-site.xml]
-        &lt;!-- 使用完全分布式 --&gt;
-        &lt;property&gt;
-            &lt;name&gt;hbase.cluster.distributed&lt;/name&gt;
-            &lt;value&gt;true&lt;/value&gt;
-        &lt;/property&gt;
-
-        &lt;!-- 指定hbase数据在hdfs上的存放路径 --&gt;
-        &lt;property&gt;
-            &lt;name&gt;hbase.rootdir&lt;/name&gt;
-            &lt;value&gt;hdfs://s201:8020/hbase&lt;/value&gt;
-        &lt;/property&gt;
-        &lt;!-- 配置zk地址 --&gt;
-        &lt;property&gt;
-            &lt;name&gt;hbase.zookeeper.quorum&lt;/name&gt;
-            &lt;value&gt;s201:2181,s202:2181,s203:2181&lt;/value&gt;
-        &lt;/property&gt;
-        &lt;!-- zk的本地目录 --&gt;
-        &lt;property&gt;
-            &lt;name&gt;hbase.zookeeper.property.dataDir&lt;/name&gt;
-            &lt;value&gt;/home/centos/zookeeper&lt;/value&gt;
-        &lt;/property&gt;
-
-6.配置regionservers
-    [hbase/conf/regionservers]
-    s202
-    s203
-    s204
-
-7.启动hbase集群(s201)
-    $&gt;start-hbase.sh
-
-8.登录hbase的webui
-    http://s201:16010
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/11/Avro-protobuf/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/11/Avro-protobuf/" itemprop="url">Avro&protobuf</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-11T19:52:10+08:00">
-                2018-11-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Avro-Protobuf/" itemprop="url" rel="index">
-                    <span itemprop="name">Avro&Protobuf</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>数据倾斜.
-$hive&gt;SET hive.optimize.skewjoin=true;
-$hive&gt;SET hive.skewjoin.key=100000;
-$hive&gt;SET hive.groupby.skewindata=true;
-</code></pre><p>CREATE TABLE mydb.doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘,’ ;</p>
-<p>select t.word,count(*) from (select explode(split(line,’ ‘)) word from doc ) t group by t.word ;</p>
-<h2 id="java串行化"><a href="#java串行化" class="headerlink" title="java串行化"></a>java串行化</h2><h2 id="串行化系统"><a href="#串行化系统" class="headerlink" title="串行化系统"></a>串行化系统</h2><p>protobuf，协议缓冲区。</p>
-<p>在Hadoop里面的代码很多是通过相关语言自动生成的。</p>
-<p>hadoop底层的rpc都是自动生成的。</p>
-<p>java也有串行化，但是hadoop不适用，因为相对来讲比protobuf和avro复杂而且性能差一些。</p>
-<p>当吧对象写入磁盘文件或者用于网络传输的时候要把对象变成字节数组。</p>
-<p>串行化从本质上来讲是数据格式，就是一种格式，吧对象变成字节数组，也就是说所有数据都要落实到字节数组上，都需要这样，不管是影音文件还是别的文件，通过串行化吧他边恒字节数组    </p>
-<h1 id="关于Javabean"><a href="#关于Javabean" class="headerlink" title="关于Javabean:"></a>关于Javabean:</h1><p>标准javabean(pojo,plain old java object)</p>
-<p>任何一个Java类也可以叫javabean.广义上。</p>
-<p>狭义上的javabean：就是普通古老的java对象pojo:plain old java object </p>
-<p>也就是私有的属性，getset方法，空的构造函数。比如person,学生，人。都是javabean。现实生活中的名词，在开发中都被定义成一个类，也就是说的javabean。</p>
-<p>下面的代码就是一段javabean<br>    class Person{<br>        public Person(){<br>    }<br>    private String name;<br>    public  void setName(String name){<br>        this.name=name;<br>    }<br>    publc String genName(){<br>        return name; }<br>}</p>
-<h2 id="google-protobuf"><a href="#google-protobuf" class="headerlink" title="google protobuf"></a>google protobuf</h2><pre><code>1.下载google protobuf.配置环境
-    protoc-2.5.0-win32.zip
-</code></pre><p><img src="https://i.imgur.com/7QVjPjY.png" alt=""></p>
-<pre><code>1&apos;.pom.xml
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;com.google.protobuf&lt;/groupId&gt;
-            &lt;artifactId&gt;protobuf-java&lt;/artifactId&gt;
-            &lt;version&gt;2.5.0&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;junit&lt;/groupId&gt;
-            &lt;artifactId&gt;junit&lt;/artifactId&gt;
-            &lt;version&gt;4.11&lt;/version&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-
-2.设计对象
-    ...
-3.描述对象
-    package tutorial;
-    option java_package = &quot;com.example.tutorial&quot;;
-    option java_outer_classname = &quot;AddressBookProtos&quot;;
-    //这个是一个javabean，在protobuf里面叫message
-        message Person {
-        required string name = 1;
-        required int32 id = 2;
-        optional string email = 3;
-    //下面这个是一个phonetype的枚举类
-        enum PhoneType {
-            MOBILE = 0;
-            HOME = 1;
-            WORK = 2;
-        }
-    //这个也是一个javabean。
-        message PhoneNumber {
-            required string number = 1;
-            optional PhoneType type = 2 [default = HOME];
-        }
-        repeated PhoneNumber phone = 4;
-    }
-    message AddressBook {
-        repeated Person person = 1;
-    }
-
-4.编译描述
-    cmd&gt;protoc --java_out . xxx.proto
-
-5.导入源代码到项目中
-    ...
-
-6.使用对象
-    public class TestProtoBuf {
-
-        @Test
-        public void write() throws Exception{
-            AddressBookProtos.Person john = AddressBookProtos.Person.newBuilder()
-                    .setId(12345)
-                    .setName(&quot;tomas&quot;)
-                    .setEmail(&quot;123@123.123&quot;)
-                    .addPhone(AddressBookProtos.Person.PhoneNumber.newBuilder()
-                            .setNumber(&quot;+351 999 999 999&quot;)
-                            .setType(AddressBookProtos.Person.PhoneType.HOME)
-                            .build())
-                    .build();
-            john.writeTo(new FileOutputStream(&quot;d:/prototbuf.data&quot;));
-        }
-
-        @Test
-        public void read() throws Exception{
-            AddressBookProtos.Person john = AddressBookProtos.Person.parseFrom(new FileInputStream(&quot;d:/prototbuf.data&quot;));
-            System.out.println(john.getName());
-        }
-    }
-</code></pre><p>上一段是用Protobuf进行编译和反编译的过程。然后下面这段图片是用java进行编译和反编译的过程：</p>
-<p><img src="https://i.imgur.com/8rzRjOu.png" alt=""></p>
-<h2 id="xml"><a href="#xml" class="headerlink" title="xml"></a>xml</h2><pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;persons&gt;
-    &lt;person id=&quot;&quot; name=&quot;&quot;&gt;
-        &lt;age&gt;12&lt;/age&gt;
-    &lt;/person&gt;
-&lt;/person&gt;
-</code></pre><h2 id="json"><a href="#json" class="headerlink" title="json"></a>json</h2><pre><code>[{
-    &quot;id&quot; : 1,
-    &quot;nmae&quot; : &quot;tom&quot;,
-    &quot;age&quot; : 20
-},
-{
-    &quot;id&quot; : 2,
-    &quot;nmae&quot; : &quot;tomas&quot;,
-    &quot;age&quot; : 30
-}
-]
-</code></pre><h2 id="avro-doug-cutting"><a href="#avro-doug-cutting" class="headerlink" title="avro (doug cutting)"></a>avro (doug cutting)</h2><pre><code>1.数据串行化系统
-2.自描述语言.
-    数据结构和数据都存在文件中。跨语言。
-    使用json格式存储数据。
-3.可压缩 + 可切割。
-4.使用avro
-    a)定义schema
-    b)编译schema，生成java类
-        {    //名字空间是这个，然后类型，然后名字，然后是字段数组
-            &quot;namespace&quot;: &quot;tutorialspoint.com&quot;,
-            &quot;type&quot;: &quot;record&quot;,
-            &quot;name&quot;: &quot;emp&quot;,
-            &quot;fields&quot;: [
-                {&quot;name&quot;: &quot;name&quot;, &quot;type&quot;: &quot;string&quot;},
-                {&quot;name&quot;: &quot;id&quot;, &quot;type&quot;: &quot;int&quot;},
-                {&quot;name&quot;: &quot;salary&quot;, &quot;type&quot;: &quot;int&quot;},
-                {&quot;name&quot;: &quot;age&quot;, &quot;type&quot;: &quot;int&quot;},
-                {&quot;name&quot;: &quot;address&quot;, &quot;type&quot;: &quot;string&quot;}
-            ]
-        } 
-    c)使用java类
-        cmd&gt;java -jar avro-tools-1.7.7.jar compile schema emp.avsc .
-
-    d)单元测试
-        package com.it18zhang.avrodemo.test;
-
-        import org.apache.avro.Schema;
-        import org.apache.avro.file.DataFileReader;
-        import org.apache.avro.file.DataFileWriter;
-        import org.apache.avro.generic.GenericData;
-        import org.apache.avro.generic.GenericRecord;
-        import org.apache.avro.io.DatumWriter;
-        import org.apache.avro.specific.SpecificDatumReader;
-        import org.apache.avro.specific.SpecificDatumWriter;
-        import org.junit.Test;
-
-        import java.io.File;
-        import java.io.IOException;
-        import java.util.Iterator;
-
-        /**
-         * Created by Administrator on 2017/3/23.
-         */
-        public class TestAvro {
-
-        //    @Test
-        //    public void write() throws Exception {
-        //        //创建writer对象
-        //        SpecificDatumWriter empDatumWriter = new SpecificDatumWriter&lt;Employee&gt;(Employee.class);
-        //        //写入文件
-        //        DataFileWriter&lt;Employee&gt; empFileWriter = new DataFileWriter&lt;Employee&gt;(empDatumWriter);
-        //
-        //        //创建对象
-        //        Employee e1 = new Employee();
-        //        e1.setName(&quot;tomas&quot;);
-        //        e1.setAge(12);
-        //
-        //        //串行化数据到磁盘
-        //        empFileWriter.create(e1.getSchema(), new File(&quot;d:/avro/data/e1.avro&quot;));
-        //        empFileWriter.append(e1);
-        //        empFileWriter.append(e1);
-        //        empFileWriter.append(e1);
-        //        empFileWriter.append(e1);
-        //        //关闭流
-        //        empFileWriter.close();
-        //    }
-        //
-        //    @Test
-        //    public void read() throws Exception {
-        //        //创建writer对象
-        //        SpecificDatumReader empDatumReader = new SpecificDatumReader&lt;Employee&gt;(Employee.class);
-        //        //写入文件
-        //        DataFileReader&lt;Employee&gt; dataReader = new DataFileReader&lt;Employee&gt;(new File(&quot;d:/avro/data/e1.avro&quot;)  ,empDatumReader);
-        //        Iterator&lt;Employee&gt; it = dataReader.iterator();
-        //        while(it.hasNext()){
-        //            System.out.println(it.next().getName());
-        //        }
-        //    }
-
-            /**
-             * 直接使用schema文件进行读写，不需要编译
-             */
-            @Test
-            public void writeInSchema() throws  Exception {
-                //指定定义的avsc文件。
-                Schema schema = new Schema.Parser().parse(new File(&quot;d:/avro/emp.avsc&quot;));
-
-                //创建GenericRecord,相当于Employee
-                GenericRecord e1 = new GenericData.Record(schema);
-                //设置javabean属性
-                e1.put(&quot;Name&quot;, &quot;ramu&quot;);
-        //        e1.put(&quot;id&quot;, 001);
-        //        e1.put(&quot;salary&quot;, 30000);
-                e1.put(&quot;age&quot;, 25);
-        //        e1.put(&quot;address&quot;, &quot;chennai&quot;);
-
-                //
-                DatumWriter&lt;GenericRecord&gt; empDatumWriter = new SpecificDatumWriter&lt;GenericRecord&gt;(GenericRecord.class);
-                DataFileWriter&lt;GenericRecord&gt; empFileWriter = new DataFileWriter&lt;GenericRecord&gt;(empDatumWriter);
-                empFileWriter.create(schema,new File(&quot;d:/avro/data/e2.avro&quot;)) ;
-                empFileWriter.append(e1);
-                empFileWriter.append(e1);
-                empFileWriter.append(e1);
-                empFileWriter.append(e1);
-                empFileWriter.close();
-
-            }
-
-        }
-</code></pre><p>看一下AVSC这个编译好的avro文件里面的是什么结构：</p>
-<p>他其实是一个json格式的结构：</p>
-<p><img src="https://i.imgur.com/dKcBw8b.png" alt=""></p>
-<pre><code>非编译模式
----------------
-    @Test
-    public void writeInSchema() throws  Exception {
-        //指定定义的avsc文件。
-        Schema schema = new Schema.Parser().parse(new File(&quot;d:/avro/emp.avsc&quot;));
-
-        //创建GenericRecord,相当于Employee
-        GenericRecord e1 = new GenericData.Record(schema);
-        //设置javabean属性
-        e1.put(&quot;name&quot;, &quot;ramu&quot;);
-//        e1.put(&quot;id&quot;, 001);
-//        e1.put(&quot;salary&quot;, 30000);
-        e1.put(&quot;age&quot;, 25);
-//        e1.put(&quot;address&quot;, &quot;chennai&quot;);
-
-        //
-        DatumWriter w1 = new SpecificDatumWriter (schema);
-        DataFileWriter w2 = new DataFileWriter(w1);
-        w2.create(schema,new File(&quot;d:/avro/data/e2.avro&quot;)) ;
-        w2.append(e1);
-        w2.append(e1);
-        w2.close();
-    }
-
-    /**
-     * 反串行avro数据
-     */
-    @Test
-    public void readInSchema() throws  Exception {
-        //指定定义的avsc文件。
-        Schema schema = new Schema.Parser().parse(new File(&quot;d:/avro/emp.avsc&quot;));
-
-        GenericRecord e1 = new GenericData.Record(schema);
-        DatumReader r1 = new SpecificDatumReader (schema);
-        DataFileReader r2 = new DataFileReader(new File(&quot;d:/avro/data/e2.avro&quot;),r1);
-        while(r2.hasNext()){
-            GenericRecord rec = (GenericRecord)r2.next();
-            System.out.println(rec.get(&quot;name&quot;));
-        }
-        r2.close();
-    }
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/11/笔记重点总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/11/笔记重点总结/" itemprop="url">笔记重点总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-11T19:51:41+08:00">
-                2018-11-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/笔记总结/" itemprop="url" rel="index">
-                    <span itemprop="name">笔记总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在Hadoop中重点是，全排序，二次排序。<br>在视频的最后有一天是讲解一个二次排序的实例，我没有细看。</p>
-<p>在Hive中我认为重点的是关于查询的内容，因为在hive中一般都是加载数据然后查询，查询之后有一个自定义函数UDF的内容，这部分的内容看的不是很清晰。</p>
-<p>在avro和Protoc里面主要讲解2中反编译的方法，主要是一个面向对象开发的一个过程，还是java编程不熟悉，然后代码跟着走了一遍但是肯定还是有问题，视频里面的老师是在一遍看外文的书籍，根据里面的代码模板来写的。在自己敲的过程中protoc的代码引入maven依赖包之后，还是没有能够将编译好的文件识别出来，不知道什么问题，但是avo就引入maven之后解决了这个问题。</p>
-<p>在讲解zookeeper的时候我觉得在选举算法的时候他没有细致的讲解，<br>然后这边主要是zookeeper部署在hadoop集群和使用API控制zookeeper。在集群部署高可用的时候是201202203部署zk202203204部署journalnode节点，（journalnode节点已经快忘记了）。</p>
-<p>容灾管理器进程ZKFC在配置的时候后来跟着yarn启动了起来。下面图是整个的进程图：</p>
-<p><img src="https://i.imgur.com/osWW4ZM.png" alt=""></p>
-<p>这个zookeeper的地方看的比较快，对于每个目录做什么的比较忘记，然后在配置的时候没有细究配置的意义。就是跟着走了一遍。但是最后配置了起来了。配置hdfs高可用的时候比较费时费力，配置内容比较多，配置yarn的时候比较简单，配置一下即可。</p>
-<hr>
-<p>在hbase安装的过程中，由于开始的时候设置了zookeeper的HA自动容灾，所以最开始的时候s206自动设置为active模式，要把s206设置为<br>standby模式才能在s201里面设置s201为HMaster。</p>
-<p>也就是说要杀死掉s206里面的namenode或者说通过转换吧他变成standby然后s201设置为active模式。不然会导致出错</p>
-<hr>
-<p>几个端口2181 8080 50070  8020 16010</p>
-<hr>
-<p>在讲解hbase 第二天的动态遍历的那个三层For循环并没有看明白，也就是说Java的基础还是很薄弱的。讲解hbase一个三层循环嵌套来scan的没有弄明白。hbase的时候讲解的重点在于协处理器的理解和那个电信的一个calllogs的rowkey的设计。利用了一个二级索引的方式。这个地方的原理很重要。然后最后有一个平时用于生产的工具叫phoenix的工具，可以用类sql的语句写出来，避免了自己设二次索引。里面有大量协处理器的封装，可以直接用sql语句。这边又讲了一个hive和hbase集成的一个问题，这个直接在hive中直接写语句即可。注意看一下phoenix和hive集成的区别。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/09/人为什么要努力？——2018-11-09/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/09/人为什么要努力？——2018-11-09/" itemprop="url">心情日记——2018.11.09</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-09T22:38:08+08:00">
-                2018-11-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/心情记/" itemprop="url" rel="index">
-                    <span itemprop="name">心情记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>无意之间从知乎里面看见的题目是：人这一辈子为什么要努力？</p>
-<p>泪目，与诸君共勉。</p>
-<pre><code>奶奶五十岁才来的美国，身无分文，也没有一技之长，随身携带的只有长年辛勤劳作留下的一身病根。
-
-那是九十年代初，她去了唐人街的扎花厂上班，每天工作十个小时以上，一年工作三百六十五天。
-
-扎花按件算钱，她眼神虽然不好，却比谁扎得都快。
-
-有人弹吉他磨出了茧，有人搬砖头磨出了茧，她被针头扎出了茧。
-
-回国看我的时候，她给我带了费列罗巧克力，翘胡子薯片，Jif花生酱。
-
-她给我买好看的小西装，给我买一斤几十元的黄螺。
-
-她带我去动物园，游乐园，森林公园，带我去北京看长城，看天安门，看毛主席。
-
-“奶奶，美国比北京还好吗？”
-
-她用最朴实的语言向我描述纽约的繁华，告诉我美国好极了，一切都在等着我。
-
-知乎上经常讨论富养女孩，我有一个男孩被富养的故事。
-
-有一年，我的巧克力吃完了，薯片吃完了，花生酱吃完了，奶奶还是没有回来。
-
-那是我第一个不愿意知道的生活真相，她中风了，瘫了半边身子。
-
-
-
-奶奶移民美国时带去了三个未成年的儿子，二叔，三叔，四叔。
-
-二叔和三叔在登陆美国的第二天就打工去了，年幼的四叔读了几年书后也离开了学校。
-
-他们在亲戚家的餐馆打工，每天工作十二个小时，每周工作六天。
-
-餐馆一年营业三百六十四天，只在感恩节那天歇业。
-
-奶奶瘫痪后，叔叔们轮流回国，给我带好吃的，带我出去玩。
-
-我喜欢打乒乓球，二叔给我买了乒乓球，乒乓球拍，乒乓球桌。
-
-有一年流行四驱车，三叔给我买了一辆遥控越野车，助我碾压所有的小伙伴。
-
-四叔年少风流，出门把妹的时候总不忘带上我，要把我培养成下一代情圣。
-
-他们绝口不提在美国生存的艰辛，那是大人们的秘密，和我无关。
-
-
-
-奶奶出国五年后，爸妈也去了美国。
-
-怎一个落魄了得？夫妻俩连属于自己的房间都没有。
-
-扎花已经被时代淘汰，只有重活可以干。我爸当过屠夫，货柜工人，货运司机。
-
-细节不必赘述，无非就是 12小时 x 365天的陈词滥调。
-
-后来，他们四兄弟聚首，开了一家小超市，一家餐馆，后来又开了第二家小超市，第二家餐馆。
-
-钱赚得越来越多，老家伙们拼命工作的老毛病却没有得到丝毫缓解。
-
-
-
-爸妈出国五年后，我也来了美国，看清了生活本来的面目。
-
-我在纽约生活了几个月，带着半身不遂的奶奶看遍了世界之都的繁华。
-
-在这之前，她几乎没有走出过唐人街的范围，以前对我描绘纽约时一半是转述，一半靠想象。
-
-后来，我回到了父母的身边，结束了长达五年的骨肉分离。
-
-我爸来车站接我，把我带到了一栋小别墅前，很得意地告诉我：“这是我们家，知道你要来，刚买的。”
-
-我去过奶奶刚来美国时住过的那个阴暗破旧的小公寓楼，也去过爸妈栖身过的那个散发着霉味的地下室，我知道我在新家会有一张床，一个房间，但我没想到，我会有一个别墅，一个前院，一个后院，一整个铺垫好的未来。
-
-
-
-人这一生为什么要努力？
-
-奶奶的答案是我，爸妈的答案是我，我的答案是他们，以及把身家性命托付于我的媳妇和孩子。
-
-对于我来说，长大了，责任多了，自然而然地想要努力，不是为了赚很多很多钱，而是为了过上自己想要的生活，过上奶奶和父母不曾拥有过的生活。他们替我吃完了所有的苦，帮我走了九十九步，我自己只需再走一步，哪敢迟疑？
-
-从外曾祖父母算起，我们家族四代八十多口人已经在美国奋斗了半个多世纪。我们人人都在努力，我们一代好过一代。
-
-
-
-如果你的人生起点不高，不曾有人为你走过人生百步中的任何一步，不打紧，你尽管努力，多出来的步数不会被浪费掉，总有你在乎的人用得着，而你迟早会遇到你在乎的人。
-
-与诸君共勉。
-
-顾宇的知乎回答索引
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/08/Hive第二天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/08/Hive第二天/" itemprop="url">Hive第二天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-08T16:17:04+08:00">
-                2018-11-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hive/" itemprop="url" rel="index">
-                    <span itemprop="name">Hive</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>数据仓库,在线分析处理。
-HiveQL,类似sql语言。
-表,metadata-&gt;rdbms.
-hive处理的数据是hdfs.
-MR,聚合操作。
-</code></pre><h1 id="hive的2个重点一个是分区一个是桶表"><a href="#hive的2个重点一个是分区一个是桶表" class="headerlink" title="hive的2个重点一个是分区一个是桶表"></a>hive的2个重点一个是分区一个是桶表</h1><h1 id="内部表-管理表-托管表"><a href="#内部表-管理表-托管表" class="headerlink" title="内部表,管理表,托管表"></a>内部表,管理表,托管表</h1><pre><code>hive,drop ,数据也删除
-</code></pre><h1 id="外部表"><a href="#外部表" class="headerlink" title="外部表"></a>外部表</h1><pre><code>hive表结构。
-</code></pre><h1 id="分区表"><a href="#分区表" class="headerlink" title="分区表"></a>分区表</h1><pre><code>目录.
-where 缩小查询范围。
-</code></pre><h1 id="bucket表"><a href="#bucket表" class="headerlink" title="bucket表"></a>bucket表</h1><pre><code>文件。
-hash
-clustered by &apos;&apos;
-</code></pre><h1 id="join"><a href="#join" class="headerlink" title="join"></a>join</h1><pre><code>横向连接，也就是作外连接和右外连接
-</code></pre><h1 id="union"><a href="#union" class="headerlink" title="union"></a>union</h1><pre><code>竖向连接。只能指定相匹配的字段
-
-select id ,name from a1 union select id ,cid from a2;
-</code></pre><h1 id="hive-union操作"><a href="#hive-union操作" class="headerlink" title="hive union操作"></a>hive union操作</h1><pre><code>select id,name from customers union select id,orderno from orders ;
-$&gt;hive                            //hive --service cli 
-$&gt;hive --servic hiveserver2        //启动hiveserver2，10000 [thriftServer]
-$&gt;hive --service beeline        //beeline    
-</code></pre><h1 id="hive使用jdbc协议实现远程访问"><a href="#hive使用jdbc协议实现远程访问" class="headerlink" title="hive使用jdbc协议实现远程访问"></a>hive使用jdbc协议实现远程访问</h1><h1 id="hive-1"><a href="#hive-1" class="headerlink" title="hive"></a>hive</h1><pre><code>$hive&gt;CREATE TABLE t3(id int,name string,age int) PARTITIONED BY (Year INT, Month INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-</code></pre><h1 id="export"><a href="#export" class="headerlink" title="export"></a>export</h1><pre><code>$hive&gt;EXPORT TABLE customers TO &apos;/user/centos/tmp.txt&apos;;        //导出表结构+数据到hdfs目录。
-看一下导出来的东西，是一个目录，包括表结构和表内容。
-</code></pre><p><img src="https://i.imgur.com/pFsQ5fZ.png" alt=""></p>
-<h1 id="order全排序"><a href="#order全排序" class="headerlink" title="/order全排序"></a>/order全排序</h1><pre><code>$hive&gt;select * from orders order by id asc ;
-</code></pre><h1 id="sort-map端排序-本地有序。"><a href="#sort-map端排序-本地有序。" class="headerlink" title="sort,map端排序,本地有序。"></a>sort,map端排序,本地有序。</h1><pre><code>$hive&gt;select * from orders sort by id asc ;
-</code></pre><h1 id="distribute-by-amp-cluster-by-amp-sort-by"><a href="#distribute-by-amp-cluster-by-amp-sort-by" class="headerlink" title="distribute by &amp; cluster by  &amp; sort by"></a>distribute by &amp; cluster by  &amp; sort by</h1><p>类似于mysql的group by,进行分区操作。</p>
-<pre><code>//select cid , ... from orders distribute by cid sort by name ;            //注意顺序.
-$hive&gt;select id,orderno,cid from orders distribute by cid sort by cid desc ;
-
-//cluster by ===&gt;  distribute by cid sort by cid
-</code></pre><p><strong>destribut by 和cluster by图解对比：</strong></p>
-<p><img src="https://i.imgur.com/BQ7NHQU.png" alt=""></p>
-<p>这个地方没有细讲，说主要应用还是group by 只要记住这个cluster是dirstribute by 和sort by 的组合极客</p>
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><pre><code>mysql&gt;select concat(&apos;tom&apos;,1000) ;
-$hive&gt;select current_database(),current_user() ;
-$hive&gt;tab                                //查看帮助
-</code></pre><h2 id="设置作业参数"><a href="#设置作业参数" class="headerlink" title="设置作业参数"></a>设置作业参数</h2><pre><code>$hive&gt;set hive.exec.reducers.bytes.per.reducer=xxx            //设置reducetask的字节数。
-$hive&gt;set hive.exec.reducers.max=0                            //设置reduce task的最大任务数
-$hive&gt;set mapreduce.job.reduces=0                            //设置reducetask个数。
-</code></pre><h2 id="动态分区-严格模式-非严格模式"><a href="#动态分区-严格模式-非严格模式" class="headerlink" title="动态分区-严格模式-非严格模式"></a>动态分区-严格模式-非严格模式</h2><pre><code>动态分区模式:strict-严格模式，插入时至少指定一个静态分区，nonstrict-非严格模式-可以不指定静态分区。
-set hive.exec.dynamic.partition.mode=nonstrict            //设置非严格模式
-$hive&gt;INSERT [OVERWRITE] into TABLE employees PARTITION (country, state) SELECT ..., se.cnty, se.st FROM staged_employees se WHERE se.cnty = &apos;US&apos;;
-</code></pre><p><img src="https://i.imgur.com/8zgzuuO.png" alt=""></p>
-<p>本来有一个已经分区好了的表，然后再建立一个表，比如也是相同的字段，然后新表没有分区要插进去老表，让他自动分区，就要用到动态分区，动态分区分为严格模式和非严格模式。如下图先使用了严格模式的情况，出错，说要至少指定一个分区也就是</p>
-<pre><code>$hive&gt;INSERT [OVERWRITE] into TABLE employees PARTITION (country=&apos;US&apos;, state) SELECT ..., se.cnty, se.st FROM staged_employees;
-</code></pre><p>但是严格模式还是要制定这个分区，所以用一下非严格模式先设置一下：</p>
-<pre><code>set hive.exec.dynamic.partition.mode=nonstrict            //设置非严格模式
-</code></pre><p>然后我们开始插入：</p>
-<pre><code>$hive&gt;INSERT [OVERWRITE] into TABLE employees PARTITION (country, state) SELECT ..., se.cnty, se.st FROM staged_employees;
-</code></pre><p>这样就实现了非严格模式下的动态分区</p>
-<h1 id="hive事务处理在-gt-0-13-0之后支持行级事务。-（这个地方老师没讲清楚自己没搞出来）"><a href="#hive事务处理在-gt-0-13-0之后支持行级事务。-（这个地方老师没讲清楚自己没搞出来）" class="headerlink" title="hive事务处理在&gt;0.13.0之后支持行级事务。 #（这个地方老师没讲清楚自己没搞出来）"></a>hive事务处理在&gt;0.13.0之后支持行级事务。 #（这个地方老师没讲清楚自己没搞出来）</h1><pre><code>1.所有事务自动提交。
-2.只支持orc格式。
-3.使用bucket表。
-4.配置hive参数，使其支持事务。
-</code></pre><p>$hive&gt;SET hive.support.concurrency = true;<br>$hive&gt;SET hive.enforce.bucketing = true;<br>$hive&gt;SET hive.exec.dynamic.partition.mode = nonstrict;<br>$hive&gt;SET hive.txn.manager = org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;<br>$hive&gt;SET hive.compactor.initiator.on = true;<br>$hive&gt;SET hive.compactor.worker.threads = 1;</p>
-<pre><code>5.使用事务性操作
-    $&gt;CREATE TABLE tx(id int,name string,age int) CLUSTERED BY (id) INTO 3 BUCKETS ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; stored as orc TBLPROPERTIES (&apos;transactional&apos;=&apos;true&apos;);
-</code></pre><p><img src="https://i.imgur.com/UWJd7M5.png" alt=""></p>
-<hr>
-<p>mysql支持这样的操作，左边选择的查询的列，并不出现在右边的分组当中这样可以查询，但是hive中不允许这样。</p>
-<p><img src="https://i.imgur.com/vpfbmjD.png" alt=""></p>
-<p>但是在hive当中只可以如下图查询：</p>
-<p><img src="https://i.imgur.com/oOqn35d.png" alt=""></p>
-<h2 id="聚合处理"><a href="#聚合处理" class="headerlink" title="聚合处理"></a>聚合处理</h2><pre><code>每个用户购买商品订单大于1的：这个按照cid分组的，查询每个分组里面的count(*)，也就是每个不同的cid 的
-
-$hive&gt;select cid,count(*) c ,max(price) from orders group by cid having c &gt; 1 ; 
-</code></pre><h1 id="wordcount"><a href="#wordcount" class="headerlink" title="wordcount"></a>wordcount</h1><p>创建新表:stats(word string,c int) ;<br>    将查询结果插入到指定表中。</p>
-<p><img src="https://i.imgur.com/wxA99my.png" alt=""></p>
-<p>按照下图这个切割方法，用一个split的函数切割，切割之后形成一个数组类型的东西</p>
-<p><img src="https://i.imgur.com/NVQuyss.png" alt=""></p>
-<p>explode这个函数传入的需要是一个经过split切割之后的数组，传入之后再去展开得到如上图所示的东西。但是切出来还是需要聚合，查询每个单词的个数</p>
-<p>对下面这个SQL语句进行讲解。先看括号里面的最里面的括号，select explode(split(line,’ ‘)) as word from doc这句话都能理解，就是先切割成数组，然后对这个数据进行explode炸裂成单词，然后as word就是别名叫word，然后再把整个查询的as t别名t，然后select t.word,count(*) c from …group by t.word order by c desc limit2;就是对t的word字段进行分组，对分组的t的字段word和计数总和进行查询，然后按照降序排序，然后limit 2取最高的2个数。</p>
-<pre><code>$hive&gt;select t.word,count(*) c from ((select explode(split(line, &apos; &apos;)) as word from doc) as t) group by t.word order by c desc limit 2 ;
-</code></pre><h1 id="view-视图-虚表"><a href="#view-视图-虚表" class="headerlink" title="view:视图,虚表"></a>view:视图,虚表</h1><p>是一个虚拟的表，类似于对这个语句的封装，或者说起了一个别名，并不是真的表。</p>
-<p>这个地方创建视图的时候不能</p>
-<pre><code>$hive&gt;create view v1 as select a.*,b.*from customers a left outer join default.tt b on a.id = b.cid ;
-</code></pre><p>上图这样是错误的，因为在a和b里面有相同的字段，要把相同的字段修改为不同的字段，如下图：</p>
-<pre><code>//创建视图
-$hive&gt;create view v1 as select a.id aid,a.name ,b.id bid , b.order from customers a left outer join default.tt b on a.id = b.cid ;
-</code></pre><p>可以在续表的基础上在查询，如下所示：</p>
-<pre><code>//查看视图
-$hive&gt;show tables ;
-$hive&gt;select * from v1 ;
-</code></pre><p>view这个在hdfs上没有哦，而是存放在了mysql里面</p>
-<h2 id="一个mysql里面的操作：-G-行转列"><a href="#一个mysql里面的操作：-G-行转列" class="headerlink" title="一个mysql里面的操作：\G 行转列"></a>一个mysql里面的操作：\G 行转列</h2><p>select * from tbls \G：结果如下：</p>
-<p><img src="https://i.imgur.com/AbE1mvx.png" alt=""></p>
-<h2 id="Map端连接"><a href="#Map端连接" class="headerlink" title="Map端连接"></a>Map端连接</h2><pre><code>$hive&gt;set hive.auto.convert.join=true            //设置自动转换连接,默认开启了。
-
-//使用mapjoin连接暗示实现mapjoin
-$hive&gt;select /*+ mapjoin(customers) */ a.*,b.* from customers a left outer join orders b on a.id = b.cid ;
-</code></pre><h2 id="调优"><a href="#调优" class="headerlink" title="调优"></a>调优</h2><pre><code>1.explain
-    使用explain查看查询计划
-    hive&gt;explain [extended] select count(*) from customers ;
-    hive&gt;explain select t.name , count(*) from (select a.name ,b.id,b.orderno from customers a ,orders b where a.id = b.cid) t group by t.name ;
-
-    //设置limit优化测，避免全部查询.但是树上说因为是随机取样，可能会出问题。
-    hive&gt;set hive.limit.optimize.enable=true
-
-    //本地模式
-    $hive&gt;set mapred.job.tracker=local;            //
-    $hive&gt;set hive.exec.mode.local.auto=true    //自动本地模式,主要用于测试不用于实战
-
-
-    //并行执行,同时执行不存在依赖关系的阶段。??
-    $hive&gt;set hive.exec.parallel=true            //是自动设置好的
-
-    //严格模式,
-    $hive&gt;set hive.mapred.mode=strict            //手动设置之后。1.分区表必须指定分区进行查询，否则不让查询。
-                                                //2.order by时必须使用limit子句。
-                                                //3.不允许笛卡尔积.
-
-
-    //设置MR的数量
-    hive&gt; set hive.exec.reducers.bytes.per.reducer=750000000;    //设置reduce处理的字节数。
-
-    //JVM重用
-    $hive&gt;set mapreduce.job.jvm.numtasks=1        //-1没有限制，使用大量小文件。
-
-
-    //UDF
-    //User define function,用户自定义函数
-    //current_database(),current_user();
-
-    //显式所有函数
-    $hive&gt;show functions;
-    $hive&gt;select array(1,2,3) ;
-
-    //显式指定函数帮助
-    $hive&gt;desc function current_database();
-
-    //表生成函数,多行函数。
-    $hive&gt;explode(str,exp);            //按照exp切割str.
-</code></pre><h2 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h2><p><img src="https://i.imgur.com/lvT1nkj.png" alt=""></p>
-<p>上图带括号的都是函数，不带括号的是命令</p>
-<pre><code>1.创建类，继承UDF
-    package com.it18zhang.hivedemo.udf;
-
-    import org.apache.hadoop.hive.ql.exec.Description;
-    import org.apache.hadoop.hive.ql.exec.UDF;
-
-    /**
-     * 自定义hive函数
-     */
-    @Description(name = &quot;myadd&quot;,
-            value = &quot;myadd(int a , int b) ==&gt; return a + b &quot;,
-            extended = &quot;Example:\n&quot;
-                    + &quot; myadd(1,1) ==&gt; 2 \n&quot;
-                    + &quot; myadd(1,2,3) ==&gt; 6;&quot;)
-    public class AddUDF extends UDF {
-
-        public int evaluate(int a ,int b) {
-            return a + b ;
-        }
-
-        public int evaluate(int a ,int b , int c) {
-            return a + b + c;
-        }
-    }
-2.打成jar包。
-    cmd&gt;cd {classes所在目录}
-    cmd&gt;jar cvf HiveDemo.jar -C x/x/x/x/classes/ .
-3.添加jar包到hive的类路径
-    //添加jar到类路径
-    $&gt;cp /mnt/hgfs/downloads/bigdata/data/HiveDemo.jar /soft/hive/lib
-
-3.重进入hive
-    $&gt;....
-
-4.创建临时函数
-    //
-    CREATE TEMPORARY FUNCTION myadd AS &apos;com.it18zhang.hivedemo.udf.AddUDF&apos;;
-
-5.在查询中使用自定义函数
-    $hive&gt;select myadd(1,2)  ;
-
-6.定义日期函数
-    1)定义类
-    public class ToCharUDF extends UDF {
-        /**
-         * 取出服务器的当前系统时间 2017/3/21 16:53:55
-         */
-        public String evaluate() {
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat();
-            sdf.applyPattern(&quot;yyyy/MM/dd hh:mm:ss&quot;);
-            return sdf.format(date) ;
-        }
-        public String evaluate(Date date) {
-            SimpleDateFormat sdf = new SimpleDateFormat();
-            sdf.applyPattern(&quot;yyyy/MM/dd hh:mm:ss&quot;);
-            return sdf.format(date) ;
-        }
-
-        public String evaluate(Date date,String frt) {
-            SimpleDateFormat sdf = new SimpleDateFormat();
-            sdf.applyPattern(frt);
-            return sdf.format(date) ;
-        }
-    }
-
-    2)导出jar包，通过命令添加到hive的类路径(不需要重进hive)。
-        $hive&gt;add jar /mnt/hgfs/downloads/bigdata/data/HiveDemo-1.0-SNAPSHOT.jar
-
-    3)注册函数
-        $hive&gt;CREATE TEMPORARY FUNCTION to_char AS &apos;com.it18zhang.hivedemo.udf.ToCharUDF&apos;;
-        $hive&gt;CREATE TEMPORARY FUNCTION to_date AS &apos;com.it18zhang.hivedemo.udf.ToCharUDF&apos;;
-</code></pre><h2 id="定义Nvl函数-这个是在英文版的Hadoop权威指南上给的"><a href="#定义Nvl函数-这个是在英文版的Hadoop权威指南上给的" class="headerlink" title="定义Nvl函数(这个是在英文版的Hadoop权威指南上给的)"></a>定义Nvl函数(这个是在英文版的Hadoop权威指南上给的)</h2><pre><code>package com.it18zhang.hivedemo.udf;
-
-import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
-import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
-import org.apache.hadoop.hive.ql.exec.UDFArgumentTypeException;
-import org.apache.hadoop.hive.ql.metadata.HiveException;
-import org.apache.hadoop.hive.ql.udf.generic.GenericUDF;
-import org.apache.hadoop.hive.ql.udf.generic.GenericUDFUtils;
-import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
-
-/**
- * 自定义null值处理函数
- */
-public class Nvl extends GenericUDF {
-    private GenericUDFUtils.ReturnObjectInspectorResolver returnOIResolver;
-    private ObjectInspector[] argumentOIs;
-
-    public ObjectInspector initialize(ObjectInspector[] arguments)
-            throws UDFArgumentException {
-        argumentOIs = arguments;
-        //检查参数个数
-        if (arguments.length != 2) {
-            throw new UDFArgumentLengthException(
-                    &quot;The operator &apos;NVL&apos; accepts 2 arguments.&quot;);
-        }
-        returnOIResolver = new GenericUDFUtils.ReturnObjectInspectorResolver(true);
-        //检查参数类型
-        if (!(returnOIResolver.update(arguments[0]) &amp;&amp; returnOIResolver
-                .update(arguments[1]))) {
-            throw new UDFArgumentTypeException(2,
-                    &quot;The 1st and 2nd args of function NLV should have the same type, &quot;
-                            + &quot;but they are different: \&quot;&quot; + arguments[0].getTypeName()
-                            + &quot;\&quot; and \&quot;&quot; + arguments[1].getTypeName() + &quot;\&quot;&quot;);
-        }
-        return returnOIResolver.get();
-    }
-
-    public Object evaluate(DeferredObject[] arguments) throws HiveException {
-        Object retVal = returnOIResolver.convertIfNecessary(arguments[0].get(), argumentOIs[0]);
-        if (retVal == null) {
-            retVal = returnOIResolver.convertIfNecessary(arguments[1].get(),
-                    argumentOIs[1]);
-        }
-        return retVal;
-    }
-
-    public String getDisplayString(String[] children) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(&quot;if &quot;);
-        sb.append(children[0]);
-        sb.append(&quot; is null &quot;);
-        sb.append(&quot;returns&quot;);
-        sb.append(children[1]);
-        return sb.toString();
-    }
-}
-
-2)添加jar到类路径
-    ...
-3)注册函数
-    $hive&gt;CREATE TEMPORARY FUNCTION nvl AS &apos;org.apache.hadoop.hive.ql.udf.generic.GenericUDFNvl&apos;;
-</code></pre><h1 id="一些课上用的PPT"><a href="#一些课上用的PPT" class="headerlink" title="一些课上用的PPT"></a>一些课上用的PPT</h1><p><img src="https://i.imgur.com/6OyT9i3.png" alt=""><br><img src="https://i.imgur.com/CLZNHSV.png" alt=""><br><img src="https://i.imgur.com/Rx5Hslt.png" alt=""><br><img src="https://i.imgur.com/fb0PfG0.png" alt=""><br><img src="https://i.imgur.com/P8kwdax.png" alt=""><br><img src="https://i.imgur.com/avoDPKV.png" alt=""><br><img src="https://i.imgur.com/OwHiTIn.png" alt=""><br><img src="https://i.imgur.com/x4qXG7v.png" alt=""><br><img src="https://i.imgur.com/mIQbSR1.png" alt=""><br><img src="https://i.imgur.com/2bMpEMd.png" alt=""><br><img src="https://i.imgur.com/bSF4lMN.png" alt=""><br><img src="https://i.imgur.com/C3IMpOQ.png" alt=""><br><img src="https://i.imgur.com/6xpn8Ul.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/06/Hive第一天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/06/Hive第一天/" itemprop="url">Hive第一天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-06T16:35:55+08:00">
-                2018-11-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hive/" itemprop="url" rel="index">
-                    <span itemprop="name">Hive</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h2><pre><code>在hadoop处理结构化数据的数据仓库。
-不是:    关系数据库
-        不是OLTP
-        实时查询和行级更新。
-</code></pre><h2 id="hive特点"><a href="#hive特点" class="headerlink" title="hive特点"></a>hive特点</h2><pre><code>hive存储数据结构(schema)在数据库中,处理的数据进入hdfs.
-OLAP
-HQL / HiveQL
-</code></pre><h2 id="hive安装"><a href="#hive安装" class="headerlink" title="hive安装"></a>hive安装</h2><pre><code>1.下载hive2.1-tar.gz
-2.tar开
-    $&gt;tar -xzvf hive-2.1.0.tar.gz -C /soft    //tar开
-    $&gt;cd /soft/hive-2.1.0                    //
-    $&gt;ln -s hive-2.1.0 hive                    //符号连接
-
-3.配置环境变量
-    [/etc/profile]
-    HIVE_HOME=/soft/hive
-    PATH=...:$HIVE_HOME/bin
-
-4.验证hive安装成功
-    $&gt;hive --v
-
-5.配置hive,使用win7的mysql存放hive的元数据.
-    a)复制mysql驱动程序到hive的lib目录下。
-        ...
-    b)配置hive-site.xml
-        复制hive-default.xml.template为hive-site.xml
-        修改连接信息为mysql链接地址，将${system:...字样替换成具体路径。
-        [hive/conf/hive-site.xml]
-        &lt;property&gt;
-            &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;
-            &lt;value&gt;root&lt;/value&gt;
-            &lt;description&gt;password to use against metastore database&lt;/description&gt;
-        &lt;/property&gt;
-        &lt;property&gt;
-            &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;
-            &lt;value&gt;root&lt;/value&gt;
-            &lt;description&gt;Username to use against metastore database&lt;/description&gt;
-        &lt;/property&gt;
-        &lt;property&gt;
-            &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;
-            &lt;value&gt;jdbc:mysql://192.168.231.1:3306/hive2&lt;/value&gt;
-        &lt;/property&gt;
-        &lt;property&gt;
-            &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;
-            &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;
-            &lt;description&gt;Driver class name for a JDBC metastore&lt;/description&gt;
-        &lt;/property&gt;
-
-    6)在msyql中创建存放hive信息的数据库
-        mysql&gt;create database hive2 ;
-
-    6)初始化hive的元数据(表结构)到mysql中。
-        $&gt;cd /soft/hive/bin
-        $&gt;schematool -dbType mysql -initSchema
-</code></pre><h1 id="hive命令行操作"><a href="#hive命令行操作" class="headerlink" title="hive命令行操作"></a>hive命令行操作</h1><h2 id="1-创建hive的数据库"><a href="#1-创建hive的数据库" class="headerlink" title="1.创建hive的数据库"></a>1.创建hive的数据库</h2><pre><code>$hive&gt;hive --version                //
-$hive&gt;hive --help                    //
-
-$hive&gt;create database mydb2 ;                //
-$hive&gt;show databases ;
-$hive&gt;use mydb2 ;
-$hive&gt;create table mydb2.t(id int,name string,age int);
-$hive&gt;drop table t ;
-$hive&gt;drop table mydb2.t ;
-$hive&gt;select * from mydb2.t ;        //查看指定库的表
-$hive&gt;exit ;                        //退出
-
-$&gt;hive                                //hive --service cli
-$&gt;hive                                //hive --service cli
-</code></pre><h2 id="2-通过远程jdbc方式连接到hive数据仓库"><a href="#2-通过远程jdbc方式连接到hive数据仓库" class="headerlink" title="2.通过远程jdbc方式连接到hive数据仓库"></a>2.通过远程jdbc方式连接到hive数据仓库</h2><pre><code>1.启动hiveserver2服务器，监听端口10000
-    $&gt;hive --service hiveserver2 &amp;
-
-2.通过beeline命令行连接到hiveserver2
-    $&gt;beeline                                            //进入beeline命令行(于hive --service beeline)
-    $beeline&gt;!help                                        //查看帮助
-    $beeline&gt;!quit                                        //退出
-    $beeline&gt;!connect jdbc:hive2://localhost:10000/mydb2//连接到hibve数据
-    $beeline&gt;show databases ;
-    $beeline&gt;use mydb2 ;
-    $beeline&gt;show tables;                                //显式表
-</code></pre><h2 id="使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库"><a href="#使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库" class="headerlink" title="使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库"></a>使用Hive-jdbc驱动程序采用jdbc方式访问远程数据仓库</h2><pre><code>1.创建java模块
-2.引入maven
-3.添加hive-jdbc依赖
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-        &lt;artifactId&gt;HiveDemo&lt;/artifactId&gt;
-        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.apache.hive&lt;/groupId&gt;
-                &lt;artifactId&gt;hive-jdbc&lt;/artifactId&gt;
-                &lt;version&gt;2.1.0&lt;/version&gt;
-            &lt;/dependency&gt;
-        &lt;/dependencies&gt;
-    &lt;/project&gt;
-
-4.App
-    package com.it18zhang.hivedemo;
-
-    import java.sql.Connection;
-    import java.sql.DriverManager;
-    import java.sql.ResultSet;
-    import java.sql.Statement;
-
-    /**
-     * 使用jdbc方式连接到hive数据仓库，数据仓库需要开启hiveserver2服务。
-     */
-    public class App {
-        public static void main(String[] args) throws  Exception {
-            Class.forName(&quot;org.apache.hive.jdbc.HiveDriver&quot;);
-            Connection conn = DriverManager.getConnection(&quot;jdbc:hive2://192.168.231.201:10000/mydb2&quot;);
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(&quot;select id , name ,age from t&quot;);
-            while(rs.next()){
-                System.out.println(rs.getInt(1) + &quot;,&quot; + rs.getString(2)) ;
-            }
-            rs.close();
-            st.close();
-            conn.close();
-        }
-    }
-</code></pre><h1 id="hive中表"><a href="#hive中表" class="headerlink" title="hive中表"></a>hive中表</h1><h2 id="1-managed-table"><a href="#1-managed-table" class="headerlink" title="1.managed table"></a>1.managed table</h2><pre><code>托管表。
-删除表时，数据也删除了。
-</code></pre><h2 id="2-external-table"><a href="#2-external-table" class="headerlink" title="2.external table"></a>2.external table</h2><pre><code>外部表。
-删除表时，数据不删。
-</code></pre><h1 id="hive命令"><a href="#hive命令" class="headerlink" title="hive命令"></a>hive命令</h1><pre><code>//创建表,external 外部表
-$hive&gt;CREATE external TABLE IF NOT EXISTS t2(id int,name string,age int)
-COMMENT &apos;xx&apos; ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; STORED AS TEXTFILE ; 
-
-//查看表数据
-$hive&gt;desc t2 ;
-$hive&gt;desc formatted t2 ;
-
-//加载数据到hive表
-$hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t2 ;    //local上传文件
-$hive&gt;load data inpath &apos;/user/centos/customers.txt&apos; [overwrite] into table t2 ;    //移动文件
-
-//复制表
-mysql&gt;create table tt as select * from users ;        //携带数据和表结构
-mysql&gt;create table tt like users ;            //不带数据，只有表结构
-
-hive&gt;create table tt as select * from users ;    
-hive&gt;create table tt like users ;    
-
-
-//count()查询要转成mr
-$hive&gt;select count(*) from t2 ;
-$hive&gt;select id,name from t2 ;
-
-
-//
-$hive&gt;select * from t2 order by id desc ;                //MR
-
-//启用/禁用表
-$hive&gt;ALTER TABLE t2 ENABLE NO_DROP;    //不允许删除
-$hive&gt;ALTER TABLE t2 DISABLE NO_DROP;    //允许删除
-</code></pre><h1 id="分区表"><a href="#分区表" class="headerlink" title="分区表"></a>分区表</h1><pre><code>优化手段之一，从目录的层面控制搜索数据的范围。
-//创建分区表.
-$hive&gt;CREATE TABLE t3(id int,name string,age int) PARTITIONED BY (Year INT, Month INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-
-//显式表的分区信息
-$hive&gt;SHOW PARTITIONS t3;
-
-//添加分区,创建目录
-$hive&gt; alter table t3 add partition (year=2014, month=12) partition (year=2014,month=11);
-
-//删除分区
-hive&gt;ALTER TABLE employee_partitioned DROP IF EXISTS PARTITION (year=2014, month=11);
-
-//分区结构
-hive&gt;/user/hive/warehouse/mydb2.db/t3/year=2014/month=11
-hive&gt;/user/hive/warehouse/mydb2.db/t3/year=2014/month=12
-
-
-//加载数据到分区表
-hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t3 partition(year=2014,month=11);
-
-//查询分区表
-hive&gt;select * from t3 where year = 2014 and month =11;
-</code></pre><p><img src="https://i.imgur.com/Ad6JAI7.png" alt=""></p>
-<p>分区对应的是文件夹是目录，分桶对应的是文件，按照id分桶的意思就是按照id哈希不同的哈希进入不同的桶</p>
-<pre><code>//创建桶表
-$hive&gt;CREATE TABLE t4(id int,name string,age int) CLUSTERED BY (id) INTO 3 BUCKETS ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-
-//加载数据不会进行分桶操作
-$hive&gt;load data local inpath &apos;/home/centos/customers.txt&apos; into table t4 ;
-
-//查询t3表数据插入到t4中。t3是分区表还多了年份和月份的2个字段所以要投影查询不能直接insert into t4 select * from t3;这是错的
-$hive&gt;insert into t4 select id,name,age from t3 ;
-</code></pre><p><img src="https://i.imgur.com/5Rpz8su.png" alt=""></p>
-<pre><code>//桶表的数量如何设置?
-//评估数据量，保证每个桶的数据量block的2倍大小。
-
-
-//连接查询
-$hive&gt;CREATE TABLE customers(id int,name string,age int) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-$hive&gt;CREATE TABLE orders(id int,orderno string,price float,cid int) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-
-//加载数据到表
-//内连接查询
-hive&gt;select a.*,b.* from customers a , orders b where a.id = b.cid ;
-//左外
-hive&gt;select a.*,b.* from customers a left outer join orders b on a.id = b.cid ;
-hive&gt;select a.*,b.* from customers a right outer join orders b on a.id = b.cid ;
-hive&gt;select a.*,b.* from customers a full outer join orders b on a.id = b.cid ;
-
-//explode,炸裂,表生成函数。
-//使用hive实现单词统计
-//1.建表
-$hive&gt;CREATE TABLE doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;,&apos; ;
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -4215,7 +4343,7 @@ $hive&gt;CREATE TABLE doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -4319,7 +4447,7 @@ $hive&gt;CREATE TABLE doc(line string) ROW FORMAT DELIMITED FIELDS TERMINATED BY
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

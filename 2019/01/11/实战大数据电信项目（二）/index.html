@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="无心是一首歌" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="按照时间段查询通话记录： 1.按照时间段查询通话记录，设置startRow+endRow。2.web部分设置一个电话号码输入起始时间输入结束时间输入，然后在SSMweb层controller设置一个查询使用hbaseapi。重点在月份值取出来哈希构造rowkey。 设置一个表单的查询的jsp界面，action是动态嵌套打印的用url标识库，提交给/callLog/finCallLog通过Post方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实战大数据电信项目（二）">
+<meta property="og:url" content="http://erichunn.github.io/2019/01/11/实战大数据电信项目（二）/index.html">
+<meta property="og:site_name" content="无心是一首歌">
+<meta property="og:description" content="按照时间段查询通话记录： 1.按照时间段查询通话记录，设置startRow+endRow。2.web部分设置一个电话号码输入起始时间输入结束时间输入，然后在SSMweb层controller设置一个查询使用hbaseapi。重点在月份值取出来哈希构造rowkey。 设置一个表单的查询的jsp界面，action是动态嵌套打印的用url标识库，提交给/callLog/finCallLog通过Post方">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.imgur.com/gB8tQaU.png">
+<meta property="og:image" content="https://i.imgur.com/0EPdPzM.png">
+<meta property="og:image" content="https://i.imgur.com/cJBPeDB.png">
+<meta property="og:updated_time" content="2019-01-14T03:07:13.834Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实战大数据电信项目（二）">
+<meta name="twitter:description" content="按照时间段查询通话记录： 1.按照时间段查询通话记录，设置startRow+endRow。2.web部分设置一个电话号码输入起始时间输入结束时间输入，然后在SSMweb层controller设置一个查询使用hbaseapi。重点在月份值取出来哈希构造rowkey。 设置一个表单的查询的jsp界面，action是动态嵌套打印的用url标识库，提交给/callLog/finCallLog通过Post方">
+<meta name="twitter:image" content="https://i.imgur.com/gB8tQaU.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://erichunn.github.io/2019/01/11/实战大数据电信项目（二）/"/>
+
+
+
+
+
+  <title>实战大数据电信项目（二） | 无心是一首歌</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?02fe19ac065353167cab1b453f2909ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">无心是一首歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于我">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-站点地图">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-腾讯公益">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            腾讯公益
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/实战大数据电信项目（二）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">实战大数据电信项目（二）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-11T15:56:27+08:00">
+                2019-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>按照时间段查询通话记录：</p>
+<p>1.按照时间段查询通话记录，设置startRow+endRow。<br>2.web部分设置一个电话号码输入起始时间输入结束时间输入，然后在SSMweb层controller设置一个查询使用hbaseapi。重点在月份值取出来哈希构造rowkey。</p>
+<p>设置一个表单的查询的jsp界面，action是动态嵌套打印的用url标识库，提交给/callLog/finCallLog通过Post方式，返回输入值起始时间和结束时间到controller层接受参数，</p>
+<p>传值到controller层之后，controller层拿到了参数，拿到starttime callerid endtie。</p>
+<p>对起始日期和结束日期进行一个calendar.getinstance()，日历这个可以计算天数月份数，有多少东西都可以算出来。</p>
+<p>编程：在得到的起始时间和结束时间对2个时间点做操作：得到一个结束的endpoint=开始的前6个数字是年和月+最后2个数字是天+1。</p>
+<p>如果是同年月，起始点就是起始串，结束点是天+1的endpoint。<br>    public static List<calllogrange> getCallLogRanges(String startStr ,String endStr){<br>            try{<br>                SimpleDateFormat sdfYMD = new SimpleDateFormat(“yyyyMMdd”);<br>                SimpleDateFormat sdfYM = new SimpleDateFormat(“yyyyMM”);<br>                DecimalFormat df00 = new DecimalFormat(“00”);</calllogrange></p>
+<pre><code>            //
+            List&lt;CallLogRange&gt; list = new ArrayList&lt;CallLogRange&gt;();
+            //字符串时间
+            String startPrefix = startStr.substring(0, 6);
+
+            String endPrefix = endStr.substring(0, 6);
+            int endDay = Integer.parseInt(endStr.substring(6, 8));
+            //结束点
+            String endPoint = endPrefix + df00.format(endDay + 1);
+
+            //日历对象
+            Calendar c = Calendar.getInstance();
+
+            //同年月
+            if (startPrefix.equals(endPrefix)) {
+                CallLogRange range = new CallLogRange();
+                range.setStartPoint(startStr);          //设置起始点
+
+                range.setEndPoint(endPoint);            //设置结束点
+                list.add(range);
+            } else {
+                //1.起始月
+                CallLogRange range = new CallLogRange();
+                range.setStartPoint(startStr);
+
+                //设置日历的时间对象
+                c.setTime(sdfYMD.parse(startStr));
+                c.add(Calendar.MONTH, 1);
+                range.setEndPoint(sdfYM.format(c.getTime()));
+                list.add(range);
+
+                //是否是最后一月
+                while (true) {
+                    //到了结束月份
+                    if (endStr.startsWith(sdfYM.format(c.getTime()))) {
+                        range = new CallLogRange();
+                        range.setStartPoint(sdfYM.format(c.getTime()));
+                        range.setEndPoint(endPoint);
+                        list.add(range);
+                        break;
+                    } else {
+                        range = new CallLogRange();
+                        //起始时间
+                        range.setStartPoint(sdfYM.format(c.getTime()));
+
+                        //增加月份
+                        c.add(Calendar.MONTH, 1);
+                        range.setEndPoint(sdfYM.format(c.getTime()));
+                        list.add(range);
+                    }
+                }
+            }
+            return list ;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null ;
+    }
+
+    /**
+     * 对时间进行格式化
+     */
+    public static String formatDate(String timeStr){
+        try {
+            return sdfFriend.format(sdf.parse(timeStr));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null ;
+    }
+}
+</code></pre><p>上图是工具类时间的代码。</p>
+<p>下面代码是service层的具体实现内容：<br>    /**</p>
+<pre><code>     * 按照范围查询通话记录
+     */
+    public List&lt;CallLog&gt; findCallogs(String call , List&lt;CallLogRange&gt; ranges){
+        List&lt;CallLog&gt; logs = new ArrayList&lt;CallLog&gt;();
+        try {
+            for(CallLogRange range : ranges){
+                Scan scan = new Scan();
+                //设置扫描起始行
+                scan.setStartRow(Bytes.toBytes(CallLogUtil.getStartRowkey(call, range.getStartPoint(),100)));
+                //设置扫描结束行
+                scan.setStopRow(Bytes.toBytes(CallLogUtil.getStopRowkey(call, range.getStartPoint(), range.getEndPoint(),100)));
+
+                ResultScanner rs = table.getScanner(scan);
+                Iterator&lt;Result&gt; it = rs.iterator();
+                byte[] f = Bytes.toBytes(&quot;f1&quot;);
+
+                byte[] caller = Bytes.toBytes(&quot;caller&quot;);
+                byte[] callee = Bytes.toBytes(&quot;callee&quot;);
+                byte[] callTime = Bytes.toBytes(&quot;callTime&quot;);
+                byte[] callDuration = Bytes.toBytes(&quot;callDuration&quot;);
+                CallLog log = null;
+                while (it.hasNext()) {
+                    log = new CallLog();
+                    Result r = it.next();
+                    //rowkey
+                    String rowkey = Bytes.toString(r.getRow());
+                    String flag = rowkey.split(&quot;,&quot;)[3] ;
+                    log.setFlag(flag.equals(&quot;0&quot;)?true:false);
+                    //caller
+                    log.setCaller(Bytes.toString(r.getValue(f, caller)));
+                    //callee
+                    log.setCallee(Bytes.toString(r.getValue(f, callee)));
+                    //callTime
+                    log.setCallTime(Bytes.toString(r.getValue(f, callTime)));
+                    //callDuration
+                    log.setCallDuration(Bytes.toString(r.getValue(f, callDuration)));
+                    logs.add(log);
+                }
+            }
+            return logs;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
+</code></pre><p>在查询的controller层里面写调用工具类里面对时间进行格式化。格式化之后的List集合作为参数传入到service层的findCallogs（）里面查询到hbase内容集合logs，将logs传入Model.addAttribute里面（向模型中传入数据也就是让前台可以调用）。下面是controller层的内容：</p>
+<pre><code>    /**
+     * 进入查询通话记录的页面,form
+     */
+    @RequestMapping(&quot;/callLog/toFindCallLogPage&quot;)
+    public String toFindCallLogPage(){
+        return &quot;callLog/findCallLog&quot; ;
+    }
+
+    @RequestMapping(value = &quot;/callLog/findCallLog&quot;,method = RequestMethod.POST)
+    public String findCallLog(Model m , @RequestParam(&quot;caller&quot;) String caller, @RequestParam(&quot;startTime&quot;) String startTime, @RequestParam(&quot;endTime&quot;) String endTime){
+        List&lt;CallLogRange&gt; list = CallLogUtil.getCallLogRanges(startTime, endTime);
+        List&lt;CallLog&gt; logs = cs.findCallogs(caller,list);
+        m.addAttribute(&quot;callLogs&quot;, logs);
+        return &quot;callLog/callLogList&quot; ;
+    }
+}
+</code></pre><p>上述就完成了主叫查询功能。但是查询的只有主叫功能，没有被叫功能，我们在编写一个协处理器处理被叫查询功能：<br>      /**</p>
+<pre><code> * Put后处理
+ */
+public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+    super.postPut(e, put, edit, durability);
+    //
+    String tableName0 = TableName.valueOf(CALL_LOG_TABLE_NAME).getNameAsString();
+
+    //得到当前的TableName对象
+    String tableName1 = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+    //判断是否是ns1:calllogs表
+    if (!tableName0.equals(tableName1)) {
+        return;
+    }
+
+    //得到主叫的rowkey,
+    String rowkey = Bytes.toString(put.getRow());
+
+    //如果被叫就放行
+    String[] arr = rowkey.split(&quot;,&quot;);
+    if (arr[3].equals(&quot;1&quot;)) {
+        return;
+    }
+    //hashcode,caller,time,flag,callee,duration
+    String caller = arr[1] ;        //主叫
+    String callTime = arr[2] ;      //通话时间
+    String callee = arr[4] ;        //被叫
+    String callDuration = arr[5] ;  //通话时长
+
+    //被叫hashcode
+    String hashcode = CallLogUtil.getHashcode(callee,callTime,100);
+    //被叫rowkey
+    String calleeRowKey = hashcode + &quot;,&quot; + callee + &quot;,&quot; + callTime + &quot;,1,&quot; + caller + &quot;,&quot; + callDuration;
+    Put newPut = new Put(Bytes.toBytes(calleeRowKey));
+    newPut.addColumn(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(REF_ROW_ID), Bytes.toBytes(rowkey));
+    TableName tn = TableName.valueOf(CALL_LOG_TABLE_NAME);
+    Table t = e.getEnvironment().getTable(tn);
+    t.put(newPut);
+}
+</code></pre><p>也就是创建协处理器，在postput的方法下（这个方法本来是用于在添加一条主叫信息后在添加一条被叫信息）重写之后，在添加主叫信息后，在添加一条被叫信息，该被叫信息的value值插入到f2列族，refrowid列。然后value值就是 原来主叫的rowkey,这个也就是二级索引的思想，避免了原来的主叫的value重复存储，减少了冗余。所以是重写postput方法。</p>
+<p>在没有重写postgetOp()方法的时候返回的是这种情况：</p>
+<p><img src="https://i.imgur.com/gB8tQaU.png" alt=""></p>
+<p>发现里面是被叫的时候没有电话1和电话2为什么呢？<br>因为在检索时候的是这样子写的：检索填充的值是通过getvalue方法，而通过协处理器填进去的是一个被叫信息是控制，所以get不到value信息。</p>
+<p><img src="https://i.imgur.com/0EPdPzM.png" alt=""></p>
+<p>但是查询的时候，还是不能查询到主叫，所以重写检索方法,在协处理器中重写    postscannerNext（）方法。完成被叫查询返回主叫的rowkey值。</p>
+<pre><code>/**
+     *
+     */
+    public boolean postScannerNext(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, InternalScanner s, List&lt;Result&gt; results, int limit, boolean hasMore) throws IOException {
+        boolean b = super.postScannerNext(e, s, results, limit, hasMore);
+
+        //新集合
+        List&lt;Result&gt; newList = new ArrayList&lt;Result&gt;();
+
+        //获得表名
+        String tableName = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+
+        //判断表名是否是ns1:calllogs
+        if (tableName.equals(CALL_LOG_TABLE_NAME)) {
+            Table tt = e.getEnvironment().getTable(TableName.valueOf(CALL_LOG_TABLE_NAME));
+            for(Result r : results){
+                //rowkey
+                String rowkey = Bytes.toString(r.getRow());
+                String flag = rowkey.split(&quot;,&quot;)[3] ;
+                //主叫
+                if(flag.equals(&quot;0&quot;)){
+                    newList.add(r) ;
+                }
+                //被叫
+                else{
+                    //取出主叫号码
+                    byte[] refrowkey = r.getValue(Bytes.toBytes(&quot;f2&quot;),Bytes.toBytes(REF_ROW_ID)) ;
+                    Get newGet = new Get(refrowkey);
+                    newList.add(tt.get(newGet));
+                }
+            }
+            results.clear();
+            results.addAll(newList);
+        }
+        return b ;
+    }
+}
+</code></pre><p><img src="https://i.imgur.com/cJBPeDB.png" alt=""></p>
+<pre><code>1.hbase交互
+    Scan : 设置startRow + endRow
+    rowkey : hashcode , + callerid , + callTime, 0 , callee , duration.
+</code></pre><p>2.<br>3.</p>
+<h2 id="编写CallLogController-java"><a href="#编写CallLogController-java" class="headerlink" title="编写CallLogController.java"></a>编写CallLogController.java</h2><pre><code>/**
+ * 进入查询通话记录的页面,form
+ */
+@RequestMapping(&quot;/callLog/toFindCallLogPage&quot;)
+public String toFindCallLogPage(){
+    return &quot;callLog/findCallLog&quot; ;
+}
+
+@RequestMapping(value = &quot;/callLog/findCallLog&quot;,method = RequestMethod.POST)
+public String findCallLog(@RequestParam(&quot;caller&quot;) String caller, @RequestParam(&quot;startTime&quot;) String startTime, @RequestParam(&quot;endTime&quot;) String endTime){
+    Calendar startCalendar = Calendar.getInstance();
+    Calendar endCalendar = Calendar.getInstance();
+
+    return &quot;callLog/callLogList&quot; ;
+}
+</code></pre><h2 id="编写jsp"><a href="#编写jsp" class="headerlink" title="编写jsp"></a>编写jsp</h2><pre><code>&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;查询通话记录&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;../css/my.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&apos;&lt;c:url value=&quot;/callLog/findCallLog&quot; /&gt;&apos; method=&quot;post&quot;&gt;
+    &lt;table&gt;
+        &lt;tr&gt;
+            &lt;td&gt;电话号码 :&lt;/td&gt;
+            &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;caller&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;起始时间 :&lt;/td&gt;
+            &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;startTime&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;结束时间:&lt;/td&gt;
+            &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;endTime&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot;&gt;
+                &lt;input type=&quot;submit&quot; value=&quot;查询&quot;/&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h2 id="实现时间段查询"><a href="#实现时间段查询" class="headerlink" title="实现时间段查询"></a>实现时间段查询</h2><pre><code>1.提取时间范围
+    [CallLogUtil.java]
+    /**
+     * 起始时间
+     */
+    public static String getStartRowkey(String caller, String startTime, int partitions){
+        String hashcode = getHashcode(caller, startTime,partitions);
+        return hashcode + &quot;,&quot; + caller + &quot;,&quot; + startTime ;
+    }
+
+    /**
+     * 结束时间
+     */
+    public static String getStopRowkey(String caller, String startTime,String endTime, int partitions){
+        String hashcode = getHashcode(caller, startTime,partitions);
+        return hashcode + &quot;,&quot; + caller + &quot;,&quot; + endTime ;
+    }
+
+    /**
+     * 计算查询时间范围
+     */
+    public static List&lt;CallLogRange&gt; getCallLogRanges(String startStr ,String endStr){
+        try{
+            SimpleDateFormat sdfYMD = new SimpleDateFormat(&quot;yyyyMMdd&quot;);
+            SimpleDateFormat sdfYM = new SimpleDateFormat(&quot;yyyyMM&quot;);
+            DecimalFormat df00 = new DecimalFormat(&quot;00&quot;);
+
+            //
+            List&lt;CallLogRange&gt; list = new ArrayList&lt;CallLogRange&gt;();
+            //字符串时间
+            String startPrefix = startStr.substring(0, 6);
+
+            String endPrefix = endStr.substring(0, 6);
+            int endDay = Integer.parseInt(endStr.substring(6, 8));
+            //结束点
+            String endPoint = endPrefix + df00.format(endDay + 1);
+
+            //日历对象
+            Calendar c = Calendar.getInstance();
+
+            //同年月
+            if (startPrefix.equals(endPrefix)) {
+                CallLogRange range = new CallLogRange();
+                range.setStartPoint(startStr);          //设置起始点
+
+                range.setEndPoint(endPoint);            //设置结束点
+                list.add(range);
+            } else {
+                //1.起始月
+                CallLogRange range = new CallLogRange();
+                range.setStartPoint(startStr);
+
+                //设置日历的时间对象
+                c.setTime(sdfYMD.parse(startStr));
+                c.add(Calendar.MONTH, 1);
+                range.setEndPoint(sdfYM.format(c.getTime()));
+                list.add(range);
+
+                //是否是最后一月
+                while (true) {
+                    //到了结束月份
+                    if (endStr.startsWith(sdfYM.format(c.getTime()))) {
+                        range = new CallLogRange();
+                        range.setStartPoint(sdfYM.format(c.getTime()));
+                        range.setEndPoint(endPoint);
+                        list.add(range);
+                        break;
+                    } else {
+                        range = new CallLogRange();
+                        //起始时间
+                        range.setStartPoint(sdfYM.format(c.getTime()));
+
+                        //增加月份
+                        c.add(Calendar.MONTH, 1);
+                        range.setEndPoint(sdfYM.format(c.getTime()));
+                        list.add(range);
+                    }
+                }
+            }
+            return list ;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null ;
+    }
+
+2.编写service.
+
+3.
+4.
+</code></pre><h2 id="实现hbase的协处理器"><a href="#实现hbase的协处理器" class="headerlink" title="实现hbase的协处理器"></a>实现hbase的协处理器</h2><pre><code>0.说明
+    HBaseConsumer put的数据都是主叫，被叫数据在Coprossor中完成。
+
+1.创建协处理器
+    package com.it18zhang.calllog.coprossor;
+
+    import org.apache.hadoop.hbase.TableName;
+    import org.apache.hadoop.hbase.client.Durability;
+    import org.apache.hadoop.hbase.client.Put;
+    import org.apache.hadoop.hbase.client.Table;
+    import org.apache.hadoop.hbase.coprocessor.BaseRegionObserver;
+    import org.apache.hadoop.hbase.coprocessor.ObserverContext;
+    import org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;
+    import org.apache.hadoop.hbase.regionserver.wal.WALEdit;
+    import org.apache.hadoop.hbase.util.Bytes;
+
+    import java.io.IOException;
+
+    /**
+     * 协处理器,
+     */
+    public class CallLogRegionObserver extends BaseRegionObserver {
+
+        /**
+         * Put后处理
+         */
+        public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+            super.postPut(e, put, edit, durability);
+            //
+            String tableName0 = TableName.valueOf(&quot;ns1:calllogs&quot;).getNameAsString();
+
+            //得到当前的TableName对象
+            String tableName1 = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+            //判断是否是ns1:calllogs表
+            if (!tableName0.equals(tableName1)) {
+                return;
+            }
+
+            //得到主叫的rowkey,
+            String rowkey = Bytes.toString(put.getRow());
+
+            //如果被叫就放行
+            String[] arr = rowkey.split(&quot;,&quot;);
+            if (arr[3].equals(&quot;1&quot;)) {
+                return;
+            }
+            //hashcode,caller,time,flag,callee,duration
+            String caller = arr[1] ;        //主叫
+            String callTime = arr[2] ;      //通话时间
+            String callee = arr[4] ;        //被叫
+            String callDuration = arr[5] ;  //通话时长
+
+            //被叫hashcode
+            String hashcode = CallLogUtil.getHashcode(callee,callTime,100);
+            //被叫rowkey
+            String calleeRowKey = hashcode + &quot;,&quot; + callee + &quot;,&quot; + callTime + &quot;,1,&quot; + caller + &quot;,&quot; + callDuration;
+            Put newPut = new Put(Bytes.toBytes(calleeRowKey));
+            newPut.addColumn(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;refrowid&quot;), Bytes.toBytes(rowkey));
+            TableName tn = TableName.valueOf(&quot;ns1:calllogs&quot;);
+            Table t = e.getEnvironment().getTable(tn);
+            t.put(newPut);
+        }
+    }
+
+2.注册协处理器
+    a)导出jar包,分到集群.
+        ...
+    b)修改hbase配置文件并分发.
+        [hbase-site.xml]
+        &lt;property&gt;
+                &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
+                &lt;value&gt;com.it18zhang.calllog.coprossor.CallLogRegionObserver&lt;/value&gt;
+        &lt;/property&gt;
+
+    c)停止hbase集群
+
+    d)重新启动
+        ...
+    e)进入hbase shell,重建ns1:calllogs
+        $hbase&gt;create &apos;ns1:calllogs&apos; , &apos;f1&apos;,&apos;f2&apos;
+</code></pre><h2 id="主叫"><a href="#主叫" class="headerlink" title="主叫"></a>主叫</h2><pre><code>rowkey:
+12,1234,xxx,0,5678,60,.,.,.,.,
+</code></pre><h2 id="被叫"><a href="#被叫" class="headerlink" title="被叫"></a>被叫</h2><pre><code>rowkey:                        f2:refrowkey
+98,5678,xxxx,1,1234,60   --&gt; 12,1234,xxx,0,5678,60,.
+</code></pre><h2 id="重写RegionObserver的postGetOp方法-完成被叫查询时，直接返回主叫的记录"><a href="#重写RegionObserver的postGetOp方法-完成被叫查询时，直接返回主叫的记录" class="headerlink" title="重写RegionObserver的postGetOp方法,完成被叫查询时，直接返回主叫的记录"></a>重写RegionObserver的postGetOp方法,完成被叫查询时，直接返回主叫的记录</h2><pre><code>1.重写
+[CallLogRegionObserver.java]
+package com.it18zhang.calllog.coprossor;
+
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.coprocessor.BaseRegionObserver;
+import org.apache.hadoop.hbase.coprocessor.ObserverContext;
+import org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;
+import org.apache.hadoop.hbase.regionserver.InternalScanner;
+import org.apache.hadoop.hbase.regionserver.wal.WALEdit;
+import org.apache.hadoop.hbase.util.Bytes;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 协处理器,
+ */
+public class CallLogRegionObserver extends BaseRegionObserver {
+
+    //被叫引用id
+    private static final String REF_ROW_ID = &quot;refrowid&quot; ;
+    //通话记录表名
+    private static final String CALL_LOG_TABLE_NAME = &quot;ns1:calllogs&quot; ;
+
+    /**
+     * Put后处理
+     */
+    public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+        super.postPut(e, put, edit, durability);
+        //
+        String tableName0 = TableName.valueOf(CALL_LOG_TABLE_NAME).getNameAsString();
+
+        //得到当前的TableName对象
+        String tableName1 = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+        //判断是否是ns1:calllogs表
+        if (!tableName0.equals(tableName1)) {
+            return;
+        }
+
+        //得到主叫的rowkey,
+        String rowkey = Bytes.toString(put.getRow());
+
+        //如果被叫就放行
+        String[] arr = rowkey.split(&quot;,&quot;);
+        if (arr[3].equals(&quot;1&quot;)) {
+            return;
+        }
+        //hashcode,caller,time,flag,callee,duration
+        String caller = arr[1] ;        //主叫
+        String callTime = arr[2] ;      //通话时间
+        String callee = arr[4] ;        //被叫
+        String callDuration = arr[5] ;  //通话时长
+
+        //被叫hashcode
+        String hashcode = CallLogUtil.getHashcode(callee,callTime,100);
+        //被叫rowkey
+        String calleeRowKey = hashcode + &quot;,&quot; + callee + &quot;,&quot; + callTime + &quot;,1,&quot; + caller + &quot;,&quot; + callDuration;
+        Put newPut = new Put(Bytes.toBytes(calleeRowKey));
+        newPut.addColumn(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(REF_ROW_ID), Bytes.toBytes(rowkey));
+        TableName tn = TableName.valueOf(CALL_LOG_TABLE_NAME);
+        Table t = e.getEnvironment().getTable(tn);
+        t.put(newPut);
+    }
+
+    /**
+     * 重写方法，完成被叫查询，返回主叫结果。
+     */
+    public void postGetOp(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Get get, List&lt;Cell&gt; results) throws IOException {
+        //获得表名
+        String tableName = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+
+        //判断表名是否是ns1:calllogs
+        if(!tableName.equals(CALL_LOG_TABLE_NAME)){
+            super.preGetOp(e, get, results);
+        }
+        else{
+            //得到rowkey
+            String rowkey = Bytes.toString(get.getRow());
+            //
+            String[] arr = rowkey.split(&quot;,&quot;);
+            //主叫
+            if(arr[3].equals(&quot;0&quot;)){
+                super.postGetOp(e, get, results);
+            }
+            //被叫
+            else{
+                //得到主叫方的rowkey
+                String refrowid = Bytes.toString(CellUtil.cloneValue(results.get(0)));
+                //
+                Table tt = e.getEnvironment().getTable(TableName.valueOf(CALL_LOG_TABLE_NAME));
+                Get g = new Get(Bytes.toBytes(refrowid));
+                Result r = tt.get(g);
+                List&lt;Cell&gt; newList = r.listCells();
+                results.clear();
+                results.addAll(newList);
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    public boolean postScannerNext(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, InternalScanner s, List&lt;Result&gt; results, int limit, boolean hasMore) throws IOException {
+        boolean b = super.postScannerNext(e, s, results, limit, hasMore);
+
+        //新集合
+        List&lt;Result&gt; newList = new ArrayList&lt;Result&gt;();
+
+        //获得表名
+        String tableName = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+
+        //判断表名是否是ns1:calllogs
+        if (tableName.equals(CALL_LOG_TABLE_NAME)) {
+            Table tt = e.getEnvironment().getTable(TableName.valueOf(CALL_LOG_TABLE_NAME));
+            for(Result r : results){
+                //rowkey
+                String rowkey = Bytes.toString(r.getRow());
+                String flag = rowkey.split(&quot;,&quot;)[3] ;
+                //主叫
+                if(flag.equals(&quot;0&quot;)){
+                    newList.add(r) ;
+                }
+                //被叫
+                else{
+                    //取出主叫号码
+                    byte[] refrowkey = r.getValue(Bytes.toBytes(&quot;f2&quot;),Bytes.toBytes(REF_ROW_ID)) ;
+                    Get newGet = new Get(refrowkey);
+                    newList.add(tt.get(newGet));
+                }
+            }
+            results.clear();
+            results.addAll(newList);
+        }
+        return b ;
+    }
+}
+
+1&apos;.修改jsp页面
+    [callLogList.jsp]
+    &lt;c:if test=&quot;${log.caller == param.caller}&quot;&gt;主叫&lt;/c:if&gt;
+    &lt;c:if test=&quot;${log.caller != param.caller}&quot;&gt;被叫&lt;/c:if&gt;
+
+2.部署jar包
+
+3.测试
+    ...
+
+4.
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/11/实战大数据电信项目（一）/" rel="next" title="实战大数据电信项目（一）">
+                <i class="fa fa-chevron-left"></i> 实战大数据电信项目（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/11/实战大数据电信项目（三）/" rel="prev" title="实战大数据电信项目（三）">
+                实战大数据电信项目（三） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Eric Hunn" />
+            
+              <p class="site-author-name" itemprop="name">Eric Hunn</p>
+              <p class="site-description motion-element" itemprop="description">大数据|动漫迷|科技控</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/erichunn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:erichunn.me@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/2944687303/home?wvr=5" target="_blank" title="Webibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Webibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#编写CallLogController-java"><span class="nav-number">1.</span> <span class="nav-text">编写CallLogController.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写jsp"><span class="nav-number">2.</span> <span class="nav-text">编写jsp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现时间段查询"><span class="nav-number">3.</span> <span class="nav-text">实现时间段查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现hbase的协处理器"><span class="nav-number">4.</span> <span class="nav-text">实现hbase的协处理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主叫"><span class="nav-number">5.</span> <span class="nav-text">主叫</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#被叫"><span class="nav-number">6.</span> <span class="nav-text">被叫</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重写RegionObserver的postGetOp方法-完成被叫查询时，直接返回主叫的记录"><span class="nav-number">7.</span> <span class="nav-text">重写RegionObserver的postGetOp方法,完成被叫查询时，直接返回主叫的记录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+	  
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eric Hunn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

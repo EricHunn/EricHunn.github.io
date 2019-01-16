@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="无心是一首歌" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="前段请求和hive交互，在hive之中创建外部表，映射到Hbase当中一般hive在远端通过jdbc方式来交互，要想走jdbc协议hive还需要打开hiveserver2，其实就是启动thrift服务器，端口是10000.而ssm是在controller里面，交互service在SSM里面得有一个service。service通过jdbc协议和hive server2交互，转换hive语句，在通过">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实战大数据电信项目（三）">
+<meta property="og:url" content="http://erichunn.github.io/2019/01/11/实战大数据电信项目（三）/index.html">
+<meta property="og:site_name" content="无心是一首歌">
+<meta property="og:description" content="前段请求和hive交互，在hive之中创建外部表，映射到Hbase当中一般hive在远端通过jdbc方式来交互，要想走jdbc协议hive还需要打开hiveserver2，其实就是启动thrift服务器，端口是10000.而ssm是在controller里面，交互service在SSM里面得有一个service。service通过jdbc协议和hive server2交互，转换hive语句，在通过">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.imgur.com/FFumqvN.png">
+<meta property="og:image" content="https://i.imgur.com/7N6lXVy.png">
+<meta property="og:image" content="https://i.imgur.com/qyHtkg0.png">
+<meta property="og:image" content="https://i.imgur.com/V9gqUmv.png">
+<meta property="og:image" content="https://i.imgur.com/QCKt99s.png">
+<meta property="og:updated_time" content="2019-01-16T07:53:04.472Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实战大数据电信项目（三）">
+<meta name="twitter:description" content="前段请求和hive交互，在hive之中创建外部表，映射到Hbase当中一般hive在远端通过jdbc方式来交互，要想走jdbc协议hive还需要打开hiveserver2，其实就是启动thrift服务器，端口是10000.而ssm是在controller里面，交互service在SSM里面得有一个service。service通过jdbc协议和hive server2交互，转换hive语句，在通过">
+<meta name="twitter:image" content="https://i.imgur.com/FFumqvN.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://erichunn.github.io/2019/01/11/实战大数据电信项目（三）/"/>
+
+
+
+
+
+  <title>实战大数据电信项目（三） | 无心是一首歌</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?02fe19ac065353167cab1b453f2909ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">无心是一首歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于我">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-站点地图">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-腾讯公益">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            腾讯公益
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/实战大数据电信项目（三）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">实战大数据电信项目（三）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-11T15:56:40+08:00">
+                2019-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前段请求和hive交互，在hive之中创建外部表，映射到Hbase当中<br>一般hive在远端通过jdbc方式来交互，要想走jdbc协议hive还需要打开hiveserver2，其实就是启动thrift服务器，端口是10000.而ssm是在controller里面，交互service在SSM里面得有一个service。service通过jdbc协议和hive server2交互，转换hive语句，在通过hbase交互。</p>
+<p>为什么要用到Hive映射到hbase表：</p>
+<h2 id="要想查询用户最近通话信息-，"><a href="#要想查询用户最近通话信息-，" class="headerlink" title="要想查询用户最近通话信息 ##，"></a>要想查询用户最近通话信息 ##，</h2><p>从现有手段hbase查询，首先rowkey没法确定。rowkey是手机号+年份+月份。因为每个月份的哈希code都不一样，所以只能一个月一个月查。很麻烦。但是我们可以通过hive里面的max()聚集函数查询，借助于mr，也就是用Hive查询。通过hive操纵hbase里面的表，创建一个外部表映射到hbase上去通过Hive的聚集函数通过max min count等聚集函数来查询。</p>
+<p><img src="https://i.imgur.com/FFumqvN.png" alt=""></p>
+<p>由于hive操作是通过hive和beeline来操作。hive客户端只能本地使用并且不能并发，所以使用hiveserver2服务通过beeline.sh这个脚本，㑨10000，走的是thrift服务器。而ssm是通过ssm里面的service通过jdbc和hiveserver2交互，hiveserver2找到hive外部表并且操作这个是走的jdbc可以实现远程访问。</p>
+<p>那么怎样在hive里面查询最近通话详单呢：（最近一条记录）<br>$hive&gt;select * from ext_calllogs_in_hbase where id like ‘%xxxx%’ order by callTime desc limit 1 ;</p>
+<p><img src="https://i.imgur.com/7N6lXVy.png" alt=""></p>
+<p>1.SSm中创建service做一个hive的聚集表的查询，查询最近的通话记录进行Mr查询。加一个pom的hive驱动<br>    @Service(“hiveCallLogService”)<br>    public class HiveCallLogService {</p>
+<pre><code>    //hiveserver2连接串
+    private static String url = &quot;jdbc:hive2://s201:10000/&quot; ;
+    //驱动程序类
+    private static String driverClass = &quot;org.apache.hive.jdbc.HiveDriver&quot; ;
+
+    static{
+        try {
+            Class.forName(driverClass);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 查询最近的通话记录,使用hive进行mr查询.
+     */
+    public CallLog findLatestCallLog(String phoneNum){
+        try {
+            Connection conn = DriverManager.getConnection(url);
+            Statement st = conn.createStatement();
+            String sql = &quot;select * from ext_calllogs_in_hbase where id like &apos;%&quot;+ phoneNum+&quot;%&apos; order by callTime desc limit 1&quot; ;
+            ResultSet rs = st.executeQuery(sql);
+            CallLog log = null ;
+            if(rs.next()){
+                log = new CallLog();
+                log.setCaller(rs.getString(&quot;caller&quot;));
+                log.setCallee(rs.getString(&quot;caller&quot;));
+                log.setCallTime(rs.getString(&quot;callTime&quot;));
+                log.setCallDuration(rs.getString(&quot;callDuration&quot;));
+            }
+            rs.close();
+            return log ;
+        } catch (Exception e) {
+             e.printStackTrace();
+        }
+        return null ;
+    }
+}
+</code></pre><p>在controller层添加内容：</p>
+<pre><code>/**
+     * 查询最近通话记录
+     */
+    @RequestMapping(value = &quot;/callLog/findLatestCallLog&quot;,method = RequestMethod.POST)
+    public String findLatestCallLog(Model m , @RequestParam(&quot;caller&quot;) String caller){
+        CallLog log = hcs.findLatestCallLog(caller);
+        if(log != null){
+            m.addAttribute(&quot;log&quot;, log);
+        }
+        return &quot;callLog/latestCallLog&quot; ;
+    }
+    /**
+     * 查询最近通话记录
+     */
+    @RequestMapping(value = &quot;/callLog/toFindLatestCallLog&quot;)
+    public String toFindLatestCallLog(){
+        return &quot;callLog/findLatestCallLog&quot; ;
+    }
+}
+</code></pre><p>jsp界面编写：</p>
+<pre><code>&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;通话记录&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;../css/my.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;c:if test=&quot;${log == null}&quot;&gt;
+        无记录！
+    &lt;/c:if&gt;
+    &lt;c:if test=&quot;${log != null}&quot;&gt;
+        &lt;table id=&quot;t1&quot; border=&quot;1px&quot; class=&quot;t-1&quot; style=&quot;width: 800px&quot;&gt;
+            &lt;tr&gt;
+                &lt;td&gt;电话1&lt;/td&gt;
+                &lt;td&gt;&lt;c:out value=&quot;${log.caller}&quot; /&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;电话2&lt;/td&gt;
+                &lt;td&gt;&lt;c:out value=&quot;${log.callee}&quot;/&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;时间&lt;/td&gt;
+                &lt;td&gt;&lt;c:out value=&quot;${log.callTime}&quot;/&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;时长&lt;/td&gt;
+                &lt;td&gt;&lt;c:out value=&quot;${log.callDuration}&quot;/&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+
+        &lt;/table&gt;
+    &lt;/c:if&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;    
+</code></pre><p>在中间有一个报错问题：<br><img src="https://i.imgur.com/qyHtkg0.png" alt=""><br><img src="https://i.imgur.com/V9gqUmv.png" alt=""><br><img src="https://i.imgur.com/QCKt99s.png" alt=""><br>解决办法是更新继承的tomcat倒9。0版本。然后hive的依赖百年城1.2.1</p>
+<h2 id="然后做一个增加人员信息的内容：然后完成一个人员信息查询在界面显示的内容"><a href="#然后做一个增加人员信息的内容：然后完成一个人员信息查询在界面显示的内容" class="headerlink" title="然后做一个增加人员信息的内容：然后完成一个人员信息查询在界面显示的内容"></a>然后做一个增加人员信息的内容：然后完成一个人员信息查询在界面显示的内容</h2><p>业务场景是吧人员信息放到一个简单的关系型数据库中，也就是人员信息在公安部的信息中，然后实现一个和关系型数据库的交互查询    </p>
+<pre><code>1.建表
+create table persons(id ...) ;
+
+2.domain
+public class Person {
+    private Integer id ;
+    private String name ;
+    private String phone  ;
+    ...
+}
+
+3.dao
+
+4.service
+
+5.
+</code></pre><p>//在查询之中集成MYSQL的查询到的内容，整理一下下就是写mapper的SQL语句，在DAO层getSqlSession().selectOne(“persons.selectNameByPhone”,phone)通过这句话来返回，然后service层调用这个方法，然后在到personserviceimpl中调用这个方法，然后在calllogseriviceimpl中调用这个方法返回内容填充到实体类里面，controller层调用这些方法然后在jsp文件里面进行一个内容的填充。<br>——————</p>
+<h2 id="MR运行参数配置，关闭物理内存和虚拟内存对容器的限制"><a href="#MR运行参数配置，关闭物理内存和虚拟内存对容器的限制" class="headerlink" title="MR运行参数配置，关闭物理内存和虚拟内存对容器的限制"></a>MR运行参数配置，关闭物理内存和虚拟内存对容器的限制</h2><pre><code>默认限制是开启的，最多分配给容器8G的物理内存，虚拟内存是物理内存的2.1倍。
+[yarn-site.xml]
+&lt;property&gt;
+    &lt;name&gt;yarn.nodemanager.resource.memory-mb&lt;/name&gt;
+    &lt;value&gt;8192&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+    &lt;name&gt;yarn.nodemanager.pmem-check-enabled&lt;/name&gt;
+    &lt;value&gt;false&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+    &lt;name&gt;yarn.nodemanager.vmem-check-enabled&lt;/name&gt;
+    &lt;value&gt;false&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+    &lt;name&gt;yarn.nodemanager.vmem-pmem-ratio&lt;/name&gt;
+    &lt;value&gt;2.1&lt;/value&gt;
+&lt;/property&gt;
+</code></pre><hr>
+<p>0310然后实现一个生成带名字的数据源的代码。然后要做一个局部刷新的fastjson。<br>0311实现一个通过服务器返回给客户端json格式的内容，通过集成jQuery实现ajax访问，动态刷新通话记录。</p>
+<p>启动顺序，先启动kafka，启动kafka消费者，启动flume，启动ssm，启动日志生成程序。.<br>flume-ng agent -f calllog.conf -n a1在s201中<br>kafka-server-start.sh -daemon /soft/kafka/config/server.properties启动3个<br>启动kafka消费者：kafka-console-consumer.sh –zookeeper s202:2181 –topic calllog<br>开启hadoop集群和hbase集群</p>
+<p>真机使用：<br>10个kafka3台zk我们是1，2，3是zk。3台zk里面分配好myid。配置好zoo.cfg里面配置好3台主机的Ip地址<br>kafka配置配置kafka/config/server.properties 。kafka依赖于zk在kafka的配置文件里面配置zk的ip<br>单独安装flume配置配置文件。配置source channel sink<br>一边生成日志一边搜集。</p>
+<hr>
+<h2 id="协处理器-批处理。"><a href="#协处理器-批处理。" class="headerlink" title="协处理器:批处理。"></a>协处理器:批处理。</h2><pre><code>1.类似于触发器。
+    完成被叫日志的写入过程。
+2.重写postPut()/postGetOp()/postScannNext();
+    put / get / scann
+    直接返回主叫。
+</code></pre><h2 id="按时间段查询通话记录"><a href="#按时间段查询通话记录" class="headerlink" title="按时间段查询通话记录"></a>按时间段查询通话记录</h2><pre><code>hashcode            //确定分区。100
+</code></pre><h2 id="用户最近的通话信息"><a href="#用户最近的通话信息" class="headerlink" title="用户最近的通话信息"></a>用户最近的通话信息</h2><pre><code>hbase:rowkey
+
+max()聚集函数。
+</code></pre><h2 id="mr-hive"><a href="#mr-hive" class="headerlink" title="mr:hive"></a>mr:hive</h2><pre><code>MapReduce.
+</code></pre><h2 id="用户最近的通话信息-1"><a href="#用户最近的通话信息-1" class="headerlink" title="用户最近的通话信息"></a>用户最近的通话信息</h2><pre><code>1.启动hadoop的yarn集群
+    [s201]
+    $&gt;start-yarn.sh
+
+    [s206]
+    $&gt;yarn-daemon.sh start resourcemanager
+
+    [验证]
+    http://s201:8088/
+
+2.初始化hive
+
+    $&gt;cd /soft/hive/bin
+    $&gt;./schemaTool -dbType mysql -initSchema
+
+    $&gt;hive            //进入hive的shell
+    $hive&gt;create database mydb ;
+    $hive&gt;use mydb ;
+    $hive&gt;create external table ext_calllogs_in_hbase(id string, caller string,callTime string,callee string,callDuration string) STORED BY &apos;org.apache.hadoop.hive.hbase.HBaseStorageHandler&apos; WITH SERDEPROPERTIES (&quot;hbase.columns.mapping&quot; = &quot;:key,f1:caller,f1:callTime,f1:callee,f1:callDuration&quot;) TBLPROPERTIES (&quot;hbase.table.name&quot; = &quot;ns1:calllogs&quot;);
+
+    $hive&gt;select * from ext_calllogs_in_hbase where id like &apos;%xxxx%&apos; order by callTime desc limit 1 ;
+    $hive&gt;select * from ext_calllogs_in_hbase where callTime = (select max(tt.callTime) from ext_calllogs_in_hbase tt where tt.id like &apos;%xxx%&apos;);
+
+3.ssm中创建service，查询hive表中数据。
+    a.增加依赖
+        [pom.xml]
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.hive&lt;/groupId&gt;
+            &lt;artifactId&gt;hive-jdbc&lt;/artifactId&gt;
+            &lt;version&gt;1.2.1&lt;/version&gt;
+        &lt;/dependency&gt;
+
+    b.编写类
+        package com.it18zhang.ssm.hive;
+
+        import com.it18zhang.ssm.domain.CallLog;
+
+        import java.sql.Connection;
+        import java.sql.DriverManager;
+
+        /**
+         * Created by Administrator on 2017/4/14.
+         */
+        public class HiveCallLogService {
+
+            //hiveserver2连接串
+            private static String url = &quot;jdbc:hive2://s201:10000/mydb&quot; ;
+            //驱动程序类
+            private static String driverClass = &quot;org.apache.hive.jdbc.HiveDriver&quot; ;
+
+            static{
+                try {
+                    Class.forName(driverClass);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            /**
+             * 查询最近的通话记录,使用hive进行mr查询.
+             */
+            public CallLog findLatestCallLog(){
+                try {
+                    Connection conn = DriverManager.getConnection(url);
+                    System.out.println(conn);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null ;
+            }
+        }
+
+    c.启动hiveserver2服务器
+        $&gt;hive/bin/hiveserver2 &amp;
+
+    d.验证hiveserver2端口
+        $&gt;netstat -anop | grep 10000
+
+4.测试类
+    package com.it18zhang.ssm.hive;
+
+    import com.it18zhang.ssm.domain.CallLog;
+    import org.apache.hadoop.hbase.client.Result;
+
+    import java.sql.Connection;
+    import java.sql.DriverManager;
+    import java.sql.ResultSet;
+    import java.sql.Statement;
+
+    /**
+     *
+     */
+    public class HiveCallLogService {
+
+        //hiveserver2连接串
+        private static String url = &quot;jdbc:hive2://s201:10000/&quot; ;
+        //驱动程序类
+        private static String driverClass = &quot;org.apache.hive.jdbc.HiveDriver&quot; ;
+
+        static{
+            try {
+                Class.forName(driverClass);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        /**
+         * 查询最近的通话记录,使用hive进行mr查询.
+         */
+        public CallLog findLatestCallLog(){
+            try {
+                Connection conn = DriverManager.getConnection(url);
+                Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery(&quot;select * from ext_calllogs_in_hbase&quot;);
+                while(rs.next()){
+                    String id = rs.getString(&quot;id&quot;);
+                    String caller = rs.getString(&quot;caller&quot;);
+                    String callee = rs.getString(&quot;callee&quot;);
+                    String callTime = rs.getString(&quot;callTime&quot;);
+                    String callDuration = rs.getString(&quot;callDuration&quot;);
+
+                    System.out.println(id + &quot; :  &quot; + caller);
+                }
+                rs.close();
+                System.out.println(conn);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null ;
+        }
+    }
+
+5.注意事项
+    SSM集成hive-jdbc访问hive的hiveserver2时，需要如下处理:
+
+    5.1)使用hive-jdbc-1.2.1的依赖版本
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.hive&lt;/groupId&gt;
+            &lt;artifactId&gt;hive-jdbc&lt;/artifactId&gt;
+            &lt;version&gt;1.2.1&lt;/version&gt;
+        &lt;/dependency&gt;
+
+    5.5)需要集成apache-tomcat-9.0.0.M19版本，否则报编译器错误。
+</code></pre><h2 id="添加人员信息"><a href="#添加人员信息" class="headerlink" title="添加人员信息"></a>添加人员信息</h2><pre><code>1.建表
+create table persons(id ...) ;
+
+2.domain
+public class Person {
+    private Integer id ;
+    private String name ;
+    private String phone  ;
+    ...
+}
+
+3.dao
+
+4.service
+
+5.
+</code></pre><h2 id="MR运行参数配置，关闭物理内存和虚拟内存对容器的限制-1"><a href="#MR运行参数配置，关闭物理内存和虚拟内存对容器的限制-1" class="headerlink" title="MR运行参数配置，关闭物理内存和虚拟内存对容器的限制"></a>MR运行参数配置，关闭物理内存和虚拟内存对容器的限制</h2><pre><code>默认限制是开启的，最多分配给容器8G的物理内存，虚拟内存是物理内存的2.1倍。
+[yarn-site.xml]
+&lt;property&gt;
+    &lt;name&gt;yarn.nodemanager.resource.memory-mb&lt;/name&gt;
+    &lt;value&gt;8192&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+    &lt;name&gt;yarn.nodemanager.pmem-check-enabled&lt;/name&gt;
+    &lt;value&gt;false&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+    &lt;name&gt;yarn.nodemanager.vmem-check-enabled&lt;/name&gt;
+    &lt;value&gt;false&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+    &lt;name&gt;yarn.nodemanager.vmem-pmem-ratio&lt;/name&gt;
+    &lt;value&gt;2.1&lt;/value&gt;
+&lt;/property&gt;
+</code></pre><h2 id="实现局部实时刷新通话记录的功能"><a href="#实现局部实时刷新通话记录的功能" class="headerlink" title="实现局部实时刷新通话记录的功能"></a>实现局部实时刷新通话记录的功能</h2><pre><code>1.引入pom.xml
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+        &lt;artifactId&gt;fastjson&lt;/artifactId&gt;
+        &lt;version&gt;1.2.24&lt;/version&gt;
+    &lt;/dependency&gt;
+
+2.编写Controller，增加方法
+    @RequestMapping(&quot;/callLog/json/findAll&quot;)
+    public String findAllJson(HttpServletResponse response) {
+        List&lt;CallLog&gt; list = cs.findAll();
+        String json = JSON.toJSONString(list);
+        //内容类型
+        response.setContentType(&quot;application/json&quot;);
+        try {
+            OutputStream out = response.getOutputStream();
+            out.write(json.getBytes());
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+</code></pre><p>1.启动顺序<br>    a)1.zookeeper<br>    b)2.hadoop<br>    c)3.hbase<br>    d)4.kakfa<br>    e)5.HbaseConsumer<br>    f)6.flume<br>    g)7.web程序<br>    h)8.数据生成程序.<br>2.<br>3.<br>4.<br>5.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/11/实战大数据电信项目（二）/" rel="next" title="实战大数据电信项目（二）">
+                <i class="fa fa-chevron-left"></i> 实战大数据电信项目（二）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/11/实战大数据电信项目（四）/" rel="prev" title="实战大数据电信项目（四）">
+                实战大数据电信项目（四） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Eric Hunn" />
+            
+              <p class="site-author-name" itemprop="name">Eric Hunn</p>
+              <p class="site-description motion-element" itemprop="description">大数据|动漫迷|科技控</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/erichunn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:erichunn.me@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/2944687303/home?wvr=5" target="_blank" title="Webibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Webibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#要想查询用户最近通话信息-，"><span class="nav-number">1.</span> <span class="nav-text">要想查询用户最近通话信息 ##，</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#然后做一个增加人员信息的内容：然后完成一个人员信息查询在界面显示的内容"><span class="nav-number">2.</span> <span class="nav-text">然后做一个增加人员信息的内容：然后完成一个人员信息查询在界面显示的内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MR运行参数配置，关闭物理内存和虚拟内存对容器的限制"><span class="nav-number">3.</span> <span class="nav-text">MR运行参数配置，关闭物理内存和虚拟内存对容器的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协处理器-批处理。"><span class="nav-number">4.</span> <span class="nav-text">协处理器:批处理。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#按时间段查询通话记录"><span class="nav-number">5.</span> <span class="nav-text">按时间段查询通话记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户最近的通话信息"><span class="nav-number">6.</span> <span class="nav-text">用户最近的通话信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mr-hive"><span class="nav-number">7.</span> <span class="nav-text">mr:hive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户最近的通话信息-1"><span class="nav-number">8.</span> <span class="nav-text">用户最近的通话信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加人员信息"><span class="nav-number">9.</span> <span class="nav-text">添加人员信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MR运行参数配置，关闭物理内存和虚拟内存对容器的限制-1"><span class="nav-number">10.</span> <span class="nav-text">MR运行参数配置，关闭物理内存和虚拟内存对容器的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现局部实时刷新通话记录的功能"><span class="nav-number">11.</span> <span class="nav-text">实现局部实时刷新通话记录的功能</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+	  
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eric Hunn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
