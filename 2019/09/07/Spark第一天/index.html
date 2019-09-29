@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="无心是一首歌" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="并行集群计算。 并行计算。 并发并发执行。 SparkLightning-fast cluster computing。 快如闪电的集群计算。 大规模快速通用的计算引擎。 速度:    比hadoop 100x,磁盘计算快10x 使用:    java / Scala /R /python         提供80+算子(操作符)，容易构建并行应用。 通用:    组合SQL ，流计算 + 复杂分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="无心是一首歌">
+<meta property="og:url" content="http://erichunn.github.io/2019/09/07/Spark第一天/index.html">
+<meta property="og:site_name" content="无心是一首歌">
+<meta property="og:description" content="并行集群计算。 并行计算。 并发并发执行。 SparkLightning-fast cluster computing。 快如闪电的集群计算。 大规模快速通用的计算引擎。 速度:    比hadoop 100x,磁盘计算快10x 使用:    java / Scala /R /python         提供80+算子(操作符)，容易构建并行应用。 通用:    组合SQL ，流计算 + 复杂分">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-09-09T14:59:34.528Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="无心是一首歌">
+<meta name="twitter:description" content="并行集群计算。 并行计算。 并发并发执行。 SparkLightning-fast cluster computing。 快如闪电的集群计算。 大规模快速通用的计算引擎。 速度:    比hadoop 100x,磁盘计算快10x 使用:    java / Scala /R /python         提供80+算子(操作符)，容易构建并行应用。 通用:    组合SQL ，流计算 + 复杂分">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://erichunn.github.io/2019/09/07/Spark第一天/"/>
+
+
+
+
+
+  <title> | 无心是一首歌</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?02fe19ac065353167cab1b453f2909ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">无心是一首歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于我">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-站点地图">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-腾讯公益">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            腾讯公益
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/07/Spark第一天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-07T16:22:05+08:00">
+                2019-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="并行"><a href="#并行" class="headerlink" title="并行"></a>并行</h2><pre><code>集群计算。
+并行计算。
+</code></pre><h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><pre><code>并发执行。
+</code></pre><h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><pre><code>Lightning-fast cluster computing。
+快如闪电的集群计算。
+大规模快速通用的计算引擎。
+速度:    比hadoop 100x,磁盘计算快10x
+使用:    java / Scala /R /python
+        提供80+算子(操作符)，容易构建并行应用。
+通用:    组合SQL ，流计算 + 复杂分析。
+
+运行：    Hadoop, Mesos, standalone, or in the cloud,local.
+</code></pre><h2 id="Spark模块"><a href="#Spark模块" class="headerlink" title="Spark模块"></a>Spark模块</h2><pre><code>Spark core        //核心模块
+Spark SQL        //SQL
+Spark Streaming    //流计算
+Spark MLlib        //机器学习
+Spark graph        //图计算
+
+
+
+DAG        //direct acycle graph,有向无环图。
+</code></pre><h2 id="安装Spark"><a href="#安装Spark" class="headerlink" title="安装Spark"></a>安装Spark</h2><pre><code>1.下载spark-2.1.0-bin-hadoop2.7.tgz
+    ..
+2.解压
+    ..
+3.环境变量
+    [/etc/profile]
+    SPARK_HOME=/soft/spark
+    PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
+
+    [source]
+    $&gt;source /etc/profile
+
+4.验证spark
+
+    $&gt;cd /soft/spark
+    $&gt;./spark-shell
+
+5.webui
+    http://s201:4040/
+</code></pre><h2 id="体验spark"><a href="#体验spark" class="headerlink" title="体验spark"></a>体验spark</h2><pre><code>0.sc
+    SparkContext，Spark程序的入口点，封装了整个spark运行环境的信息。
+
+1.进入spark-shell
+    $&gt;spark-shell
+    $scala&gt;sc
+</code></pre><h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><pre><code>[SparkContext]
+    Spark程序的入口点，封装了整个spark运行环境的信息。
+
+[RDD]
+    resilient distributed dataset,弹性分布式数据集。等价于集合。
+</code></pre><h2 id="spark实现word-count"><a href="#spark实现word-count" class="headerlink" title="spark实现word count"></a>spark实现word count</h2><pre><code>//加载文本文件,以换行符方式切割文本.Array(hello  world2,hello world2 ,...)
+val rdd1 = sc.textFile(&quot;/home/centos/test.txt&quot;);
+
+//单词统计1
+$scala&gt;val rdd1 = sc.textFile(&quot;/home/centos/test.txt&quot;)
+$scala&gt;val rdd2 = rdd1.flatMap(line=&gt;line.split(&quot; &quot;))
+$scala&gt;val rdd3 = rdd2.map(word = &gt; (word,1))
+$scala&gt;val rdd4 = rdd3.reduceByKey(_ + _)
+$scala&gt;rdd4.collect
+
+//单词统计2
+sc.textFile(&quot;/home/centos/test.txt&quot;).flatMap(_.split(&quot; &quot;)).map((_,1)).reduceByKey(_ + _).collect
+
+//统计所有含有wor字样到单词个数。filter
+
+//过滤单词
+sc.textFile(&quot;/home/centos/test.txt&quot;).flatMap(_.split(&quot; &quot;)).filter(_.contains(&quot;wor&quot;)).map((_,1)).reduceByKey(_ + _).collect
+</code></pre><p>[API]<br>    SparkContext:<br>        Spark功能的主要入口点。代表到Spark集群的连接，可以创建RDD、累加器和广播变量.<br>        每个JVM只能激活一个SparkContext对象，在创建sc之前需要stop掉active的sc。</p>
+<pre><code>SparkConf:
+    spark配置对象，设置Spark应用各种参数，kv形式。
+</code></pre><h2 id="编写scala程序，引入spark类库，完成wordcount"><a href="#编写scala程序，引入spark类库，完成wordcount" class="headerlink" title="编写scala程序，引入spark类库，完成wordcount"></a>编写scala程序，引入spark类库，完成wordcount</h2><pre><code>1.创建Scala模块,并添加pom.xml
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;SparkDemo1&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.spark&lt;/groupId&gt;
+                &lt;artifactId&gt;spark-core_2.11&lt;/artifactId&gt;
+                &lt;version&gt;2.1.0&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+2.编写scala文件
+    import org.apache.spark.{SparkConf, SparkContext}
+
+    /**
+      * Created by Administrator on 2017/4/20.
+      */
+    object WordCountDemo {
+        def main(args: Array[String]): Unit = {
+            //创建Spark配置对象
+            val conf = new SparkConf();
+            conf.setAppName(&quot;WordCountSpark&quot;)
+            //设置master属性
+            conf.setMaster(&quot;local&quot;) ;
+
+            //通过conf创建sc
+            val sc = new SparkContext(conf);
+
+            //加载文本文件
+            val rdd1 = sc.textFile(&quot;d:/scala/test.txt&quot;);
+            //压扁
+            val rdd2 = rdd1.flatMap(line =&gt; line.split(&quot; &quot;)) ;
+            //映射w =&gt; (w,1)
+            val rdd3 = rdd2.map((_,1))
+            val rdd4 = rdd3.reduceByKey(_ + _)
+            val r = rdd4.collect()
+            r.foreach(println)
+        }
+    }
+</code></pre><h2 id="java版单词统计"><a href="#java版单词统计" class="headerlink" title="java版单词统计"></a>java版单词统计</h2><pre><code>import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.api.java.function.PairFunction;
+import scala.Tuple2;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * java版
+ */
+public class WordCountJava2 {
+    public static void main(String[] args) {
+        //创建SparkConf对象
+        SparkConf conf = new SparkConf();
+        conf.setAppName(&quot;WordCountJava2&quot;);
+        conf.setMaster(&quot;local&quot;);
+
+        //创建java sc
+        JavaSparkContext sc = new JavaSparkContext(conf);
+        //加载文本文件
+        JavaRDD&lt;String&gt; rdd1 = sc.textFile(&quot;d:/scala//test.txt&quot;);
+
+        //压扁
+        JavaRDD&lt;String&gt; rdd2 = rdd1.flatMap(new FlatMapFunction&lt;String, String&gt;() {
+            public Iterator&lt;String&gt; call(String s) throws Exception {
+                List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+                String[] arr = s.split(&quot; &quot;);
+                for(String ss :arr){
+                    list.add(ss);
+                }
+                return list.iterator();
+            }
+        });
+
+        //映射,word -&gt; (word,1)
+        JavaPairRDD&lt;String,Integer&gt; rdd3 = rdd2.mapToPair(new PairFunction&lt;String, String, Integer&gt;() {
+            public Tuple2&lt;String, Integer&gt; call(String s) throws Exception {
+                return new Tuple2&lt;String, Integer&gt;(s,1);
+            }
+        });
+
+        //reduce化简
+        JavaPairRDD&lt;String,Integer&gt; rdd4 = rdd3.reduceByKey(new Function2&lt;Integer, Integer, Integer&gt;() {
+            public Integer call(Integer v1, Integer v2) throws Exception {
+                return v1 + v2;
+            }
+        });
+
+        //
+        List&lt;Tuple2&lt;String,Integer&gt;&gt; list = rdd4.collect();
+        for(Tuple2&lt;String, Integer&gt; t : list){
+            System.out.println(t._1() + &quot; : &quot; + t._2());
+        }
+    }
+}
+</code></pre><p>Spark2.1.0最新版是基于Scala2.11.8版本，因此安装scala2.11.8版本，</p>
+<h2 id="否则如果基于2-12-0版本编译会出现找不到包的问题。"><a href="#否则如果基于2-12-0版本编译会出现找不到包的问题。" class="headerlink" title="否则如果基于2.12.0版本编译会出现找不到包的问题。"></a>否则如果基于2.12.0版本编译会出现找不到包的问题。</h2><pre><code>1.卸载原来的scala.
+2.重新安装scala2.11.8版本
+3.配置idea的全局库
+    project settings -&gt; global library -&gt; 删除原来的scala sdk
+    project settings -&gt; global library -&gt; 添加sdk -&gt; browser -&gt; 定位scala安装目录 -&gt;选中scala-compiler.jar + 
+                                                                                        scala-library.jar + 
+                                                                                        scala-reflect.jar
+
+4.在模块中添加scala sdk 2.11.8版本
+
+5.重新编译项目 -&gt; 导入jar -&gt;丢到集群运行。
+</code></pre><h2 id="提交作业到spark集群运行"><a href="#提交作业到spark集群运行" class="headerlink" title="提交作业到spark集群运行"></a>提交作业到spark集群运行</h2><pre><code>1.导出jar包
+2.spark-submit提交命令运行job
+    //Scala版本
+    $&gt;spark-submit --master local --name MyWordCount --class com.it18zhang.spark.scala.WordCountScala SparkDemo1-1.0-SNAPSHOT.jar /home/centos/test.txt
+    //java版
+    $&gt;spark-submit --master local --name MyWordCount --class com.it18zhang.spark.java.WordCountJava SparkDemo1-1.0-SNAPSHOT.jar /home/centos/test.txt
+</code></pre><h2 id="Spark集群模式"><a href="#Spark集群模式" class="headerlink" title="Spark集群模式"></a>Spark集群模式</h2><pre><code>1.local
+    nothing!
+    spark-shell --master local;        //默认
+
+2.standalone
+    独立模式。
+    a)复制spark安装目录到其他几个主机
+    b)配置其他主机的所有环境变量
+        [/etc/profile]
+        SPARK_HOME
+        PATH
+
+    c)配置master节点的slaves
+        [/soft/spark/conf/slaves]文件中添加下面的
+        s202
+        s203
+        s204
+
+    d)启动spark集群，和hadoop一样，但是要指定目录下即可。这个是独立模式和没有关系
+        /soft/spark/sbin/start-all.sh
+
+    e)查看进程
+        $&gt;xcall.jps jps
+            master        //s201
+            worker        //s202
+            worker        //s203
+            worker        //s204
+    e)webui，然后验证webui，8080端口。本地模式是4040端口
+        http://s201:8080/
+</code></pre><h2 id="提交作业jar到完全分布式spark集群"><a href="#提交作业jar到完全分布式spark集群" class="headerlink" title="提交作业jar到完全分布式spark集群"></a>提交作业jar到完全分布式spark集群</h2><pre><code>1.需要启动hadoop集群(只需要hdfs，是standalone模式，不需要yarn调度)
+    $&gt;start-dfs.sh
+2.put文件到hdfs.
+
+3.运行spark-submit
+    $&gt;spark-submit 
+                --master spark://s201:7077 
+                --name MyWordCount 
+                --class com.it18zhang.spark.scala.WordCountScala 
+                SparkDemo1-1.0-SNAPSHOT.jar 
+                hdfs://s201:8020/user/centos/test.txt
+</code></pre><h2 id="脚本分析"><a href="#脚本分析" class="headerlink" title="脚本分析"></a>脚本分析</h2><pre><code>[start-all.sh]
+    sbin/spark-config.sh
+    sbin/spark-master.sh        //启动master进程
+    sbin/spark-slaves.sh        //启动worker进程
+
+[start-master.sh]
+    sbin/spark-config.sh
+    org.apache.spark.deploy.master.Master
+    spark-daemon.sh start org.apache.spark.deploy.master.Master --host --port --webui-port ...
+
+[spark-slaves.sh]
+    sbin/spark-config.sh
+    slaves.sh                //主要循环这个文件conf/slaves
+
+[slaves.sh]
+    for conf/slaves{
+        ssh host start-slave.sh ...
+    }
+
+[start-slave.sh]
+</code></pre><p>先找到这个work类<br>        CLASS=”org.apache.spark.deploy.worker.Worker”<br>        sbin/spark-config.sh 走这个配置<br>        for ((  .. )) ; do<br>            start_instance $(( 1 + $i )) “$@”<br>        done </p>
+<pre><code>$&gt;cd /soft/spark/sbin
+$&gt;./stop-all.sh                //停掉整个spark集群.
+$&gt;./start-master.sh            //停掉整个spark集群.
+$&gt;./start-master.sh            //启动master节点
+$&gt;./start-slaves.sh            //启动所有worker节点
+从s204里面启动某一个slave ./start-slave.sh spark://s201:7077
+
+
+对上面几个命令了解可以通过 start-master.sh --help来查询，其他类似
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/04/编程题/" rel="next" title="编程题">
+                <i class="fa fa-chevron-left"></i> 编程题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/10/Mybatis第一天/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Eric Hunn" />
+            
+              <p class="site-author-name" itemprop="name">Eric Hunn</p>
+              <p class="site-description motion-element" itemprop="description">大数据|动漫迷|科技控</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">68</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/erichunn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:erichunn.me@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/2944687303/home?wvr=5" target="_blank" title="Webibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Webibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#并行"><span class="nav-number">1.</span> <span class="nav-text">并行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发"><span class="nav-number">2.</span> <span class="nav-text">并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark"><span class="nav-number">3.</span> <span class="nav-text">Spark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark模块"><span class="nav-number">4.</span> <span class="nav-text">Spark模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Spark"><span class="nav-number">5.</span> <span class="nav-text">安装Spark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#体验spark"><span class="nav-number">6.</span> <span class="nav-text">体验spark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API"><span class="nav-number">7.</span> <span class="nav-text">API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spark实现word-count"><span class="nav-number">8.</span> <span class="nav-text">spark实现word count</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写scala程序，引入spark类库，完成wordcount"><span class="nav-number">9.</span> <span class="nav-text">编写scala程序，引入spark类库，完成wordcount</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java版单词统计"><span class="nav-number">10.</span> <span class="nav-text">java版单词统计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#否则如果基于2-12-0版本编译会出现找不到包的问题。"><span class="nav-number">11.</span> <span class="nav-text">否则如果基于2.12.0版本编译会出现找不到包的问题。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提交作业到spark集群运行"><span class="nav-number">12.</span> <span class="nav-text">提交作业到spark集群运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark集群模式"><span class="nav-number">13.</span> <span class="nav-text">Spark集群模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提交作业jar到完全分布式spark集群"><span class="nav-number">14.</span> <span class="nav-text">提交作业jar到完全分布式spark集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本分析"><span class="nav-number">15.</span> <span class="nav-text">脚本分析</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+	  
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eric Hunn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

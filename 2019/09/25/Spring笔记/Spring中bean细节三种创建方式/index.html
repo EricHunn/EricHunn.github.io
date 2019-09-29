@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="无心是一首歌" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Spring bean的三种创建细节和生命周期首先如果一个类的默认构造函数是空值构造函数，然后在写一个带参构造函数，那么这个默认构造函数就被覆盖了。如下：    public class AccountServiceImpl implements IAccountService {     public AccountServiceImpl(String name) {         Syste">
+<meta property="og:type" content="article">
+<meta property="og:title" content="无心是一首歌">
+<meta property="og:url" content="http://erichunn.github.io/2019/09/25/Spring笔记/Spring中bean细节三种创建方式/index.html">
+<meta property="og:site_name" content="无心是一首歌">
+<meta property="og:description" content="Spring bean的三种创建细节和生命周期首先如果一个类的默认构造函数是空值构造函数，然后在写一个带参构造函数，那么这个默认构造函数就被覆盖了。如下：    public class AccountServiceImpl implements IAccountService {     public AccountServiceImpl(String name) {         Syste">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-09-26T14:13:38.556Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="无心是一首歌">
+<meta name="twitter:description" content="Spring bean的三种创建细节和生命周期首先如果一个类的默认构造函数是空值构造函数，然后在写一个带参构造函数，那么这个默认构造函数就被覆盖了。如下：    public class AccountServiceImpl implements IAccountService {     public AccountServiceImpl(String name) {         Syste">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://erichunn.github.io/2019/09/25/Spring笔记/Spring中bean细节三种创建方式/"/>
+
+
+
+
+
+  <title> | 无心是一首歌</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?02fe19ac065353167cab1b453f2909ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">无心是一首歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于我">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-站点地图">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-腾讯公益">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            腾讯公益
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/25/Spring笔记/Spring中bean细节三种创建方式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-25T11:19:25+08:00">
+                2019-09-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Spring-bean的三种创建细节和生命周期"><a href="#Spring-bean的三种创建细节和生命周期" class="headerlink" title="Spring bean的三种创建细节和生命周期"></a>Spring bean的三种创建细节和生命周期</h2><p>首先如果一个类的默认构造函数是空值构造函数，然后在写一个带参构造函数，那么这个默认构造函数就被覆盖了。如下：<br>    public class AccountServiceImpl implements IAccountService {</p>
+<pre><code>    public AccountServiceImpl(String name) {
+        System.out.println(&quot;对象创建了&quot;);
+    }
+
+}
+</code></pre><p>这种就是被覆盖了的构造函数</p>
+<p> 第一种方式：使用默认构造函数创建。这种情况是使用自己写好的类</p>
+<p> 在spring的配置文件中使用bean标签，配以id和class属性之后，且没有其他属性和标签时。<br> 采用的就是默认构造函数创建bean对象，此时如果类中没有默认构造函数，则对象无法创建。</p>
+<pre><code>&lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;&lt;/bean&gt;&gt;
+</code></pre><p>在实际开发中有可能使用别人定义好的类，那么如何调用在Jar包里面的类呢？<br>第二种方式： 使用普通工厂中的方法创建对象（使用某个类中的方法创建对象，并存入spring容器</p>
+<pre><code>//bean.xml文件里面的配置
+&lt;bean id=&quot;instanceFactory&quot; class=&quot;com.itheima.factory.InstanceFactory&quot;&gt;&lt;/bean&gt;
+&lt;bean id=&quot;accountService&quot; factory-bean=&quot;instanceFactory&quot; factory method=&quot;getAccountService&quot;&gt;&lt;/bean&gt;
+</code></pre><hr>
+<pre><code>/**
+ * jar包中的类，模拟一个工厂类（该类可能是存在于jar包中的，我们无法通过修改源码的方式来提供默认构造函数）
+ */
+public class InstanceFactory {
+
+    public IAccountService getAccountService(){
+        return new AccountServiceImpl();
+    }
+}
+</code></pre><p>第二种方式的要求工厂类instanceFactory，类名配好，然后下面那一行，有一个getAccountService方法和一个instanceFactory类。</p>
+ <!-- 第三种方式：使用工厂中的静态方法创建对象（使用某个类中的静态方法创建对象，并存入spring容器)
+
+    <bean id="accountService" class="com.itheima.factory.StaticFactory" factory-method="getAccountService"></bean>
+
+***
+
+    /**
+     * jar包中的类，模拟一个工厂类（该类可能是存在于jar包中的，我们无法通过修改源码的方式来提供默认构造函数）
+     */
+    public class StaticFactory {
+
+        public static IAccountService getAccountService(){
+
+            return new AccountServiceImpl();
+        }
+    }
+
+
+Bean的作用范围调整
+
+        bean的作用范围调整
+            bean标签的scope属性：
+                作用：用于指定bean的作用范围
+                取值： 常用的就是单例的和多例的
+                    singleton：单例的（默认值）
+                    prototype：多例的
+                    request：作用于web应用的请求范围
+                    session：作用于web应用的会话范围
+                    global-session：作用于集群环境的会话范围（全局会话范围），当不是集群环境时，它就是session
+
+        <bean id="accountService" class="com.itheima.service.impl.AccountServiceImpl" scope="prototype"></bean>
+
+那么global-session是什么：
+![](https://i.imgur.com/Xj13Dza.png)
+
+就比如开始有一个用户，他通过网址访问，然后过负载均衡，开始的时候在01,输入帐号密码，01里面的session就变成了1234，但是第二次她在访问06是空闲的，所以访问了06，但是这时候session还是在01里面，那么怎么办呢，就弄一个全局的globalsession，每次访问都放在global-session这个域里面就好了。
+
+Bean的对象的生命周期：
+
+     /**       单例对象
+                出生：当容器创建时对象出生
+                活着：只要容器还在，对象一直活着
+                死亡：容器销毁，对象消亡
+                总结：单例对象的生命周期和容器相同
+            多例对象
+                出生：当我们使用对象时spring框架为我们创建
+                活着：对象只要是在使用过程中就一直活着。
+                死亡：当对象长时间不用，且没有别的对象引用时，由Java的垃圾回收器回收
+     */
+
+需要借用一个属性：
+
+    <bean id="accountService" class="com.itheima.service.impl.AccountServiceImpl"
+          scope="prototype" init-method="init" destroy-method="destroy"></bean>
+    </beans>
+
+***
+
+    /**
+     * 账户的业务层实现类
+     */
+    public class AccountServiceImpl implements IAccountService {
+
+
+    public AccountServiceImpl() {
+        System.out.println("对象创建了");
+    }
+
+
+    public void  saveAccount(){
+        System.out.println("service中的saveAccount方法执行了。。。");
+    }
+
+    public void  init(){
+        System.out.println("对象初始化了。。。");
+    }
+    public void  destroy(){
+        System.out.println("对象销毁了。。。");
+    }
+}
+
+再说一下如果代码写成这样子：
+
+    ApplicationContext ac = new ClassPathXmlApplicationContext("bean.xml");
+
+的话，会发现不能调用子类的方法，智能调用父类的方法，所以只能调用ApplicationContext的方法。
+
+
+在使用单例对象和多例对象的情况下，单例是刚执行这行方法就创建对象，多例是执行这个方法时候并不会创建，只有使用的时候才会创建。单例对象的死亡，就是容器destroy了，就关闭了，但是多例对象的死亡，如果对象长时间不用，并且没有别的对象引用的时候，由java的垃圾回收机制回收。下面是整个所有的代码：
+
+    package com.itheima.factory;
+
+    import com.itheima.service.IAccountService;
+    import com.itheima.service.impl.AccountServiceImpl;
+
+    /**
+     * 模拟一个工厂类（该类可能是存在于jar包中的，我们无法通过修改源码的方式来提供默认构造函数）
+     */
+    public class InstanceFactory {
+
+        public IAccountService getAccountService(){
+            return new AccountServiceImpl();
+        }
+    }
+
+***
+
+    package com.itheima.factory;
+
+    import com.itheima.service.IAccountService;
+    import com.itheima.service.impl.AccountServiceImpl;
+
+    /**
+     * 模拟一个工厂类（该类可能是存在于jar包中的，我们无法通过修改源码的方式来提供默认构造函数）
+     */
+    public class StaticFactory {
+
+        public static IAccountService getAccountService(){
+
+            return new AccountServiceImpl();
+        }
+    }
+
+***
+
+    package com.itheima.service;
+
+    /**
+     * 账户业务层的接口
+     */
+    public interface IAccountService {
+
+        /**
+         * 模拟保存账户
+         */
+        void saveAccount();
+    }
+***
+    package com.itheima.service.impl;
+
+    import com.itheima.service.IAccountService;
+
+    /**
+     * 账户的业务层实现类
+     */
+    public class AccountServiceImpl implements IAccountService {
+
+
+        public AccountServiceImpl() {
+            System.out.println("对象创建了");
+        }
+
+
+        public void  saveAccount(){
+            System.out.println("service中的saveAccount方法执行了。。。");
+        }
+
+        public void  init(){
+            System.out.println("对象初始化了。。。");
+        }
+        public void  destroy(){
+            System.out.println("对象销毁了。。。");
+        }
+    }
+***
+    package com.itheima.ui;
+
+    import com.itheima.service.IAccountService;
+    import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+    /**
+     * 模拟一个表现层，用于调用业务层
+     */
+    public class Client {
+
+        /**
+         *
+         * @param args
+         */
+        public static void main(String[] args) {
+            //1.获取核心容器对象
+    //
+            ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext("bean.xml");
+            //2.根据id获取Bean对象
+            IAccountService as  = (IAccountService)ac.getBean("accountService");
+            as.saveAccount();
+
+            //手动关闭容器
+            ac.close();
+        }
+    }
+***
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+        <!--把对象的创建交给spring来管理-->
+<pre><code>    &lt;!--spring对bean的管理细节
+        1.创建bean的三种方式
+        2.bean对象的作用范围
+        3.bean对象的生命周期
+    --&gt;
+
+    &lt;!--创建Bean的三种方式 --&gt;
+    &lt;!-- 第一种方式：使用默认构造函数创建。
+            在spring的配置文件中使用bean标签，配以id和class属性之后，且没有其他属性和标签时。
+            采用的就是默认构造函数创建bean对象，此时如果类中没有默认构造函数，则对象无法创建。
+
+    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;&lt;/bean&gt;
+    --&gt;
+
+    &lt;!-- 第二种方式： 使用普通工厂中的方法创建对象（使用某个类中的方法创建对象，并存入spring容器）
+    &lt;bean id=&quot;instanceFactory&quot; class=&quot;com.itheima.factory.InstanceFactory&quot;&gt;&lt;/bean&gt;
+    &lt;bean id=&quot;accountService&quot; factory-bean=&quot;instanceFactory&quot; factory-method=&quot;getAccountService&quot;&gt;&lt;/bean&gt;
+    --&gt;
+
+    &lt;!-- 第三种方式：使用工厂中的静态方法创建对象（使用某个类中的静态方法创建对象，并存入spring容器)
+    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.factory.StaticFactory&quot; factory-method=&quot;getAccountService&quot;&gt;&lt;/bean&gt;
+    --&gt;
+
+    &lt;!-- bean的作用范围调整
+        bean标签的scope属性：
+            作用：用于指定bean的作用范围
+            取值： 常用的就是单例的和多例的
+                singleton：单例的（默认值）
+                prototype：多例的
+                request：作用于web应用的请求范围
+                session：作用于web应用的会话范围
+                global-session：作用于集群环境的会话范围（全局会话范围），当不是集群环境时，它就是session
+
+    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot; scope=&quot;prototype&quot;&gt;&lt;/bean&gt;
+    --&gt;
+    &lt;!-- bean对象的生命周期
+              单例对象
+                  出生：当容器创建时对象出生
+                  活着：只要容器还在，对象一直活着
+                  死亡：容器销毁，对象消亡
+                  总结：单例对象的生命周期和容器相同
+              多例对象
+                  出生：当我们使用对象时spring框架为我们创建
+                  活着：对象只要是在使用过程中就一直活着。
+                  死亡：当对象长时间不用，且没有别的对象引用时，由Java的垃圾回收器回收
+       --&gt;
+    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
+          scope=&quot;prototype&quot; init-method=&quot;init&quot; destroy-method=&quot;destroy&quot;&gt;&lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre><h1 id="Spring的依赖注入"><a href="#Spring的依赖注入" class="headerlink" title="Spring的依赖注入"></a>Spring的依赖注入</h1><h2 id="1、使用构造函数注入"><a href="#1、使用构造函数注入" class="headerlink" title="1、使用构造函数注入"></a>1、使用构造函数注入</h2><pre><code>&lt;!--spring中的依赖注入--&gt;
+&lt;!--    依赖注入：--&gt;
+&lt;!--        Dependency Injection--&gt;
+&lt;!--     IOC的作用：降低程序之间的依赖关系，但是没有消除。--&gt;
+&lt;!--    依赖关系的管理：--&gt;
+&lt;!--    以后都交给了spring来维护，--&gt;
+&lt;!--    在当前类中需要用到其他的对象，由spring为我们提供，我们只需要在配置文件中说明--&gt;
+&lt;!--    依赖关系的维护：就称之为依赖注入，--&gt;
+&lt;!--        能注入的数据有三种：--&gt;
+&lt;!--        基本类型和String、其他的bean类型（在配置文件中或者注解配置过的bean)、复杂类型|集合类型--&gt;
+&lt;!--        注入的方式有三种：--&gt;
+&lt;!--            第一种：使用构造函数提供--&gt;
+&lt;!--            第二种：使用set方法提供--&gt;
+&lt;!--            第三种：使用注解提供（明天内容）--&gt;
+</code></pre><hr>
+<p>第一种方式：</p>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.service.IAccountService;
+
+import java.util.Date;
+
+/**
+ * 账户的业务层实现类
+ */
+public class AccountServiceImpl implements IAccountService {
+
+
+//如果是经常变化的数据，并不适合注入的方式，这里演示的3种类型，不考虑他们代表的意义，假设他们不经常变化适合注入
+    private String name;
+    private Integer age;
+    private Date birthday;
+
+
+    public AccountServiceImpl(String name, Integer age ,Date birthday){
+        this.name=name;
+        this.age=age;
+        this.birthday=birthday;
+    }
+    public void  saveAccount(){
+        System.out.println(&quot;service中的saveAccount方法执行了。。。&quot;);
+    }
+
+}
+</code></pre><hr>
+<pre><code>// 但是像下面这样子注入的情况下，将test注入到上面实现类的构造函数里面，使用的是tpye方式，但是一旦构造函数中有2个以上的同类型，就难以判断是哪一个，这个是因为每个只有一种类型，所以可以解决。
+
+&lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;
+&lt;constructor-arg type=&quot;java.lang.String&quot; value=&quot;test&quot;&gt;&lt;/constructor-arg&gt;
+&lt;/bean&gt;
+</code></pre><hr>
+<pre><code>  &lt;!--构造函数注入：
+    使用的标签:constructor-arg
+    标签出现的位置：bean标签的内部
+    标签中的属性
+        type：用于指定要注入的数据的数据类型，该数据类型也是构造函数中某个或某些参数的类型
+        index：用于指定要注入的数据给构造函数中指定索引位置的参数赋值。索引的位置是从0开始
+        name：用于指定给构造函数中指定名称的参数赋值                                        常用的
+        =============以上三个用于指定给构造函数中哪个参数赋值===============================
+        value：用于提供基本类型和String类型的数据
+        ref：用于指定其他的bean类型数据。它指的就是在spring的Ioc核心容器中出现过的bean对象
+
+    优势：
+        在获取bean对象时，注入数据是必须的操作，否则对象无法创建成功。
+    弊端：
+        改变了bean对象的实例化方式，使我们在创建对象时，如果用不到这些数据，也必须提供。
+--&gt;
+
+  &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;
+    &lt;constructor-arg name=&quot;name&quot; value=&quot;泰斯特&quot;&gt;&lt;/constructor-arg&gt;
+    &lt;constructor-arg name=&quot;age&quot; value=&quot;18&quot;&gt;&lt;/constructor-arg&gt;
+    &lt;constructor-arg name=&quot;birthday&quot; ref=&quot;now&quot;&gt;&lt;/constructor-arg&gt;
+&lt;/bean&gt;
+  &lt;!-- 配置一个日期对象 --&gt;
+&lt;bean id=&quot;now&quot; class=&quot;java.util.Date&quot;&gt;&lt;/bean&gt;
+</code></pre><h2 id="2、使用set方法注入"><a href="#2、使用set方法注入" class="headerlink" title="2、使用set方法注入"></a>2、使用set方法注入</h2><pre><code>&lt;!-- set方法注入                更常用的方式
+涉及的标签：property
+出现的位置：bean标签的内部
+标签的属性
+    name：用于指定注入时所调用的set方法名称
+    value：用于提供基本类型和String类型的数据
+    ref：用于指定其他的bean类型数据。它指的就是在spring的Ioc核心容器中出现过的bean对象
+优势：
+    创建对象时没有明确的限制，可以直接使用默认构造函数
+弊端： 对象是有可能set方法没有执行。（解释；有可能在调用AccountServiceImpl2这个类的时候已经用完了，所以set不了，每太明白。）
+--&gt;
+</code></pre><hr>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.service.IAccountService;
+
+import java.util.Date;
+
+/**
+ * 账户的业务层实现类
+ */
+public class AccountServiceImpl2 implements IAccountService {
+
+
+    //如果是经常变化的数据，并不适合注入的方式，这里演示的3种类型，不考虑他们代表的意义，假设他们不经常变化适合注入
+    private String name;
+    private Integer age;
+    private Date birthday;
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public void saveAccount() {
+        System.out.println(&quot;service中的saveAccount方法执行了。。。&quot;);
+    }
+
+}
+</code></pre><hr>
+<pre><code> &lt;bean id=&quot;accountService2&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl2&quot;&gt;
+    &lt;property name=&quot;name&quot; value=&quot;TEST&quot; &gt;&lt;/property&gt;
+    &lt;property name=&quot;age&quot; value=&quot;21&quot;&gt;&lt;/property&gt;
+    &lt;property name=&quot;birthday&quot; ref=&quot;now&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;
+&lt;!-- 配置一个日期对象 --&gt;
+&lt;bean id=&quot;now&quot; class=&quot;java.util.Date&quot;&gt;&lt;/bean&gt;
+</code></pre><h2 id="复杂类型的注入"><a href="#复杂类型的注入" class="headerlink" title="复杂类型的注入"></a>复杂类型的注入</h2><pre><code>package com.itheima.service.impl;
+
+import com.itheima.service.IAccountService;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Map;
+
+/**
+ * 账户的业务层实现类
+ */
+public class AccountServiceImpl3 implements IAccountService {
+
+//    数组、List集合、Set集合、Map集合、 
+    private String[] myStrs;
+    private List&lt;String&gt; myList;
+    private Set&lt;String&gt; mySet;
+    private Map&lt;String,String&gt; myMap;
+    private Properties myProps;
+
+    public void setMyStrs(String[] myStrs) {
+        this.myStrs = myStrs;
+    }
+
+    public void setMyList(List&lt;String&gt; myList) {
+        this.myList = myList;
+    }
+
+    public void setMySet(Set&lt;String&gt; mySet) {
+        this.mySet = mySet;
+    }
+
+    public void setMyMap(Map&lt;String, String&gt; myMap) {
+        this.myMap = myMap;
+    }
+
+    public void setMyProps(Properties myProps) {
+        this.myProps = myProps;
+    }
+
+    public void  saveAccount(){
+        System.out.println(Arrays.toString(myStrs));
+        System.out.println(myList);
+        System.out.println(mySet);
+        System.out.println(myMap);
+        System.out.println(myProps);
+    }
+
+
+}
+</code></pre><hr>
+<pre><code>&lt;!-- 复杂类型的注入/集合类型的注入
+       用于给List结构集合注入的标签：
+           list array set
+       用于个Map结构集合注入的标签:
+           map  props
+       结构相同，标签可以互换
+   --&gt;
+   &lt;bean id=&quot;accountService3&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl3&quot;&gt;
+       &lt;property name=&quot;myStrs&quot;&gt;
+           &lt;set&gt;
+               &lt;value&gt;AAA&lt;/value&gt;
+               &lt;value&gt;BBB&lt;/value&gt;
+               &lt;value&gt;CCC&lt;/value&gt;
+           &lt;/set&gt;
+       &lt;/property&gt;
+
+       &lt;property name=&quot;myList&quot;&gt;
+           &lt;array&gt;
+               &lt;value&gt;AAA&lt;/value&gt;
+               &lt;value&gt;BBB&lt;/value&gt;
+               &lt;value&gt;CCC&lt;/value&gt;
+           &lt;/array&gt;
+       &lt;/property&gt;
+
+       &lt;property name=&quot;mySet&quot;&gt;
+           &lt;list&gt;
+               &lt;value&gt;AAA&lt;/value&gt;
+               &lt;value&gt;BBB&lt;/value&gt;
+               &lt;value&gt;CCC&lt;/value&gt;
+           &lt;/list&gt;
+       &lt;/property&gt;
+
+       &lt;property name=&quot;myMap&quot;&gt;
+           &lt;props&gt;
+               &lt;prop key=&quot;testC&quot;&gt;ccc&lt;/prop&gt;
+               &lt;prop key=&quot;testD&quot;&gt;ddd&lt;/prop&gt;
+           &lt;/props&gt;
+       &lt;/property&gt;
+
+       &lt;property name=&quot;myProps&quot;&gt;
+           &lt;map&gt;
+               &lt;entry key=&quot;testA&quot; value=&quot;aaa&quot;&gt;&lt;/entry&gt;
+               &lt;entry key=&quot;testB&quot;&gt;
+                   &lt;value&gt;BBB&lt;/value&gt;
+               &lt;/entry&gt;
+           &lt;/map&gt;
+       &lt;/property&gt;
+   &lt;/bean&gt;
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/21/VUE第一天/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/29/test/" rel="prev" title="test">
+                test <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Eric Hunn" />
+            
+              <p class="site-author-name" itemprop="name">Eric Hunn</p>
+              <p class="site-description motion-element" itemprop="description">大数据|动漫迷|科技控</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">68</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/erichunn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:erichunn.me@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/2944687303/home?wvr=5" target="_blank" title="Webibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Webibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-bean的三种创建细节和生命周期"><span class="nav-number">1.</span> <span class="nav-text">Spring bean的三种创建细节和生命周期</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring的依赖注入"><span class="nav-number"></span> <span class="nav-text">Spring的依赖注入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、使用构造函数注入"><span class="nav-number">1.</span> <span class="nav-text">1、使用构造函数注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、使用set方法注入"><span class="nav-number">2.</span> <span class="nav-text">2、使用set方法注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂类型的注入"><span class="nav-number">3.</span> <span class="nav-text">复杂类型的注入</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+	  
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eric Hunn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

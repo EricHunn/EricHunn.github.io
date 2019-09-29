@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="无心是一首歌" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="前言：上一章节讲解的是就是通过工厂类获取bean实例，通过获取xml文件里面的配置，value是serviceimpl对应一个Id，然后获取一个serviceimpl的实例，或者获取一个daoimpl的实例，就不用通过new来创建了，本章讲解的是通过Spring容器，注解的方式达到上面的目的，直接注入实例或者注入某一成员类型的值。 Spring基于注解的IOC以及IOC的案例1、spring中io">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring第二天_01Spring常用注解">
+<meta property="og:url" content="http://erichunn.github.io/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/index.html">
+<meta property="og:site_name" content="无心是一首歌">
+<meta property="og:description" content="前言：上一章节讲解的是就是通过工厂类获取bean实例，通过获取xml文件里面的配置，value是serviceimpl对应一个Id，然后获取一个serviceimpl的实例，或者获取一个daoimpl的实例，就不用通过new来创建了，本章讲解的是通过Spring容器，注解的方式达到上面的目的，直接注入实例或者注入某一成员类型的值。 Spring基于注解的IOC以及IOC的案例1、spring中io">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.imgur.com/vgQ4cGY.png">
+<meta property="og:image" content="https://i.imgur.com/QmLkCqe.png">
+<meta property="og:updated_time" content="2019-09-27T06:49:25.098Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring第二天_01Spring常用注解">
+<meta name="twitter:description" content="前言：上一章节讲解的是就是通过工厂类获取bean实例，通过获取xml文件里面的配置，value是serviceimpl对应一个Id，然后获取一个serviceimpl的实例，或者获取一个daoimpl的实例，就不用通过new来创建了，本章讲解的是通过Spring容器，注解的方式达到上面的目的，直接注入实例或者注入某一成员类型的值。 Spring基于注解的IOC以及IOC的案例1、spring中io">
+<meta name="twitter:image" content="https://i.imgur.com/vgQ4cGY.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://erichunn.github.io/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/"/>
+
+
+
+
+
+  <title>Spring第二天_01Spring常用注解 | 无心是一首歌</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?02fe19ac065353167cab1b453f2909ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">无心是一首歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于我">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-站点地图">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-腾讯公益">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            腾讯公益
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring第二天_01Spring常用注解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-11T15:56:21+08:00">
+                2019-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前言：上一章节讲解的是就是通过工厂类获取bean实例，通过获取xml文件里面的配置，value是serviceimpl对应一个Id，然后获取一个serviceimpl的实例，或者获取一个daoimpl的实例，就不用通过new来创建了，本章讲解的是通过Spring容器，注解的方式达到上面的目的，直接注入实例或者注入某一成员类型的值。</p>
+<h1 id="Spring基于注解的IOC以及IOC的案例"><a href="#Spring基于注解的IOC以及IOC的案例" class="headerlink" title="Spring基于注解的IOC以及IOC的案例"></a>Spring基于注解的IOC以及IOC的案例</h1><h2 id="1、spring中ioc的常用注解"><a href="#1、spring中ioc的常用注解" class="headerlink" title="1、spring中ioc的常用注解"></a>1、spring中ioc的常用注解</h2><h2 id="2、案例使用xml方式和注解方式实现单表的CRUD操作"><a href="#2、案例使用xml方式和注解方式实现单表的CRUD操作" class="headerlink" title="2、案例使用xml方式和注解方式实现单表的CRUD操作"></a>2、案例使用xml方式和注解方式实现单表的CRUD操作</h2><pre><code>持久层技术选择：dbutils
+</code></pre><h2 id="3、改造基于注解的ioc案例，使用纯注解的方式实现"><a href="#3、改造基于注解的ioc案例，使用纯注解的方式实现" class="headerlink" title="3、改造基于注解的ioc案例，使用纯注解的方式实现"></a>3、改造基于注解的ioc案例，使用纯注解的方式实现</h2><pre><code>spring的一些新注解使用
+</code></pre><h2 id="4、spring和Junit整合"><a href="#4、spring和Junit整合" class="headerlink" title="4、spring和Junit整合"></a>4、spring和Junit整合</h2><p>曾经XML的配置，</p>
+<pre><code>&lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
+&lt;scope =&quot;&quot;   init-method=&quot;&quot;  destory-method=&quot;&quot;&gt;
+&lt;propertiy name = &quot;&quot; value=&quot;&quot; | ref=&quot;&quot;&gt;&lt;/propertiy&gt;
+&lt;/bean&gt;
+</code></pre><p> 1、用于创建对象的注解：</p>
+<pre><code>@Component
+</code></pre><p>他们的作用就和在XML配置文件中编写一个<bean></bean>标签实现的功能一样的</p>
+<p> 2、用于注入数据的注解：</p>
+<p>他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的</p>
+<p> 3、用于改变范围的注解</p>
+<p>他们的作用就和在bean标签中使用scope属性实现的功能是一样的</p>
+<p> 4、和生命周期相关的</p>
+<p>他们的作用就和在bean标签中使用Init-method和destory标签是一样的</p>
+<hr>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.dao.impl.AccountDaoImpl;
+import com.itheima.service.IAccountService;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Description 账户的业务层实现类
+ * @Author TT Hun
+ * @Data 2019/9/16 22:09
+
+ *
+ *  1、用于创建对象的注解
+ *      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
+
+ */
+@Component(value=&quot;accountService&quot;)
+public class AccountServiceImpl implements IAccountService {    
+
+
+    public AccountServiceImpl(){
+        System.out.println(&quot;对象被创建了&quot;);
+    }
+    public void saveAccount() {
+        accountDao.saveAccount();
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+&lt;!--    告知Spring在创建容器的时候需要扫描的包，配置所需要的标签不是在beans这个约束中，而是一个名称为context名称空间和约束中--&gt;
+    &lt;context:component-scan base-package=&quot;com.itheima&quot;&gt;&lt;/context:component-scan&gt;
+
+
+
+    &lt;/beans&gt;
+</code></pre><hr>
+<pre><code>package com.itheima.ui;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.service.IAccountService;
+import com.itheima.service.impl.AccountServiceImpl;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import sun.security.tools.keytool.Resources;
+
+
+/**
+ * @Description 用这个模拟一个表现层用于调用业务层，实际上应该是一个servlet
+ * @Author TT Hun
+ * @Data 2019/9/16 22:15
+ */
+public class Client {
+    public static void main(String[] args) {
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、根据ID获取bean对象
+        IAccountService as = (IAccountService) ac.getBean(&quot;accountService&quot;);
+
+        System.out.println(as);
+
+    }
+
+}
+</code></pre><hr>
+<h2 id="由Component衍生出来的三个注解："><a href="#由Component衍生出来的三个注解：" class="headerlink" title="由Component衍生出来的三个注解："></a>由Component衍生出来的三个注解：</h2><pre><code>/**  1、用于创建对象的注解
+*      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
+*      Component;作用，用于把当前对象注入Srping容器中
+*      属性：value:用于指定的bean的id。当我们不写的时候，它默认值是当前类名，而且首字母小写
+*      Controller:用在表现层
+*      Service:业务层
+*      Respository：用于持久层
+*      以上是和Component一样的作用，他们是Spring框架提供的为了明确三层使用的注解，是我们对三层更加清晰
+*
+*  2、用于注入数据的注解
+*      他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的
+*  3、用于改变范围的注解
+*      他们的作用就和在bean标签中使用scope属性实现的功能是一样的
+*  4、和生命周期相关的
+*      他们的作用就和在bean标签中使用Init-method和destory标签是一样的
+**/
+</code></pre><hr>
+<blockquote>
+<p>下面这段例子会报错因为没有注入数据，导致空指针异常。</p>
+</blockquote>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.dao.impl.AccountDaoImpl;
+import com.itheima.service.IAccountService;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Description 账户的业务层实现类
+ * @Author TT Hun
+ * @Data 2019/9/16 22:09
+ * 曾经XML的配置，
+ *  &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
+ *  &lt;scope =&quot;&quot;   init-method=&quot;&quot;  destory-method=&quot;&quot;&gt;
+ *  &lt;propertiy name = &quot;&quot; value=&quot;&quot; | ref=&quot;&quot;&gt;&lt;/propertiy&gt;
+ *  &lt;/bean&gt;
+ *
+ *
+ *
+ *  1、用于创建对象的注解
+ *      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
+ *      Component;作用，用于把当前对象注入Srping容器中
+ *      属性：value:用于指定的bean的id。当我们不写的时候，它默认值是当前类名，而且首字母小写
+ *      Controller:用在表现层
+ *      Service:业务层
+ *      Respository：用于持久层
+ *      以上是和Component一样的作用，他们是Spring框架提供的为了明确三层使用的注解，是我们对三层更加清晰
+ *
+ *  2、用于注入数据的注解
+ *      他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的
+ *  3、用于改变范围的注解
+ *      他们的作用就和在bean标签中使用scope属性实现的功能是一样的
+ *  4、和生命周期相关的
+ *      他们的作用就和在bean标签中使用Init-method和destory标签是一样的
+ */
+@Component(value=&quot;accountService&quot;)
+public class AccountServiceImpl implements IAccountService {
+        private IAccountDao accountDao ;
+
+
+    public void saveAccount() {
+        accountDao.saveAccount();
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.dao.impl;
+
+import com.itheima.dao.IAccountDao;
+import org.springframework.stereotype.Repository;
+
+/**
+ * @Description 账户的持久层实现类
+ * @Author TT Hun
+ * @Data 2019/9/16 22:13
+ */
+@Repository(&quot;accountDao&quot;)
+public class AccountDaoImpl implements IAccountDao {
+
+
+    public void saveAccount() {
+        System.out.println(&quot;保存了账户&quot;);
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.ui;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.service.IAccountService;
+import com.itheima.service.impl.AccountServiceImpl;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import sun.security.tools.keytool.Resources;
+
+
+/**
+ * @Description 用这个模拟一个表现层用于调用业务层，实际上应该是一个servlet
+ * @Author TT Hun
+ * @Data 2019/9/16 22:15
+ */
+public class Client {
+    public static void main(String[] args) {
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、根据ID获取Service的实例
+        IAccountService as = (IAccountService) ac.getBean(&quot;accountService&quot;);
+//      下面是获取dao对象的实例，
+        IAccountDao adao = ac.getBean(&quot;accountDao&quot;,IAccountDao.class);
+//        这里只显示调用了对象，没有使用其中的方法，因为其中的Serviceimpl里面隐入了Dao类型的变量，因为还没有实例化，所以他是null，会出现空指针异常，
+        as.saveAccount();    
+    }
+
+}
+</code></pre><blockquote>
+<p>所以要在上面这一段代码的数据类型serviceimpl里面的成员变量上面写上@Autowired</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>下面这一段讲解当出现相同的类的时候，Autowired注解怎么解决：</p>
+</blockquote>
+<p><img src="https://i.imgur.com/vgQ4cGY.png" alt=""></p>
+<p>Spring容器本质上是Map，key-value格式的</p>
+<p>如果在注入数据的时候有2个DAO类型的，那么首先，他会先匹配数据类型一致的，他会发现2个。</p>
+<p>然后在根据变量名称找对应的Spring容器里面的key写的，哪一个是相同的名字。</p>
+<hr>
+<blockquote>
+<p>Qualifier:<br>作用：在按照类中注入的基础之上再按照名称注入。他在给类成员注入时不能单独使用。但是在方法范数注入的时候可以。在给类成员注入的时候，需要和antuwired联合使用，在给方法注入时候可以单独使用<br>属性：value用于指定注入bean的id。</p>
+</blockquote>
+<blockquote>
+<p>Resource：<br>作用：直接按照bean的id注入。可以独立使用<br>属性：<br>name:用于指定bean的Id</p>
+</blockquote>
+<blockquote>
+<p>Autowired注解、Qualifier注解、Resource注解只能注入其他类型的bean数据类型，而基本类型和String类型无法实现上述实现。<br>另外，集合类型的注入智能通过XML来实现。</p>
+</blockquote>
+<blockquote>
+<p>基本类型和String类型的注入用Value注解<br>作用：用于注入基本类型和String类型的数据 </p>
+</blockquote>
+<blockquote>
+<p>属性：<br>value用于指定数据的值，他可以使用Spring中的SPEl（也就是Srpring的el表达式）<br>Spel的写法：${表达式}</p>
+</blockquote>
+<blockquote>
+<p>用于改变作用范围的：</p>
+</blockquote>
+<blockquote>
+<p>他们的作用就和在bean标签中使用scope属性实现的功能是一样的。</p>
+</blockquote>
+<blockquote>
+<p>scope:</p>
+</blockquote>
+<blockquote>
+<p>作用：用于指定bean的作用范围，</p>
+</blockquote>
+<blockquote>
+<p>属性：value:用于指定范围的取值。常用取值：singleton 和 prototype</p>
+</blockquote>
+<p>和生命周期相关：</p>
+<pre><code>他们的作用和在bean标签中使用init-method和destroy-method的作用是一样的。
+PreDestory
+    用于指定销毁方法
+PostConstruct
+    作用用于指定初始化方法
+</code></pre><p>小结：<br>    1、多例模式，关闭Spring不会销毁对象，<br>    2、想要实现销毁方法的实现，如果在serviceimpl注入初始化和销毁注解，然后写方法，然后再在main方法里面先初始化Spring容器，但是只有写了spring的close方法， 才会执行对象的销毁方法，这个地方的初始化和销毁，销毁的是spring容器创建的，比如下图；创建的是IAccountService类型的bean对象，最后要使用ac.close()方法关闭spring容器。</p>
+<p><img src="https://i.imgur.com/QmLkCqe.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/10/SSM第四天/" rel="next" title="SSM第四天">
+                <i class="fa fa-chevron-left"></i> SSM第四天
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/11/实战大数据电信项目（一）/" rel="prev" title="实战大数据电信项目（一）">
+                实战大数据电信项目（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Eric Hunn" />
+            
+              <p class="site-author-name" itemprop="name">Eric Hunn</p>
+              <p class="site-description motion-element" itemprop="description">大数据|动漫迷|科技控</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">68</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/erichunn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:erichunn.me@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/2944687303/home?wvr=5" target="_blank" title="Webibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Webibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring基于注解的IOC以及IOC的案例"><span class="nav-number">1.</span> <span class="nav-text">Spring基于注解的IOC以及IOC的案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、spring中ioc的常用注解"><span class="nav-number">1.1.</span> <span class="nav-text">1、spring中ioc的常用注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、案例使用xml方式和注解方式实现单表的CRUD操作"><span class="nav-number">1.2.</span> <span class="nav-text">2、案例使用xml方式和注解方式实现单表的CRUD操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、改造基于注解的ioc案例，使用纯注解的方式实现"><span class="nav-number">1.3.</span> <span class="nav-text">3、改造基于注解的ioc案例，使用纯注解的方式实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、spring和Junit整合"><span class="nav-number">1.4.</span> <span class="nav-text">4、spring和Junit整合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#由Component衍生出来的三个注解："><span class="nav-number">1.5.</span> <span class="nav-text">由Component衍生出来的三个注解：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+	  
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eric Hunn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
