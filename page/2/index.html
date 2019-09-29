@@ -2349,6 +2349,388 @@ public class CallLogRegionObserver extends BaseRegionObserver {
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/" itemprop="url">Spring第二天_01Spring常用注解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-11T15:56:21+08:00">
+                2019-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前言：上一章节讲解的是就是通过工厂类获取bean实例，通过获取xml文件里面的配置，value是serviceimpl对应一个Id，然后获取一个serviceimpl的实例，或者获取一个daoimpl的实例，就不用通过new来创建了，本章讲解的是通过Spring容器，注解的方式达到上面的目的，直接注入实例或者注入某一成员类型的值。</p>
+<h1 id="Spring基于注解的IOC以及IOC的案例"><a href="#Spring基于注解的IOC以及IOC的案例" class="headerlink" title="Spring基于注解的IOC以及IOC的案例"></a>Spring基于注解的IOC以及IOC的案例</h1><h2 id="1、spring中ioc的常用注解"><a href="#1、spring中ioc的常用注解" class="headerlink" title="1、spring中ioc的常用注解"></a>1、spring中ioc的常用注解</h2><h2 id="2、案例使用xml方式和注解方式实现单表的CRUD操作"><a href="#2、案例使用xml方式和注解方式实现单表的CRUD操作" class="headerlink" title="2、案例使用xml方式和注解方式实现单表的CRUD操作"></a>2、案例使用xml方式和注解方式实现单表的CRUD操作</h2><pre><code>持久层技术选择：dbutils
+</code></pre><h2 id="3、改造基于注解的ioc案例，使用纯注解的方式实现"><a href="#3、改造基于注解的ioc案例，使用纯注解的方式实现" class="headerlink" title="3、改造基于注解的ioc案例，使用纯注解的方式实现"></a>3、改造基于注解的ioc案例，使用纯注解的方式实现</h2><pre><code>spring的一些新注解使用
+</code></pre><h2 id="4、spring和Junit整合"><a href="#4、spring和Junit整合" class="headerlink" title="4、spring和Junit整合"></a>4、spring和Junit整合</h2><p>曾经XML的配置，</p>
+<pre><code>&lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
+&lt;scope =&quot;&quot;   init-method=&quot;&quot;  destory-method=&quot;&quot;&gt;
+&lt;propertiy name = &quot;&quot; value=&quot;&quot; | ref=&quot;&quot;&gt;&lt;/propertiy&gt;
+&lt;/bean&gt;
+</code></pre><p> 1、用于创建对象的注解：</p>
+<pre><code>@Component
+</code></pre><p>他们的作用就和在XML配置文件中编写一个<bean></bean>标签实现的功能一样的</p>
+<p> 2、用于注入数据的注解：</p>
+<p>他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的</p>
+<p> 3、用于改变范围的注解</p>
+<p>他们的作用就和在bean标签中使用scope属性实现的功能是一样的</p>
+<p> 4、和生命周期相关的</p>
+<p>他们的作用就和在bean标签中使用Init-method和destory标签是一样的</p>
+<hr>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.dao.impl.AccountDaoImpl;
+import com.itheima.service.IAccountService;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Description 账户的业务层实现类
+ * @Author TT Hun
+ * @Data 2019/9/16 22:09
+
+ *
+ *  1、用于创建对象的注解
+ *      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
+
+ */
+@Component(value=&quot;accountService&quot;)
+public class AccountServiceImpl implements IAccountService {    
+
+
+    public AccountServiceImpl(){
+        System.out.println(&quot;对象被创建了&quot;);
+    }
+    public void saveAccount() {
+        accountDao.saveAccount();
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+&lt;!--    告知Spring在创建容器的时候需要扫描的包，配置所需要的标签不是在beans这个约束中，而是一个名称为context名称空间和约束中--&gt;
+    &lt;context:component-scan base-package=&quot;com.itheima&quot;&gt;&lt;/context:component-scan&gt;
+
+
+
+    &lt;/beans&gt;
+</code></pre><hr>
+<pre><code>package com.itheima.ui;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.service.IAccountService;
+import com.itheima.service.impl.AccountServiceImpl;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import sun.security.tools.keytool.Resources;
+
+
+/**
+ * @Description 用这个模拟一个表现层用于调用业务层，实际上应该是一个servlet
+ * @Author TT Hun
+ * @Data 2019/9/16 22:15
+ */
+public class Client {
+    public static void main(String[] args) {
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、根据ID获取bean对象
+        IAccountService as = (IAccountService) ac.getBean(&quot;accountService&quot;);
+
+        System.out.println(as);
+
+    }
+
+}
+</code></pre><hr>
+<h2 id="由Component衍生出来的三个注解："><a href="#由Component衍生出来的三个注解：" class="headerlink" title="由Component衍生出来的三个注解："></a>由Component衍生出来的三个注解：</h2><pre><code>/**  1、用于创建对象的注解
+*      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
+*      Component;作用，用于把当前对象注入Srping容器中
+*      属性：value:用于指定的bean的id。当我们不写的时候，它默认值是当前类名，而且首字母小写
+*      Controller:用在表现层
+*      Service:业务层
+*      Respository：用于持久层
+*      以上是和Component一样的作用，他们是Spring框架提供的为了明确三层使用的注解，是我们对三层更加清晰
+*
+*  2、用于注入数据的注解
+*      他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的
+*  3、用于改变范围的注解
+*      他们的作用就和在bean标签中使用scope属性实现的功能是一样的
+*  4、和生命周期相关的
+*      他们的作用就和在bean标签中使用Init-method和destory标签是一样的
+**/
+</code></pre><hr>
+<blockquote>
+<p>下面这段例子会报错因为没有注入数据，导致空指针异常。</p>
+</blockquote>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.dao.impl.AccountDaoImpl;
+import com.itheima.service.IAccountService;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Description 账户的业务层实现类
+ * @Author TT Hun
+ * @Data 2019/9/16 22:09
+ * 曾经XML的配置，
+ *  &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
+ *  &lt;scope =&quot;&quot;   init-method=&quot;&quot;  destory-method=&quot;&quot;&gt;
+ *  &lt;propertiy name = &quot;&quot; value=&quot;&quot; | ref=&quot;&quot;&gt;&lt;/propertiy&gt;
+ *  &lt;/bean&gt;
+ *
+ *
+ *
+ *  1、用于创建对象的注解
+ *      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
+ *      Component;作用，用于把当前对象注入Srping容器中
+ *      属性：value:用于指定的bean的id。当我们不写的时候，它默认值是当前类名，而且首字母小写
+ *      Controller:用在表现层
+ *      Service:业务层
+ *      Respository：用于持久层
+ *      以上是和Component一样的作用，他们是Spring框架提供的为了明确三层使用的注解，是我们对三层更加清晰
+ *
+ *  2、用于注入数据的注解
+ *      他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的
+ *  3、用于改变范围的注解
+ *      他们的作用就和在bean标签中使用scope属性实现的功能是一样的
+ *  4、和生命周期相关的
+ *      他们的作用就和在bean标签中使用Init-method和destory标签是一样的
+ */
+@Component(value=&quot;accountService&quot;)
+public class AccountServiceImpl implements IAccountService {
+        private IAccountDao accountDao ;
+
+
+    public void saveAccount() {
+        accountDao.saveAccount();
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.dao.impl;
+
+import com.itheima.dao.IAccountDao;
+import org.springframework.stereotype.Repository;
+
+/**
+ * @Description 账户的持久层实现类
+ * @Author TT Hun
+ * @Data 2019/9/16 22:13
+ */
+@Repository(&quot;accountDao&quot;)
+public class AccountDaoImpl implements IAccountDao {
+
+
+    public void saveAccount() {
+        System.out.println(&quot;保存了账户&quot;);
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.ui;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.service.IAccountService;
+import com.itheima.service.impl.AccountServiceImpl;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import sun.security.tools.keytool.Resources;
+
+
+/**
+ * @Description 用这个模拟一个表现层用于调用业务层，实际上应该是一个servlet
+ * @Author TT Hun
+ * @Data 2019/9/16 22:15
+ */
+public class Client {
+    public static void main(String[] args) {
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、根据ID获取Service的实例
+        IAccountService as = (IAccountService) ac.getBean(&quot;accountService&quot;);
+//      下面是获取dao对象的实例，
+        IAccountDao adao = ac.getBean(&quot;accountDao&quot;,IAccountDao.class);
+//        这里只显示调用了对象，没有使用其中的方法，因为其中的Serviceimpl里面隐入了Dao类型的变量，因为还没有实例化，所以他是null，会出现空指针异常，
+        as.saveAccount();    
+    }
+
+}
+</code></pre><blockquote>
+<p>所以要在上面这一段代码的数据类型serviceimpl里面的成员变量上面写上@Autowired</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>下面这一段讲解当出现相同的类的时候，Autowired注解怎么解决：</p>
+</blockquote>
+<p><img src="https://i.imgur.com/vgQ4cGY.png" alt=""></p>
+<p>Spring容器本质上是Map，key-value格式的</p>
+<p>如果在注入数据的时候有2个DAO类型的，那么首先，他会先匹配数据类型一致的，他会发现2个。</p>
+<p>然后在根据变量名称找对应的Spring容器里面的key写的，哪一个是相同的名字。</p>
+<hr>
+<blockquote>
+<p>Qualifier:<br>作用：在按照类中注入的基础之上再按照名称注入。他在给类成员注入时不能单独使用。但是在方法范数注入的时候可以。在给类成员注入的时候，需要和antuwired联合使用，在给方法注入时候可以单独使用<br>属性：value用于指定注入bean的id。</p>
+</blockquote>
+<blockquote>
+<p>Resource：<br>作用：直接按照bean的id注入。可以独立使用<br>属性：<br>name:用于指定bean的Id</p>
+</blockquote>
+<blockquote>
+<p>Autowired注解、Qualifier注解、Resource注解只能注入其他类型的bean数据类型，而基本类型和String类型无法实现上述实现。<br>另外，集合类型的注入智能通过XML来实现。</p>
+</blockquote>
+<blockquote>
+<p>基本类型和String类型的注入用Value注解<br>作用：用于注入基本类型和String类型的数据 </p>
+</blockquote>
+<blockquote>
+<p>属性：<br>value用于指定数据的值，他可以使用Spring中的SPEl（也就是Srpring的el表达式）<br>Spel的写法：${表达式}</p>
+</blockquote>
+<blockquote>
+<p>用于改变作用范围的：</p>
+</blockquote>
+<blockquote>
+<p>他们的作用就和在bean标签中使用scope属性实现的功能是一样的。</p>
+</blockquote>
+<blockquote>
+<p>scope:</p>
+</blockquote>
+<blockquote>
+<p>作用：用于指定bean的作用范围，</p>
+</blockquote>
+<blockquote>
+<p>属性：value:用于指定范围的取值。常用取值：singleton 和 prototype</p>
+</blockquote>
+<p>和生命周期相关：</p>
+<pre><code>他们的作用和在bean标签中使用init-method和destroy-method的作用是一样的。
+PreDestory
+    用于指定销毁方法
+PostConstruct
+    作用用于指定初始化方法
+</code></pre><p>小结：<br>    1、多例模式，关闭Spring不会销毁对象，<br>    2、想要实现销毁方法的实现，如果在serviceimpl注入初始化和销毁注解，然后写方法，然后再在main方法里面先初始化Spring容器，但是只有写了spring的close方法， 才会执行对象的销毁方法，这个地方的初始化和销毁，销毁的是spring容器创建的，比如下图；创建的是IAccountService类型的bean对象，最后要使用ac.close()方法关闭spring容器。</p>
+<p><img src="https://i.imgur.com/QmLkCqe.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/实战大数据电信项目（一）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2821,388 +3203,6 @@ public class CallLogRegionObserver extends BaseRegionObserver {
 
 4.
 </code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/" itemprop="url">Spring第二天_01Spring常用注解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-11T15:56:21+08:00">
-                2019-01-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>前言：上一章节讲解的是就是通过工厂类获取bean实例，通过获取xml文件里面的配置，value是serviceimpl对应一个Id，然后获取一个serviceimpl的实例，或者获取一个daoimpl的实例，就不用通过new来创建了，本章讲解的是通过Spring容器，注解的方式达到上面的目的，直接注入实例或者注入某一成员类型的值。</p>
-<h1 id="Spring基于注解的IOC以及IOC的案例"><a href="#Spring基于注解的IOC以及IOC的案例" class="headerlink" title="Spring基于注解的IOC以及IOC的案例"></a>Spring基于注解的IOC以及IOC的案例</h1><h2 id="1、spring中ioc的常用注解"><a href="#1、spring中ioc的常用注解" class="headerlink" title="1、spring中ioc的常用注解"></a>1、spring中ioc的常用注解</h2><h2 id="2、案例使用xml方式和注解方式实现单表的CRUD操作"><a href="#2、案例使用xml方式和注解方式实现单表的CRUD操作" class="headerlink" title="2、案例使用xml方式和注解方式实现单表的CRUD操作"></a>2、案例使用xml方式和注解方式实现单表的CRUD操作</h2><pre><code>持久层技术选择：dbutils
-</code></pre><h2 id="3、改造基于注解的ioc案例，使用纯注解的方式实现"><a href="#3、改造基于注解的ioc案例，使用纯注解的方式实现" class="headerlink" title="3、改造基于注解的ioc案例，使用纯注解的方式实现"></a>3、改造基于注解的ioc案例，使用纯注解的方式实现</h2><pre><code>spring的一些新注解使用
-</code></pre><h2 id="4、spring和Junit整合"><a href="#4、spring和Junit整合" class="headerlink" title="4、spring和Junit整合"></a>4、spring和Junit整合</h2><p>曾经XML的配置，</p>
-<pre><code>&lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
-&lt;scope =&quot;&quot;   init-method=&quot;&quot;  destory-method=&quot;&quot;&gt;
-&lt;propertiy name = &quot;&quot; value=&quot;&quot; | ref=&quot;&quot;&gt;&lt;/propertiy&gt;
-&lt;/bean&gt;
-</code></pre><p> 1、用于创建对象的注解：</p>
-<pre><code>@Component
-</code></pre><p>他们的作用就和在XML配置文件中编写一个<bean></bean>标签实现的功能一样的</p>
-<p> 2、用于注入数据的注解：</p>
-<p>他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的</p>
-<p> 3、用于改变范围的注解</p>
-<p>他们的作用就和在bean标签中使用scope属性实现的功能是一样的</p>
-<p> 4、和生命周期相关的</p>
-<p>他们的作用就和在bean标签中使用Init-method和destory标签是一样的</p>
-<hr>
-<pre><code>package com.itheima.service.impl;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.dao.impl.AccountDaoImpl;
-import com.itheima.service.IAccountService;
-import org.springframework.stereotype.Component;
-
-/**
- * @Description 账户的业务层实现类
- * @Author TT Hun
- * @Data 2019/9/16 22:09
-
- *
- *  1、用于创建对象的注解
- *      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
-
- */
-@Component(value=&quot;accountService&quot;)
-public class AccountServiceImpl implements IAccountService {    
-
-
-    public AccountServiceImpl(){
-        System.out.println(&quot;对象被创建了&quot;);
-    }
-    public void saveAccount() {
-        accountDao.saveAccount();
-    }
-}
-</code></pre><hr>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
-       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
-
-&lt;!--    告知Spring在创建容器的时候需要扫描的包，配置所需要的标签不是在beans这个约束中，而是一个名称为context名称空间和约束中--&gt;
-    &lt;context:component-scan base-package=&quot;com.itheima&quot;&gt;&lt;/context:component-scan&gt;
-
-
-
-    &lt;/beans&gt;
-</code></pre><hr>
-<pre><code>package com.itheima.ui;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.service.IAccountService;
-import com.itheima.service.impl.AccountServiceImpl;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import sun.security.tools.keytool.Resources;
-
-
-/**
- * @Description 用这个模拟一个表现层用于调用业务层，实际上应该是一个servlet
- * @Author TT Hun
- * @Data 2019/9/16 22:15
- */
-public class Client {
-    public static void main(String[] args) {
-        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
-//        2、根据ID获取bean对象
-        IAccountService as = (IAccountService) ac.getBean(&quot;accountService&quot;);
-
-        System.out.println(as);
-
-    }
-
-}
-</code></pre><hr>
-<h2 id="由Component衍生出来的三个注解："><a href="#由Component衍生出来的三个注解：" class="headerlink" title="由Component衍生出来的三个注解："></a>由Component衍生出来的三个注解：</h2><pre><code>/**  1、用于创建对象的注解
-*      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
-*      Component;作用，用于把当前对象注入Srping容器中
-*      属性：value:用于指定的bean的id。当我们不写的时候，它默认值是当前类名，而且首字母小写
-*      Controller:用在表现层
-*      Service:业务层
-*      Respository：用于持久层
-*      以上是和Component一样的作用，他们是Spring框架提供的为了明确三层使用的注解，是我们对三层更加清晰
-*
-*  2、用于注入数据的注解
-*      他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的
-*  3、用于改变范围的注解
-*      他们的作用就和在bean标签中使用scope属性实现的功能是一样的
-*  4、和生命周期相关的
-*      他们的作用就和在bean标签中使用Init-method和destory标签是一样的
-**/
-</code></pre><hr>
-<blockquote>
-<p>下面这段例子会报错因为没有注入数据，导致空指针异常。</p>
-</blockquote>
-<pre><code>package com.itheima.service.impl;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.dao.impl.AccountDaoImpl;
-import com.itheima.service.IAccountService;
-import org.springframework.stereotype.Component;
-
-/**
- * @Description 账户的业务层实现类
- * @Author TT Hun
- * @Data 2019/9/16 22:09
- * 曾经XML的配置，
- *  &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
- *  &lt;scope =&quot;&quot;   init-method=&quot;&quot;  destory-method=&quot;&quot;&gt;
- *  &lt;propertiy name = &quot;&quot; value=&quot;&quot; | ref=&quot;&quot;&gt;&lt;/propertiy&gt;
- *  &lt;/bean&gt;
- *
- *
- *
- *  1、用于创建对象的注解
- *      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
- *      Component;作用，用于把当前对象注入Srping容器中
- *      属性：value:用于指定的bean的id。当我们不写的时候，它默认值是当前类名，而且首字母小写
- *      Controller:用在表现层
- *      Service:业务层
- *      Respository：用于持久层
- *      以上是和Component一样的作用，他们是Spring框架提供的为了明确三层使用的注解，是我们对三层更加清晰
- *
- *  2、用于注入数据的注解
- *      他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的
- *  3、用于改变范围的注解
- *      他们的作用就和在bean标签中使用scope属性实现的功能是一样的
- *  4、和生命周期相关的
- *      他们的作用就和在bean标签中使用Init-method和destory标签是一样的
- */
-@Component(value=&quot;accountService&quot;)
-public class AccountServiceImpl implements IAccountService {
-        private IAccountDao accountDao ;
-
-
-    public void saveAccount() {
-        accountDao.saveAccount();
-    }
-}
-</code></pre><hr>
-<pre><code>package com.itheima.dao.impl;
-
-import com.itheima.dao.IAccountDao;
-import org.springframework.stereotype.Repository;
-
-/**
- * @Description 账户的持久层实现类
- * @Author TT Hun
- * @Data 2019/9/16 22:13
- */
-@Repository(&quot;accountDao&quot;)
-public class AccountDaoImpl implements IAccountDao {
-
-
-    public void saveAccount() {
-        System.out.println(&quot;保存了账户&quot;);
-    }
-}
-</code></pre><hr>
-<pre><code>package com.itheima.ui;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.service.IAccountService;
-import com.itheima.service.impl.AccountServiceImpl;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import sun.security.tools.keytool.Resources;
-
-
-/**
- * @Description 用这个模拟一个表现层用于调用业务层，实际上应该是一个servlet
- * @Author TT Hun
- * @Data 2019/9/16 22:15
- */
-public class Client {
-    public static void main(String[] args) {
-        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
-//        2、根据ID获取Service的实例
-        IAccountService as = (IAccountService) ac.getBean(&quot;accountService&quot;);
-//      下面是获取dao对象的实例，
-        IAccountDao adao = ac.getBean(&quot;accountDao&quot;,IAccountDao.class);
-//        这里只显示调用了对象，没有使用其中的方法，因为其中的Serviceimpl里面隐入了Dao类型的变量，因为还没有实例化，所以他是null，会出现空指针异常，
-        as.saveAccount();    
-    }
-
-}
-</code></pre><blockquote>
-<p>所以要在上面这一段代码的数据类型serviceimpl里面的成员变量上面写上@Autowired</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>下面这一段讲解当出现相同的类的时候，Autowired注解怎么解决：</p>
-</blockquote>
-<p><img src="https://i.imgur.com/vgQ4cGY.png" alt=""></p>
-<p>Spring容器本质上是Map，key-value格式的</p>
-<p>如果在注入数据的时候有2个DAO类型的，那么首先，他会先匹配数据类型一致的，他会发现2个。</p>
-<p>然后在根据变量名称找对应的Spring容器里面的key写的，哪一个是相同的名字。</p>
-<hr>
-<blockquote>
-<p>Qualifier:<br>作用：在按照类中注入的基础之上再按照名称注入。他在给类成员注入时不能单独使用。但是在方法范数注入的时候可以。在给类成员注入的时候，需要和antuwired联合使用，在给方法注入时候可以单独使用<br>属性：value用于指定注入bean的id。</p>
-</blockquote>
-<blockquote>
-<p>Resource：<br>作用：直接按照bean的id注入。可以独立使用<br>属性：<br>name:用于指定bean的Id</p>
-</blockquote>
-<blockquote>
-<p>Autowired注解、Qualifier注解、Resource注解只能注入其他类型的bean数据类型，而基本类型和String类型无法实现上述实现。<br>另外，集合类型的注入智能通过XML来实现。</p>
-</blockquote>
-<blockquote>
-<p>基本类型和String类型的注入用Value注解<br>作用：用于注入基本类型和String类型的数据 </p>
-</blockquote>
-<blockquote>
-<p>属性：<br>value用于指定数据的值，他可以使用Spring中的SPEl（也就是Srpring的el表达式）<br>Spel的写法：${表达式}</p>
-</blockquote>
-<blockquote>
-<p>用于改变作用范围的：</p>
-</blockquote>
-<blockquote>
-<p>他们的作用就和在bean标签中使用scope属性实现的功能是一样的。</p>
-</blockquote>
-<blockquote>
-<p>scope:</p>
-</blockquote>
-<blockquote>
-<p>作用：用于指定bean的作用范围，</p>
-</blockquote>
-<blockquote>
-<p>属性：value:用于指定范围的取值。常用取值：singleton 和 prototype</p>
-</blockquote>
-<p>和生命周期相关：</p>
-<pre><code>他们的作用和在bean标签中使用init-method和destroy-method的作用是一样的。
-PreDestory
-    用于指定销毁方法
-PostConstruct
-    作用用于指定初始化方法
-</code></pre><p>小结：<br>    1、多例模式，关闭Spring不会销毁对象，<br>    2、想要实现销毁方法的实现，如果在serviceimpl注入初始化和销毁注解，然后写方法，然后再在main方法里面先初始化Spring容器，但是只有写了spring的close方法， 才会执行对象的销毁方法，这个地方的初始化和销毁，销毁的是spring容器创建的，比如下图；创建的是IAccountService类型的bean对象，最后要使用ac.close()方法关闭spring容器。</p>
-<p><img src="https://i.imgur.com/QmLkCqe.png" alt=""></p>
-
           
         
       
