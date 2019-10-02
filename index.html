@@ -328,6 +328,934 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/29/Spring第二天03Spring新注解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/29/Spring第二天03Spring新注解/" itemprop="url">Spring第二天03Spring新注解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-29T19:34:41+08:00">
+                2019-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          关于Spring新注解
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/09/29/Spring第二天03Spring新注解/">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/29/Spring第二天02基于XML和使用注解的IOC案例/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/29/Spring第二天02基于XML和使用注解的IOC案例/" itemprop="url">Spring第二天02基于XML和使用注解的IOC案例</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-29T17:19:14+08:00">
+                2019-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="基于XML的IOC的案例："><a href="#基于XML的IOC的案例：" class="headerlink" title="基于XML的IOC的案例："></a>基于XML的IOC的案例：</h1><pre><code>package com.itheima.dao;
+
+import com.itheima.domain.Account;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+
+import java.util.List;
+
+/**
+ * @Description 账户的持久层实现类
+ * @Author TT Hun
+ * @Data 2019/9/27 15:42
+ */
+public class AccountDaoImpl implements IAccountDao {
+
+    private QueryRunner runner;
+
+    public void setRunner(QueryRunner runner) {
+        this.runner = runner;
+    }
+
+    public List&lt;Account&gt; findAllAccount() {
+        try {
+            return runner.query(&quot;select * from account&quot;, new BeanListHandler&lt;Account&gt;(Account.class));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Account findAccountById(Integer accountId) {
+        try {
+            return runner.query(&quot;select * from account where id = ?&quot;, new BeanHandler&lt;Account&gt;(Account.class),accountId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void saveAccount(Account account) {
+        try {
+             runner.update(&quot;insert into account(name,money)values(?,?)&quot;, account.getName(),account.getMoney());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateAccount(Account account) {
+        try {
+            runner.update(&quot;update account set name =?,money = ? where id =?&quot;, account.getName(),account.getMoney(),account.getID());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    public void deleteAccount(Integer accountId) {
+
+        try {
+            runner.update(&quot;delete from  account where id = ?&quot;, accountId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.dao;
+
+import com.itheima.domain.Account;
+
+import java.util.List;
+
+/**
+ * 账户的持久层接口
+ */
+public interface IAccountDao {
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List&lt;Account&gt; findAllAccount();
+
+    /**
+     * 查询一个
+     * @return
+     */
+    Account findAccountById(Integer accountId);
+
+    /**
+     * 保存
+     * @param account
+     */
+    void saveAccount(Account account);
+
+    /**
+     * 更新
+     * @param account
+     */
+    void updateAccount(Account account);
+
+    /**
+     * 删除
+     * @param acccountId
+     */
+    void deleteAccount(Integer acccountId);
+}
+</code></pre><hr>
+<pre><code>package com.itheima.service;
+
+import com.itheima.domain.Account;
+
+import java.util.List;
+
+/**
+ * 账户的业务层接口
+ */
+public interface IAccountService {
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List&lt;Account&gt; findAllAccount();
+
+    /**
+     * 查询一个
+     * @return
+     */
+    Account findAccountById(Integer accountId);
+
+    /**
+     * 保存
+     * @param account
+     */
+    void saveAccount(Account account);
+
+    /**
+     * 更新
+     * @param account
+     */
+    void updateAccount(Account account);
+
+    /**
+     * 删除
+     * @param acccountId
+     */
+    void deleteAccount(Integer acccountId);
+
+
+}
+</code></pre><hr>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import com.itheima.service.IAccountService;
+
+import java.util.List;
+
+/**
+ * 账户的业务层实现类
+ */
+public class AccountServiceImpl implements IAccountService{
+
+    private IAccountDao accountDao;
+
+    public void setAccountDao(IAccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
+
+    public List&lt;Account&gt; findAllAccount() {
+        return accountDao.findAllAccount();
+    }
+
+    public Account findAccountById(Integer accountId) {
+        return accountDao.findAccountById(accountId);
+    }
+
+    public void saveAccount(Account account) {
+        accountDao.saveAccount(account);
+    }
+
+    public void updateAccount(Account account) {
+        accountDao.updateAccount(account);
+    }
+
+    public void deleteAccount(Integer acccountId) {
+        accountDao.deleteAccount(acccountId);
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.domain;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/9/27 15:01
+ */
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
+
+@Setter
+@Getter
+@Data
+public class Account implements Serializable {
+
+     private  Integer ID;
+     private  String name;
+     private Float money;
+</code></pre><p>}</p>
+<hr>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:util=&quot;http://www.springframework.org/schema/util&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd&quot;&gt;
+
+&lt;!--    配对业务层对象，知识点：如何创建bean对象  --&gt;
+    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;
+&lt;!--        注入dao，知识点：如何注入数据、通过set方法注入数据、注入的类型：其他bean类型
+            这个地方由于使用了accountDao对象，所以--&gt;
+        &lt;property name=&quot;accountDao&quot; ref=&quot;accountDao&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+&lt;!--    里面需要注入DAO对象，配置DAO对象--&gt;
+    &lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.AccountDaoImpl&quot;&gt;
+        &lt;!--    注入queryrunner丨由于accountDaoimpl里面也是在使用了QueryRunner对象所以注入queryrunner对象--&gt;
+        &lt;property name=&quot;runner&quot; ref=&quot;runner&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+&lt;!--配置queryrunner对象丨这个地方的细节：runner对象是一个单例对象单例对象会导致多线程在往数据库插入
+的时候会导致一个插入还没插入完就又开始了，相互干扰。所以加上一个scope属性，配置多例模式，--&gt;
+    &lt;bean id=&quot;runner&quot; class=&quot;org.apache.commons.dbutils.QueryRunner&quot; scope=&quot;prototype&quot;&gt;
+&lt;!--        注入数据源、知识点：通过构造函数注入数据--&gt;
+        &lt;constructor-arg name=&quot;ds&quot; ref=&quot; dataSource&quot;&gt;&lt;/constructor-arg&gt;
+    &lt;/bean&gt;
+&lt;!--    配置数据源、知识点：注入的类型：基本类型的注入--&gt;
+    &lt;bean id=&quot; dataSource&quot; class =&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;
+&lt;!--        连接数据库的必备信息--&gt;
+        &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/eesy?characterEncoding=utf-8&amp;amp;serverTimezone=UTC&amp;amp;useSSL=false&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;user&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;password&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+
+
+&lt;!--总结：这个配置文件就是配置service对象和dao对象，但是由于service对象里面使用了dao对象，所以要
+把dao对象注入到serviceImpl里面，由于dao对象使用了dbutil的对象，所以还要注入这个对象和，然后在设置
+dbutil反射对象和dbutil需要注入的基本类型的数据--&gt;
+&lt;/beans&gt;
+
+package com.itheima.test;
+
+import com.itheima.domain.Account;
+import com.itheima.service.IAccountService;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.List;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/9/29 14:33
+ */
+public class AccountServiceTest {
+    @Test
+    public void testFindAll() {
+//        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        得到业务层对象
+        IAccountService as = ac.getBean(&quot;accountService&quot;, IAccountService.class);
+//        执行方法
+        List&lt;Account&gt; accounts = as.findAllAccount();
+        for (Account account : accounts) {
+            System.out.println(account);
+        }
+    }
+
+    @Test
+    public void testFindOne() {
+        //        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        得到业务层对象
+        IAccountService as = ac.getBean(&quot;accountService&quot;, IAccountService.class);
+//        执行方法
+        Account account = as.findAccountById(1);
+        System.out.println(account);
+    }
+
+    @Test
+    public void testSave() {
+        Account account = new Account();
+        account.setName(&quot;test&quot;);
+        account.setMoney(12345f);
+
+        //        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+        //        得到业务层对象
+        IAccountService as = ac.getBean(&quot;accountService&quot;, IAccountService.class);
+        //         执行方法
+        as.saveAccount(account);
+
+    }
+
+    @Test
+    public void testUpdate() {
+        //        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        得到业务层对象
+        IAccountService as = ac.getBean(&quot;accountService&quot;, IAccountService.class);
+//        执行方法
+        Account account = new Account();
+        account.setMoney(23456f);
+        as.updateAccount(account);
+
+    }
+
+    @Test
+    public void testDelete() {
+        //        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        得到业务层对象
+        IAccountService as = ac.getBean(&quot;accountService&quot;, IAccountService.class);
+//        执行方法
+        as.deleteAccount(4);
+
+    }
+}
+</code></pre><h1 id="基于注解的IOC的案例："><a href="#基于注解的IOC的案例：" class="headerlink" title="基于注解的IOC的案例："></a>基于注解的IOC的案例：</h1><pre><code>package com.itheima.dao;
+
+import com.itheima.domain.Account;
+
+import java.util.List;
+
+/**
+ * 账户的持久层接口
+ */
+public interface IAccountDao {
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List&lt;Account&gt; findAllAccount();
+
+    /**
+     * 查询一个
+     * @return
+     */
+    Account findAccountById(Integer accountId);
+
+    /**
+     * 保存
+     * @param account
+     */
+    void saveAccount(Account account);
+
+    /**
+     * 更新
+     * @param account
+     */
+    void updateAccount(Account account);
+
+    /**
+     * 删除
+     * @param acccountId
+     */
+    void deleteAccount(Integer acccountId);
+}
+</code></pre><hr>
+<pre><code>package com.itheima.dao;
+
+import com.itheima.domain.Account;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * @Description 账户的持久层实现类
+ * @Author TT Hun
+ * @Data 2019/9/27 15:42
+ */
+@Repository(&quot;accountDao&quot;)
+public class AccountDaoImpl implements IAccountDao {
+
+    @Autowired
+    private QueryRunner runner;
+
+    public void setRunner(QueryRunner runner) {
+        this.runner = runner;
+    }
+
+    public List&lt;Account&gt; findAllAccount() {
+        try {
+            return runner.query(&quot;select * from account&quot;, new BeanListHandler&lt;Account&gt;(Account.class));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Account findAccountById(Integer accountId) {
+        try {
+            return runner.query(&quot;select * from account where id = ?&quot;, new BeanHandler&lt;Account&gt;(Account.class),accountId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void saveAccount(Account account) {
+        try {
+             runner.update(&quot;insert into account(name,money)values(?,?)&quot;, account.getName(),account.getMoney());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateAccount(Account account) {
+        try {
+            runner.update(&quot;update account set name =?,money = ? where id =?&quot;, account.getName(),account.getMoney(),account.getID());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    public void deleteAccount(Integer accountId) {
+
+        try {
+            runner.update(&quot;delete from  account where id = ?&quot;, accountId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.service;
+
+import com.itheima.domain.Account;
+
+import java.util.List;
+
+/**
+ * 账户的业务层接口
+ */
+public interface IAccountService {
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List&lt;Account&gt; findAllAccount();
+
+    /**
+     * 查询一个
+     * @return
+     */
+    Account findAccountById(Integer accountId);
+
+    /**
+     * 保存
+     * @param account
+     */
+    void saveAccount(Account account);
+
+    /**
+     * 更新
+     * @param account
+     */
+    void updateAccount(Account account);
+
+    /**
+     * 删除
+     * @param acccountId
+     */
+    void deleteAccount(Integer acccountId);
+
+
+}
+</code></pre><hr>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import com.itheima.service.IAccountService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 账户的业务层实现类
+ */
+@Service(&quot;accountService&quot;)
+public class AccountServiceImpl implements IAccountService {
+
+    @Autowired
+    private IAccountDao accountDao;
+
+
+    public List&lt;Account&gt; findAllAccount() {
+        return accountDao.findAllAccount();
+    }
+
+    public Account findAccountById(Integer accountId) {
+        return accountDao.findAccountById(accountId);
+    }
+
+    public void saveAccount(Account account) {
+        accountDao.saveAccount(account);
+    }
+
+    public void updateAccount(Account account) {
+        accountDao.updateAccount(account);
+    }
+
+    public void deleteAccount(Integer acccountId) {
+        accountDao.deleteAccount(acccountId);
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+&lt;!--    使用注解开发就需要告知Spring在使用注解的时候需要扫描的包--&gt;
+    &lt;context:component-scan base-package=&quot;com.itheima&quot;&gt;&lt;/context:component-scan&gt;
+    &lt;!--配置QueryRunner--&gt;
+    &lt;bean id=&quot;runner&quot; class=&quot;org.apache.commons.dbutils.QueryRunner&quot; scope=&quot;prototype&quot;&gt;
+        &lt;!--注入数据源--&gt;
+        &lt;constructor-arg name=&quot;ds&quot; ref=&quot;dataSource&quot;&gt;&lt;/constructor-arg&gt;
+    &lt;/bean&gt;
+
+    &lt;!-- 配置数据源 --&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;
+        &lt;!--连接数据库的必备信息--&gt;
+        &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/eesy?characterEncoding=utf-8&amp;amp;serverTimezone=UTC&amp;amp;useSSL=false&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;user&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;password&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre><hr>
+<pre><code>package com.itheima.test;
+
+import com.itheima.domain.Account;
+import com.itheima.service.IAccountService;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.List;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/9/29 14:33
+ */
+public class AccountServiceTest {
+    @Test
+    public void testFindAll() {
+//        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        得到业务层对象
+        IAccountService as = ac.getBean(&quot;accountService&quot;, IAccountService.class);
+//        执行方法
+        List&lt;Account&gt; accounts = as.findAllAccount();
+        for (Account account : accounts) {
+            System.out.println(account);
+        }
+    }
+
+    @Test
+    public void testFindOne() {
+        //        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        得到业务层对象
+        IAccountService as = ac.getBean(&quot;accountService&quot;, IAccountService.class);
+//        执行方法
+        Account account = as.findAccountById(1);
+        System.out.println(account);
+    }
+
+    @Test
+    public void testSave() {
+        Account account = new Account();
+        account.setName(&quot;test&quot;);
+        account.setMoney(12345f);
+
+        //        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+        //        得到业务层对象
+        IAccountService as = ac.getBean(&quot;accountService&quot;, IAccountService.class);
+        //         执行方法
+        as.saveAccount(account);
+
+    }
+
+    @Test
+    public void testUpdate() {
+        //        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        得到业务层对象
+        IAccountService as = ac.getBean(&quot;accountService&quot;, IAccountService.class);
+//        执行方法
+        Account account = new Account();
+        account.setMoney(23456f);
+        as.updateAccount(account);
+
+    }
+
+    @Test
+    public void testDelete() {
+        //        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        得到业务层对象
+        IAccountService as = ac.getBean(&quot;accountService&quot;, IAccountService.class);
+//        执行方法
+        as.deleteAccount(4);
+
+    }
+}
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/29/test/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -348,6 +1276,125 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 <a class="post-title-link" href="/2019/09/29/test/" itemprop="url">test</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-29T17:04:55+08:00">
+                2019-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/29/Spring第三天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/29/Spring第三天/" itemprop="url">test</a></h1>
         
 
         <div class="post-meta">
@@ -2027,686 +3074,11 @@ countByKey()                            //按照key,统计每个key下value的�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/11/Mybatis第二天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/11/Mybatis第二天/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-11T21:32:10+08:00">
-                2019-09-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="https://i.imgur.com/CduGMIo.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/10/Mybatis第一天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/10/Mybatis第一天/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-10T15:05:48+08:00">
-                2019-09-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>mybatis框架<br>共四天<br>第一天：mybatis入门<br>    mybatis的概述<br>    mybatis的环境搭建<br>    mybatis入门案例<br>    自定义mybatis框架（主要的目的是为了让大家了解mybatis中执行细节）<br>第二天：mybatis基本使用<br>    mybatis的单表crud操作<br>    mybatis的参数和返回值<br>    mybatis的dao编写<br>    mybatis配置的细节<br>        几个标签的使用<br>第三天：mybatis的深入和多表<br>    mybatis的连接池<br>    mybatis的事务控制及设计的方法<br>    mybatis的多表查询<br>        一对多（多对一）<br>        多对多<br>第四天：mybatis的缓存和注解开发<br>    mybatis中的加载时机（查询的时机）<br>    mybatis中的一级缓存和二级缓存<br>    mybatis的注解开发<br>        单表CRUD</p>
-<pre><code>多表查询
-</code></pre><hr>
-<p>1、什么是框架？<br>    它是我们软件开发中的一套解决方案，不同的框架解决的是不同的问题。<br>    使用框架的好处：<br>        框架封装了很多的细节，使开发者可以使用极简的方式实现功能。大大提高开发效率。<br>2、三层架构<br>    表现层：<br>        是用于展示数据的<br>    业务层：<br>        是处理业务需求<br>    持久层：<br>        是和数据库交互的<br>3、持久层技术解决方案<br>    JDBC技术：<br>        Connection<br>        PreparedStatement<br>        ResultSet<br>    Spring的JdbcTemplate：<br>        Spring中对jdbc的简单封装<br>    Apache的DBUtils：<br>        它和Spring的JdbcTemplate很像，也是对Jdbc的简单封装</p>
-<pre><code>以上这些都不是框架
-    JDBC是规范
-    Spring的JdbcTemplate和Apache的DBUtils都只是工具类
-</code></pre><p>4、mybatis的概述<br>    mybatis是一个持久层框架，用java编写的。<br>    它封装了jdbc操作的很多细节，使开发者只需要关注sql语句本身，而无需关注注册驱动，创建连接等繁杂过程<br>    它使用了ORM思想实现了结果集的封装。</p>
-<pre><code>ORM：
-    Object Relational Mappging 对象关系映射
-    简单的说：
-        就是把数据库表和实体类及实体类的属性对应起来
-        让我们可以操作实体类就实现操作数据库表。
-
-        user            User
-        id            userId
-        user_name        userName
-今天我们需要做到
-    实体类中的属性和数据库表的字段名称保持一致。
-        user            User
-        id            id
-        user_name        user_name
-</code></pre><p>5、mybatis的入门<br>    mybatis的环境搭建<br>        第一步：创建maven工程并导入坐标<br>        第二步：创建实体类和dao的接口<br>        第三步：创建Mybatis的主配置文件<br>                SqlMapConifg.xml<br>        第四步：创建映射配置文件<br>                IUserDao.xml<br>    环境搭建的注意事项：<br>        第一个：创建IUserDao.xml 和 IUserDao.java时名称是为了和我们之前的知识保持一致。<br>            在Mybatis中它把持久层的操作接口名称和映射文件也叫做：Mapper<br>            所以：IUserDao 和 IUserMapper是一样的<br>        第二个：在idea中创建目录的时候，它和包是不一样的<br>            包在创建时：com.itheima.dao它是三级结构<br>            目录在创建时：com.itheima.dao是一级目录<br>        第三个：mybatis的映射配置文件位置必须和dao接口的包结构相同<br>        第四个：映射配置文件的mapper标签namespace属性的取值必须是dao接口的全限定类名<br>        第五个：映射配置文件的操作配置（select），id属性的取值必须是dao接口的方法名</p>
-<pre><code>    当我们遵从了第三，四，五点之后，我们在开发中就无须再写dao的实现类。
-mybatis的入门案例
-    第一步：读取配置文件
-    第二步：创建SqlSessionFactory工厂
-    第三步：创建SqlSession
-    第四步：创建Dao接口的代理对象
-    第五步：执行dao中的方法
-    第六步：释放资源
-
-    注意事项：
-        不要忘记在映射配置中告知mybatis要封装到哪个实体类中
-        配置的方式：指定实体类的全限定类名
-
-    mybatis基于注解的入门案例：
-        把IUserDao.xml移除，在dao接口的方法上使用@Select注解，并且指定SQL语句
-        同时需要在SqlMapConfig.xml中的mapper配置时，使用class属性指定dao接口的全限定类名。
-明确：
-    我们在实际开发中，都是越简便越好，所以都是采用不写dao实现类的方式。
-    不管使用XML还是注解配置。
-    但是Mybatis它是支持写dao实现类的。
-</code></pre><p>6、自定义Mybatis的分析：<br>    mybatis在使用代理dao的方式实现增删改查时做什么事呢？<br>        只有两件事：<br>            第一：创建代理对象<br>            第二：在代理对象中调用selectList</p>
-<pre><code>自定义mybatis能通过入门案例看到类
-    class Resources
-    class SqlSessionFactoryBuilder
-    interface SqlSessionFactory
-    interface SqlSession
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/07/Spark第一天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/07/Spark第一天/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-07T16:22:05+08:00">
-                2019-09-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="并行"><a href="#并行" class="headerlink" title="并行"></a>并行</h2><pre><code>集群计算。
-并行计算。
-</code></pre><h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><pre><code>并发执行。
-</code></pre><h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><pre><code>Lightning-fast cluster computing。
-快如闪电的集群计算。
-大规模快速通用的计算引擎。
-速度:    比hadoop 100x,磁盘计算快10x
-使用:    java / Scala /R /python
-        提供80+算子(操作符)，容易构建并行应用。
-通用:    组合SQL ，流计算 + 复杂分析。
-
-运行：    Hadoop, Mesos, standalone, or in the cloud,local.
-</code></pre><h2 id="Spark模块"><a href="#Spark模块" class="headerlink" title="Spark模块"></a>Spark模块</h2><pre><code>Spark core        //核心模块
-Spark SQL        //SQL
-Spark Streaming    //流计算
-Spark MLlib        //机器学习
-Spark graph        //图计算
-
-
-
-DAG        //direct acycle graph,有向无环图。
-</code></pre><h2 id="安装Spark"><a href="#安装Spark" class="headerlink" title="安装Spark"></a>安装Spark</h2><pre><code>1.下载spark-2.1.0-bin-hadoop2.7.tgz
-    ..
-2.解压
-    ..
-3.环境变量
-    [/etc/profile]
-    SPARK_HOME=/soft/spark
-    PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
-
-    [source]
-    $&gt;source /etc/profile
-
-4.验证spark
-
-    $&gt;cd /soft/spark
-    $&gt;./spark-shell
-
-5.webui
-    http://s201:4040/
-</code></pre><h2 id="体验spark"><a href="#体验spark" class="headerlink" title="体验spark"></a>体验spark</h2><pre><code>0.sc
-    SparkContext，Spark程序的入口点，封装了整个spark运行环境的信息。
-
-1.进入spark-shell
-    $&gt;spark-shell
-    $scala&gt;sc
-</code></pre><h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><pre><code>[SparkContext]
-    Spark程序的入口点，封装了整个spark运行环境的信息。
-
-[RDD]
-    resilient distributed dataset,弹性分布式数据集。等价于集合。
-</code></pre><h2 id="spark实现word-count"><a href="#spark实现word-count" class="headerlink" title="spark实现word count"></a>spark实现word count</h2><pre><code>//加载文本文件,以换行符方式切割文本.Array(hello  world2,hello world2 ,...)
-val rdd1 = sc.textFile(&quot;/home/centos/test.txt&quot;);
-
-//单词统计1
-$scala&gt;val rdd1 = sc.textFile(&quot;/home/centos/test.txt&quot;)
-$scala&gt;val rdd2 = rdd1.flatMap(line=&gt;line.split(&quot; &quot;))
-$scala&gt;val rdd3 = rdd2.map(word = &gt; (word,1))
-$scala&gt;val rdd4 = rdd3.reduceByKey(_ + _)
-$scala&gt;rdd4.collect
-
-//单词统计2
-sc.textFile(&quot;/home/centos/test.txt&quot;).flatMap(_.split(&quot; &quot;)).map((_,1)).reduceByKey(_ + _).collect
-
-//统计所有含有wor字样到单词个数。filter
-
-//过滤单词
-sc.textFile(&quot;/home/centos/test.txt&quot;).flatMap(_.split(&quot; &quot;)).filter(_.contains(&quot;wor&quot;)).map((_,1)).reduceByKey(_ + _).collect
-</code></pre><p>[API]<br>    SparkContext:<br>        Spark功能的主要入口点。代表到Spark集群的连接，可以创建RDD、累加器和广播变量.<br>        每个JVM只能激活一个SparkContext对象，在创建sc之前需要stop掉active的sc。</p>
-<pre><code>SparkConf:
-    spark配置对象，设置Spark应用各种参数，kv形式。
-</code></pre><h2 id="编写scala程序，引入spark类库，完成wordcount"><a href="#编写scala程序，引入spark类库，完成wordcount" class="headerlink" title="编写scala程序，引入spark类库，完成wordcount"></a>编写scala程序，引入spark类库，完成wordcount</h2><pre><code>1.创建Scala模块,并添加pom.xml
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-        &lt;artifactId&gt;SparkDemo1&lt;/artifactId&gt;
-        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.apache.spark&lt;/groupId&gt;
-                &lt;artifactId&gt;spark-core_2.11&lt;/artifactId&gt;
-                &lt;version&gt;2.1.0&lt;/version&gt;
-            &lt;/dependency&gt;
-        &lt;/dependencies&gt;
-    &lt;/project&gt;
-
-2.编写scala文件
-    import org.apache.spark.{SparkConf, SparkContext}
-
-    /**
-      * Created by Administrator on 2017/4/20.
-      */
-    object WordCountDemo {
-        def main(args: Array[String]): Unit = {
-            //创建Spark配置对象
-            val conf = new SparkConf();
-            conf.setAppName(&quot;WordCountSpark&quot;)
-            //设置master属性
-            conf.setMaster(&quot;local&quot;) ;
-
-            //通过conf创建sc
-            val sc = new SparkContext(conf);
-
-            //加载文本文件
-            val rdd1 = sc.textFile(&quot;d:/scala/test.txt&quot;);
-            //压扁
-            val rdd2 = rdd1.flatMap(line =&gt; line.split(&quot; &quot;)) ;
-            //映射w =&gt; (w,1)
-            val rdd3 = rdd2.map((_,1))
-            val rdd4 = rdd3.reduceByKey(_ + _)
-            val r = rdd4.collect()
-            r.foreach(println)
-        }
-    }
-</code></pre><h2 id="java版单词统计"><a href="#java版单词统计" class="headerlink" title="java版单词统计"></a>java版单词统计</h2><pre><code>import org.apache.spark.SparkConf;
-import org.apache.spark.SparkContext;
-import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.Function2;
-import org.apache.spark.api.java.function.PairFunction;
-import scala.Tuple2;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-/**
- * java版
- */
-public class WordCountJava2 {
-    public static void main(String[] args) {
-        //创建SparkConf对象
-        SparkConf conf = new SparkConf();
-        conf.setAppName(&quot;WordCountJava2&quot;);
-        conf.setMaster(&quot;local&quot;);
-
-        //创建java sc
-        JavaSparkContext sc = new JavaSparkContext(conf);
-        //加载文本文件
-        JavaRDD&lt;String&gt; rdd1 = sc.textFile(&quot;d:/scala//test.txt&quot;);
-
-        //压扁
-        JavaRDD&lt;String&gt; rdd2 = rdd1.flatMap(new FlatMapFunction&lt;String, String&gt;() {
-            public Iterator&lt;String&gt; call(String s) throws Exception {
-                List&lt;String&gt; list = new ArrayList&lt;String&gt;();
-                String[] arr = s.split(&quot; &quot;);
-                for(String ss :arr){
-                    list.add(ss);
-                }
-                return list.iterator();
-            }
-        });
-
-        //映射,word -&gt; (word,1)
-        JavaPairRDD&lt;String,Integer&gt; rdd3 = rdd2.mapToPair(new PairFunction&lt;String, String, Integer&gt;() {
-            public Tuple2&lt;String, Integer&gt; call(String s) throws Exception {
-                return new Tuple2&lt;String, Integer&gt;(s,1);
-            }
-        });
-
-        //reduce化简
-        JavaPairRDD&lt;String,Integer&gt; rdd4 = rdd3.reduceByKey(new Function2&lt;Integer, Integer, Integer&gt;() {
-            public Integer call(Integer v1, Integer v2) throws Exception {
-                return v1 + v2;
-            }
-        });
-
-        //
-        List&lt;Tuple2&lt;String,Integer&gt;&gt; list = rdd4.collect();
-        for(Tuple2&lt;String, Integer&gt; t : list){
-            System.out.println(t._1() + &quot; : &quot; + t._2());
-        }
-    }
-}
-</code></pre><p>Spark2.1.0最新版是基于Scala2.11.8版本，因此安装scala2.11.8版本，</p>
-<h2 id="否则如果基于2-12-0版本编译会出现找不到包的问题。"><a href="#否则如果基于2-12-0版本编译会出现找不到包的问题。" class="headerlink" title="否则如果基于2.12.0版本编译会出现找不到包的问题。"></a>否则如果基于2.12.0版本编译会出现找不到包的问题。</h2><pre><code>1.卸载原来的scala.
-2.重新安装scala2.11.8版本
-3.配置idea的全局库
-    project settings -&gt; global library -&gt; 删除原来的scala sdk
-    project settings -&gt; global library -&gt; 添加sdk -&gt; browser -&gt; 定位scala安装目录 -&gt;选中scala-compiler.jar + 
-                                                                                        scala-library.jar + 
-                                                                                        scala-reflect.jar
-
-4.在模块中添加scala sdk 2.11.8版本
-
-5.重新编译项目 -&gt; 导入jar -&gt;丢到集群运行。
-</code></pre><h2 id="提交作业到spark集群运行"><a href="#提交作业到spark集群运行" class="headerlink" title="提交作业到spark集群运行"></a>提交作业到spark集群运行</h2><pre><code>1.导出jar包
-2.spark-submit提交命令运行job
-    //Scala版本
-    $&gt;spark-submit --master local --name MyWordCount --class com.it18zhang.spark.scala.WordCountScala SparkDemo1-1.0-SNAPSHOT.jar /home/centos/test.txt
-    //java版
-    $&gt;spark-submit --master local --name MyWordCount --class com.it18zhang.spark.java.WordCountJava SparkDemo1-1.0-SNAPSHOT.jar /home/centos/test.txt
-</code></pre><h2 id="Spark集群模式"><a href="#Spark集群模式" class="headerlink" title="Spark集群模式"></a>Spark集群模式</h2><pre><code>1.local
-    nothing!
-    spark-shell --master local;        //默认
-
-2.standalone
-    独立模式。
-    a)复制spark安装目录到其他几个主机
-    b)配置其他主机的所有环境变量
-        [/etc/profile]
-        SPARK_HOME
-        PATH
-
-    c)配置master节点的slaves
-        [/soft/spark/conf/slaves]文件中添加下面的
-        s202
-        s203
-        s204
-
-    d)启动spark集群，和hadoop一样，但是要指定目录下即可。这个是独立模式和没有关系
-        /soft/spark/sbin/start-all.sh
-
-    e)查看进程
-        $&gt;xcall.jps jps
-            master        //s201
-            worker        //s202
-            worker        //s203
-            worker        //s204
-    e)webui，然后验证webui，8080端口。本地模式是4040端口
-        http://s201:8080/
-</code></pre><h2 id="提交作业jar到完全分布式spark集群"><a href="#提交作业jar到完全分布式spark集群" class="headerlink" title="提交作业jar到完全分布式spark集群"></a>提交作业jar到完全分布式spark集群</h2><pre><code>1.需要启动hadoop集群(只需要hdfs，是standalone模式，不需要yarn调度)
-    $&gt;start-dfs.sh
-2.put文件到hdfs.
-
-3.运行spark-submit
-    $&gt;spark-submit 
-                --master spark://s201:7077 
-                --name MyWordCount 
-                --class com.it18zhang.spark.scala.WordCountScala 
-                SparkDemo1-1.0-SNAPSHOT.jar 
-                hdfs://s201:8020/user/centos/test.txt
-</code></pre><h2 id="脚本分析"><a href="#脚本分析" class="headerlink" title="脚本分析"></a>脚本分析</h2><pre><code>[start-all.sh]
-    sbin/spark-config.sh
-    sbin/spark-master.sh        //启动master进程
-    sbin/spark-slaves.sh        //启动worker进程
-
-[start-master.sh]
-    sbin/spark-config.sh
-    org.apache.spark.deploy.master.Master
-    spark-daemon.sh start org.apache.spark.deploy.master.Master --host --port --webui-port ...
-
-[spark-slaves.sh]
-    sbin/spark-config.sh
-    slaves.sh                //主要循环这个文件conf/slaves
-
-[slaves.sh]
-    for conf/slaves{
-        ssh host start-slave.sh ...
-    }
-
-[start-slave.sh]
-</code></pre><p>先找到这个work类<br>        CLASS=”org.apache.spark.deploy.worker.Worker”<br>        sbin/spark-config.sh 走这个配置<br>        for ((  .. )) ; do<br>            start_instance $(( 1 + $i )) “$@”<br>        done </p>
-<pre><code>$&gt;cd /soft/spark/sbin
-$&gt;./stop-all.sh                //停掉整个spark集群.
-$&gt;./start-master.sh            //停掉整个spark集群.
-$&gt;./start-master.sh            //启动master节点
-$&gt;./start-slaves.sh            //启动所有worker节点
-从s204里面启动某一个slave ./start-slave.sh spark://s201:7077
-
-
-对上面几个命令了解可以通过 start-master.sh --help来查询，其他类似
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2756,7 +3128,7 @@ $&gt;./start-slaves.sh            //启动所有worker节点
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">68</span>
+                  <span class="site-state-item-count">71</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2767,7 +3139,7 @@ $&gt;./start-slaves.sh            //启动所有worker节点
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -2778,7 +3150,7 @@ $&gt;./start-slaves.sh            //启动所有worker节点
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-count">107</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

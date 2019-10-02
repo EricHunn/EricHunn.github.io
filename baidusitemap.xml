@@ -4,7 +4,64 @@
 
     
   <url>
+    <loc>http://erichunn.github.io/2019/09/29/Spring%E7%AC%AC%E4%BA%8C%E5%A4%A903Spring%E6%96%B0%E6%B3%A8%E8%A7%A3/</loc>
+    <lastmod>2019-10-02T13:15:47.437Z</lastmod>
+    <data>
+        <display>
+        <title>Spring第二天03Spring新注解</title>
+        <pubTime>2019-09-29T11:34:41.000Z</pubTime>
+        
+        <tag>Spring</tag>
+         
+        <tag>新注解</tag>
+         
+         
+           
+             
+              <breadCrumb title="Spring" url="http://erichunn.github.io/categories/Spring/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://erichunn.github.io/2019/09/29/Spring%E7%AC%AC%E4%BA%8C%E5%A4%A902%E5%9F%BA%E4%BA%8EXML%E5%92%8C%E4%BD%BF%E7%94%A8%E6%B3%A8%E8%A7%A3%E7%9A%84IOC%E6%A1%88%E4%BE%8B/</loc>
+    <lastmod>2019-09-29T11:26:33.973Z</lastmod>
+    <data>
+        <display>
+        <title>Spring第二天02基于XML和使用注解的IOC案例</title>
+        <pubTime>2019-09-29T09:19:14.000Z</pubTime>
+        
+        <tag>SpringIOC</tag>
+         
+         
+           
+             
+              <breadCrumb title="Spring" url="http://erichunn.github.io/categories/Spring/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://erichunn.github.io/2019/09/29/test/</loc>
+    <lastmod>2019-09-29T09:17:48.347Z</lastmod>
+    <data>
+        <display>
+        <title>test</title>
+        <pubTime>2019-09-29T09:04:55.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://erichunn.github.io/2019/09/29/Spring%E7%AC%AC%E4%B8%89%E5%A4%A9/</loc>
     <lastmod>2019-09-29T09:04:55.693Z</lastmod>
     <data>
         <display>
@@ -1151,9 +1208,9 @@
         <title>Hadoop第五天01之hdfs写入剖析</title>
         <pubTime>2018-10-05T08:31:19.000Z</pubTime>
         
-        <tag>hdfs写入</tag>
-         
         <tag>Hadoop</tag>
+         
+        <tag>hdfs写入</tag>
          
          
            

@@ -328,6 +328,681 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/11/Mybatis第二天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/11/Mybatis第二天/" itemprop="url">Untitled</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-11T21:32:10+08:00">
+                2019-09-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="https://i.imgur.com/CduGMIo.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/10/Mybatis第一天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/10/Mybatis第一天/" itemprop="url">Untitled</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-10T15:05:48+08:00">
+                2019-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>mybatis框架<br>共四天<br>第一天：mybatis入门<br>    mybatis的概述<br>    mybatis的环境搭建<br>    mybatis入门案例<br>    自定义mybatis框架（主要的目的是为了让大家了解mybatis中执行细节）<br>第二天：mybatis基本使用<br>    mybatis的单表crud操作<br>    mybatis的参数和返回值<br>    mybatis的dao编写<br>    mybatis配置的细节<br>        几个标签的使用<br>第三天：mybatis的深入和多表<br>    mybatis的连接池<br>    mybatis的事务控制及设计的方法<br>    mybatis的多表查询<br>        一对多（多对一）<br>        多对多<br>第四天：mybatis的缓存和注解开发<br>    mybatis中的加载时机（查询的时机）<br>    mybatis中的一级缓存和二级缓存<br>    mybatis的注解开发<br>        单表CRUD</p>
+<pre><code>多表查询
+</code></pre><hr>
+<p>1、什么是框架？<br>    它是我们软件开发中的一套解决方案，不同的框架解决的是不同的问题。<br>    使用框架的好处：<br>        框架封装了很多的细节，使开发者可以使用极简的方式实现功能。大大提高开发效率。<br>2、三层架构<br>    表现层：<br>        是用于展示数据的<br>    业务层：<br>        是处理业务需求<br>    持久层：<br>        是和数据库交互的<br>3、持久层技术解决方案<br>    JDBC技术：<br>        Connection<br>        PreparedStatement<br>        ResultSet<br>    Spring的JdbcTemplate：<br>        Spring中对jdbc的简单封装<br>    Apache的DBUtils：<br>        它和Spring的JdbcTemplate很像，也是对Jdbc的简单封装</p>
+<pre><code>以上这些都不是框架
+    JDBC是规范
+    Spring的JdbcTemplate和Apache的DBUtils都只是工具类
+</code></pre><p>4、mybatis的概述<br>    mybatis是一个持久层框架，用java编写的。<br>    它封装了jdbc操作的很多细节，使开发者只需要关注sql语句本身，而无需关注注册驱动，创建连接等繁杂过程<br>    它使用了ORM思想实现了结果集的封装。</p>
+<pre><code>ORM：
+    Object Relational Mappging 对象关系映射
+    简单的说：
+        就是把数据库表和实体类及实体类的属性对应起来
+        让我们可以操作实体类就实现操作数据库表。
+
+        user            User
+        id            userId
+        user_name        userName
+今天我们需要做到
+    实体类中的属性和数据库表的字段名称保持一致。
+        user            User
+        id            id
+        user_name        user_name
+</code></pre><p>5、mybatis的入门<br>    mybatis的环境搭建<br>        第一步：创建maven工程并导入坐标<br>        第二步：创建实体类和dao的接口<br>        第三步：创建Mybatis的主配置文件<br>                SqlMapConifg.xml<br>        第四步：创建映射配置文件<br>                IUserDao.xml<br>    环境搭建的注意事项：<br>        第一个：创建IUserDao.xml 和 IUserDao.java时名称是为了和我们之前的知识保持一致。<br>            在Mybatis中它把持久层的操作接口名称和映射文件也叫做：Mapper<br>            所以：IUserDao 和 IUserMapper是一样的<br>        第二个：在idea中创建目录的时候，它和包是不一样的<br>            包在创建时：com.itheima.dao它是三级结构<br>            目录在创建时：com.itheima.dao是一级目录<br>        第三个：mybatis的映射配置文件位置必须和dao接口的包结构相同<br>        第四个：映射配置文件的mapper标签namespace属性的取值必须是dao接口的全限定类名<br>        第五个：映射配置文件的操作配置（select），id属性的取值必须是dao接口的方法名</p>
+<pre><code>    当我们遵从了第三，四，五点之后，我们在开发中就无须再写dao的实现类。
+mybatis的入门案例
+    第一步：读取配置文件
+    第二步：创建SqlSessionFactory工厂
+    第三步：创建SqlSession
+    第四步：创建Dao接口的代理对象
+    第五步：执行dao中的方法
+    第六步：释放资源
+
+    注意事项：
+        不要忘记在映射配置中告知mybatis要封装到哪个实体类中
+        配置的方式：指定实体类的全限定类名
+
+    mybatis基于注解的入门案例：
+        把IUserDao.xml移除，在dao接口的方法上使用@Select注解，并且指定SQL语句
+        同时需要在SqlMapConfig.xml中的mapper配置时，使用class属性指定dao接口的全限定类名。
+明确：
+    我们在实际开发中，都是越简便越好，所以都是采用不写dao实现类的方式。
+    不管使用XML还是注解配置。
+    但是Mybatis它是支持写dao实现类的。
+</code></pre><p>6、自定义Mybatis的分析：<br>    mybatis在使用代理dao的方式实现增删改查时做什么事呢？<br>        只有两件事：<br>            第一：创建代理对象<br>            第二：在代理对象中调用selectList</p>
+<pre><code>自定义mybatis能通过入门案例看到类
+    class Resources
+    class SqlSessionFactoryBuilder
+    interface SqlSessionFactory
+    interface SqlSession
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/07/Spark第一天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/07/Spark第一天/" itemprop="url">Untitled</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-07T16:22:05+08:00">
+                2019-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="并行"><a href="#并行" class="headerlink" title="并行"></a>并行</h2><pre><code>集群计算。
+并行计算。
+</code></pre><h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><pre><code>并发执行。
+</code></pre><h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><pre><code>Lightning-fast cluster computing。
+快如闪电的集群计算。
+大规模快速通用的计算引擎。
+速度:    比hadoop 100x,磁盘计算快10x
+使用:    java / Scala /R /python
+        提供80+算子(操作符)，容易构建并行应用。
+通用:    组合SQL ，流计算 + 复杂分析。
+
+运行：    Hadoop, Mesos, standalone, or in the cloud,local.
+</code></pre><h2 id="Spark模块"><a href="#Spark模块" class="headerlink" title="Spark模块"></a>Spark模块</h2><pre><code>Spark core        //核心模块
+Spark SQL        //SQL
+Spark Streaming    //流计算
+Spark MLlib        //机器学习
+Spark graph        //图计算
+
+
+
+DAG        //direct acycle graph,有向无环图。
+</code></pre><h2 id="安装Spark"><a href="#安装Spark" class="headerlink" title="安装Spark"></a>安装Spark</h2><pre><code>1.下载spark-2.1.0-bin-hadoop2.7.tgz
+    ..
+2.解压
+    ..
+3.环境变量
+    [/etc/profile]
+    SPARK_HOME=/soft/spark
+    PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
+
+    [source]
+    $&gt;source /etc/profile
+
+4.验证spark
+
+    $&gt;cd /soft/spark
+    $&gt;./spark-shell
+
+5.webui
+    http://s201:4040/
+</code></pre><h2 id="体验spark"><a href="#体验spark" class="headerlink" title="体验spark"></a>体验spark</h2><pre><code>0.sc
+    SparkContext，Spark程序的入口点，封装了整个spark运行环境的信息。
+
+1.进入spark-shell
+    $&gt;spark-shell
+    $scala&gt;sc
+</code></pre><h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><pre><code>[SparkContext]
+    Spark程序的入口点，封装了整个spark运行环境的信息。
+
+[RDD]
+    resilient distributed dataset,弹性分布式数据集。等价于集合。
+</code></pre><h2 id="spark实现word-count"><a href="#spark实现word-count" class="headerlink" title="spark实现word count"></a>spark实现word count</h2><pre><code>//加载文本文件,以换行符方式切割文本.Array(hello  world2,hello world2 ,...)
+val rdd1 = sc.textFile(&quot;/home/centos/test.txt&quot;);
+
+//单词统计1
+$scala&gt;val rdd1 = sc.textFile(&quot;/home/centos/test.txt&quot;)
+$scala&gt;val rdd2 = rdd1.flatMap(line=&gt;line.split(&quot; &quot;))
+$scala&gt;val rdd3 = rdd2.map(word = &gt; (word,1))
+$scala&gt;val rdd4 = rdd3.reduceByKey(_ + _)
+$scala&gt;rdd4.collect
+
+//单词统计2
+sc.textFile(&quot;/home/centos/test.txt&quot;).flatMap(_.split(&quot; &quot;)).map((_,1)).reduceByKey(_ + _).collect
+
+//统计所有含有wor字样到单词个数。filter
+
+//过滤单词
+sc.textFile(&quot;/home/centos/test.txt&quot;).flatMap(_.split(&quot; &quot;)).filter(_.contains(&quot;wor&quot;)).map((_,1)).reduceByKey(_ + _).collect
+</code></pre><p>[API]<br>    SparkContext:<br>        Spark功能的主要入口点。代表到Spark集群的连接，可以创建RDD、累加器和广播变量.<br>        每个JVM只能激活一个SparkContext对象，在创建sc之前需要stop掉active的sc。</p>
+<pre><code>SparkConf:
+    spark配置对象，设置Spark应用各种参数，kv形式。
+</code></pre><h2 id="编写scala程序，引入spark类库，完成wordcount"><a href="#编写scala程序，引入spark类库，完成wordcount" class="headerlink" title="编写scala程序，引入spark类库，完成wordcount"></a>编写scala程序，引入spark类库，完成wordcount</h2><pre><code>1.创建Scala模块,并添加pom.xml
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
+        &lt;artifactId&gt;SparkDemo1&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.apache.spark&lt;/groupId&gt;
+                &lt;artifactId&gt;spark-core_2.11&lt;/artifactId&gt;
+                &lt;version&gt;2.1.0&lt;/version&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/project&gt;
+
+2.编写scala文件
+    import org.apache.spark.{SparkConf, SparkContext}
+
+    /**
+      * Created by Administrator on 2017/4/20.
+      */
+    object WordCountDemo {
+        def main(args: Array[String]): Unit = {
+            //创建Spark配置对象
+            val conf = new SparkConf();
+            conf.setAppName(&quot;WordCountSpark&quot;)
+            //设置master属性
+            conf.setMaster(&quot;local&quot;) ;
+
+            //通过conf创建sc
+            val sc = new SparkContext(conf);
+
+            //加载文本文件
+            val rdd1 = sc.textFile(&quot;d:/scala/test.txt&quot;);
+            //压扁
+            val rdd2 = rdd1.flatMap(line =&gt; line.split(&quot; &quot;)) ;
+            //映射w =&gt; (w,1)
+            val rdd3 = rdd2.map((_,1))
+            val rdd4 = rdd3.reduceByKey(_ + _)
+            val r = rdd4.collect()
+            r.foreach(println)
+        }
+    }
+</code></pre><h2 id="java版单词统计"><a href="#java版单词统计" class="headerlink" title="java版单词统计"></a>java版单词统计</h2><pre><code>import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.api.java.function.PairFunction;
+import scala.Tuple2;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * java版
+ */
+public class WordCountJava2 {
+    public static void main(String[] args) {
+        //创建SparkConf对象
+        SparkConf conf = new SparkConf();
+        conf.setAppName(&quot;WordCountJava2&quot;);
+        conf.setMaster(&quot;local&quot;);
+
+        //创建java sc
+        JavaSparkContext sc = new JavaSparkContext(conf);
+        //加载文本文件
+        JavaRDD&lt;String&gt; rdd1 = sc.textFile(&quot;d:/scala//test.txt&quot;);
+
+        //压扁
+        JavaRDD&lt;String&gt; rdd2 = rdd1.flatMap(new FlatMapFunction&lt;String, String&gt;() {
+            public Iterator&lt;String&gt; call(String s) throws Exception {
+                List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+                String[] arr = s.split(&quot; &quot;);
+                for(String ss :arr){
+                    list.add(ss);
+                }
+                return list.iterator();
+            }
+        });
+
+        //映射,word -&gt; (word,1)
+        JavaPairRDD&lt;String,Integer&gt; rdd3 = rdd2.mapToPair(new PairFunction&lt;String, String, Integer&gt;() {
+            public Tuple2&lt;String, Integer&gt; call(String s) throws Exception {
+                return new Tuple2&lt;String, Integer&gt;(s,1);
+            }
+        });
+
+        //reduce化简
+        JavaPairRDD&lt;String,Integer&gt; rdd4 = rdd3.reduceByKey(new Function2&lt;Integer, Integer, Integer&gt;() {
+            public Integer call(Integer v1, Integer v2) throws Exception {
+                return v1 + v2;
+            }
+        });
+
+        //
+        List&lt;Tuple2&lt;String,Integer&gt;&gt; list = rdd4.collect();
+        for(Tuple2&lt;String, Integer&gt; t : list){
+            System.out.println(t._1() + &quot; : &quot; + t._2());
+        }
+    }
+}
+</code></pre><p>Spark2.1.0最新版是基于Scala2.11.8版本，因此安装scala2.11.8版本，</p>
+<h2 id="否则如果基于2-12-0版本编译会出现找不到包的问题。"><a href="#否则如果基于2-12-0版本编译会出现找不到包的问题。" class="headerlink" title="否则如果基于2.12.0版本编译会出现找不到包的问题。"></a>否则如果基于2.12.0版本编译会出现找不到包的问题。</h2><pre><code>1.卸载原来的scala.
+2.重新安装scala2.11.8版本
+3.配置idea的全局库
+    project settings -&gt; global library -&gt; 删除原来的scala sdk
+    project settings -&gt; global library -&gt; 添加sdk -&gt; browser -&gt; 定位scala安装目录 -&gt;选中scala-compiler.jar + 
+                                                                                        scala-library.jar + 
+                                                                                        scala-reflect.jar
+
+4.在模块中添加scala sdk 2.11.8版本
+
+5.重新编译项目 -&gt; 导入jar -&gt;丢到集群运行。
+</code></pre><h2 id="提交作业到spark集群运行"><a href="#提交作业到spark集群运行" class="headerlink" title="提交作业到spark集群运行"></a>提交作业到spark集群运行</h2><pre><code>1.导出jar包
+2.spark-submit提交命令运行job
+    //Scala版本
+    $&gt;spark-submit --master local --name MyWordCount --class com.it18zhang.spark.scala.WordCountScala SparkDemo1-1.0-SNAPSHOT.jar /home/centos/test.txt
+    //java版
+    $&gt;spark-submit --master local --name MyWordCount --class com.it18zhang.spark.java.WordCountJava SparkDemo1-1.0-SNAPSHOT.jar /home/centos/test.txt
+</code></pre><h2 id="Spark集群模式"><a href="#Spark集群模式" class="headerlink" title="Spark集群模式"></a>Spark集群模式</h2><pre><code>1.local
+    nothing!
+    spark-shell --master local;        //默认
+
+2.standalone
+    独立模式。
+    a)复制spark安装目录到其他几个主机
+    b)配置其他主机的所有环境变量
+        [/etc/profile]
+        SPARK_HOME
+        PATH
+
+    c)配置master节点的slaves
+        [/soft/spark/conf/slaves]文件中添加下面的
+        s202
+        s203
+        s204
+
+    d)启动spark集群，和hadoop一样，但是要指定目录下即可。这个是独立模式和没有关系
+        /soft/spark/sbin/start-all.sh
+
+    e)查看进程
+        $&gt;xcall.jps jps
+            master        //s201
+            worker        //s202
+            worker        //s203
+            worker        //s204
+    e)webui，然后验证webui，8080端口。本地模式是4040端口
+        http://s201:8080/
+</code></pre><h2 id="提交作业jar到完全分布式spark集群"><a href="#提交作业jar到完全分布式spark集群" class="headerlink" title="提交作业jar到完全分布式spark集群"></a>提交作业jar到完全分布式spark集群</h2><pre><code>1.需要启动hadoop集群(只需要hdfs，是standalone模式，不需要yarn调度)
+    $&gt;start-dfs.sh
+2.put文件到hdfs.
+
+3.运行spark-submit
+    $&gt;spark-submit 
+                --master spark://s201:7077 
+                --name MyWordCount 
+                --class com.it18zhang.spark.scala.WordCountScala 
+                SparkDemo1-1.0-SNAPSHOT.jar 
+                hdfs://s201:8020/user/centos/test.txt
+</code></pre><h2 id="脚本分析"><a href="#脚本分析" class="headerlink" title="脚本分析"></a>脚本分析</h2><pre><code>[start-all.sh]
+    sbin/spark-config.sh
+    sbin/spark-master.sh        //启动master进程
+    sbin/spark-slaves.sh        //启动worker进程
+
+[start-master.sh]
+    sbin/spark-config.sh
+    org.apache.spark.deploy.master.Master
+    spark-daemon.sh start org.apache.spark.deploy.master.Master --host --port --webui-port ...
+
+[spark-slaves.sh]
+    sbin/spark-config.sh
+    slaves.sh                //主要循环这个文件conf/slaves
+
+[slaves.sh]
+    for conf/slaves{
+        ssh host start-slave.sh ...
+    }
+
+[start-slave.sh]
+</code></pre><p>先找到这个work类<br>        CLASS=”org.apache.spark.deploy.worker.Worker”<br>        sbin/spark-config.sh 走这个配置<br>        for ((  .. )) ; do<br>            start_instance $(( 1 + $i )) “$@”<br>        done </p>
+<pre><code>$&gt;cd /soft/spark/sbin
+$&gt;./stop-all.sh                //停掉整个spark集群.
+$&gt;./start-master.sh            //停掉整个spark集群.
+$&gt;./start-master.sh            //启动master节点
+$&gt;./start-slaves.sh            //启动所有worker节点
+从s204里面启动某一个slave ./start-slave.sh spark://s201:7077
+
+
+对上面几个命令了解可以通过 start-master.sh --help来查询，其他类似
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/03/04/编程题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2349,388 +3024,6 @@ public class CallLogRegionObserver extends BaseRegionObserver {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/" itemprop="url">Spring第二天_01Spring常用注解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-11T15:56:21+08:00">
-                2019-01-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>前言：上一章节讲解的是就是通过工厂类获取bean实例，通过获取xml文件里面的配置，value是serviceimpl对应一个Id，然后获取一个serviceimpl的实例，或者获取一个daoimpl的实例，就不用通过new来创建了，本章讲解的是通过Spring容器，注解的方式达到上面的目的，直接注入实例或者注入某一成员类型的值。</p>
-<h1 id="Spring基于注解的IOC以及IOC的案例"><a href="#Spring基于注解的IOC以及IOC的案例" class="headerlink" title="Spring基于注解的IOC以及IOC的案例"></a>Spring基于注解的IOC以及IOC的案例</h1><h2 id="1、spring中ioc的常用注解"><a href="#1、spring中ioc的常用注解" class="headerlink" title="1、spring中ioc的常用注解"></a>1、spring中ioc的常用注解</h2><h2 id="2、案例使用xml方式和注解方式实现单表的CRUD操作"><a href="#2、案例使用xml方式和注解方式实现单表的CRUD操作" class="headerlink" title="2、案例使用xml方式和注解方式实现单表的CRUD操作"></a>2、案例使用xml方式和注解方式实现单表的CRUD操作</h2><pre><code>持久层技术选择：dbutils
-</code></pre><h2 id="3、改造基于注解的ioc案例，使用纯注解的方式实现"><a href="#3、改造基于注解的ioc案例，使用纯注解的方式实现" class="headerlink" title="3、改造基于注解的ioc案例，使用纯注解的方式实现"></a>3、改造基于注解的ioc案例，使用纯注解的方式实现</h2><pre><code>spring的一些新注解使用
-</code></pre><h2 id="4、spring和Junit整合"><a href="#4、spring和Junit整合" class="headerlink" title="4、spring和Junit整合"></a>4、spring和Junit整合</h2><p>曾经XML的配置，</p>
-<pre><code>&lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
-&lt;scope =&quot;&quot;   init-method=&quot;&quot;  destory-method=&quot;&quot;&gt;
-&lt;propertiy name = &quot;&quot; value=&quot;&quot; | ref=&quot;&quot;&gt;&lt;/propertiy&gt;
-&lt;/bean&gt;
-</code></pre><p> 1、用于创建对象的注解：</p>
-<pre><code>@Component
-</code></pre><p>他们的作用就和在XML配置文件中编写一个<bean></bean>标签实现的功能一样的</p>
-<p> 2、用于注入数据的注解：</p>
-<p>他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的</p>
-<p> 3、用于改变范围的注解</p>
-<p>他们的作用就和在bean标签中使用scope属性实现的功能是一样的</p>
-<p> 4、和生命周期相关的</p>
-<p>他们的作用就和在bean标签中使用Init-method和destory标签是一样的</p>
-<hr>
-<pre><code>package com.itheima.service.impl;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.dao.impl.AccountDaoImpl;
-import com.itheima.service.IAccountService;
-import org.springframework.stereotype.Component;
-
-/**
- * @Description 账户的业务层实现类
- * @Author TT Hun
- * @Data 2019/9/16 22:09
-
- *
- *  1、用于创建对象的注解
- *      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
-
- */
-@Component(value=&quot;accountService&quot;)
-public class AccountServiceImpl implements IAccountService {    
-
-
-    public AccountServiceImpl(){
-        System.out.println(&quot;对象被创建了&quot;);
-    }
-    public void saveAccount() {
-        accountDao.saveAccount();
-    }
-}
-</code></pre><hr>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
-       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
-
-&lt;!--    告知Spring在创建容器的时候需要扫描的包，配置所需要的标签不是在beans这个约束中，而是一个名称为context名称空间和约束中--&gt;
-    &lt;context:component-scan base-package=&quot;com.itheima&quot;&gt;&lt;/context:component-scan&gt;
-
-
-
-    &lt;/beans&gt;
-</code></pre><hr>
-<pre><code>package com.itheima.ui;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.service.IAccountService;
-import com.itheima.service.impl.AccountServiceImpl;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import sun.security.tools.keytool.Resources;
-
-
-/**
- * @Description 用这个模拟一个表现层用于调用业务层，实际上应该是一个servlet
- * @Author TT Hun
- * @Data 2019/9/16 22:15
- */
-public class Client {
-    public static void main(String[] args) {
-        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
-//        2、根据ID获取bean对象
-        IAccountService as = (IAccountService) ac.getBean(&quot;accountService&quot;);
-
-        System.out.println(as);
-
-    }
-
-}
-</code></pre><hr>
-<h2 id="由Component衍生出来的三个注解："><a href="#由Component衍生出来的三个注解：" class="headerlink" title="由Component衍生出来的三个注解："></a>由Component衍生出来的三个注解：</h2><pre><code>/**  1、用于创建对象的注解
-*      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
-*      Component;作用，用于把当前对象注入Srping容器中
-*      属性：value:用于指定的bean的id。当我们不写的时候，它默认值是当前类名，而且首字母小写
-*      Controller:用在表现层
-*      Service:业务层
-*      Respository：用于持久层
-*      以上是和Component一样的作用，他们是Spring框架提供的为了明确三层使用的注解，是我们对三层更加清晰
-*
-*  2、用于注入数据的注解
-*      他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的
-*  3、用于改变范围的注解
-*      他们的作用就和在bean标签中使用scope属性实现的功能是一样的
-*  4、和生命周期相关的
-*      他们的作用就和在bean标签中使用Init-method和destory标签是一样的
-**/
-</code></pre><hr>
-<blockquote>
-<p>下面这段例子会报错因为没有注入数据，导致空指针异常。</p>
-</blockquote>
-<pre><code>package com.itheima.service.impl;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.dao.impl.AccountDaoImpl;
-import com.itheima.service.IAccountService;
-import org.springframework.stereotype.Component;
-
-/**
- * @Description 账户的业务层实现类
- * @Author TT Hun
- * @Data 2019/9/16 22:09
- * 曾经XML的配置，
- *  &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
- *  &lt;scope =&quot;&quot;   init-method=&quot;&quot;  destory-method=&quot;&quot;&gt;
- *  &lt;propertiy name = &quot;&quot; value=&quot;&quot; | ref=&quot;&quot;&gt;&lt;/propertiy&gt;
- *  &lt;/bean&gt;
- *
- *
- *
- *  1、用于创建对象的注解
- *      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
- *      Component;作用，用于把当前对象注入Srping容器中
- *      属性：value:用于指定的bean的id。当我们不写的时候，它默认值是当前类名，而且首字母小写
- *      Controller:用在表现层
- *      Service:业务层
- *      Respository：用于持久层
- *      以上是和Component一样的作用，他们是Spring框架提供的为了明确三层使用的注解，是我们对三层更加清晰
- *
- *  2、用于注入数据的注解
- *      他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的
- *  3、用于改变范围的注解
- *      他们的作用就和在bean标签中使用scope属性实现的功能是一样的
- *  4、和生命周期相关的
- *      他们的作用就和在bean标签中使用Init-method和destory标签是一样的
- */
-@Component(value=&quot;accountService&quot;)
-public class AccountServiceImpl implements IAccountService {
-        private IAccountDao accountDao ;
-
-
-    public void saveAccount() {
-        accountDao.saveAccount();
-    }
-}
-</code></pre><hr>
-<pre><code>package com.itheima.dao.impl;
-
-import com.itheima.dao.IAccountDao;
-import org.springframework.stereotype.Repository;
-
-/**
- * @Description 账户的持久层实现类
- * @Author TT Hun
- * @Data 2019/9/16 22:13
- */
-@Repository(&quot;accountDao&quot;)
-public class AccountDaoImpl implements IAccountDao {
-
-
-    public void saveAccount() {
-        System.out.println(&quot;保存了账户&quot;);
-    }
-}
-</code></pre><hr>
-<pre><code>package com.itheima.ui;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.service.IAccountService;
-import com.itheima.service.impl.AccountServiceImpl;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import sun.security.tools.keytool.Resources;
-
-
-/**
- * @Description 用这个模拟一个表现层用于调用业务层，实际上应该是一个servlet
- * @Author TT Hun
- * @Data 2019/9/16 22:15
- */
-public class Client {
-    public static void main(String[] args) {
-        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
-//        2、根据ID获取Service的实例
-        IAccountService as = (IAccountService) ac.getBean(&quot;accountService&quot;);
-//      下面是获取dao对象的实例，
-        IAccountDao adao = ac.getBean(&quot;accountDao&quot;,IAccountDao.class);
-//        这里只显示调用了对象，没有使用其中的方法，因为其中的Serviceimpl里面隐入了Dao类型的变量，因为还没有实例化，所以他是null，会出现空指针异常，
-        as.saveAccount();    
-    }
-
-}
-</code></pre><blockquote>
-<p>所以要在上面这一段代码的数据类型serviceimpl里面的成员变量上面写上@Autowired</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>下面这一段讲解当出现相同的类的时候，Autowired注解怎么解决：</p>
-</blockquote>
-<p><img src="https://i.imgur.com/vgQ4cGY.png" alt=""></p>
-<p>Spring容器本质上是Map，key-value格式的</p>
-<p>如果在注入数据的时候有2个DAO类型的，那么首先，他会先匹配数据类型一致的，他会发现2个。</p>
-<p>然后在根据变量名称找对应的Spring容器里面的key写的，哪一个是相同的名字。</p>
-<hr>
-<blockquote>
-<p>Qualifier:<br>作用：在按照类中注入的基础之上再按照名称注入。他在给类成员注入时不能单独使用。但是在方法范数注入的时候可以。在给类成员注入的时候，需要和antuwired联合使用，在给方法注入时候可以单独使用<br>属性：value用于指定注入bean的id。</p>
-</blockquote>
-<blockquote>
-<p>Resource：<br>作用：直接按照bean的id注入。可以独立使用<br>属性：<br>name:用于指定bean的Id</p>
-</blockquote>
-<blockquote>
-<p>Autowired注解、Qualifier注解、Resource注解只能注入其他类型的bean数据类型，而基本类型和String类型无法实现上述实现。<br>另外，集合类型的注入智能通过XML来实现。</p>
-</blockquote>
-<blockquote>
-<p>基本类型和String类型的注入用Value注解<br>作用：用于注入基本类型和String类型的数据 </p>
-</blockquote>
-<blockquote>
-<p>属性：<br>value用于指定数据的值，他可以使用Spring中的SPEl（也就是Srpring的el表达式）<br>Spel的写法：${表达式}</p>
-</blockquote>
-<blockquote>
-<p>用于改变作用范围的：</p>
-</blockquote>
-<blockquote>
-<p>他们的作用就和在bean标签中使用scope属性实现的功能是一样的。</p>
-</blockquote>
-<blockquote>
-<p>scope:</p>
-</blockquote>
-<blockquote>
-<p>作用：用于指定bean的作用范围，</p>
-</blockquote>
-<blockquote>
-<p>属性：value:用于指定范围的取值。常用取值：singleton 和 prototype</p>
-</blockquote>
-<p>和生命周期相关：</p>
-<pre><code>他们的作用和在bean标签中使用init-method和destroy-method的作用是一样的。
-PreDestory
-    用于指定销毁方法
-PostConstruct
-    作用用于指定初始化方法
-</code></pre><p>小结：<br>    1、多例模式，关闭Spring不会销毁对象，<br>    2、想要实现销毁方法的实现，如果在serviceimpl注入初始化和销毁注解，然后写方法，然后再在main方法里面先初始化Spring容器，但是只有写了spring的close方法， 才会执行对象的销毁方法，这个地方的初始化和销毁，销毁的是spring容器创建的，比如下图；创建的是IAccountService类型的bean对象，最后要使用ac.close()方法关闭spring容器。</p>
-<p><img src="https://i.imgur.com/QmLkCqe.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/实战大数据电信项目（一）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3237,815 +3530,11 @@ public class CallLogRegionObserver extends BaseRegionObserver {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/10/SSM第四天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/10/SSM第四天/" itemprop="url">SSM第四天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-10T17:11:25+08:00">
-                2019-01-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>新建SSM模块，添加完之后再加入maven支持，刷新  </p>
-<p><img src="https://i.imgur.com/p9PS1Gs.png" alt=""></p>
-<h2 id="session数据访问"><a href="#session数据访问" class="headerlink" title="session数据访问"></a>session数据访问</h2><pre><code>1.java
-    @RequestMapping(&quot;/toLogin&quot;)
-    public String doLogin() {
-        return &quot;login&quot;;
-    }
-
-    @RequestMapping(&quot;/doLogin&quot;)
-    public String doLogin(User u ,HttpSession s){
-        //将数据存放到session范围。
-        s.setAttribute(&quot;user&quot;,u);
-        return &quot;index&quot; ;
-    }
-2.jsp
-    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
-    &lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
-    &lt;%@ page session=&quot;true&quot; %&gt;
-
-    &lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;login.jsp&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-    &lt;c:out value=&quot;${sessionScope.user.name}&quot;/&gt;
-    &lt;c:if test=&quot;${sessionScope.user != null}&quot;&gt;
-        欢迎 &lt;c:out value=&quot;${sessionScope.user.name}&quot;/&gt;
-    &lt;/c:if&gt;
-    &lt;c:if test=&quot;${sessionScope.user == null}&quot;&gt;
-       您尚未登录,请登录!!
-    &lt;/c:if&gt;
-    &lt;c:out value=&quot;${sessionScope.user.name}&quot;/&gt;
-
-    &lt;form action=&apos;&lt;c:url value=&quot;/doLogin&quot; /&gt;&apos; method=&quot;post&quot;&gt;
-        UserName : &lt;input type=&quot;text&quot; name=&quot;name&quot;&gt;&lt;br&gt;
-        Password : &lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;&lt;br&gt;
-        &lt;input type=&quot;submit&quot;/&gt;
-    &lt;/form&gt;
-    &lt;/body&gt;
-    &lt;/html&gt;
-</code></pre><h2 id="整合SSM-springmvc-spring-mybatis"><a href="#整合SSM-springmvc-spring-mybatis" class="headerlink" title="整合SSM(springmvc + spring + mybatis)"></a>整合SSM(springmvc + spring + mybatis)</h2><pre><code>1.创建模块
-    ssm(javaee)
-2.添加maven支持
-3.添加依赖。
-    mysql驱动
-    c3p0数据源
-    mybatis
-    spring(tx | aop | context))包括事务AOP上下文。
-    mybatis-spring
-    spring mvc
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-        &lt;artifactId&gt;ssm&lt;/artifactId&gt;
-        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;mysql&lt;/groupId&gt;
-                &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
-                &lt;version&gt;5.1.17&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;c3p0&lt;/groupId&gt;
-                &lt;artifactId&gt;c3p0&lt;/artifactId&gt;
-                &lt;version&gt;0.9.1.2&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
-                &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
-                &lt;version&gt;3.2.1&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;junit&lt;/groupId&gt;
-                &lt;artifactId&gt;junit&lt;/artifactId&gt;
-                &lt;version&gt;4.11&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
-                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
-                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
-                &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
-                &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
-                &lt;version&gt;1.3.0&lt;/version&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
-                &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
-                &lt;version&gt;1.8.10&lt;/version&gt;
-            &lt;/dependency&gt;
-
-        &lt;/dependencies&gt;
-    &lt;/project&gt;
-
-4.创建包
-    com.it18zhang.ssm.dao.impl
-    com.it18zhang.ssm.service.impl
-    com.it18zhang.ssm.domain
-    com.it18zhang.ssm.util
-    com.it18zhang.ssm.web.controller
-
-5.创建基本类库
-    com.it18zhang.ssm.domain.User
-    com.it18zhang.ssm.domain.Order
-    com.it18zhang.ssm.domain.Item
-    ...
-6.复制beans.xml + mybatis-cconfig.xml+UserMapper.xml + OrderMapper.xml + ItemMapper.xml
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-           xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
-           xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
-           xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
-           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-                               http://www.springframework.org/schema/beans/spring-beans.xsd
-                               http://www.springframework.org/schema/context
-                               http://www.springframework.org/schema/context/spring-context-4.3.xsd
-                               http://www.springframework.org/schema/tx
-                               http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
-                               http://www.springframework.org/schema/aop
-                               http://www.springframework.org/schema/aop/spring-aop-4.3.xsd&quot; default-autowire=&quot;byType&quot;&gt;
-        &lt;!-- 配置事务特征 --&gt;
-        &lt;tx:advice id=&quot;txAdvice&quot; transaction-manager=&quot;txManager&quot;&gt;
-            &lt;tx:attributes&gt;
-                &lt;tx:method name=&quot;*&quot; propagation=&quot;REQUIRED&quot; isolation=&quot;DEFAULT&quot;/&gt;
-            &lt;/tx:attributes&gt;
-        &lt;/tx:advice&gt;
-
-        &lt;!-- 配置事务切面 --&gt;
-        &lt;aop:config&gt;
-            &lt;aop:advisor advice-ref=&quot;txAdvice&quot; pointcut=&quot;execution(* *..*Service.*(..))&quot; /&gt;
-        &lt;/aop:config&gt;
-
-        &lt;!-- 扫描包 --&gt;
-        &lt;context:component-scan base-package=&quot;com.it18zhang.ssm.dao,com.it18zhang.ssm.service&quot; /&gt;
-
-        &lt;!-- 数据源 --&gt;
-        &lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;
-            &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;/&gt;
-            &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis?user=root&amp;amp;password=root&quot;/&gt;
-            &lt;property name=&quot;user&quot; value=&quot;root&quot;/&gt;
-            &lt;property name=&quot;password&quot; value=&quot;root&quot;/&gt;
-            &lt;property name=&quot;maxPoolSize&quot; value=&quot;10&quot;/&gt;
-            &lt;property name=&quot;minPoolSize&quot; value=&quot;2&quot;/&gt;
-            &lt;property name=&quot;initialPoolSize&quot; value=&quot;3&quot;/&gt;
-            &lt;property name=&quot;acquireIncrement&quot; value=&quot;2&quot;/&gt;
-        &lt;/bean&gt;
-
-        &lt;!-- mybatis整合spring的核心类。 --&gt;
-        &lt;bean id=&quot;sf&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;
-            &lt;!-- 指定数据源 --&gt;
-            &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;
-            &lt;!-- 指定mybatis配置文件 --&gt;
-            &lt;property name=&quot;configLocation&quot; value=&quot;classpath:mybatis-config.xml&quot;/&gt;
-        &lt;/bean&gt;
-
-        &lt;!-- 数据源事务管理器 --&gt;
-        &lt;bean id=&quot;txManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
-            &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;
-        &lt;/bean&gt;
-    &lt;/beans&gt;
-    ...
-
-7.创建UserController.java
-    package com.it18zhang.ssm.web.controller;
-
-    import com.it18zhang.ssm.domain.User;
-    import com.it18zhang.ssm.service.UserService;
-    import org.springframework.stereotype.Controller;
-    import org.springframework.ui.Model;
-    import org.springframework.web.bind.annotation.RequestMapping;
-
-    import javax.annotation.Resource;
-    import java.util.List;
-
-    /**
-     *
-     */
-    @Controller
-    public class UserController {
-
-        @Resource(name=&quot;userService&quot;)
-        private UserService us ;
-
-        /**
-         * 查看全部user
-         */
-        @RequestMapping(&quot;/user/findall&quot;)
-        public String findAll(Model m ){
-            List&lt;User&gt; list = us.selectAll();
-            m.addAttribute(&quot;allUsers&quot;,list);
-            return &quot;user/userList&quot; ;
-        }
-    }
-
-8.编写web.xml
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot;
-             version=&quot;3.1&quot;&gt;
-        &lt;!-- 指定spring的配置文件beans.xml --&gt;
-        &lt;context-param&gt;
-            &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
-            &lt;param-value&gt;classpath*:beans.xml&lt;/param-value&gt;
-        &lt;/context-param&gt;
-        &lt;!-- 确保web服务器启动时，完成spring的容器初始化 --&gt;
-        &lt;listener&gt;
-            &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
-        &lt;/listener&gt;
-
-        &lt;!-- 配置分发器Servlet --&gt;
-        &lt;servlet&gt;
-            &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;
-            &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
-        &lt;/servlet&gt;
-        &lt;servlet-mapping&gt;
-            &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;
-            &lt;url-pattern&gt;/&lt;/url-pattern&gt;
-        &lt;/servlet-mapping&gt;
-    &lt;/web-app&gt;
-
-9.编写WEB-INF/dispatcher-servlet.xml
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-           xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
-           xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
-           xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-                            http://www.springframework.org/schema/beans/spring-beans.xsd
-                            http://www.springframework.org/schema/mvc
-                            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
-                            http://www.springframework.org/schema/context
-                            http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt;
-        &lt;!-- 配置扫描路径 --&gt;
-        &lt;context:component-scan base-package=&quot;com.it18zhang.ssm.web.controller&quot; /&gt;
-        &lt;!-- 使用注解驱动 --&gt;
-        &lt;mvc:annotation-driven   /&gt;
-
-        &lt;!-- 内部资源视图解析器 --&gt;
-        &lt;bean class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
-            &lt;property name=&quot;prefix&quot; value=&quot;/&quot; /&gt;
-            &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
-        &lt;/bean&gt;
-    &lt;/beans&gt;
-</code></pre><h2 id="spring-mvc静态资源部分"><a href="#spring-mvc静态资源部分" class="headerlink" title="spring mvc静态资源部分"></a>spring mvc静态资源部分</h2><pre><code>1.描述
-    html
-    image
-    css
-    js
-
-2.在[dispatcher-servlet.xml]添加如下元素
-    &lt;mvc:resources mapping=&quot;/jsssss/**&quot; location=&quot;/js/&quot;/&gt;
-    &lt;mvc:resources mapping=&quot;/css/**&quot; location=&quot;/css/&quot;/&gt;
-    &lt;mvc:resources mapping=&quot;/images/**&quot; location=&quot;/images/&quot;/&gt;
-    &lt;mvc:resources mapping=&quot;/html/**&quot; location=&quot;/html/&quot;/&gt;
-
-
-3.常见相关目录
-    /web/js
-    /web/css
-    /web/images
-    /web/html
-
-4.放置相应文件
-    /web/html/hello.html
-    &lt;!DOCTYPE html&gt;
-    &lt;html lang=&quot;en&quot;&gt;
-    &lt;head&gt;
-        &lt;meta charset=&quot;UTF-8&quot;&gt;
-        &lt;title&gt;Hello.html&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;div&gt;hello&lt;/div&gt;
-        &lt;table&gt;
-            &lt;tr&gt;
-                &lt;td&gt;ID&lt;/td&gt;
-                &lt;td&gt;name&lt;/td&gt;
-                &lt;td&gt;age&lt;/td&gt;
-            &lt;/tr&gt;
-            &lt;tr&gt;
-                &lt;td&gt;1&lt;/td&gt;
-                &lt;td&gt;tom&lt;/td&gt;
-                &lt;td&gt;12&lt;/td&gt;
-            &lt;/tr&gt;
-            &lt;tr&gt;
-                &lt;td&gt;2&lt;/td&gt;
-                &lt;td&gt;tomas&lt;/td&gt;
-                &lt;td&gt;13&lt;/td&gt;
-            &lt;/tr&gt;
-            &lt;tr&gt;
-                &lt;td&gt;3&lt;/td&gt;
-                &lt;td&gt;tomasLee&lt;/td&gt;
-                &lt;td&gt;4&lt;/td&gt;
-            &lt;/tr&gt;
-        &lt;/table&gt;
-    &lt;/body&gt;
-    &lt;/html&gt;
-
-5.启动程序访问
-    http://localhost:9090/html/hello.html
-</code></pre><h2 id="css选择器"><a href="#css选择器" class="headerlink" title="css选择器"></a>css选择器</h2><pre><code>table            //标签选择
-#id                //id选择
-.class-name        //类选择
-tabble td        //后台选择
-</code></pre><h2 id="中文乱码"><a href="#中文乱码" class="headerlink" title="中文乱码"></a>中文乱码</h2><pre><code>1.jsp页面使用&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot; language=&quot;java&quot; %&gt;进行utf8码声明。
-
-2.在web.xml文件中，加入filter。
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot;
-             version=&quot;3.1&quot;&gt;
-        &lt;!-- 指定spring的配置文件beans.xml --&gt;
-        &lt;context-param&gt;
-            &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
-            &lt;param-value&gt;classpath*:beans.xml&lt;/param-value&gt;
-        &lt;/context-param&gt;
-        &lt;!-- 确保web服务器启动时，完成spring的容器初始化 --&gt;
-        &lt;listener&gt;
-            &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
-        &lt;/listener&gt;
-
-        &lt;filter&gt;
-            &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
-            &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
-            &lt;init-param&gt;
-                &lt;param-name&gt;encoding&lt;/param-name&gt;
-                &lt;param-value&gt;UTF-8&lt;/param-value&gt;
-            &lt;/init-param&gt;
-            &lt;init-param&gt;
-                &lt;param-name&gt;forceEncoding&lt;/param-name&gt;
-                &lt;param-value&gt;true&lt;/param-value&gt;
-            &lt;/init-param&gt;
-        &lt;/filter&gt;
-        &lt;filter-mapping&gt;
-            &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
-            &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-        &lt;/filter-mapping&gt;
-
-
-        &lt;!-- 配置分发器Servlet --&gt;
-        &lt;servlet&gt;
-            &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;
-            &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
-        &lt;/servlet&gt;
-        &lt;servlet-mapping&gt;
-            &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;
-            &lt;url-pattern&gt;/&lt;/url-pattern&gt;
-        &lt;/servlet-mapping&gt;
-    &lt;/web-app&gt;
-
-3.确认mysql使用utf8编码，可以修改mysql的编码.
-    [mysql安装目录/my.ini]
-    uft8
-4.spring中的数据库连接地址url中显式指定编码.
-    [beans.xml]
-    &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis?user=root&amp;amp;password=root&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8&quot;/&gt;
-</code></pre><p>unicode : 2        //两个字节</p>
-<p>ascii    : 1        //7<br>iso8859 : 1        //8<br>utf8            //3<br>gbk                //2</p>
-<h2 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h2><pre><code>0.技术背景
-    mysql:
-    select * from users limit 10 10
-1.dao + service
-
-2.userList.jsp
-
-3.
-4.
-5.
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/05/电信项目第一天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/05/电信项目第一天/" itemprop="url">电信项目第一天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-05T10:44:38+08:00">
-                2019-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="可视化"><a href="#可视化" class="headerlink" title="可视化:"></a>可视化:</h2><pre><code>1.
-2.
-3.
-4.
-5.
-</code></pre><p>package com.it18zhang.callloggen;</p>
-<p>import java.util.HashMap;<br>import java.util.Map;</p>
-<p>/*<em>
- </em><br> */<br>public class App {<br>    public static Map&lt;String,String&gt; caller = new HashMap&lt;String, String&gt;();<br>    static{<br>        caller.put(“15810092493”, “史玉龙”);<br>        caller.put(“18000696806”, “赵贺彪”);<br>        caller.put(“15151889601”, “张倩 “);<br>        caller.put(“13269361119”, “王世昌”);<br>        caller.put(“15032293356”, “张涛”);<br>        caller.put(“17731088562”, “张阳”);<br>        caller.put(“15338595369”, “李进全”);<br>        caller.put(“15733218050”, “杜泽文”);<br>        caller.put(“15614201525”, “任宗阳”);<br>        caller.put(“15778423030”, “梁鹏”);<br>        caller.put(“18641241020”, “郭美彤”);<br>        caller.put(“15732648446”, “刘飞飞”);<br>        caller.put(“13341109505”, “段光星”);<br>        caller.put(“13560190665”, “唐会华”);<br>        caller.put(“18301589432”, “杨力谋”);<br>        caller.put(“13520404983”, “温海英”);<br>        caller.put(“18332562075”, “朱尚宽”);<br>        caller.put(“18620192711”, “刘能宗”);<br>    }</p>
-<pre><code>public static void main(String[] args) {
-    genCallLog();
-}
-
-public static void genCallLog(){
-
-}
-</code></pre><h2 id="生成jar包，部署到centos执行"><a href="#生成jar包，部署到centos执行" class="headerlink" title="生成jar包，部署到centos执行"></a>生成jar包，部署到centos执行</h2><pre><code>1.使用maven生成jar文件
-    ...
-2.部署到centos
-
-3.执行
-    $&gt;mkdir /home/centos/calllog
-    java -cp xxx.jar com.it18zhang.callloggen.App /home/centos/calllog/calllog.log
-
-4.创建centos上的执行脚本
-    [calllog.sh]
-    #!/bin/bash
-    java -cp Calllog.jar com.it18zhang.callloggen.App /home/centos/calllog/calllog.log
-
-5.修改权限
-    $&gt;chmod a+x calllog.sh
-
-6.执行脚本
-    $&gt;cd ~/calllog
-    $&gt;./calllog.sh
-</code></pre><h2 id="手机号"><a href="#手机号" class="headerlink" title="手机号"></a>手机号</h2><pre><code>0755-67568979
-186----------
-</code></pre><p>086+0755-67568979</p>
-<h2 id="固话"><a href="#固话" class="headerlink" title="固话"></a>固话</h2><pre><code>0755-67568979
-0755-67568979
-</code></pre><h2 id="网络电话"><a href="#网络电话" class="headerlink" title="网络电话"></a>网络电话</h2><pre><code>12358757575765656565
-</code></pre><h2 id="启动zk集群-s201-s202-s203"><a href="#启动zk集群-s201-s202-s203" class="headerlink" title="启动zk集群[s201 + s202 + s203]"></a>启动zk集群[s201 + s202 + s203]</h2><pre><code>$&gt;zkServer.sh start 
-</code></pre><h2 id="启动kafka集群-s202-s203-s204"><a href="#启动kafka集群-s202-s203-s204" class="headerlink" title="启动kafka集群[s202 + s203 + s204]"></a>启动kafka集群[s202 + s203 + s204]</h2><pre><code>$&gt;cd /soft/kafka/config
-$&gt;kafka-server-start.sh -daemon server.properties
-</code></pre><h2 id="创建kafka主题"><a href="#创建kafka主题" class="headerlink" title="创建kafka主题"></a>创建kafka主题</h2><pre><code>//创建主题
-$&gt;kafka-topics.sh --zookeeper s202:2181 --topic calllog --create --replication-factor 3 --partitions 4
-
-//查看主题列表
-$&gt;kafka-topics.sh --zookeeper s202:2181 --list
-
-//启动控制台消费者,消费calllog主题,用于测试.测试flume有没有取得到。
-</code></pre><p>消费者需要连接到zk主题需要连接到zk生产者不用连接zk<br>    $&gt;kafka-console-consumer.sh –zookeeper s201:2181 –topic calllog</p>
-<h2 id="s201上编写flume配置文件件，实时收集calllog-log日志"><a href="#s201上编写flume配置文件件，实时收集calllog-log日志" class="headerlink" title="s201上编写flume配置文件件，实时收集calllog.log日志"></a>s201上编写flume配置文件件，实时收集calllog.log日志</h2><pre><code>1.配置文件
-    [/soft/flume/conf/calllog.conf]
-    a1.sources = r1
-    a1.sinks = k1
-    a1.channels = c1
-
-    a1.sources.r1.type=exec
-    #-F 最后10行,如果从头开始收集 -c +0 -F:持续收集后续数据,否则进程停止。
-    a1.sources.r1.command=tail -F -c +0 /home/centos/calllog/calllog.log
-
-    a1.channels.c1.type=memory
-
-    a1.sinks.k1.type = org.apache.flume.sink.kafka.KafkaSink
-    a1.sinks.k1.kafka.topic = calllog
-    #三台节点，启动的时候连接座初始化
-    a1.sinks.k1.kafka.bootstrap.servers = s202:9092 s203:9092 s204:9092
-
-    a1.sinks.k1.kafka.flumeBatchSize = 20
-    a1.sinks.k1.kafka.producer.acks = 1
-
-    a1.sources.r1.channels = c1
-    a1.sinks.k1.channel = c1
-
-
-2.启动flume收集程序
-    $&gt;flume-ng agent -f /soft/flume/conf/calllog.conf -n a1 &amp;
-</code></pre><h2 id="在s202主机安装flume软件"><a href="#在s202主机安装flume软件" class="headerlink" title="在s202主机安装flume软件"></a>在s202主机安装flume软件</h2><pre><code>...
-</code></pre><p>启动hadoop hdfs集群[s201 ~ s206]<br>角色划分:<br>NameNode        //s201,s206<br>DataNode        //s202,s203,s204,s205<br>JournalNode        //s202,s203,s204</p>
-<h2 id="ZK-s201-s206"><a href="#ZK-s201-s206" class="headerlink" title="ZK                //s201,s206"></a>ZK                //s201,s206</h2><pre><code>1.启动hadoop(完全分布式 + HA,HA是s201 + s206作为主备名称节点namenode的2个节点)
-    在s201上启动dfs集群.
-    $&gt;start-dfs.sh
-
-2.webui    
-    http://s201:50070/
-
-3.查看节点状态
-    $&gt;hdfs haadmin -getServiceState nn1
-4.容灾切换
-    $&gt;hdfs haadmin -failover nn1 nn2
-</code></pre><h2 id="启动hbase集群"><a href="#启动hbase集群" class="headerlink" title="启动hbase集群"></a>启动hbase集群</h2><pre><code>1.[角色划分]对hbase做高可用
-    master            //s201,s204
-    regsionServer    //s202,s203,s204
-
-2.启动hbase集群
-    //s201
-    $&gt;start-hbase.sh
-
-3.查看进程和webui
-    http://s201:16010
-
-4.启动备份master节点
-    //s204
-    $&gt;hbase-daemon.sh start master
-</code></pre><h2 id="创建hbase名字空间-表"><a href="#创建hbase名字空间-表" class="headerlink" title="创建hbase名字空间+表"></a>创建hbase名字空间+表</h2><pre><code>1.创建名字空间
-    $&gt;hbase shell                        //进入hbase shell
-    $hbase&gt;create_namespace &apos;ns1&apos;        //创建空间
-    $hbase&gt;create &apos;ns1:calllogs&apos; , &apos;f1&apos;    //创建表
-
-    $hbase&gt;truncate &apos;ns1:calllogs&apos;        //重建表
-</code></pre><h2 id="IBM-Power720-210000"><a href="#IBM-Power720-210000" class="headerlink" title="IBM Power720(210000) "></a>IBM Power720(210000) </h2><pre><code>基本规格    
-处理器类型POWER7+
-处理器主频3.6GHz
-处理器缓存每个内核256KB二级缓存，4MB三级缓存
-最大处理器个数8
-内存类型DDR3
-标准内存容量32GB
-最大内存容量128GB
-4颗CPU
-</code></pre><h2 id="去IOE"><a href="#去IOE" class="headerlink" title="去IOE"></a>去IOE</h2><pre><code>IBM:        //ibm小型机
-Oracle:        //oracle数据
-EMC            //网络存储设备
-</code></pre><h2 id="戴尔（DELL）13900-100-140万"><a href="#戴尔（DELL）13900-100-140万" class="headerlink" title="戴尔（DELL）13900 * 100 = 140万 "></a>戴尔（DELL）13900 * 100 = 140万 </h2><pre><code>商品名称：
-戴尔（DELL）R730服务器 
-机架式主机    2U 
-至强        E5处理器 
-内存类型    ECC
-硬盘总容量：8T以上 8T x 100 = 800T = 副本(3) 800/3 = 250  80%(4/5) =  150T
-类型：
-机架服务器电源：冗余
-操作系统：    DOS
-内存        总容量：64G及以上
-硬盘转速：其他
-支持CPU颗数    2颗
-机箱规格    2U机架式
-显存        集成显卡
-硬盘类型    SAS
-Raid卡        
-缓存：        无缓存
-处理器：    至强Xeon-E5
-</code></pre><h2 id="创建kafka消费者，订阅calllog主题"><a href="#创建kafka消费者，订阅calllog主题" class="headerlink" title="创建kafka消费者，订阅calllog主题"></a>创建kafka消费者，订阅calllog主题</h2><pre><code>1.设计rowkey
-    业务数据: caller , callee , date , duration
-
-    分区号    号码     时间,标记  (对方号码),时长
-    regionNo, caller,date , flag,callee,duration
-
-    caller(11) + 通话时间(201701) = 
-    (后四位) + 201701 = % 100
-
-2.
-3.
-4.
-</code></pre><p>11 - 4 = 7</p>
-<p>hbase(main):001:0&gt; scan ‘ns1:calllogs’<br>ROW                             COLUMN+CELL<br> 39,15032293356,20170313140201,0,18620192711,297 column=f1:callDuration, timestamp=1491896679156, value=297</p>
-<p> 39,15032293356,20170313140201,0,18620192711,297 column=f1:callTime, timestamp=1491896679156, value=20170313140201</p>
-<p> 39,15032293356,20170313140201,0,18620192711,297 column=f1:callee, timestamp=1491896679156, value=18620192711</p>
-<p> 39,15032293356,20170313140201,0,18620192711,297 column=f1:caller, timestamp=1491896679156, value=15032293356</p>
-<p> 93,18620192711,20170313140201,1,15032293356,297 column=f1:dummy, timestamp=1491896679184, value=no</p>
-<h2 id="使用mvn命令，下载工件的所有依赖软件包"><a href="#使用mvn命令，下载工件的所有依赖软件包" class="headerlink" title="使用mvn命令，下载工件的所有依赖软件包"></a>使用mvn命令，下载工件的所有依赖软件包</h2><pre><code>mvn -DoutputDirectory=./lib 
-    -DgroupId=com.it18zhang 
-    -DartifactId=CallLogConsumerModule 
-    -Dversion=1.0-SNAPSHOT 
-    dependency:copy-dependencies
-</code></pre><h2 id="导入kafka消费者，放置以上面的lib下，使用命令行方式运行"><a href="#导入kafka消费者，放置以上面的lib下，使用命令行方式运行" class="headerlink" title="导入kafka消费者，放置以上面的lib下，使用命令行方式运行"></a>导入kafka消费者，放置以上面的lib下，使用命令行方式运行</h2><pre><code>java -cp CallLogConsumerModule.jar;./lib/activation-1.1.jar;./lib/apacheds-i18n-2.0.0-M15.jar;./lib/apacheds-kerberos-codec-2.0.0-M15.jar;./lib/api-asn1-api-1.0.0-M20.jar;./lib/api-util-1.0.0-M20.jar;./lib/avro-1.7.4.jar;./lib/commons-beanutils-1.7.0.jar;./lib/commons-beanutils-core-1.8.0.jar;./lib/commons-cli-1.2.jar;./lib/commons-codec-1.9.jar;./lib/commons-collections-3.2.2.jar;./lib/commons-compress-1.4.1.jar;./lib/commons-configuration-1.6.jar;./lib/commons-digester-1.8.jar;./lib/commons-el-1.0.jar;./lib/commons-httpclient-3.1.jar;./lib/commons-io-2.4.jar;./lib/commons-lang-2.6.jar;./lib/commons-logging-1.2.jar;./lib/commons-math3-3.1.1.jar;./lib/commons-net-3.1.jar;./lib/findbugs-annotations-1.3.9-1.jar;./lib/guava-12.0.1.jar;./lib/hadoop-annotations-2.5.1.jar;./lib/hadoop-auth-2.5.1.jar;./lib/hadoop-common-2.5.1.jar;./lib/hadoop-mapreduce-client-core-2.5.1.jar;./lib/hadoop-yarn-api-2.5.1.jar;./lib/hadoop-yarn-common-2.5.1.jar;./lib/hamcrest-core-1.3.jar;./lib/hbase-annotations-1.2.4.jar;./lib/hbase-client-1.2.4.jar;./lib/hbase-common-1.2.4.jar;./lib/hbase-protocol-1.2.4.jar;./lib/htrace-core-3.1.0-incubating.jar;./lib/httpclient-4.2.5.jar;./lib/httpcore-4.2.4.jar;./lib/jackson-core-asl-1.9.13.jar;./lib/jackson-mapper-asl-1.9.13.jar;./lib/jaxb-api-2.2.2.jar;./lib/jcodings-1.0.8.jar;./lib/jdk.tools-1.6.jar;./lib/jetty-util-6.1.26.jar;./lib/jline-0.9.94.jar;./lib/joni-2.1.2.jar;./lib/jopt-simple-4.9.jar;./lib/jsch-0.1.42.jar;./lib/jsr305-1.3.9.jar;./lib/junit-4.12.jar;./lib/kafka-clients-0.10.0.1.jar;./lib/kafka_2.11-0.10.0.1.jar;./lib/log4j-1.2.15.jar;./lib/lz4-1.3.0.jar;./lib/mail-1.4.jar;./lib/metrics-core-2.2.0.jar;./lib/netty-3.7.0.Final.jar;./lib/netty-all-4.0.23.Final.jar;./lib/paranamer-2.3.jar;./lib/protobuf-java-2.5.0.jar;./lib/scala-library-2.11.8.jar;./lib/scala-parser-combinators_2.11-1.0.4.jar;./lib/slf4j-api-1.6.1.jar;./lib/slf4j-log4j12-1.7.21.jar;./lib/snappy-java-1.1.2.6.jar;./lib/stax-api-1.0-2.jar;./lib/xmlenc-0.52.jar;./lib/xz-1.0.jar;./lib/zkclient-0.8.jar;./lib/zookeeper-3.4.6.jar com.it18zhang.calllog.consumer.HbaseConsumer
-</code></pre><h2 id="编写web程序，从hbase中提取所有进行展示，可视化"><a href="#编写web程序，从hbase中提取所有进行展示，可视化" class="headerlink" title="编写web程序，从hbase中提取所有进行展示，可视化"></a>编写web程序，从hbase中提取所有进行展示，可视化</h2><pre><code>1.导入ssm项目
-    ...
-2.创建CallLog
-    ...
-3.创建CallLogService.java + CallLogServiceImpl.java
-    ...
-
-4.
-</code></pre><p>=======================================</p>
-<p>在windows下编写的.sh文件到了linux上变成不可用了什么原因：<br><img src="https://i.imgur.com/5aOaIic.png" alt=""></p>
-<p>因为换行符的原因，windows下的换行符和Linux下的换行符不一样。所以要在linux下编写.sh文件即可解决。</p>
-<p>=================</p>
-<p>kafka同一个组下只能有一个消费者。被消费一次就不能再次消费了</p>
-<p>所以修改配置文件里面的group.id=5。这是kafka里面的具体问题了。</p>
-<p>==================</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -4095,7 +3584,7 @@ Raid卡
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">68</span>
+                  <span class="site-state-item-count">71</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -4106,7 +3595,7 @@ Raid卡
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -4117,7 +3606,7 @@ Raid卡
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-count">107</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
