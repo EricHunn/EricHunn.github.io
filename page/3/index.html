@@ -328,7 +328,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/实战大数据电信项目（一）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Eric Hunn">
@@ -347,7 +347,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/" itemprop="url">Spring第二天_01Spring常用注解</a></h1>
+                <a class="post-title-link" href="/2019/01/11/实战大数据电信项目（一）/" itemprop="url">实战大数据电信项目（一）</a></h1>
         
 
         <div class="post-meta">
@@ -399,270 +399,407 @@
       
         
           
-            <p>前言：上一章节讲解的是就是通过工厂类获取bean实例，通过获取xml文件里面的配置，value是serviceimpl对应一个Id，然后获取一个serviceimpl的实例，或者获取一个daoimpl的实例，就不用通过new来创建了，本章讲解的是通过Spring容器，注解的方式达到上面的目的，直接注入实例或者注入某一成员类型的值。</p>
-<h1 id="Spring基于注解的IOC以及IOC的案例"><a href="#Spring基于注解的IOC以及IOC的案例" class="headerlink" title="Spring基于注解的IOC以及IOC的案例"></a>Spring基于注解的IOC以及IOC的案例</h1><h2 id="1、spring中ioc的常用注解"><a href="#1、spring中ioc的常用注解" class="headerlink" title="1、spring中ioc的常用注解"></a>1、spring中ioc的常用注解</h2><h2 id="2、案例使用xml方式和注解方式实现单表的CRUD操作"><a href="#2、案例使用xml方式和注解方式实现单表的CRUD操作" class="headerlink" title="2、案例使用xml方式和注解方式实现单表的CRUD操作"></a>2、案例使用xml方式和注解方式实现单表的CRUD操作</h2><pre><code>持久层技术选择：dbutils
-</code></pre><h2 id="3、改造基于注解的ioc案例，使用纯注解的方式实现"><a href="#3、改造基于注解的ioc案例，使用纯注解的方式实现" class="headerlink" title="3、改造基于注解的ioc案例，使用纯注解的方式实现"></a>3、改造基于注解的ioc案例，使用纯注解的方式实现</h2><pre><code>spring的一些新注解使用
-</code></pre><h2 id="4、spring和Junit整合"><a href="#4、spring和Junit整合" class="headerlink" title="4、spring和Junit整合"></a>4、spring和Junit整合</h2><p>曾经XML的配置，</p>
-<pre><code>&lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
-&lt;scope =&quot;&quot;   init-method=&quot;&quot;  destory-method=&quot;&quot;&gt;
-&lt;propertiy name = &quot;&quot; value=&quot;&quot; | ref=&quot;&quot;&gt;&lt;/propertiy&gt;
-&lt;/bean&gt;
-</code></pre><p> 1、用于创建对象的注解：</p>
-<pre><code>@Component
-</code></pre><p>他们的作用就和在XML配置文件中编写一个<bean></bean>标签实现的功能一样的</p>
-<p> 2、用于注入数据的注解：</p>
-<p>他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的</p>
-<p> 3、用于改变范围的注解</p>
-<p>他们的作用就和在bean标签中使用scope属性实现的功能是一样的</p>
-<p> 4、和生命周期相关的</p>
-<p>他们的作用就和在bean标签中使用Init-method和destory标签是一样的</p>
-<hr>
-<pre><code>package com.itheima.service.impl;
+            <p>0.rowkey的设计<br>因为通过rowkey查询，吧尽可能多的数据放到rowkey里面去。</p>
+<p>考虑的问题：</p>
+<p>从通话记录整个来考虑，记录量比较大。让记录分散，吧主叫被叫编写进去时间编进去，就是一个rowkey的构成，如果用主叫被叫时间做rowkey的话。 </p>
+<p>每个服务器承载的数据量。hbase没经过10G就切割成2个区域，分成2个区域服务器，一条记录是1k10G是多少行可以算出来，可以设计出来区间。要知道rowkey的范围 。</p>
+<p>如果数据都在一台服务器吧请求都发送给一台服务器，压力很大。</p>
+<p>对于服务器来说，每个服务器应该多少数据量的问题。怎么衡量？</p>
+<p>对于单张表是10G就切割。切割出来的区域分成2个区域服务器上去了是10G的数据量。可以算一下一条记录是1K那么10G的数据量是多少行，根据这个法则设定空间，要知道rowkey的范围。加入1个区域存放10G要是有10个区域存放10G是100G。存放就是10G、1k=1亿数据量。</p>
+<p>rowkey是排序的，所以排序最好是等长度的，因为如果从1-10000情况下8是大于10000的。</p>
+<p> 可以通过预切割避免切割风暴。<br> 139。。。。<br>137.。。。<br>切割成区域，如果定了10个区域，要把所有的数据分散到10个区域里面去就是00-09，所以在编写rowkey里面，139，137的都有很多，所以在前面加一个前缀，也就是说盐析。</p>
+<p>rowkey设计的长度原则。一般是定长，越短越好，不超过1个字节：因为目前都是64位系统，内存是8字节对其，控制在16字节8字节的整数倍利用了操作系统的最佳特性。</p>
+<p>建议用rowkey的高位进行散列处理，由程序随机生成，低位放时间字段，这样提高数据均衡分布在每个regionServer来实现负载均衡。</p>
+<p>如果不进行散列，如果用时间片编写开头。起始的Rowkey的弊端就会集中在一个regionserver上，光是交换机写入就已经爆掉hbase了。因为数据量太大了。</p>
+<p>以电话号码编写开头的话，所有数据都在</p>
+<p>rowkey设计原则由于rowkey是字典排序的所以要将常用的放到一个region但是又不能量太大。</p>
+<p>热点：<br><img src="https://i.imgur.com/fYWGFDr.png" alt=""></p>
+<p>总结来说就是在整个数据rowkey前面加个2位数的随机数也就是通过盐析的方式避免热点问题。2位数的随机数是通过一个hash算法实现0-100散列。分布在0-100的不通的region里面。协处理器相当于一个区域观察期，类似于zookeeper的观察者。也就是插入了一条数据他就观察的到通过该preput 和postput重写这些方法来实现在插入前和插入后的动作，和插入的时候类似，通过哈希算法实现前面的随机数。完成新的rowkey的重组。这个地方根据业务场景的需要，每次查询的时候主叫和被叫都要查询出来，所以他的设计是将两个电话的主叫和被叫同时分布在一个区域里面。使得查询的效率更加高效分布更加合理。通过在协处理器哈希算法的时候通过被叫号码+时间片来哈希，主动插入的时候通过主叫号码+时间片来哈希。就可以实现主叫和被叫一个号码的都在同一个区域里面。</p>
+<p>在查询几月到几月的通话详单的时候，通过设置scan.startKey和scan.stopRow查询到开始日期和结束日期。打印是通过resultscanner</p>
+<p>如果查询某一个号码作为被叫的信息，我们可以在设计一张表calleelog被叫记录日志。rowkey设计：呼叫时间吧calltime和calleeid作为rowkey的设计什么时候被叫的但是他的value就是之前设计的callerlog表的rowkey的值，然后通过被叫表的value，这个value就是主叫表的rowkey通过这个也就是通过被叫表查询到了主叫表。这个场景还有2中可能，一种是设计2张表，然后查询，要是不设计2张表的话就是通过上文说过的通过设计一个被叫表指向主叫表的rowkey来完成这个业务场景。</p>
+<p>主叫表查询的rowkey设计：因为主要查询的时候都是通过主叫电话号码和时间来查询通过清单的，所以rowkey设计为hash,callerid,time,0,calleeid，然后value里面放一些其他诸如基站，手机信息等等其他无关紧要的信息，吧主要要查询的内容放到rowkey里面可以增加效率，直接查询rowkey就可以查询到所需要的内容。</p>
+<p>被叫表rowkey设计：设计一个另外一个表。calleeid,callertime里面的value放主叫表的rowkey即可。是为了避免第二张表大量冗余。</p>
+<p>1.按照时间段查询通话记录</p>
+<p><img src="https://i.imgur.com/2vxKcC0.png" alt=""><br>    1.hbase交互<br>        Scan : 设置startRow + endRow<br>        rowkey : hashcode , + callerid , + callTime, 0 , callee , duration.</p>
+<p>2.<br>3.</p>
+<h2 id="编写CallLogController-java"><a href="#编写CallLogController-java" class="headerlink" title="编写CallLogController.java"></a>编写CallLogController.java</h2><pre><code>/**
+ * 进入查询通话记录的页面,form
+ */
 
-import com.itheima.dao.IAccountDao;
-import com.itheima.dao.impl.AccountDaoImpl;
-import com.itheima.service.IAccountService;
-import org.springframework.stereotype.Component;
+
+@RequestMapping(&quot;/callLog/toFindCallLogPage&quot;)
+public String toFindCallLogPage(){
+    return &quot;callLog/findCallLog&quot; ;
+}
+
+
+@RequestMapping(value = &quot;/callLog/findCallLog&quot;,method = RequestMethod.POST)
+public String findCallLog(@RequestParam(&quot;caller&quot;) String caller, @RequestParam(&quot;startTime&quot;) String startTime, @RequestParam(&quot;endTime&quot;) String endTime){
+    Calendar startCalendar = Calendar.getInstance();
+    Calendar endCalendar = Calendar.getInstance();
+
+    return &quot;callLog/callLogList&quot; ;
+}
+</code></pre><h2 id="编写jsp界面"><a href="#编写jsp界面" class="headerlink" title="编写jsp界面"></a>编写jsp界面</h2><pre><code>&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;查询通话记录&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;../css/my.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&apos;&lt;c:url value=&quot;/callLog/findCallLog&quot; /&gt;&apos; method=&quot;post&quot;&gt;
+    &lt;table&gt;
+        &lt;tr&gt;
+            &lt;td&gt;电话号码 :&lt;/td&gt;
+            &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;caller&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;起始时间 :&lt;/td&gt;
+            &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;startTime&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;结束时间:&lt;/td&gt;
+            &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;endTime&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot;&gt;
+                &lt;input type=&quot;submit&quot; value=&quot;查询&quot;/&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h2 id="实现时间段查询"><a href="#实现时间段查询" class="headerlink" title="实现时间段查询"></a>实现时间段查询</h2><pre><code>1.提取时间范围
+    [CallLogUtil.java]
+    /**
+     * 起始时间
+     */
+    public static String getStartRowkey(String caller, String startTime, int partitions){
+        String hashcode = getHashcode(caller, startTime,partitions);
+        return hashcode + &quot;,&quot; + caller + &quot;,&quot; + startTime ;
+    }
+
+    /**
+     * 结束时间
+     */
+    public static String getStopRowkey(String caller, String startTime,String endTime, int partitions){
+        String hashcode = getHashcode(caller, startTime,partitions);
+        return hashcode + &quot;,&quot; + caller + &quot;,&quot; + endTime ;
+    }
+
+    /**
+     * 计算查询时间范围
+     */
+    public static List&lt;CallLogRange&gt; getCallLogRanges(String startStr ,String endStr){
+        try{
+            SimpleDateFormat sdfYMD = new SimpleDateFormat(&quot;yyyyMMdd&quot;);
+            SimpleDateFormat sdfYM = new SimpleDateFormat(&quot;yyyyMM&quot;);
+            DecimalFormat df00 = new DecimalFormat(&quot;00&quot;);
+
+            //
+            List&lt;CallLogRange&gt; list = new ArrayList&lt;CallLogRange&gt;();
+            //字符串时间
+            String startPrefix = startStr.substring(0, 6);
+
+            String endPrefix = endStr.substring(0, 6);
+            int endDay = Integer.parseInt(endStr.substring(6, 8));
+            //结束点
+            String endPoint = endPrefix + df00.format(endDay + 1);
+
+            //日历对象
+            Calendar c = Calendar.getInstance();
+
+            //同年月
+            if (startPrefix.equals(endPrefix)) {
+                CallLogRange range = new CallLogRange();
+                range.setStartPoint(startStr);          //设置起始点
+
+                range.setEndPoint(endPoint);            //设置结束点
+                list.add(range);
+            } else {
+                //1.起始月
+                CallLogRange range = new CallLogRange();
+                range.setStartPoint(startStr);
+
+                //设置日历的时间对象
+                c.setTime(sdfYMD.parse(startStr));
+                c.add(Calendar.MONTH, 1);
+                range.setEndPoint(sdfYM.format(c.getTime()));
+                list.add(range);
+
+                //是否是最后一月
+                while (true) {
+                    //到了结束月份
+                    if (endStr.startsWith(sdfYM.format(c.getTime()))) {
+                        range = new CallLogRange();
+                        range.setStartPoint(sdfYM.format(c.getTime()));
+                        range.setEndPoint(endPoint);
+                        list.add(range);
+                        break;
+                    } else {
+                        range = new CallLogRange();
+                        //起始时间
+                        range.setStartPoint(sdfYM.format(c.getTime()));
+
+                        //增加月份
+                        c.add(Calendar.MONTH, 1);
+                        range.setEndPoint(sdfYM.format(c.getTime()));
+                        list.add(range);
+                    }
+                }
+            }
+            return list ;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null ;
+    }
+
+2.编写service.
+
+3.
+4.
+</code></pre><h2 id="实现hbase的协处理器"><a href="#实现hbase的协处理器" class="headerlink" title="实现hbase的协处理器"></a>实现hbase的协处理器</h2><pre><code>0.说明
+    HBaseConsumer put的数据都是主叫，被叫数据在Coprossor中完成。
+
+1.创建协处理器
+    package com.it18zhang.calllog.coprossor;
+
+    import org.apache.hadoop.hbase.TableName;
+    import org.apache.hadoop.hbase.client.Durability;
+    import org.apache.hadoop.hbase.client.Put;
+    import org.apache.hadoop.hbase.client.Table;
+    import org.apache.hadoop.hbase.coprocessor.BaseRegionObserver;
+    import org.apache.hadoop.hbase.coprocessor.ObserverContext;
+    import org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;
+    import org.apache.hadoop.hbase.regionserver.wal.WALEdit;
+    import org.apache.hadoop.hbase.util.Bytes;
+
+    import java.io.IOException;
+
+    /**
+     * 协处理器,
+     */
+    public class CallLogRegionObserver extends BaseRegionObserver {
+
+        /**
+         * Put后处理
+         */
+        public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+            super.postPut(e, put, edit, durability);
+            //
+            String tableName0 = TableName.valueOf(&quot;ns1:calllogs&quot;).getNameAsString();
+
+            //得到当前的TableName对象
+            String tableName1 = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+            //判断是否是ns1:calllogs表
+            if (!tableName0.equals(tableName1)) {
+                return;
+            }
+
+            //得到主叫的rowkey,
+            String rowkey = Bytes.toString(put.getRow());
+
+            //如果被叫就放行
+            String[] arr = rowkey.split(&quot;,&quot;);
+            if (arr[3].equals(&quot;1&quot;)) {
+                return;
+            }
+            //hashcode,caller,time,flag,callee,duration
+            String caller = arr[1] ;        //主叫
+            String callTime = arr[2] ;      //通话时间
+            String callee = arr[4] ;        //被叫
+            String callDuration = arr[5] ;  //通话时长
+
+            //被叫hashcode
+            String hashcode = CallLogUtil.getHashcode(callee,callTime,100);
+            //被叫rowkey
+            String calleeRowKey = hashcode + &quot;,&quot; + callee + &quot;,&quot; + callTime + &quot;,1,&quot; + caller + &quot;,&quot; + callDuration;
+            Put newPut = new Put(Bytes.toBytes(calleeRowKey));
+            newPut.addColumn(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;refrowid&quot;), Bytes.toBytes(rowkey));
+            TableName tn = TableName.valueOf(&quot;ns1:calllogs&quot;);
+            Table t = e.getEnvironment().getTable(tn);
+            t.put(newPut);
+        }
+    }
+
+2.注册协处理器
+    a)导出jar包,分到集群.
+        ...
+    b)修改hbase配置文件并分发.
+        [hbase-site.xml]
+        &lt;property&gt;
+                &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
+                &lt;value&gt;com.it18zhang.calllog.coprossor.CallLogRegionObserver&lt;/value&gt;
+        &lt;/property&gt;
+
+    c)停止hbase集群
+
+    d)重新启动
+        ...
+    e)进入hbase shell,重建ns1:calllogs
+        $hbase&gt;create &apos;ns1:calllogs&apos; , &apos;f1&apos;,&apos;f2&apos;
+</code></pre><h2 id="主叫"><a href="#主叫" class="headerlink" title="主叫"></a>主叫</h2><pre><code>rowkey:
+12,1234,xxx,0,5678,60,.,.,.,.,
+</code></pre><h2 id="被叫"><a href="#被叫" class="headerlink" title="被叫"></a>被叫</h2><pre><code>rowkey:                        f2:refrowkey
+98,5678,xxxx,1,1234,60   --&gt; 12,1234,xxx,0,5678,60,.
+</code></pre><h2 id="重写RegionObserver的postGetOp方法-完成被叫查询时，直接返回主叫的记录"><a href="#重写RegionObserver的postGetOp方法-完成被叫查询时，直接返回主叫的记录" class="headerlink" title="重写RegionObserver的postGetOp方法,完成被叫查询时，直接返回主叫的记录"></a>重写RegionObserver的postGetOp方法,完成被叫查询时，直接返回主叫的记录</h2><pre><code>1.重写
+[CallLogRegionObserver.java]
+package com.it18zhang.calllog.coprossor;
+
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.coprocessor.BaseRegionObserver;
+import org.apache.hadoop.hbase.coprocessor.ObserverContext;
+import org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;
+import org.apache.hadoop.hbase.regionserver.InternalScanner;
+import org.apache.hadoop.hbase.regionserver.wal.WALEdit;
+import org.apache.hadoop.hbase.util.Bytes;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @Description 账户的业务层实现类
- * @Author TT Hun
- * @Data 2019/9/16 22:09
-
- *
- *  1、用于创建对象的注解
- *      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
-
+ * 协处理器,
  */
-@Component(value=&quot;accountService&quot;)
-public class AccountServiceImpl implements IAccountService {    
+public class CallLogRegionObserver extends BaseRegionObserver {
 
+    //被叫引用id
+    private static final String REF_ROW_ID = &quot;refrowid&quot; ;
+    //通话记录表名
+    private static final String CALL_LOG_TABLE_NAME = &quot;ns1:calllogs&quot; ;
 
-    public AccountServiceImpl(){
-        System.out.println(&quot;对象被创建了&quot;);
+    /**
+     * Put后处理
+     */
+    public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+        super.postPut(e, put, edit, durability);
+        //
+        String tableName0 = TableName.valueOf(CALL_LOG_TABLE_NAME).getNameAsString();
+
+        //得到当前的TableName对象
+        String tableName1 = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+        //判断是否是ns1:calllogs表
+        if (!tableName0.equals(tableName1)) {
+            return;
+        }
+
+        //得到主叫的rowkey,
+        String rowkey = Bytes.toString(put.getRow());
+
+        //如果被叫就放行
+        String[] arr = rowkey.split(&quot;,&quot;);
+        if (arr[3].equals(&quot;1&quot;)) {
+            return;
+        }
+        //hashcode,caller,time,flag,callee,duration
+        String caller = arr[1] ;        //主叫
+        String callTime = arr[2] ;      //通话时间
+        String callee = arr[4] ;        //被叫
+        String callDuration = arr[5] ;  //通话时长
+
+        //被叫hashcode
+        String hashcode = CallLogUtil.getHashcode(callee,callTime,100);
+        //被叫rowkey
+        String calleeRowKey = hashcode + &quot;,&quot; + callee + &quot;,&quot; + callTime + &quot;,1,&quot; + caller + &quot;,&quot; + callDuration;
+        Put newPut = new Put(Bytes.toBytes(calleeRowKey));
+        newPut.addColumn(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(REF_ROW_ID), Bytes.toBytes(rowkey));
+        TableName tn = TableName.valueOf(CALL_LOG_TABLE_NAME);
+        Table t = e.getEnvironment().getTable(tn);
+        t.put(newPut);
     }
-    public void saveAccount() {
-        accountDao.saveAccount();
+
+    /**
+     * 重写方法，完成被叫查询，返回主叫结果。
+     */
+    public void postGetOp(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Get get, List&lt;Cell&gt; results) throws IOException {
+        //获得表名
+        String tableName = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+
+        //判断表名是否是ns1:calllogs
+        if(!tableName.equals(CALL_LOG_TABLE_NAME)){
+            super.preGetOp(e, get, results);
+        }
+        else{
+            //得到rowkey
+            String rowkey = Bytes.toString(get.getRow());
+            //
+            String[] arr = rowkey.split(&quot;,&quot;);
+            //主叫
+            if(arr[3].equals(&quot;0&quot;)){
+                super.postGetOp(e, get, results);
+            }
+            //被叫
+            else{
+                //得到主叫方的rowkey
+                String refrowid = Bytes.toString(CellUtil.cloneValue(results.get(0)));
+                //
+                Table tt = e.getEnvironment().getTable(TableName.valueOf(CALL_LOG_TABLE_NAME));
+                Get g = new Get(Bytes.toBytes(refrowid));
+                Result r = tt.get(g);
+                List&lt;Cell&gt; newList = r.listCells();
+                results.clear();
+                results.addAll(newList);
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    public boolean postScannerNext(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, InternalScanner s, List&lt;Result&gt; results, int limit, boolean hasMore) throws IOException {
+        boolean b = super.postScannerNext(e, s, results, limit, hasMore);
+
+        //新集合
+        List&lt;Result&gt; newList = new ArrayList&lt;Result&gt;();
+
+        //获得表名
+        String tableName = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+
+        //判断表名是否是ns1:calllogs
+        if (tableName.equals(CALL_LOG_TABLE_NAME)) {
+            Table tt = e.getEnvironment().getTable(TableName.valueOf(CALL_LOG_TABLE_NAME));
+            for(Result r : results){
+                //rowkey
+                String rowkey = Bytes.toString(r.getRow());
+                String flag = rowkey.split(&quot;,&quot;)[3] ;
+                //主叫
+                if(flag.equals(&quot;0&quot;)){
+                    newList.add(r) ;
+                }
+                //被叫
+                else{
+                    //取出主叫号码
+                    byte[] refrowkey = r.getValue(Bytes.toBytes(&quot;f2&quot;),Bytes.toBytes(REF_ROW_ID)) ;
+                    Get newGet = new Get(refrowkey);
+                    newList.add(tt.get(newGet));
+                }
+            }
+            results.clear();
+            results.addAll(newList);
+        }
+        return b ;
     }
 }
-</code></pre><hr>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
-       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
 
-&lt;!--    告知Spring在创建容器的时候需要扫描的包，配置所需要的标签不是在beans这个约束中，而是一个名称为context名称空间和约束中--&gt;
-    &lt;context:component-scan base-package=&quot;com.itheima&quot;&gt;&lt;/context:component-scan&gt;
+1&apos;.修改jsp页面
+    [callLogList.jsp]
+    &lt;c:if test=&quot;${log.caller == param.caller}&quot;&gt;主叫&lt;/c:if&gt;
+    &lt;c:if test=&quot;${log.caller != param.caller}&quot;&gt;被叫&lt;/c:if&gt;
 
+2.部署jar包
 
+3.测试
+    ...
 
-    &lt;/beans&gt;
-</code></pre><hr>
-<pre><code>package com.itheima.ui;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.service.IAccountService;
-import com.itheima.service.impl.AccountServiceImpl;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import sun.security.tools.keytool.Resources;
-
-
-/**
- * @Description 用这个模拟一个表现层用于调用业务层，实际上应该是一个servlet
- * @Author TT Hun
- * @Data 2019/9/16 22:15
- */
-public class Client {
-    public static void main(String[] args) {
-        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
-//        2、根据ID获取bean对象
-        IAccountService as = (IAccountService) ac.getBean(&quot;accountService&quot;);
-
-        System.out.println(as);
-
-    }
-
-}
-</code></pre><hr>
-<h2 id="由Component衍生出来的三个注解："><a href="#由Component衍生出来的三个注解：" class="headerlink" title="由Component衍生出来的三个注解："></a>由Component衍生出来的三个注解：</h2><pre><code>/**  1、用于创建对象的注解
-*      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
-*      Component;作用，用于把当前对象注入Srping容器中
-*      属性：value:用于指定的bean的id。当我们不写的时候，它默认值是当前类名，而且首字母小写
-*      Controller:用在表现层
-*      Service:业务层
-*      Respository：用于持久层
-*      以上是和Component一样的作用，他们是Spring框架提供的为了明确三层使用的注解，是我们对三层更加清晰
-*
-*  2、用于注入数据的注解
-*      他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的
-*  3、用于改变范围的注解
-*      他们的作用就和在bean标签中使用scope属性实现的功能是一样的
-*  4、和生命周期相关的
-*      他们的作用就和在bean标签中使用Init-method和destory标签是一样的
-**/
-</code></pre><hr>
-<blockquote>
-<p>下面这段例子会报错因为没有注入数据，导致空指针异常。</p>
-</blockquote>
-<pre><code>package com.itheima.service.impl;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.dao.impl.AccountDaoImpl;
-import com.itheima.service.IAccountService;
-import org.springframework.stereotype.Component;
-
-/**
- * @Description 账户的业务层实现类
- * @Author TT Hun
- * @Data 2019/9/16 22:09
- * 曾经XML的配置，
- *  &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;
- *  &lt;scope =&quot;&quot;   init-method=&quot;&quot;  destory-method=&quot;&quot;&gt;
- *  &lt;propertiy name = &quot;&quot; value=&quot;&quot; | ref=&quot;&quot;&gt;&lt;/propertiy&gt;
- *  &lt;/bean&gt;
- *
- *
- *
- *  1、用于创建对象的注解
- *      他们的作用就和在XML配置文件中编写一个&lt;bean&gt;&lt;/bean&gt;标签实现的功能一样的
- *      Component;作用，用于把当前对象注入Srping容器中
- *      属性：value:用于指定的bean的id。当我们不写的时候，它默认值是当前类名，而且首字母小写
- *      Controller:用在表现层
- *      Service:业务层
- *      Respository：用于持久层
- *      以上是和Component一样的作用，他们是Spring框架提供的为了明确三层使用的注解，是我们对三层更加清晰
- *
- *  2、用于注入数据的注解
- *      他们的作用就和在XML配置文件中写一个prepertiy标签的作用是一样的
- *  3、用于改变范围的注解
- *      他们的作用就和在bean标签中使用scope属性实现的功能是一样的
- *  4、和生命周期相关的
- *      他们的作用就和在bean标签中使用Init-method和destory标签是一样的
- */
-@Component(value=&quot;accountService&quot;)
-public class AccountServiceImpl implements IAccountService {
-        private IAccountDao accountDao ;
-
-
-    public void saveAccount() {
-        accountDao.saveAccount();
-    }
-}
-</code></pre><hr>
-<pre><code>package com.itheima.dao.impl;
-
-import com.itheima.dao.IAccountDao;
-import org.springframework.stereotype.Repository;
-
-/**
- * @Description 账户的持久层实现类
- * @Author TT Hun
- * @Data 2019/9/16 22:13
- */
-@Repository(&quot;accountDao&quot;)
-public class AccountDaoImpl implements IAccountDao {
-
-
-    public void saveAccount() {
-        System.out.println(&quot;保存了账户&quot;);
-    }
-}
-</code></pre><hr>
-<pre><code>package com.itheima.ui;
-
-import com.itheima.dao.IAccountDao;
-import com.itheima.service.IAccountService;
-import com.itheima.service.impl.AccountServiceImpl;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import sun.security.tools.keytool.Resources;
-
-
-/**
- * @Description 用这个模拟一个表现层用于调用业务层，实际上应该是一个servlet
- * @Author TT Hun
- * @Data 2019/9/16 22:15
- */
-public class Client {
-    public static void main(String[] args) {
-        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
-//        2、根据ID获取Service的实例
-        IAccountService as = (IAccountService) ac.getBean(&quot;accountService&quot;);
-//      下面是获取dao对象的实例，
-        IAccountDao adao = ac.getBean(&quot;accountDao&quot;,IAccountDao.class);
-//        这里只显示调用了对象，没有使用其中的方法，因为其中的Serviceimpl里面隐入了Dao类型的变量，因为还没有实例化，所以他是null，会出现空指针异常，
-        as.saveAccount();    
-    }
-
-}
-</code></pre><blockquote>
-<p>所以要在上面这一段代码的数据类型serviceimpl里面的成员变量上面写上@Autowired</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>下面这一段讲解当出现相同的类的时候，Autowired注解怎么解决：</p>
-</blockquote>
-<p><img src="https://i.imgur.com/vgQ4cGY.png" alt=""></p>
-<p>Spring容器本质上是Map，key-value格式的</p>
-<p>如果在注入数据的时候有2个DAO类型的，那么首先，他会先匹配数据类型一致的，他会发现2个。</p>
-<p>然后在根据变量名称找对应的Spring容器里面的key写的，哪一个是相同的名字。</p>
-<hr>
-<blockquote>
-<p>Qualifier:<br>作用：在按照类中注入的基础之上再按照名称注入。他在给类成员注入时不能单独使用。但是在方法范数注入的时候可以。在给类成员注入的时候，需要和antuwired联合使用，在给方法注入时候可以单独使用<br>属性：value用于指定注入bean的id。</p>
-</blockquote>
-<blockquote>
-<p>Resource：<br>作用：直接按照bean的id注入。可以独立使用<br>属性：<br>name:用于指定bean的Id</p>
-</blockquote>
-<blockquote>
-<p>Autowired注解、Qualifier注解、Resource注解只能注入其他类型的bean数据类型，而基本类型和String类型无法实现上述实现。<br>另外，集合类型的注入智能通过XML来实现。</p>
-</blockquote>
-<blockquote>
-<p>基本类型和String类型的注入用Value注解<br>作用：用于注入基本类型和String类型的数据 </p>
-</blockquote>
-<blockquote>
-<p>属性：<br>value用于指定数据的值，他可以使用Spring中的SPEl（也就是Srpring的el表达式）<br>Spel的写法：${表达式}</p>
-</blockquote>
-<blockquote>
-<p>用于改变作用范围的：</p>
-</blockquote>
-<blockquote>
-<p>他们的作用就和在bean标签中使用scope属性实现的功能是一样的。</p>
-</blockquote>
-<blockquote>
-<p>scope:</p>
-</blockquote>
-<blockquote>
-<p>作用：用于指定bean的作用范围，</p>
-</blockquote>
-<blockquote>
-<p>属性：value:用于指定范围的取值。常用取值：singleton 和 prototype</p>
-</blockquote>
-<p>和生命周期相关：</p>
-<pre><code>他们的作用和在bean标签中使用init-method和destroy-method的作用是一样的。
-PreDestory
-    用于指定销毁方法
-PostConstruct
-    作用用于指定初始化方法
-</code></pre><p>小结：<br>    1、多例模式，关闭Spring不会销毁对象，<br>    2、想要实现销毁方法的实现，如果在serviceimpl注入初始化和销毁注解，然后写方法，然后再在main方法里面先初始化Spring容器，但是只有写了spring的close方法， 才会执行对象的销毁方法，这个地方的初始化和销毁，销毁的是spring容器创建的，比如下图；创建的是IAccountService类型的bean对象，最后要使用ac.close()方法关闭spring容器。</p>
-<p><img src="https://i.imgur.com/QmLkCqe.png" alt=""></p>
-
+4.
+</code></pre>
           
         
       
@@ -1853,6 +1990,169 @@ Class Dog{
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/12/01/剑指offer面试题Java版/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/01/剑指offer面试题Java版/" itemprop="url">剑指offer面试题Java版</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T16:56:56+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/面试/" itemprop="url" rel="index">
+                    <span itemprop="name">面试</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/面试/剑指offer/" itemprop="url" rel="index">
+                    <span itemprop="name">剑指offer</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/12/01/剑指offer面试题Java版(一)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2136,169 +2436,6 @@ public boolean find(int[][] array, int target) {
 }
 </code></pre><p>第二个算法：<br>将一个字符串中的空格替换成“%20”。</p>
 
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/12/01/剑指offer面试题Java版/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/01/剑指offer面试题Java版/" itemprop="url">剑指offer面试题Java版</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T16:56:56+08:00">
-                2018-12-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/面试/" itemprop="url" rel="index">
-                    <span itemprop="name">面试</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/面试/剑指offer/" itemprop="url" rel="index">
-                    <span itemprop="name">剑指offer</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
           
         
       
@@ -3743,7 +3880,7 @@ startkey = xx,19626675333,
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -3754,7 +3891,7 @@ startkey = xx,19626675333,
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">107</span>
+                  <span class="site-state-item-count">111</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
