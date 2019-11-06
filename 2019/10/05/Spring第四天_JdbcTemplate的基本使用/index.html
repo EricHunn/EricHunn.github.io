@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring,JdbcTemplate," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="无心是一首歌" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="类似于dbutils    下面是代码，我们可以通过IOC和AOP动态代理来简化这些代码。使代码更加灵活   小tips： 在使用query找到哪个是需要的方法：比如下面的这段，要找的是使用query带哪个参数的方法，先看有的返回void的有的返回List的，也就是Spring的Template是靠不同的query返回不同类型的东西，而dbUtils的query方法是靠ResultSetHandl">
+<meta name="keywords" content="Spring,JdbcTemplate">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring第四天_JdbcTemplate的基本使用">
+<meta property="og:url" content="http://erichunn.github.io/2019/10/05/Spring第四天_JdbcTemplate的基本使用/index.html">
+<meta property="og:site_name" content="无心是一首歌">
+<meta property="og:description" content="类似于dbutils    下面是代码，我们可以通过IOC和AOP动态代理来简化这些代码。使代码更加灵活   小tips： 在使用query找到哪个是需要的方法：比如下面的这段，要找的是使用query带哪个参数的方法，先看有的返回void的有的返回List的，也就是Spring的Template是靠不同的query返回不同类型的东西，而dbUtils的query方法是靠ResultSetHandl">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.imgur.com/QDvo9Qn.png">
+<meta property="og:image" content="https://i.imgur.com/pnXb7t8.png">
+<meta property="og:image" content="https://i.imgur.com/dSH5jGy.png">
+<meta property="og:image" content="https://i.imgur.com/kdScX2O.png">
+<meta property="og:image" content="https://i.imgur.com/KGA79w8.png">
+<meta property="og:image" content="https://i.imgur.com/lzCNz0V.png">
+<meta property="og:image" content="https://i.imgur.com/WmJnhQn.png">
+<meta property="og:image" content="https://i.imgur.com/uoAnOLH.png">
+<meta property="og:image" content="https://i.imgur.com/7ukvCYs.png">
+<meta property="og:image" content="https://i.imgur.com/939epiM.png">
+<meta property="og:image" content="https://i.imgur.com/lGpsHsd.png">
+<meta property="og:image" content="https://i.imgur.com/QH8Ltnm.png">
+<meta property="og:updated_time" content="2019-10-08T14:36:01.015Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring第四天_JdbcTemplate的基本使用">
+<meta name="twitter:description" content="类似于dbutils    下面是代码，我们可以通过IOC和AOP动态代理来简化这些代码。使代码更加灵活   小tips： 在使用query找到哪个是需要的方法：比如下面的这段，要找的是使用query带哪个参数的方法，先看有的返回void的有的返回List的，也就是Spring的Template是靠不同的query返回不同类型的东西，而dbUtils的query方法是靠ResultSetHandl">
+<meta name="twitter:image" content="https://i.imgur.com/QDvo9Qn.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://erichunn.github.io/2019/10/05/Spring第四天_JdbcTemplate的基本使用/"/>
+
+
+
+
+
+  <title>Spring第四天_JdbcTemplate的基本使用 | 无心是一首歌</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?02fe19ac065353167cab1b453f2909ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">无心是一首歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于我">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-站点地图">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-腾讯公益">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            腾讯公益
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/10/05/Spring第四天_JdbcTemplate的基本使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring第四天_JdbcTemplate的基本使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-05T11:14:07+08:00">
+                2019-10-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>类似于dbutils</p>
+<p><img src="https://i.imgur.com/QDvo9Qn.png" alt=""></p>
+<p><img src="https://i.imgur.com/pnXb7t8.png" alt=""></p>
+<p><img src="https://i.imgur.com/dSH5jGy.png" alt=""></p>
+<p>下面是代码，我们可以通过IOC和AOP动态代理来简化这些代码。使代码更加灵活</p>
+<p><img src="https://i.imgur.com/kdScX2O.png" alt=""></p>
+<hr>
+<p><strong>小tips：</strong></p>
+<p>在使用query找到哪个是需要的方法：比如下面的这段，要找的是使用query带哪个参数的方法，先看有的返回void的有的返回List的，也就是Spring的Template是靠不同的query返回不同类型的东西，而dbUtils的query方法是靠ResultSetHandler的返回值来决定返回的内容的，</p>
+<p>下面这个方法有这么多重载的方法，如何去定位：</p>
+<p><img src="https://i.imgur.com/KGA79w8.png" alt=""></p>
+<p>1、我们有什么：我们有SQL语句，语句的参数，</p>
+<p>2、我们要什么：我们要一个返回的List集合</p>
+<p>T类型和void类型直接就排除，然后第一个参数不是SQL语句的直接排除，然后RowMapper没有参数直接排除，一般参数就是可变参数和数组</p>
+<p>所以最后剩下如下下图所示：<br><img src="https://i.imgur.com/lzCNz0V.png" alt=""></p>
+<p>dbUtils的和Spring的对比：</p>
+<p><img src="https://i.imgur.com/WmJnhQn.png" alt=""></p>
+<hr>
+<p>然后讲解一下JdbcTemplate的基本用法：</p>
+<p>首先是bean.xml文件：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:util=&quot;http://www.springframework.org/schema/util&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd&quot;&gt;
+
+
+&lt;!--    配置jdbctemplate--&gt;
+    &lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+&lt;!--    配置数据源--&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306_eesy&quot;&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;username&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;password&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre><p>然后是定义的domain文件：</p>
+<pre><code>package com.itheima.domain;
+
+import java.io.Serializable;
+
+/**
+ * @Description 账户的实体类
+ * @Author TT Hun
+ * @Data 2019/10/5 11:28
+ */
+public class Account implements Serializable {
+    private Integer id;
+    private String name;
+    private Float money;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Float getMoney() {
+        return money;
+    }
+
+    public void setMoney(Float money) {
+        this.money = money;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Account{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +
+                &quot;, money=&quot; + money +
+                &apos;}&apos;;
+    }
+}
+</code></pre><p>然后是几个JdbcTemplate的Demo</p>
+<pre><code>package com.itheima.jdbctemplate;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+/**
+ * @Description JDBCTemplate最基本用法
+ * @Author TT Hun
+ * @Data 2019/10/5 11:30
+ */
+public class JdbcTemplateDemo1 {
+    public static void main(String[] args) {
+
+//        准备数据源，Spring的内置数据源不通过Spring容器，来设置内置数据源。
+        DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setDriverClassName(&quot;com.mysql.jdbc.Driver&quot;);
+        ds.setUrl(&quot;jdbc:mysql://localhost:3306/eesy&quot;);
+        ds.setUsername(&quot;root&quot;);
+        ds.setPassword(&quot;root&quot;);
+//        1、创建JDBCTemplate对象
+        JdbcTemplate jt = new JdbcTemplate();
+//        给jt设置数据源
+        jt.setDataSource(ds);
+//         2、执行操作
+        jt.execute(&quot;insert into account(name,money) values(&apos;ccc&apos;,1000f)&quot;);
+
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.jdbctemplate;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+/**
+ * @Description JDBCTemplate最基本用法，通过Spring容器IOC，来获取对象。
+ * @Author TT Hun
+ * @Data 2019/10/5 11:30
+ */
+public class JdbcTemplateDemo2 {
+    public static void main(String[] args) {
+
+//        1、获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、获取对象
+        JdbcTemplate jt = ac.getBean(&quot;jdbcTemplate&quot;, JdbcTemplate.class);
+//        3、添加操作
+        jt.execute(&quot;insert into account(name,money) values(&apos;ddd&apos;,222f)&quot;);
+
+
+
+
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.jdbctemplate;
+
+import com.itheima.domain.Account;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+/**
+ * @Description JDBCTemplate的CRUD用法
+ * @Author TT Hun
+ * @Data 2019/10/5 11:30
+ */
+public class JdbcTemplateDemo3 {
+    public static void main(String[] args) {
+
+//        1、获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、获取对象
+        JdbcTemplate jt = ac.getBean(&quot;jdbcTemplate&quot;, JdbcTemplate.class);
+//        3、执行操作
+//        保存操作
+        jt.update(&quot;insert into account(name,money)values(?,?)&quot;,&quot;eee&quot;,3333f);
+//        更新操作
+        jt.update(&quot;update acocunt set name = ?,money = ?,where id=?&quot;,&quot;test&quot;,4567,7);
+//        删除操作
+        jt.update(&quot;delete from account where id=?&quot;,8);
+//        查询所有
+//        List&lt;Account&gt; accounts = jt.query(&quot;select * from account where money &gt;?&quot;, new AccountRowMapper() , 1000f);
+//        下面这种方法不使用自己定义的结果集，而使用Spring自带的结果集即可。
+        List&lt;Account&gt; accounts = jt.query(&quot;select * from account where money&gt;?&quot;, new BeanPropertyRowMapper&lt;Account&gt;(Account.class) , 1000f);
+        for (Account account:accounts){
+            System.out.println(account);
+        }
+
+//        查询一个
+        List&lt;Account&gt; account = jt.query(&quot;select * from account where id=?&quot;, new BeanPropertyRowMapper&lt;Account&gt;(Account.class) , 1);
+        System.out.println(accounts.isEmpty()? &quot;没有内容&quot;:accounts.get(0));
+//        查询返回一行一列(使用聚合函数但是不加groupby字句)
+        List&lt;Long&gt; count = jt.queryForList(&quot;select count(*) from account where money &gt; ? &quot;, Long.class, 100000f);
+        System.out.println(count);
+    }
+}
+
+/**
+ * 定义Account的封装策略的
+ */
+class AccountRowMapper implements RowMapper&lt;Account&gt; {
+
+    /**
+     * 把结果集中的数据封装到Account中然后由Spring把每个Account加到集合中
+     * @param rs
+     * @param rowNum
+     * @return
+     * @throws SQLException
+     */
+    public Account mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Account account = new Account();
+        account.setId(rs.getInt(&quot;id&quot;));
+        account.setName(rs.getString(&quot;name&quot;));
+        account.setMoney(rs.getFloat(&quot;money&quot;));
+        return account;
+    }
+}
+</code></pre><hr>
+<p>测试类使用Dao层的操作：</p>
+<pre><code>import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+/**
+ * @Description JDBCTemplate最基本用法，通过Spring容器IOC，来获取对象。
+ * @Author TT Hun
+ * @Data 2019/10/5 11:30
+ */
+public class test {
+    public static void main(String[] args) {
+
+//        1、获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、获取对象
+//        JdbcTemplate accountDao = ac.getBean(&quot;jdbcTemplate&quot;, JdbcTemplate.class);
+//        3、添加操作
+//        jt.execute(&quot;insert into account(name,money) values(&apos;ddd&apos;,222f)&quot;);
+        IAccountDao ad = ac.getBean(&quot;accountDao&quot;, IAccountDao.class);
+        Account account = ad.findAccountById(1);
+        System.out.println(account);
+
+    }
+}
+</code></pre><p>和上面测试类一起的</p>
+<pre><code>package com.itheima.dao.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.List;
+
+/**
+ * @Description 账户的持久层实现类
+ * @Author TT Hun
+ * @Data 2019/10/8 21:05
+ */
+public class AccountDaoImpl implements IAccountDao {
+
+
+    private JdbcTemplate jdbcTemplate;
+
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Account findAccountById(Integer accountId) {
+         List&lt;Account&gt; accounts = jdbcTemplate.query(&quot;select * from account where id = ? &quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountId);
+         return accounts.isEmpty()? null:accounts.get(0);
+    }
+
+    public Account findAccountByName(String accountName) {
+        List&lt;Account&gt; accounts = jdbcTemplate.query(&quot;select * from account where name = ? &quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountName);
+        if(accounts.isEmpty()){
+            return null;
+        }
+        if(accounts.size()&gt;1){
+            throw new RuntimeException(&quot;结果集不唯一&quot;);
+        }
+        return accounts.get(0);
+    }
+
+    public void updateAccount(Account account) {
+        jdbcTemplate.update(&quot;update account set name=?,money = ? where id = ?&quot;,account.getName(),account.getMoney(),account.getId());
+
+
+    }
+}
+</code></pre><hr>
+<hr>
+<hr>
+<p>通常情况下，不仅仅有一个AccountDaoImpl，还会有有一些其他的impl，比如用户的。。之类的。<br>所以需要把重复代码抽取出来也就是让他们继承一个父类，父类中写好了重复代码即可：</p>
+<p><img src="https://i.imgur.com/uoAnOLH.png" alt=""></p>
+<p>也就是通过继承的方式实现重复代码的抽取，一种是注入dataSource一种是注入JdbcTemplate</p>
+<p><img src="https://i.imgur.com/7ukvCYs.png" alt=""></p>
+<p>除了字节写继承父类的方式解决这个问题，还可以通过Spring自带的一个类来解决，直接继承jdbcDaoSupport类即可。<br><img src="https://i.imgur.com/939epiM.png" alt=""></p>
+<p>也就是说根本不需要自己写这个父类，直接继承Spring自带的父类即可。</p>
+<p>所以，现在有2种写法，一种是继承父类，一种是成员变量，区别是：<br>继承的方法适合用xml文件配置的方式来写，而写成员变量适合用注解的方式来开发；<br>而继承父类因为父类在jar包里面，所以不能注入。<br><img src="https://i.imgur.com/lGpsHsd.png" alt=""><br><img src="https://i.imgur.com/QH8Ltnm.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+            <a href="/tags/JdbcTemplate/" rel="tag"># JdbcTemplate</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/04/Spring第三天-面向切片编程AOP/" rel="next" title="Spring第三天天_面向切片编程AOP">
+                <i class="fa fa-chevron-left"></i> Spring第三天天_面向切片编程AOP
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/08/Spring第四天_Spring中事务控制-作业例子/" rel="prev" title="Spring第四天_Spring中事务控制-作业例子">
+                Spring第四天_Spring中事务控制-作业例子 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Eric Hunn" />
+            
+              <p class="site-author-name" itemprop="name">Eric Hunn</p>
+              <p class="site-description motion-element" itemprop="description">大数据|动漫迷|科技控</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">116</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/erichunn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:erichunn.me@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/2944687303/home?wvr=5" target="_blank" title="Webibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Webibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+	  
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eric Hunn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

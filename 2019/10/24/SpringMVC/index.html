@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="无心是一首歌" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="构建SpringMVC工程： 首先解决工程添加木块过慢的问题，在添加工程的时候，添加如下的属性：  然后因为开始工程目录不全，要添加一些目录：  需要把HelloController的类交给容器来处理，然后在这个方法上再添加一个注解@ResquestMapping。请求映射注解，也就是一发请求，这个方法就执行了，映射到前台的请求。需要添加一个请求的路径。path=/“hello”。然后服务器一旦">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC">
+<meta property="og:url" content="http://erichunn.github.io/2019/10/24/SpringMVC/index.html">
+<meta property="og:site_name" content="无心是一首歌">
+<meta property="og:description" content="构建SpringMVC工程： 首先解决工程添加木块过慢的问题，在添加工程的时候，添加如下的属性：  然后因为开始工程目录不全，要添加一些目录：  需要把HelloController的类交给容器来处理，然后在这个方法上再添加一个注解@ResquestMapping。请求映射注解，也就是一发请求，这个方法就执行了，映射到前台的请求。需要添加一个请求的路径。path=/“hello”。然后服务器一旦">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.imgur.com/UvPSTxH.png">
+<meta property="og:image" content="https://i.imgur.com/LpwgIqJ.png">
+<meta property="og:image" content="https://i.imgur.com/Kxm31KN.png">
+<meta property="og:image" content="https://i.imgur.com/XsBaIY8.png">
+<meta property="og:image" content="https://i.imgur.com/J7ZJ0jx.png">
+<meta property="og:image" content="https://i.imgur.com/wLI6qKd.jpg">
+<meta property="og:image" content="https://i.imgur.com/lrTXHqi.png">
+<meta property="og:image" content="https://i.imgur.com/YhOJMgE.png">
+<meta property="og:image" content="https://i.imgur.com/iVu94S8.png">
+<meta property="og:image" content="https://i.imgur.com/fsbMFI1.png">
+<meta property="og:image" content="https://i.imgur.com/sScDjjc.png">
+<meta property="og:image" content="https://i.imgur.com/3SAMmd9.png">
+<meta property="og:image" content="https://i.imgur.com/i1JA9t9.png">
+<meta property="og:image" content="https://i.imgur.com/Wkn5y2a.png">
+<meta property="og:image" content="https://i.imgur.com/oendiQU.png">
+<meta property="og:image" content="https://i.imgur.com/oE9J2tq.png">
+<meta property="og:image" content="https://i.imgur.com/GMkzdbE.png">
+<meta property="og:image" content="https://i.imgur.com/l98bt3M.png">
+<meta property="og:image" content="https://i.imgur.com/j1zGJPI.png">
+<meta property="og:image" content="https://i.imgur.com/UZn18Sr.png">
+<meta property="og:image" content="https://i.imgur.com/Mrcg4Ui.png">
+<meta property="og:image" content="https://i.imgur.com/xt5GfpQ.png">
+<meta property="og:image" content="https://i.imgur.com/31aZ2iR.png">
+<meta property="og:image" content="https://i.imgur.com/ft78run.png">
+<meta property="og:image" content="https://i.imgur.com/Jr4T50X.png">
+<meta property="og:updated_time" content="2019-11-03T13:05:35.923Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpringMVC">
+<meta name="twitter:description" content="构建SpringMVC工程： 首先解决工程添加木块过慢的问题，在添加工程的时候，添加如下的属性：  然后因为开始工程目录不全，要添加一些目录：  需要把HelloController的类交给容器来处理，然后在这个方法上再添加一个注解@ResquestMapping。请求映射注解，也就是一发请求，这个方法就执行了，映射到前台的请求。需要添加一个请求的路径。path=/“hello”。然后服务器一旦">
+<meta name="twitter:image" content="https://i.imgur.com/UvPSTxH.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://erichunn.github.io/2019/10/24/SpringMVC/"/>
+
+
+
+
+
+  <title>SpringMVC | 无心是一首歌</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?02fe19ac065353167cab1b453f2909ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">无心是一首歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于我">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-站点地图">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-腾讯公益">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            腾讯公益
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/10/24/SpringMVC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SpringMVC</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-24T20:57:21+08:00">
+                2019-10-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://i.imgur.com/UvPSTxH.png" alt=""></p>
+<p>构建SpringMVC工程：</p>
+<p>首先解决工程添加木块过慢的问题，在添加工程的时候，添加如下的属性：</p>
+<p><img src="https://i.imgur.com/LpwgIqJ.png" alt=""></p>
+<p>然后因为开始工程目录不全，要添加一些目录：</p>
+<p><img src="https://i.imgur.com/Kxm31KN.png" alt=""></p>
+<p>需要把HelloController的类交给容器来处理，然后在这个方法上再添加一个注解@ResquestMapping。请求映射注解，也就是一发请求，这个方法就执行了，映射到前台的请求。需要添加一个请求的路径。path=/“hello”。然后服务器一旦启动，点击超链接，让点击超链接跳转到success.jsp界面即可。</p>
+<p><img src="https://i.imgur.com/XsBaIY8.png" alt=""></p>
+<p>下图是springmvc.xml文件配置文件头的讲解：<br><img src="https://i.imgur.com/J7ZJ0jx.png" alt=""></p>
+<p>首先配置里面的开启注解扫描。然后加了这个之后，我们还要让SpringMVC加载这个Springmvc.xml这个配置文件。那么这是怎么加载的那？我们在WEB-INF文件里面的web.xml文件里面也就是前端控制器里面去加载。</p>
+<p>前端控制器代码如下：</p>
+<pre><code>&lt;!DOCTYPE web-app PUBLIC
+ &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;
+ &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot; &gt;
+
+&lt;web-app&gt;
+  &lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;
+
+  &lt;!--配置前端控制器--&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+      &lt;param-value&gt;classpath:springmvc.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+  &lt;!--配置解决中文乱码的过滤器--&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;encoding&lt;/param-name&gt;
+      &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+
+&lt;/web-app&gt;
+</code></pre><p>解释一下上面的代码通过org.springframework.web.servlet.DispatcherServlet这个类里面配置classpath:springmvc.xml属性就可以帮我们加载该配置文件</p>
+<hr>
+<p>下面是简单的入门案例的图解：<br><img src="https://i.imgur.com/wLI6qKd.jpg" alt=""></p>
+<hr>
+<p>前端发来请求/hello然后通过前端控制器映射到处理器映射器，然后controller里面的任何方法都会通过处理器适配器，然后在执行相对应的方法。就到了第5步执行，返回的是一个ModelAndView也就是返回的是哪个success.jsp的适配器页面</p>
+<p><img src="https://i.imgur.com/lrTXHqi.png" alt=""></p>
+<p>但是发现为什么只是在springmvc.xml文件中配置了前端控制器呢，因为在配置了springmvc的注解开启之后就默认配置了另外的着一些适配器映射器之类的。<br><img src="https://i.imgur.com/YhOJMgE.png" alt=""></p>
+<hr>
+<p>@RequestMapping用来和前端的请求实现配合。映射过来的。建立映射关联的。可以放到方法上，也可以放到当前类上</p>
+<p>RequestMapping的属性： value和Path属性都是一样的，如果只有一个属性，那么也可以不写这个path和value这个</p>
+<p><img src="https://i.imgur.com/iVu94S8.png" alt=""></p>
+<p>例如：</p>
+<p><img src="https://i.imgur.com/fsbMFI1.png" alt=""></p>
+<hr>
+<hr>
+<hr>
+<p>Springmvc02的视频由于未保存。尚且不理他。等有时间在去更新。</p>
+<hr>
+<hr>
+<hr>
+<p>首先是讲一下RequestParam注解：<br>先来一段例子：</p>
+<p>anno.jsp类：</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 16:55
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;a href=&quot;anno/testRequestParam?username=haha&quot;&gt;RequestParam&lt;/a&gt;
+&lt;body&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>paramController类：</p>
+<pre><code>package cn.itcast.controller;
+
+import cn.itcast.domain.Account;
+import cn.itcast.domain.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/2 20:34
+ */
+@Controller
+@RequestMapping(&quot;/param&quot;)
+public class ParamController {
+
+    @RequestMapping(&quot;/hello&quot;)
+    public String testParam(String username, String password) {
+        System.out.println(&quot;执行了。。。&quot;);
+        System.out.println(&quot;用户名:&quot; + username);
+        System.out.println(&quot;密码:&quot; + password);
+        return &quot;success&quot;;
+    }
+
+    /**
+     * 把返回的数据封装到一个javabean的类当中
+     *
+     * @return
+     */
+    @RequestMapping(&quot;/saveAccount&quot;)
+    public String saveAccount(Account account) {
+        System.out.println(&quot;执行了。。。&quot;);
+        System.out.println(account);
+        return &quot;success&quot;;
+    }
+
+    @RequestMapping(&quot;/saveUser&quot;)
+    public String saveUser(User user){
+        System.out.println(&quot;执行了。。。&quot;);
+        System.out.println(user);
+        return &quot;success&quot;;
+    }
+}
+</code></pre><hr>
+<p>一旦上面的username换成了name就不能识别了</p>
+<p><img src="https://i.imgur.com/sScDjjc.png" alt=""><br>所以在Controller类的方法里加上这么一个参数，就可以将name对应的值传递给String username了<br><img src="https://i.imgur.com/3SAMmd9.png" alt=""></p>
+<p>但是以后在jsp中就必须是name=”哈哈”。了，一旦更改成别的就不行了。</p>
+<hr>
+<h2 id="RequestBody注解"><a href="#RequestBody注解" class="headerlink" title="RequestBody注解"></a>RequestBody注解</h2><p><img src="https://i.imgur.com/i1JA9t9.png" alt=""><br>这个就不能写超链接，只能写表单通过post的方式提交</p>
+<pre><code>package cn.itcast.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+/**
+ * @Description 常用的注解
+ * @Author TT Hun
+ * @Data 2019/11/3 16:59
+ */
+@Controller
+@RequestMapping(&quot;/anno&quot;)
+public class AnnoController {
+
+    @RequestMapping(&quot;/testRequestParam&quot;)
+    public String  testRequestParam(String username){
+        System.out.println(&quot;执行了。。。&quot;);
+        System.out.println(username);
+        return &quot;success&quot;;
+    }
+
+    @RequestMapping(&quot;/testRequestBody&quot;)
+    public String  testRequestBody(@RequestBody String body){
+        System.out.println(&quot;执行了。。。&quot;);
+        System.out.println(body);
+        return &quot;success&quot;;
+    }
+
+
+}
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/2
+  Time: 20:26
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;%--自定义类型转换器--%&gt;
+    &lt;form action=&quot;param/testRequestBody&quot; method=&quot;post&quot;&gt;
+        用户姓名：&lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;&lt;br/&gt;
+        用户年龄：&lt;input type=&quot;text&quot; name=&quot;age&quot; /&gt;&lt;br/&gt;
+        用户生日：&lt;input type=&quot;text&quot; name=&quot;date&quot; /&gt;&lt;br/&gt;
+        &lt;input type=&quot;submit&quot; value=&quot;提交&quot; /&gt;
+    &lt;/form&gt;
+
+&lt;/form&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<h2 id="PathVariable注解"><a href="#PathVariable注解" class="headerlink" title="PathVariable注解"></a>PathVariable注解</h2><p><img src="https://i.imgur.com/Wkn5y2a.png" alt=""></p>
+<p>Restful风格编程：<br>原来在Controller里写很多方法，在path里面写具体的路径，也就是一个方法有一个请求路径，如果是restful风格可以三个方法请求路径都是同一个。可以给不同的方法给固定的请求方式，也就是说可以根据不同的请求方式来执行。那么问题来了，查询一般都是get请求。同一个方法findall和findbyId都有可能 执行怎么办呢，可以通过占位符path=”user/{id}”通过一个id的占位符来区别。</p>
+<p><img src="https://i.imgur.com/oendiQU.png" alt=""></p>
+<p>PathVariable也就是取到的占位符的值。</p>
+<p>代码如下：</p>
+<pre><code>package cn.itcast.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+/**
+ * @Description 常用的注解
+ * @Author TT Hun
+ * @Data 2019/11/3 16:59
+ */
+@Controller
+@RequestMapping(&quot;/anno&quot;)
+public class AnnoController {
+
+    /**
+     * PathVariable注解示例
+     * @return
+     */
+    @RequestMapping(&quot;/testPathVariable/{sid}&quot;)
+    public String  testPathVariable(@PathVariable(name=&quot;sid&quot;)String id ){
+        System.out.println(&quot;执行了。。。&quot;);
+        System.out.println(id);
+        return &quot;success&quot;;
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 16:55
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;a href=&quot;/anno/testPathVariable/10&quot;&gt;testPathVariable&lt;/a&gt;
+
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<h2 id="基于HiddenHttpMethodFliter的过滤器"><a href="#基于HiddenHttpMethodFliter的过滤器" class="headerlink" title="基于HiddenHttpMethodFliter的过滤器"></a>基于HiddenHttpMethodFliter的过滤器</h2><p><img src="https://i.imgur.com/oE9J2tq.png" alt=""></p>
+<p>了解一下即可，因为webservie有API可以配置请求方式，并且浏览器中可以装插件来配置请求方式</p>
+<hr>
+<h2 id="RequestHeader注解"><a href="#RequestHeader注解" class="headerlink" title="RequestHeader注解"></a>RequestHeader注解</h2><p><img src="https://i.imgur.com/GMkzdbE.png" alt=""><br>一般用处不大</p>
+<p>package cn.itcast.controller;</p>
+<p>import org.springframework.stereotype.Controller;<br>import org.springframework.web.bind.annotation.*;</p>
+<p>/**</p>
+<ul>
+<li>@Description 常用的注解</li>
+<li>@Author TT Hun</li>
+<li><p>@Data 2019/11/3 16:59<br>*/<br>@Controller<br>@RequestMapping(“/anno”)<br>public class AnnoController {</p>
+<p> /**</p>
+<ul>
+<li>获取请求头信息的值</li>
+<li>@param header</li>
+<li>@return<br>*/<br>@RequestMapping(“/testRequestHeader”)<br>public String  testRequestHeader(@RequestHeader(value=”Accept”) String header){<br> System.out.println(“执行了。。。”);<br> System.out.println(header);<br> return “success”;<br>}<br>}</li>
+</ul>
+</li>
+</ul>
+<hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 16:55
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;a href=&quot;/anno/testRequestHeader&quot;&gt;testRequestHeader&lt;/a&gt;
+
+
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<h2 id="Cookie-Value注解"><a href="#Cookie-Value注解" class="headerlink" title="Cookie Value注解"></a>Cookie Value注解</h2><p><img src="https://i.imgur.com/l98bt3M.png" alt=""></p>
+<p>package cn.itcast.controller;</p>
+<p>import org.springframework.stereotype.Controller;<br>import org.springframework.web.bind.annotation.*;</p>
+<p>/**</p>
+<ul>
+<li>@Description 常用的注解</li>
+<li>@Author TT Hun</li>
+<li><p>@Data 2019/11/3 16:59<br>*/<br>@Controller<br>@RequestMapping(“/anno”)<br>public class AnnoController {</p>
+<p> /**</p>
+<ul>
+<li>测试CookieValue注解</li>
+<li>@param cookieValue</li>
+<li>@return<br>*/<br>@RequestMapping(“/testCookieValue”)<br>public String  testCookieValue(@CookieValue(value=”JSESSIONID”) String cookieValue){<br> System.out.println(“执行了。。。”);<br> System.out.println(cookieValue);<br> return “success”;<br>}</li>
+</ul>
+</li>
+</ul>
+<p>}</p>
+<hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 16:55
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;a href=&quot;/anno/testCookieValue&quot;&gt;testCookieValue&lt;/a&gt;
+
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<h2 id="ModelAttribute注解"><a href="#ModelAttribute注解" class="headerlink" title="ModelAttribute注解"></a>ModelAttribute注解</h2><p><img src="https://i.imgur.com/j1zGJPI.png" alt=""></p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 16:55
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;form action=&quot;anno/testModelAttribute&quot; method=&quot;post&quot;&gt;
+    用户姓名：&lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;&lt;br/&gt;
+    用户年龄：&lt;input type=&quot;text&quot; name=&quot;age&quot; /&gt;&lt;br/&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;提交&quot; /&gt;
+&lt;/form&gt;
+&lt;br&gt;
+
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<pre><code>package cn.itcast.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * @Description 常用的注解
+ * @Author TT Hun
+ * @Data 2019/11/3 16:59
+ */
+@Controller
+@RequestMapping(&quot;/anno&quot;)
+public class AnnoController {
+
+    /**
+     * testModelAttribute测试
+     * @return
+     */
+    @RequestMapping(&quot;/testModelAttribute&quot;)
+    public String  testModelAttribute(){
+        System.out.println(&quot;testModelAttribute执行了。。。&quot;);
+        return &quot;success&quot;;
+    }
+
+    @ModelAttribute
+    public void showUser(){
+        System.out.println(&quot;showUser方法执行了...&quot;);
+    }
+}
+</code></pre><hr>
+<p>然后打印结果：<br><img src="https://i.imgur.com/UZn18Sr.png" alt=""></p>
+<p>当提交的缺少一个数据，但是想让这个数据从数据库中查询或者缓存中查询。下面是有返回值的情况：</p>
+<pre><code>package cn.itcast.controller;
+
+import cn.itcast.domain.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+
+/**
+ * @Description 常用的注解
+ * @Author TT Hun
+ * @Data 2019/11/3 16:59
+ */
+@Controller
+@RequestMapping(&quot;/anno&quot;)
+public class AnnoController {
+
+    /**
+     * testModelAttribute测试
+     * @return
+     */
+    @RequestMapping(&quot;/testModelAttribute&quot;)
+    public String  testModelAttribute(User user){
+        System.out.println(&quot;testModelAttribute执行了。。。&quot;);
+        System.out.println(user);
+        return &quot;success&quot;;
+    }
+
+
+    /**
+     * 测试ModelAttribute注解的有返回值的情况，
+     */
+    @ModelAttribute
+    public User showUser(String uname ,Integer age){
+        System.out.println(&quot;showUser方法执行了...&quot;);
+//        通过用户名查询数据库（模拟）
+        User user = new User();
+        user.setUname(uname);
+        user.setAge(age);
+        user.setDate(new Date());
+        return user;
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 16:55
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;form action=&quot;anno/testModelAttribute&quot; method=&quot;post&quot;&gt;
+    用户姓名：&lt;input type=&quot;text&quot; name=&quot;uname&quot; /&gt;&lt;br/&gt;
+    用户年龄：&lt;input type=&quot;text&quot; name=&quot;age&quot; /&gt;&lt;br/&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;提交&quot; /&gt;
+&lt;/form&gt;
+&lt;br&gt;
+
+
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>打印结果：<br><img src="https://i.imgur.com/Mrcg4Ui.png" alt=""></p>
+<hr>
+<p>下面是没有返回值的写法，可以写入一个Map集合<br>    package cn.itcast.controller;</p>
+<pre><code>import cn.itcast.domain.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.Map;
+
+/**
+ * @Description 常用的注解
+ * @Author TT Hun
+ * @Data 2019/11/3 16:59
+ */
+@Controller
+@RequestMapping(&quot;/anno&quot;)
+public class AnnoController {
+</code></pre><p>   /**</p>
+<pre><code> * 测试CookieValue注解
+ * @param cookieValue
+ * @return
+ */
+@RequestMapping(&quot;/testCookieValue&quot;)
+public String  testCookieValue(@CookieValue(value=&quot;JSESSIONID&quot;) String cookieValue){
+    System.out.println(&quot;执行了。。。&quot;);
+    System.out.println(cookieValue);
+    return &quot;success&quot;;
+}
+
+    /**
+     * 测试没有返回值的ModelAttribute注解
+     */
+    @ModelAttribute
+    public void showUser(String uname , Integer age, Map&lt;String,User&gt; map){
+        System.out.println(&quot;showUser方法执行了...&quot;);
+//      通过用户名查询数据库（模拟）
+        User user = new User();
+        user.setUname(uname);
+        user.setAge(age);
+        user.setDate(new Date());
+//      查完数据之后存入一个Map集合当中
+        map.put(&quot;abc&quot;,user);
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 16:55
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;form action=&quot;anno/testModelAttribute&quot; method=&quot;post&quot;&gt;
+    用户姓名：&lt;input type=&quot;text&quot; name=&quot;uname&quot; /&gt;&lt;br/&gt;
+    用户年龄：&lt;input type=&quot;text&quot; name=&quot;age&quot; /&gt;&lt;br/&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;提交&quot; /&gt;
+&lt;/form&gt;
+&lt;br&gt;
+
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<h2 id="SessionAttribute注解-这个是重点看"><a href="#SessionAttribute注解-这个是重点看" class="headerlink" title="SessionAttribute注解 这个是重点看"></a>SessionAttribute注解 这个是重点看</h2><p><img src="https://i.imgur.com/xt5GfpQ.png" alt=""></p>
+<p>用于在request域里面添加内容，存储到域当中去，并且可以在以后jsp的界面中显示出来。</p>
+<pre><code>package cn.itcast.controller;
+
+import cn.itcast.domain.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.Map;
+
+/**
+ * @Description 常用的注解
+ * @Author TT Hun
+ * @Data 2019/11/3 16:59
+ */
+@Controller
+@RequestMapping(&quot;/anno&quot;)
+public class AnnoController {
+
+    /**
+     * SessionAttributes的注解
+     * @return
+     */
+    @RequestMapping(&quot;/testSessionAttributes&quot;)
+    public String testSessionAttributes(Model model){
+        System.out.println(&quot;testSessionAttributes方法执行了...&quot;);
+//       向requestSession域里面存值，然后在success.jsp里面取出来,底层会存储到request域对象当中去
+        model.addAttribute(&quot;msg&quot;,&quot;美美&quot;);
+        return &quot;success&quot;;
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 16:55
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;a href=&quot;/anno/testSessionAttributes&quot;&gt;testSessionAttributes&lt;/a&gt;
+&lt;br&gt;
+
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/10/24
+  Time: 22:35
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; isELIgnored=&quot;false&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+        &lt;h3&gt;入门成功了&lt;/h3&gt;
+&lt;%--        表示request域的集合--%&gt;
+    ${ requestScope }
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>SessionAttributes这个注解智能作用在类上，相当于存到Session这个域当中去，<br>然后使用model.addAttribute相当于把这个信息存储到requestSession这个域当中去。<br>在这个里面添加这个这个</p>
+<p><img src="https://i.imgur.com/31aZ2iR.png" alt=""><br>然后<br><img src="https://i.imgur.com/ft78run.png" alt=""><br>就会显示：<br><img src="https://i.imgur.com/Jr4T50X.png" alt=""></p>
+<hr>
+<p>操作Session的内容进行增加删除查看</p>
+<pre><code>package cn.itcast.controller;
+
+import cn.itcast.domain.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.Map;
+
+/**
+ * @Description 常用的注解
+ * @Author TT Hun
+ * @Data 2019/11/3 16:59
+ */
+@Controller
+@RequestMapping(&quot;/anno&quot;)
+@SessionAttributes(value={&quot;msg&quot;})//把msg=“美美&quot;在存入到Session域里面一份
+public class AnnoController {
+    /**
+     * 从Session域里面添加值
+     * @return
+     */
+    @RequestMapping(&quot;/testSessionAttributes&quot;)
+    public String testSessionAttributes(Model model){
+        System.out.println(&quot;testSessionAttributes方法执行了...&quot;);
+//       向requestSession域里面存值，然后在success.jsp里面取出来,底层会存储到request域对象当中去
+        model.addAttribute(&quot;msg&quot;,&quot;美美&quot;);
+        return &quot;success&quot;;
+    }
+
+    /**
+     * 从Session域里面取值
+     * @return
+     */
+    @RequestMapping(&quot;/getSessionAttributes&quot;)
+    public String getSessionAttributes(ModelMap modelMap){
+        System.out.println(&quot;testSessionAttributes方法执行了...&quot;);
+//        从Session域里面取值。
+        String msg = (String)modelMap.get(&quot;msg&quot;);
+        System.out.println(msg);
+        return &quot;success&quot;;
+    }
+
+    /**
+     * 从Session域里面删除值
+     * @return
+     */
+    @RequestMapping(&quot;/deleteSessionAttributes&quot;)
+    public String deleteSessionAttributes(SessionStatus status){
+        System.out.println(&quot;testSessionAttributes方法执行了...&quot;);
+//       把Session里面的东西清除掉。
+        status.setComplete();
+        return &quot;success&quot;;
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 16:55
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;a href=&quot;/anno/testSessionAttributes&quot;&gt;testSessionAttributes&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/anno/getSessionAttributes&quot;&gt;getSessionAttributes&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/anno/deleteSessionAttributes&quot;&gt;deleteSessionAttributes&lt;/a&gt;
+&lt;br&gt;
+
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/10/24
+  Time: 22:35
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; isELIgnored=&quot;false&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+        &lt;h3&gt;入门成功了&lt;/h3&gt;
+&lt;%--        表示request域的集合--%&gt;
+    ${ requestScope.msg }
+    ${sessionScope}
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/24/Spring第四天-基于纯注解事务控制-回顾部分注解例子/" rel="next" title="Spring第四天_基于纯注解事务控制+回顾部分注解例子">
+                <i class="fa fa-chevron-left"></i> Spring第四天_基于纯注解事务控制+回顾部分注解例子
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/03/SpringMVC第二天/" rel="prev" title="SpringMVC第二天">
+                SpringMVC第二天 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Eric Hunn" />
+            
+              <p class="site-author-name" itemprop="name">Eric Hunn</p>
+              <p class="site-description motion-element" itemprop="description">大数据|动漫迷|科技控</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">116</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/erichunn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:erichunn.me@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/2944687303/home?wvr=5" target="_blank" title="Webibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Webibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RequestBody注解"><span class="nav-number">1.</span> <span class="nav-text">RequestBody注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PathVariable注解"><span class="nav-number">2.</span> <span class="nav-text">PathVariable注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于HiddenHttpMethodFliter的过滤器"><span class="nav-number">3.</span> <span class="nav-text">基于HiddenHttpMethodFliter的过滤器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RequestHeader注解"><span class="nav-number">4.</span> <span class="nav-text">RequestHeader注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cookie-Value注解"><span class="nav-number">5.</span> <span class="nav-text">Cookie Value注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ModelAttribute注解"><span class="nav-number">6.</span> <span class="nav-text">ModelAttribute注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SessionAttribute注解-这个是重点看"><span class="nav-number">7.</span> <span class="nav-text">SessionAttribute注解 这个是重点看</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+	  
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eric Hunn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

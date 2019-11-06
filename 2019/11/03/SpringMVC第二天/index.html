@@ -1,0 +1,3205 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="无心是一首歌" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="第一章：相应数据和结果视图响应之返回值是String类型的 首先说一个以后开发常见的方式：首先从response.jsp发请求，然后我从Controller后台查出来，存到model，存到request里，然后在转发到页面。再从request域里取出来。  package cn.itcast.controller;  import cn.itcast.domain.User; import org">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC第二天">
+<meta property="og:url" content="http://erichunn.github.io/2019/11/03/SpringMVC第二天/index.html">
+<meta property="og:site_name" content="无心是一首歌">
+<meta property="og:description" content="第一章：相应数据和结果视图响应之返回值是String类型的 首先说一个以后开发常见的方式：首先从response.jsp发请求，然后我从Controller后台查出来，存到model，存到request里，然后在转发到页面。再从request域里取出来。  package cn.itcast.controller;  import cn.itcast.domain.User; import org">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.imgur.com/JKmwTno.png">
+<meta property="og:image" content="https://i.imgur.com/nqn2Zb5.png">
+<meta property="og:image" content="https://i.imgur.com/cRzAOZk.png">
+<meta property="og:image" content="https://i.imgur.com/3qS26c7.png">
+<meta property="og:image" content="https://i.imgur.com/R7peaUO.png">
+<meta property="og:image" content="https://i.imgur.com/2pkeXim.png">
+<meta property="og:image" content="https://i.imgur.com/DqJvvYs.png">
+<meta property="og:image" content="https://i.imgur.com/XvHH7N4.png">
+<meta property="og:image" content="https://i.imgur.com/Fm5iLrw.png">
+<meta property="og:image" content="https://i.imgur.com/qJnIJQ4.png">
+<meta property="og:image" content="https://i.imgur.com/3UI4KKM.png">
+<meta property="og:image" content="https://i.imgur.com/WUaN9Pk.png">
+<meta property="og:image" content="https://i.imgur.com/koETv8W.png">
+<meta property="og:image" content="https://i.imgur.com/eZ3Pu31.png">
+<meta property="og:image" content="https://i.imgur.com/k0zwX9f.png">
+<meta property="og:image" content="https://i.imgur.com/7edLiOL.png">
+<meta property="og:image" content="https://i.imgur.com/I7bTQPD.png">
+<meta property="og:image" content="https://i.imgur.com/coohqTT.png">
+<meta property="og:image" content="https://i.imgur.com/ZHUrpOK.png">
+<meta property="og:image" content="https://i.imgur.com/AJ9Uzzi.png">
+<meta property="og:image" content="https://i.imgur.com/q7Ee3uo.png">
+<meta property="og:updated_time" content="2019-11-06T03:43:45.674Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpringMVC第二天">
+<meta name="twitter:description" content="第一章：相应数据和结果视图响应之返回值是String类型的 首先说一个以后开发常见的方式：首先从response.jsp发请求，然后我从Controller后台查出来，存到model，存到request里，然后在转发到页面。再从request域里取出来。  package cn.itcast.controller;  import cn.itcast.domain.User; import org">
+<meta name="twitter:image" content="https://i.imgur.com/JKmwTno.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://erichunn.github.io/2019/11/03/SpringMVC第二天/"/>
+
+
+
+
+
+  <title>SpringMVC第二天 | 无心是一首歌</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?02fe19ac065353167cab1b453f2909ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">无心是一首歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于我">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-站点地图">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-腾讯公益">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            腾讯公益
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/11/03/SpringMVC第二天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SpringMVC第二天</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-03T21:06:07+08:00">
+                2019-11-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第一章：相应数据和结果视图"><a href="#第一章：相应数据和结果视图" class="headerlink" title="第一章：相应数据和结果视图"></a>第一章：相应数据和结果视图</h1><h2 id="响应之返回值是String类型的"><a href="#响应之返回值是String类型的" class="headerlink" title="响应之返回值是String类型的"></a>响应之返回值是String类型的</h2><blockquote>
+<p>首先说一个以后开发常见的方式：<br>首先从response.jsp发请求，然后我从Controller后台查出来，存到model，存到request里，然后在转发到页面。再从request域里取出来。</p>
+</blockquote>
+<pre><code>package cn.itcast.controller;
+
+import cn.itcast.domain.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/3 21:26
+ */
+@Controller
+@RequestMapping(&quot;/user&quot;)
+public class UserController {
+
+    @RequestMapping(&quot;/testString&quot;)
+    public String testString(Model model){
+        System.out.println(&quot;testString方法执行了...&quot;);
+//       模拟从数据库中查询对象
+        User user = new User();
+        user.setUsername(&quot;美美&quot;);
+        user.setPassword(&quot;123&quot;);
+        user.setAge(30);
+//        把对象存起来
+        model.addAttribute(&quot;user&quot;,user);
+        return &quot;success&quot;;
+    }
+
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.domain;
+
+import java.io.Serializable;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/3 22:00
+ */
+public class User  implements Serializable {
+    private String password;
+    private Integer age;
+    private String  username;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+}
+</code></pre><hr>
+<p>springmvc.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;!-- 开启注解扫描 扫描这个路径下的包，就可以在--&gt;
+    &lt;context:component-scan base-package=&quot;cn.itcast&quot;/&gt;
+
+    &lt;!-- 视图解析器对象  视图解析器的类名是固定的，然后配置通过这个视图解析器就可以让controller里面return的东西直接跳转指定的jsp页面
+        但是还需要配置2个属性，一个是Prefix就是配置找文件的路径
+        suffix指的是配置的后缀名字。最后也就是找/web-if/pages/下的后缀是jsp的文件--&gt;
+    &lt;bean id=&quot;internalResourceViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;!-- 开启SpringMVC框架注解的支持 标签是固定的--&gt;
+    &lt;mvc:annotation-driven  /&gt;
+
+&lt;/beans&gt;
+</code></pre><hr>
+<p>success.jsp</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 21:22
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; isELIgnored=&quot;false&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;执行成功&lt;/h2&gt;
+
+${user.username}
+${user.password}
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>web.xml</p>
+<pre><code>&lt;!DOCTYPE web-app PUBLIC
+ &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;
+ &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot; &gt;
+
+&lt;web-app&gt;
+  &lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;
+
+  &lt;!--配置前端控制器--&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+      &lt;param-value&gt;classpath:springmvc.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+  &lt;!--配置解决中文乱码的过滤器--&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;encoding&lt;/param-name&gt;
+      &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+
+&lt;/web-app&gt;
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 21:25
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;a href=&quot;user/testString&quot; &gt;testString&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<hr>
+<hr>
+<h2 id="响应值值返回值是void类型"><a href="#响应值值返回值是void类型" class="headerlink" title="响应值值返回值是void类型"></a>响应值值返回值是void类型</h2><h3 id="第一种方法：编写请求转发程序跳转到jsp界面"><a href="#第一种方法：编写请求转发程序跳转到jsp界面" class="headerlink" title="第一种方法：编写请求转发程序跳转到jsp界面"></a>第一种方法：编写请求转发程序跳转到jsp界面</h3><pre><code>package cn.itcast.controller;
+
+import cn.itcast.domain.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/3 21:26
+ */
+@Controller
+@RequestMapping(&quot;/user&quot;)
+public class UserController {
+
+    /**
+     * 返回值类型是一个字符串
+     * @param model
+     * @return
+     */
+    @RequestMapping(&quot;/testString&quot;)
+    public String testString(Model model){
+        System.out.println(&quot;testString方法执行了...&quot;);
+//       模拟从数据库中查询对象
+        User user = new User();
+        user.setUsername(&quot;美美&quot;);
+        user.setPassword(&quot;123&quot;);
+        user.setAge(30);
+//        把对象存起来
+        model.addAttribute(&quot;user&quot;,user);
+        return &quot;success&quot;;
+    }
+
+
+    /**
+     * 返回值类型是Void
+     * 请求转发是一次请求，请求路径不用编写项目名字
+     * @param
+     * @return
+     */
+    @RequestMapping(&quot;/testVoid&quot;)
+    public void testVoid(HttpServletRequest request ,HttpServletResponse response)throws  Exception{
+        System.out.println(&quot;testVoid方法执行了...&quot;);
+//       便携请求转发的程序，手动便携转发程序不会通过视图解析器，所以要自己配置WEB-INF/pages/success.jsp需要自己提供完整目录
+        request.getRequestDispatcher(&quot;/WEB-INF/pages/success.jsp&quot;).forward(request,response);
+
+        return ;
+    }
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.domain;
+
+import java.io.Serializable;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/3 22:00
+ */
+public class User  implements Serializable {
+    private String password;
+    private Integer age;
+    private String  username;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 21:25
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;a href=&quot;user/testString&quot; &gt;testString&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;user/testVoid&quot;&gt;testVoid&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>success.jsp</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 21:22
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; isELIgnored=&quot;false&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;执行成功&lt;/h2&gt;
+
+${user.username}
+${user.password}
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<h3 id="第二种方法：重定向"><a href="#第二种方法：重定向" class="headerlink" title="第二种方法：重定向"></a>第二种方法：重定向</h3><p><img src="https://i.imgur.com/JKmwTno.png" alt=""></p>
+<h3 id="第三种方法：直接响应"><a href="#第三种方法：直接响应" class="headerlink" title="第三种方法：直接响应"></a>第三种方法：直接响应</h3><p><img src="https://i.imgur.com/nqn2Zb5.png" alt=""></p>
+<hr>
+<h2 id="响应之返回值是ModelAndView类型"><a href="#响应之返回值是ModelAndView类型" class="headerlink" title="响应之返回值是ModelAndView类型"></a>响应之返回值是ModelAndView类型</h2><p>这个和返回值是String基本是一样的，只不过写法不同，返回值String底层也是调用这个的。<br><img src="https://i.imgur.com/cRzAOZk.png" alt=""></p>
+<h2 id="转发和重定向"><a href="#转发和重定向" class="headerlink" title="转发和重定向"></a>转发和重定向</h2><p>有个问题没搞懂，重定向智能定位到根目录下的文件吗。为什么写和上面一样的路径不能跳转。是一个问题，尚未认真考虑解决呢。<br><img src="https://i.imgur.com/3qS26c7.png" alt=""></p>
+<h2 id="ResponseBody注解响应json数据"><a href="#ResponseBody注解响应json数据" class="headerlink" title="ResponseBody注解响应json数据"></a>ResponseBody注解响应json数据</h2><p>页面发送一个axis请求，是一个异步请求，后台需要把对象转换成json的字符串响应回去可以通过ResponseBody这个注解完成这个任务。</p>
+<p>这个地方需要告诉前端控制器不是所有请求都拦截的，静态资源比如.js和图片是不需要拦截的。下面这地方配置为/证明都拦截还需要在springmvc.xml中配置哪些不拦截<br><img src="https://i.imgur.com/R7peaUO.png" alt=""><br><img src="https://i.imgur.com/2pkeXim.png" alt=""></p>
+<p>先看目录结构：<br><img src="https://i.imgur.com/DqJvvYs.png" alt="">里面的js文件视频中是从资料中直接拿到的。</p>
+<p>下面是整个代码的结构：</p>
+<p><img src="https://i.imgur.com/XvHH7N4.png" alt=""></p>
+<p>response.jsp界面</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 21:25
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;%--下面这个是吧js引入到了jsp里面了--%&gt;
+    &lt;script src=&quot;js/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+        // 页面加载，绑定点击时间
+        $(function(){
+            $(&quot;#btn&quot;).click(function(){
+                 alert(&quot;hello btn&quot;);
+            });
+        });
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;a href=&quot;user/testString&quot; &gt;testString&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;user/testVoid&quot;&gt;testVoid&lt;/a&gt;
+5&lt;br&gt;
+&lt;%--转发或者重定向--%&gt;
+&lt;a href=&quot;user/testForwardOrRedirect&quot;&gt;testForwardOrRedirect&lt;/a&gt;
+
+&lt;%--写一个按钮--%&gt;
+&lt;button id=&quot;btn&quot;&gt;发送ajax的请求&lt;/button&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>在springmvc.xml文件中设置哪些不拦截；</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;!-- 开启注解扫描 扫描这个路径下的包，就可以在--&gt;
+    &lt;context:component-scan base-package=&quot;cn.itcast&quot;/&gt;
+
+    &lt;!-- 视图解析器对象  视图解析器的类名是固定的，然后配置通过这个视图解析器就可以让controller里面return的东西直接跳转指定的jsp页面
+        但是还需要配置2个属性，一个是Prefix就是配置找文件的路径
+        suffix指的是配置的后缀名字。最后也就是找/web-if/pages/下的后缀是jsp的文件--&gt;
+    &lt;bean id=&quot;internalResourceViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+    &lt;/bean&gt;
+
+&lt;!--前端控制器，哪些静态资源不拦截，location写法就是以后js下所有的请求都不拦截，mapping就是和映射请求有关的,以后jss-图片也需要配置上不拦截--&gt;
+    &lt;mvc:resources mapping=&quot;/js/&quot; location=&quot;/js/**&quot;/&gt;
+
+
+&lt;!--     开启SpringMVC框架注解的支持 标签是固定的--&gt;
+    &lt;mvc:annotation-driven  /&gt;
+
+&lt;/beans&gt;
+</code></pre><hr>
+<h2 id="响应json数据之发送ajax请求"><a href="#响应json数据之发送ajax请求" class="headerlink" title="响应json数据之发送ajax请求"></a>响应json数据之发送ajax请求</h2><p>package cn.itcast.controller;</p>
+<p>import cn.itcast.domain.User;<br>import org.springframework.stereotype.Controller;<br>import org.springframework.ui.Model;<br>import org.springframework.web.bind.annotation.RequestBody;<br>import org.springframework.web.bind.annotation.RequestMapping;<br>import org.springframework.web.servlet.ModelAndView;</p>
+<p>import javax.servlet.http.HttpServletRequest;<br>import javax.servlet.http.HttpServletResponse;</p>
+<p>/**</p>
+<ul>
+<li>@Description TODO</li>
+<li>@Author TT Hun</li>
+<li><p>@Data 2019/11/3 21:26<br>*/<br>@Controller<br>@RequestMapping(“/user”)<br>public class UserController {</p>
+<p> /**</p>
+<ul>
+<li>模拟异步请求和响应过程</li>
+<li>@param</li>
+<li>@return<br>*/<br>@RequestMapping(“/testAjax”)<br>public void testAjax(@RequestBody String body){<br> System.out.println(“testForwardOrRedirect开始执行”);<br> System.out.println(body);<br>}<br>}</li>
+</ul>
+</li>
+</ul>
+<hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 21:25
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;%--下面这个是吧js引入到了jsp里面了--%&gt;
+    &lt;script src=&quot;js/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+        // 页面加载，绑定点击时间
+        $(function(){
+            $(&quot;#btn&quot;).click(function(){
+                 // alert(&quot;hello btn&quot;);
+            //    发送ajax请求
+                $.ajax({
+                //    编写json格式
+                    url:&quot;user/testAjax&quot;,
+                    //给服务器端传递的类型
+                    contentType:&quot;application/json;charset=utf-8&quot;,
+                    data:&apos;{&quot;username&quot;:&quot;呵呵&quot;,&quot;password&quot;:&quot;123&quot;,&quot;age&quot;:&quot;30&quot;}&apos;,
+                    dataType:&quot;json&quot;,
+                    type:&quot;post&quot;,
+                    success:function (data){
+                //        data指的是服务器端Json相应的数据，进行解析
+
+                }
+                })
+            });
+
+        });
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;a href=&quot;user/testString&quot; &gt;testString&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;user/testVoid&quot;&gt;testVoid&lt;/a&gt;
+5&lt;br&gt;
+&lt;%--转发或者重定向--%&gt;
+&lt;a href=&quot;user/testForwardOrRedirect&quot;&gt;testForwardOrRedirect&lt;/a&gt;
+
+&lt;%--写一个按钮--%&gt;
+&lt;button id=&quot;btn&quot;&gt;发送ajax的请求&lt;/button&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>结果直接拿到请求体<br><img src="https://i.imgur.com/Fm5iLrw.png" alt=""></p>
+<hr>
+<h3 id="怎么返回的json数据直接封装到对象当中"><a href="#怎么返回的json数据直接封装到对象当中" class="headerlink" title="怎么返回的json数据直接封装到对象当中"></a>怎么返回的json数据直接封装到对象当中</h3><p> springmvc框架已经帮我们做好了很多，如果Key和javabean中属性相同，可以直接封装到javabean里面，但是需要额外的jar包做类型转换。把串转成对象或者把对象转成串。</p>
+<pre><code>package cn.itcast.controller;
+
+import cn.itcast.domain.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/3 21:26
+ */
+@Controller
+@RequestMapping(&quot;/user&quot;)
+public class UserController {
+
+    @RequestMapping(&quot;/testAjax&quot;)
+    public @ResponseBody User testAjax(@RequestBody User user){
+        System.out.println(&quot;testAjax开始执行&quot;);
+//       客户端发送的ajax请求，传递的是json字符串，后台已经把字符串封装到user对象当中去了
+        System.out.println(user);
+//        做一个响应
+        user.setUsername(&quot;哈哈&quot;);
+        user.setAge(40);
+        user.setPassword(&quot;123&quot;);
+        return user;
+    }
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.domain;
+
+import java.io.Serializable;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/3 22:00
+ */
+public class User  implements Serializable {
+    private String password;
+    private Integer age;
+    private String  username;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;User{&quot; +
+                &quot;password=&apos;&quot; + password + &apos;\&apos;&apos; +
+                &quot;, age=&quot; + age +
+                &quot;, username=&apos;&quot; + username + &apos;\&apos;&apos; +
+                &apos;}&apos;;
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/3
+  Time: 21:25
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;%--下面这个是吧js引入到了jsp里面了--%&gt;
+    &lt;script src=&quot;js/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+        // 页面加载，绑定点击时间
+        $(function(){
+            $(&quot;#btn&quot;).click(function(){
+                 // alert(&quot;hello btn&quot;);
+            //    发送ajax请求
+                $.ajax({
+                //    编写json格式
+                    url:&quot;user/testAjax&quot;,
+                    //给服务器端传递的类型
+                    contentType:&quot;application/json;charset=utf-8&quot;,
+                    data:&apos;{&quot;username&quot;:&quot;呵呵&quot;,&quot;password&quot;:&quot;123&quot;,&quot;age&quot;:&quot;30&quot;}&apos;,
+                    dataType:&quot;json&quot;,
+                    type:&quot;post&quot;,
+                    success:function (data){
+                //        data指的是服务器端Json相应的数据，进行解析
+                    alert(data);
+                    alert(data.username);
+                    alert(data.age);
+                    alert(data.password);
+                }
+                })
+            });
+
+        });
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;a href=&quot;user/testString&quot; &gt;testString&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;user/testVoid&quot;&gt;testVoid&lt;/a&gt;
+5&lt;br&gt;
+&lt;%--转发或者重定向--%&gt;
+&lt;a href=&quot;user/testForwardOrRedirect&quot;&gt;testForwardOrRedirect&lt;/a&gt;
+
+&lt;%--写一个按钮--%&gt;
+&lt;button id=&quot;btn&quot;&gt;发送ajax的请求&lt;/button&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p><img src="https://i.imgur.com/qJnIJQ4.png" alt=""></p>
+<h1 id="第二章：SpringMVC实现文件上传"><a href="#第二章：SpringMVC实现文件上传" class="headerlink" title="第二章：SpringMVC实现文件上传"></a>第二章：SpringMVC实现文件上传</h1><h2 id="文件上传回顾"><a href="#文件上传回顾" class="headerlink" title="文件上传回顾"></a>文件上传回顾</h2><p>默认表单提交数据的格式是一组键值对的方式username=hehe&amp;password=123但是一旦把取值从默认变成multipart会把提交的表单分成几个部分，里面存储数据，可能包含文本框的值也可能包含上传选择文件的内容。<br><img src="https://i.imgur.com/3UI4KKM.png" alt=""></p>
+<p>然后请求正文的内容变成：<br><img src="https://i.imgur.com/WUaN9Pk.png" alt=""><br><img src="https://i.imgur.com/koETv8W.png" alt=""></p>
+<p>这时候表单用分隔符的方式把它分成了若干个部分。那么怎么去解析呢？通过一个jar包的组件<br><img src="https://i.imgur.com/eZ3Pu31.png" alt=""></p>
+<hr>
+<h2 id="首先环境搭建"><a href="#首先环境搭建" class="headerlink" title="首先环境搭建"></a>首先环境搭建</h2><p>配置springmvc.xml配置web.xml配置Pom.xml</p>
+<pre><code>    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!-- $Id: pom.xml 642118 2008-03-28 08:04:16Z reinhard $ --&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;
+
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;packaging&gt;war&lt;/packaging&gt;
+
+  &lt;name&gt;springmvc_day02_02_fileupload&lt;/name&gt;
+  &lt;groupId&gt;cn.itcast&lt;/groupId&gt;
+  &lt;artifactId&gt;springmvc_day02_02_fileupload&lt;/artifactId&gt;
+  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+  &lt;properties&gt;
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;
+    &lt;spring.version&gt;5.0.2.RELEASE&lt;/spring.version&gt;
+  &lt;/properties&gt;
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.mortbay.jetty&lt;/groupId&gt;
+        &lt;artifactId&gt;maven-jetty-plugin&lt;/artifactId&gt;
+        &lt;version&gt;6.1.7&lt;/version&gt;
+        &lt;configuration&gt;
+          &lt;connectors&gt;
+            &lt;connector implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;
+              &lt;port&gt;8888&lt;/port&gt;
+              &lt;maxIdleTime&gt;30000&lt;/maxIdleTime&gt;
+            &lt;/connector&gt;
+          &lt;/connectors&gt;
+          &lt;webAppSourceDirectory&gt;${project.build.directory}/${pom.artifactId}-${pom.version}&lt;/webAppSourceDirectory&gt;
+          &lt;contextPath&gt;/&lt;/contextPath&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+      &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+      &lt;version&gt;2.5&lt;/version&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;commons-fileupload&lt;/groupId&gt;
+      &lt;artifactId&gt;commons-fileupload&lt;/artifactId&gt;
+      &lt;version&gt;1.3.1&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;commons-io&lt;/groupId&gt;
+      &lt;artifactId&gt;commons-io&lt;/artifactId&gt;
+      &lt;version&gt;2.4&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;
+      &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;
+      &lt;version&gt;2.0&lt;/version&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+  &lt;/dependencies&gt;
+
+&lt;/project&gt;
+</code></pre><hr>
+<p>web.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;web-app version=&quot;2.4&quot;
+         xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;&gt;
+
+
+  &lt;!--配置前端控制器--&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+      &lt;param-value&gt;classpath:springmvc.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+  &lt;!--配置解决中文乱码的过滤器--&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;encoding&lt;/param-name&gt;
+      &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+&lt;/web-app&gt;
+</code></pre><hr>
+<p>springmvc.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;!-- 开启注解扫描 扫描这个路径下的包，就可以在--&gt;
+    &lt;context:component-scan base-package=&quot;cn.itcast&quot;/&gt;
+
+    &lt;!-- 视图解析器对象  视图解析器的类名是固定的，然后配置通过这个视图解析器就可以让controller里面return的东西直接跳转指定的jsp页面
+        但是还需要配置2个属性，一个是Prefix就是配置找文件的路径
+        suffix指的是配置的后缀名字。最后也就是找/web-if/pages/下的后缀是jsp的文件--&gt;
+    &lt;bean id=&quot;internalResourceViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+    &lt;/bean&gt;
+
+&lt;!--前端控制器，哪些静态资源不拦截，location写法就是以后js下所有的请求都不拦截，mapping就是和映射请求有关的,以后jss-图片也需要配置上不拦截--&gt;
+    &lt;mvc:resources mapping=&quot;/js/&quot; location=&quot;/js/**&quot;/&gt;
+
+
+&lt;!--     开启SpringMVC框架注解的支持 标签是固定的--&gt;
+    &lt;mvc:annotation-driven  /&gt;
+
+&lt;/beans&gt;
+</code></pre><hr>
+<h2 id="文件上传之传统方式上传代码"><a href="#文件上传之传统方式上传代码" class="headerlink" title="文件上传之传统方式上传代码"></a>文件上传之传统方式上传代码</h2><p>index.jsp文件：<br>    &lt;%–<br>      Created by IntelliJ IDEA.<br>      User: Hun<br>      Date: 2019/11/5<br>      Time: 11:25<br>      To change this template use File | Settings | File Templates.<br>    –%&gt;<br>    &lt;%@ page contentType=”text/html;charset=UTF-8” language=”java” %&gt;<br>    <html><br>    <head><br>        <title>文件上传</title><br>    </head><br>    <body><br>    <h3>文件上传</h3><br>    <form action="user/fileupload1" method="post" enctype="multipart/form-data"><br>        选择上传文件：<input type="file" name="upload"><br>        <br><br>        <input type="submit" value="上传"><br>    </form><br>    </body><br>    </html></p>
+<hr>
+<p>success.jsp<br>    &lt;%–<br>      Created by IntelliJ IDEA.<br>      User: Hun<br>      Date: 2019/11/5<br>      Time: 11:28<br>      To change this template use File | Settings | File Templates.<br>    –%&gt;<br>    &lt;%@ page contentType=”text/html;charset=UTF-8” language=”java” %&gt;<br>    <html><br>    <head><br>        <title>Title</title><br>    </head><br>    <body><br>    <h3>上传文件成功</h3><br>    </body><br>    </html></p>
+<hr>
+<pre><code>package cn.itcast.controller;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/5 11:26
+ */
+@Controller
+@RequestMapping(&quot;/user&quot;)
+public class UserController {
+
+    /**
+     * 文件上传
+     * @return
+     */
+    @RequestMapping(&quot;/fileupload1&quot;)
+    public String fileUpload1(HttpServletRequest request) throws Exception{
+        System.out.println(&quot;文件上传&quot;);
+//        可以使用fileupload这个组件完成上传
+//        上传的位置
+        String path = request.getSession().getServletContext().getRealPath(&quot;/uploads/&quot;);
+//        判断改路径是否存在：
+        File file = new File(path);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+//    解析request对象获取到上传的文件项
+        DiskFileItemFactory factory=new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
+//   解析request
+        List&lt;FileItem&gt; items = upload.parseRequest(request);
+//        遍历
+        for(FileItem item:items){
+//            进行判断，判断item对象是否是上传文件项目
+            if(item.isFormField()){
+//                如果是true则是普通表单项目，如果是false则是上传文件项
+            }else{
+//                说明是上传文件项
+//                 获取到上传文件的名称
+                String filename = item.getName();
+//                把文件名设置成唯一值，uuid
+                String uuid = UUID.randomUUID().toString().replace(&quot;-&quot;,&quot;&quot;);
+                filename = uuid+&quot;_&quot;+filename;
+//                完成文件上传
+                item.write(new File(path,filename));
+//                删除临时文件。一旦大于10KB就生成临时文件
+                item.delete();
+
+
+            }
+        }
+
+        return &quot;success&quot;;
+    }
+}
+</code></pre><hr>
+<p>最终结果的图片落在这里：<br><img src="https://i.imgur.com/k0zwX9f.png" alt=""></p>
+<h2 id="SpringMVC上传文件"><a href="#SpringMVC上传文件" class="headerlink" title="SpringMVC上传文件"></a>SpringMVC上传文件</h2><p>首先看一下整体原理：<br>解释一下下面的图：也就是上传的文件通过写在域里面通过request传递到前端控制器，前端控制器通过配置好的文件解析器解析request,然后拿到上传文件。再传递给Controller里面和文件解析器中相同参数名的参数。然后再调用他的方法对他进行使用。<br><img src="https://i.imgur.com/7edLiOL.png" alt=""><br><strong>完整代码如下：</strong><br> Controller</p>
+<pre><code>package cn.itcast.controller;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/5 11:26
+ */
+@Controller
+@RequestMapping(&quot;/user&quot;)
+public class UserController {
+
+    /**
+     * 传统方式文件上传
+     * @return
+     */
+    @RequestMapping(&quot;/fileupload1&quot;)
+    public String fileUpload1(HttpServletRequest request) throws Exception{
+        System.out.println(&quot;文件上传&quot;);
+//        可以使用fileupload这个组件完成上传
+//        上传的位置
+        String path = request.getSession().getServletContext().getRealPath(&quot;/uploads/&quot;);
+//        判断改路径是否存在：
+        File file = new File(path);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+//    解析request对象获取到上传的文件项
+        DiskFileItemFactory factory=new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
+//   解析request
+        List&lt;FileItem&gt; items = upload.parseRequest(request);
+//        遍历
+        for(FileItem item:items){
+//            进行判断，判断item对象是否是上传文件项目
+            if(item.isFormField()){
+//                如果是true则是普通表单项目，如果是false则是上传文件项
+            }else{
+//                说明是上传文件项
+//                 获取到上传文件的名称
+                String filename = item.getName();
+//                把文件名设置成唯一值，uuid
+                String uuid = UUID.randomUUID().toString().replace(&quot;-&quot;,&quot;&quot;);
+                filename = uuid+&quot;_&quot;+filename;
+//                完成文件上传
+                item.write(new File(path,filename));
+//                删除临时文件。一旦大于10KB就生成临时文件
+                item.delete();
+            }
+        }
+        return &quot;success&quot;;
+    }
+
+    /**
+     * SpringMVC方式文件上传
+     * @return
+     */
+    @RequestMapping(&quot;/fileupload2&quot;)
+    public String fileUpload2(HttpServletRequest request ,MultipartFile upload) throws Exception{
+        System.out.println(&quot;文件上传&quot;);
+//        可以使用fileupload这个组件完成上传
+//        上传的位置
+        String path = request.getSession().getServletContext().getRealPath(&quot;/uploads/&quot;);
+//        判断改路径是否存在：
+        File file = new File(path);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+//         说明是上传文件项
+//         获取到上传文件的名称
+        String filename = upload.getOriginalFilename();
+//         把文件名设置成唯一值，uuid
+         String uuid = UUID.randomUUID().toString().replace(&quot;-&quot;,&quot;&quot;);
+         filename = uuid+&quot;_&quot;+filename;
+//         完成文件上传
+        upload.transferTo(new File(path,filename));
+        return &quot;success&quot;;
+    }
+}
+</code></pre><hr>
+<p>springmvc.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;!-- 开启注解扫描 扫描这个路径下的包，就可以在--&gt;
+    &lt;context:component-scan base-package=&quot;cn.itcast&quot;/&gt;
+
+    &lt;!-- 视图解析器对象  视图解析器的类名是固定的，然后配置通过这个视图解析器就可以让controller里面return的东西直接跳转指定的jsp页面
+        但是还需要配置2个属性，一个是Prefix就是配置找文件的路径
+        suffix指的是配置的后缀名字。最后也就是找/web-if/pages/下的后缀是jsp的文件--&gt;
+    &lt;bean id=&quot;internalResourceViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+    &lt;/bean&gt;
+
+&lt;!--前端控制器，哪些静态资源不拦截，location写法就是以后js下所有的请求都不拦截，mapping就是和映射请求有关的,以后jss-图片也需要配置上不拦截--&gt;
+    &lt;mvc:resources mapping=&quot;/js/&quot; location=&quot;/js/**&quot;/&gt;
+
+&lt;!--    配置文件解析器对象--&gt;
+    &lt;bean id=&quot;multipartResolver&quot; class=&quot;org.springframework.web.multipart.commons.CommonsMultipartResolver&quot;&gt;
+&lt;!--        这个是配置最大上传文件。value是字节为单位，下面这个也就是10M  --&gt;
+        &lt;property name=&quot;maxUploadSize&quot; value=&quot;10485760&quot; /&gt;
+    &lt;/bean&gt;
+
+&lt;!--     开启SpringMVC框架注解的支持 标签是固定的--&gt;
+    &lt;mvc:annotation-driven  /&gt;
+
+&lt;/beans&gt;
+</code></pre><hr>
+<p>index.jsp</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/5
+  Time: 11:25
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;文件上传&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h3&gt;文件上传&lt;/h3&gt;
+&lt;form action=&quot;user/fileupload1&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    选择上传文件：&lt;input type=&quot;file&quot; name=&quot;upload&quot;/&gt;
+    &lt;br/&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;上传&quot;/&gt;
+&lt;/form&gt;
+
+&lt;form action=&quot;user/fileupload2&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    选择上传文件：&lt;input type=&quot;file&quot; name=&quot;upload&quot;/&gt;
+    &lt;br/&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;上传&quot;/&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>web.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;!--
+  - This is the Cocoon web-app configurations file
+  -
+  - $Id$
+  --&gt;
+&lt;web-app version=&quot;2.4&quot;
+         xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;&gt;
+
+
+  &lt;!--配置前端控制器--&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+      &lt;param-value&gt;classpath:springmvc.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+  &lt;!--配置解决中文乱码的过滤器--&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;encoding&lt;/param-name&gt;
+      &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+&lt;/web-app&gt;
+</code></pre><hr>
+<p><img src="https://i.imgur.com/I7bTQPD.png" alt=""></p>
+<h2 id="SpringMVC跨服务器方式的文件上传"><a href="#SpringMVC跨服务器方式的文件上传" class="headerlink" title="SpringMVC跨服务器方式的文件上传"></a>SpringMVC跨服务器方式的文件上传</h2><p><img src="https://i.imgur.com/coohqTT.png" alt=""><br>目前跨服务器的内容由于图片服务器没有打开所以目前还没成功，可能是因为图片服务器的配置问题。代码肯定没问题：</p>
+<pre><code>package cn.itcast.controller;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/5 11:26
+ */
+@Controller
+@RequestMapping(&quot;/user&quot;)
+public class UserController {
+    /**
+     * 跨服务器文件上传
+     * @return
+     */
+    @RequestMapping(&quot;/fileupload3&quot;)
+    public String fileuoload3(MultipartFile upload) throws Exception {
+        System.out.println(&quot;跨服务器文件上传...&quot;);
+
+        // 定义上传文件服务器路径
+        String path = &quot;http://localhost:9999/uploads/&quot;;
+        // 说明上传文件项
+        // 获取上传文件的名称
+        String filename = upload.getOriginalFilename();
+        // 把文件的名称设置唯一值，uuid
+        String uuid = UUID.randomUUID().toString().replace(&quot;-&quot;, &quot;&quot;);
+        filename = uuid+&quot;_&quot;+filename;
+        // 创建客户端的对象
+        Client client = Client.create();
+        // 和图片服务器进行连接
+        WebResource webResource = client.resource(path + filename);
+        // 上传文件
+        webResource.put(upload.getBytes());
+        return &quot;success&quot;;
+    }
+}
+</code></pre><hr>
+<p>springmvc.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;!-- 开启注解扫描 --&gt;
+    &lt;context:component-scan base-package=&quot;cn.itcast&quot;/&gt;
+
+    &lt;!-- 视图解析器对象 --&gt;
+    &lt;bean id=&quot;internalResourceViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;!--前端控制器，哪些静态资源不拦截--&gt;
+    &lt;mvc:resources location=&quot;/css/&quot; mapping=&quot;/css/**&quot;/&gt;
+    &lt;mvc:resources location=&quot;/images/&quot; mapping=&quot;/images/**&quot;/&gt;
+    &lt;mvc:resources location=&quot;/js/&quot; mapping=&quot;/js/**&quot;/&gt;
+
+    &lt;!--配置文件解析器对象--&gt;
+    &lt;bean id=&quot;multipartResolver&quot; class=&quot;org.springframework.web.multipart.commons.CommonsMultipartResolver&quot;&gt;
+        &lt;property name=&quot;maxUploadSize&quot; value=&quot;10485760&quot; /&gt;
+    &lt;/bean&gt;
+
+    &lt;!-- 开启SpringMVC框架注解的支持 --&gt;
+    &lt;mvc:annotation-driven /&gt;
+
+&lt;/beans&gt;
+</code></pre><hr>
+<p>web.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the &quot;License&quot;); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--&gt;
+
+&lt;!--
+  - This is the Cocoon web-app configurations file
+  -
+  - $Id$
+  --&gt;
+&lt;web-app version=&quot;2.4&quot;
+         xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;&gt;
+
+
+  &lt;!--配置前端控制器--&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+      &lt;param-value&gt;classpath:springmvc.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+  &lt;!--配置解决中文乱码的过滤器--&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;encoding&lt;/param-name&gt;
+      &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+&lt;/web-app&gt;
+</code></pre><hr>
+<p>index.jsp</p>
+<pre><code>    &lt;%--
+      Created by IntelliJ IDEA.
+      User: Hun
+      Date: 2019/11/5
+      Time: 11:25
+      To change this template use File | Settings | File Templates.
+    --%&gt;
+    &lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;文件上传&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;h3&gt;文件上传&lt;/h3&gt;
+    &lt;form action=&quot;user/fileupload1&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+        选择上传文件：&lt;input type=&quot;file&quot; name=&quot;upload&quot;/&gt;
+        &lt;br/&gt;
+        &lt;input type=&quot;submit&quot; value=&quot;上传&quot;/&gt;
+    &lt;/form&gt;
+
+    &lt;form action=&quot;user/fileupload2&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+        选择上传文件：&lt;input type=&quot;file&quot; name=&quot;upload&quot;/&gt;
+        &lt;br/&gt;
+        &lt;input type=&quot;submit&quot; value=&quot;上传&quot;/&gt;
+    &lt;/form&gt;
+
+    &lt;h2&gt;跨服务器文件上传&lt;/h2&gt;
+    &lt;form action=&quot;user/fileupload3&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+        选择上传文件：&lt;input type=&quot;file&quot; name=&quot;upload&quot;/&gt;
+        &lt;br/&gt;
+        &lt;input type=&quot;submit&quot; value=&quot;上传&quot;/&gt;
+    &lt;/form&gt;
+
+
+    &lt;/body&gt;
+    &lt;/html&gt;
+***
+success.jsp
+
+&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/5
+  Time: 11:28
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h3&gt;上传文件成功&lt;/h3&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>图片服务器略。</p>
+<h1 id="第三章SpringMVC异常处理"><a href="#第三章SpringMVC异常处理" class="headerlink" title="第三章SpringMVC异常处理"></a>第三章SpringMVC异常处理</h1><h2 id="SpringMVC异常处理之处理代码编写"><a href="#SpringMVC异常处理之处理代码编写" class="headerlink" title="SpringMVC异常处理之处理代码编写"></a>SpringMVC异常处理之处理代码编写</h2><p><img src="https://i.imgur.com/ZHUrpOK.png" alt=""></p>
+<pre><code>package cn.itcast.controller;
+
+import cn.itcast.exception.SysException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/5 22:38
+ */
+@Controller
+@RequestMapping(&quot;/user&quot;)
+public class UserController {
+    @RequestMapping(&quot;/testException&quot;)
+    public String testException() throws SysException {
+        System.out.println(&quot;testException 执行了&quot;);
+        try {
+//        模拟异常
+            int a = 10 / 0;
+        } catch (Exception e) {
+//            控制台打印异常信息
+            e.printStackTrace();
+//           向上抛出异常信息
+            throw new SysException(&quot;查询所有用户出错了。。。&quot;);
+
+        }
+        return &quot;success&quot;;
+    }
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.exception;
+
+/**
+ * @Description 自定义的异常类
+ * @Author TT Hun
+ * @Data 2019/11/5 23:06
+ */
+public class SysException extends Exception {
+//    用来存储提示信息的
+    private String message;
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public SysException(String message) {
+        this.message = message;
+    }
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.exception;
+
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * @Description 异常处理器
+ * @Author TT Hun
+ * @Data 2019/11/5 23:10
+ */
+public class SysExceptionResolver implements HandlerExceptionResolver {
+    /**
+     * 处理异常逻辑
+     * @param request
+     * @param response
+     * @param handler
+     * @param ex
+     * @return
+     */
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+
+        // 获取到异常对象
+        SysException e = null;
+//        判断是否是ex异常
+        if(ex instanceof SysException) {
+            e = (SysException) ex;
+        } else{//如果不是的话
+            e = new SysException(&quot;系统正在维护....&quot;);
+        }
+        // 创建ModelAndView对象，这个modelandview可以帮助跳转到那个界面
+        ModelAndView mv = new ModelAndView();
+//        向里面存入提示信息，存了一组键值对
+        mv.addObject(&quot;errorMsg&quot;,e.getMessage());
+//        往哪里跳转
+        mv.setViewName(&quot;error&quot;);
+        return mv;
+    }
+}
+</code></pre><hr>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;!-- 开启注解扫描 --&gt;
+    &lt;context:component-scan base-package=&quot;cn.itcast&quot;/&gt;
+
+    &lt;!-- 视图解析器对象 --&gt;
+    &lt;bean id=&quot;internalResourceViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;!--前端控制器，哪些静态资源不拦截--&gt;
+    &lt;mvc:resources location=&quot;/css/&quot; mapping=&quot;/css/**&quot;/&gt;
+    &lt;mvc:resources location=&quot;/images/&quot; mapping=&quot;/images/**&quot;/&gt;
+    &lt;mvc:resources location=&quot;/js/&quot; mapping=&quot;/js/**&quot;/&gt;
+
+    &lt;!--配置异常处理器--&gt;
+    &lt;bean id=&quot;sysExceptionResolver&quot; class=&quot;cn.itcast.exception.SysExceptionResolver&quot;/&gt;
+
+    &lt;!-- 开启SpringMVC框架注解的支持 --&gt;
+    &lt;mvc:annotation-driven /&gt;
+
+&lt;/beans&gt;
+</code></pre><hr>
+<p>error.jsp</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/6
+  Time: 9:35
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; isELIgnored=&quot;false&quot;%&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    ${errorMsg}
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>success.jsp</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/5
+  Time: 22:41
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h3&gt;测试成功&lt;/h3&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<pre><code>&lt;!DOCTYPE web-app PUBLIC
+ &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;
+ &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot; &gt;
+
+&lt;web-app&gt;
+  &lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;
+
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+      &lt;param-value&gt;classpath:springmvc.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+  &lt;!--配置解决中文乱码的过滤器--&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;encoding&lt;/param-name&gt;
+      &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+
+&lt;/web-app&gt;
+</code></pre><hr>
+<p>index.jsp</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Administrator
+  Date: 2018/5/5
+  Time: 22:08
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;h3&gt;异常处理&lt;/h3&gt;
+
+    &lt;a href=&quot;user/testException&quot; &gt;异常处理&lt;/a&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>pom文件：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  &quot;License&quot;); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+--&gt;
+&lt;!-- $Id: pom.xml 642118 2008-03-28 08:04:16Z reinhard $ --&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;
+        &lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;
+        &lt;spring.version&gt;5.0.2.RELEASE&lt;/spring.version&gt;
+    &lt;/properties&gt;
+
+
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;packaging&gt;war&lt;/packaging&gt;
+
+    &lt;name&gt;springmvc_day02_03_exception1&lt;/name&gt;
+    &lt;artifactId&gt;springmvc_day02_03_exception1&lt;/artifactId&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.mortbay.jetty&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-jetty-plugin&lt;/artifactId&gt;
+                &lt;version&gt;6.1.7&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;connectors&gt;
+                        &lt;connector implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;
+                            &lt;port&gt;8888&lt;/port&gt;
+                            &lt;maxIdleTime&gt;30000&lt;/maxIdleTime&gt;
+                        &lt;/connector&gt;
+                    &lt;/connectors&gt;
+                    &lt;webAppSourceDirectory&gt;${project.build.directory}/${pom.artifactId}-${pom.version}
+                    &lt;/webAppSourceDirectory&gt;
+                    &lt;contextPath&gt;/&lt;/contextPath&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+            &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+            &lt;version&gt;2.5&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;
+            &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;
+            &lt;version&gt;2.0&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+&lt;/project&gt;
+</code></pre><hr>
+<h2 id="SpringMVC中的拦截器"><a href="#SpringMVC中的拦截器" class="headerlink" title="SpringMVC中的拦截器"></a>SpringMVC中的拦截器</h2><p><img src="https://i.imgur.com/AJ9Uzzi.png" alt=""><br>拦截器只会拦截控制器中的方法，也就是Controller中的方法。JSP之类的资源不会拦截的。过滤器什么都可以拦截。也就是拦截器可以做的事情过滤器都可以做。但是过滤器可以做的事情拦截器不一定会做。<br><strong>拦截器完整代码</strong><br>注意Pom中的依赖使用那一些依赖：</p>
+<p>先看一下目录；<br><img src="https://i.imgur.com/q7Ee3uo.png" alt=""></p>
+<pre><code>package cn.itcast.controller.cn.itcast.interceptor;
+
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * 自定义拦截器
+ */
+public class MyInterceptor1 implements HandlerInterceptor{
+
+    /**
+     * 预处理，controller方法执行前
+     * return true 放行，执行下一个拦截器，如果没有，执行controller中的方法
+     * return false不放行
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println(&quot;MyInterceptor1执行了...前1111&quot;);
+        // request.getRequestDispatcher(&quot;/WEB-INF/pages/error.jsp&quot;).forward(request,response);
+        return true;
+    }
+
+    /**
+     * 后处理方法，controller方法执行后，success.jsp执行之前
+     * @param request
+     * @param response
+     * @param handler
+     * @param modelAndView
+     * @throws Exception
+     */
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        System.out.println(&quot;MyInterceptor1执行了...后1111&quot;);
+        // request.getRequestDispatcher(&quot;/WEB-INF/pages/error.jsp&quot;).forward(request,response);
+    }
+
+    /**
+     * success.jsp页面执行后，该方法会执行
+     * @param request
+     * @param response
+     * @param handler
+     * @param ex
+     * @throws Exception
+     */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        System.out.println(&quot;MyInterceptor1执行了...最后1111&quot;);
+    }
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.controller.cn.itcast.interceptor;
+
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * 自定义拦截器
+ */
+public class MyInterceptor2 implements HandlerInterceptor{
+
+    /**
+     * 预处理，controller方法执行前
+     * return true 放行，执行下一个拦截器，如果没有，执行controller中的方法
+     * return false不放行
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println(&quot;MyInterceptor1执行了...前2222&quot;);
+        // request.getRequestDispatcher(&quot;/WEB-INF/pages/error.jsp&quot;).forward(request,response);
+        return true;
+    }
+
+    /**
+     * 后处理方法，controller方法执行后，success.jsp执行之前
+     * @param request
+     * @param response
+     * @param handler
+     * @param modelAndView
+     * @throws Exception
+     */
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        System.out.println(&quot;MyInterceptor1执行了...后2222&quot;);
+        // request.getRequestDispatcher(&quot;/WEB-INF/pages/error.jsp&quot;).forward(request,response);
+    }
+
+    /**
+     * success.jsp页面执行后，该方法会执行
+     * @param request
+     * @param response
+     * @param handler
+     * @param ex
+     * @throws Exception
+     */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        System.out.println(&quot;MyInterceptor1执行了...最后2222&quot;);
+    }
+
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping(&quot;/user&quot;)
+public class UserController {
+
+    @RequestMapping(&quot;/testInterceptor&quot;)
+    public String testInterceptor(){
+        System.out.println(&quot;testInterceptor执行了...&quot;);
+        return &quot;success&quot;;
+    }
+
+}
+</code></pre><hr>
+<p>springmvc.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;!-- 开启注解扫描 --&gt;
+    &lt;context:component-scan base-package=&quot;cn.itcast&quot;/&gt;
+
+    &lt;!-- 视图解析器对象 --&gt;
+    &lt;bean id=&quot;internalResourceViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;!--前端控制器，哪些静态资源不拦截--&gt;
+    &lt;mvc:resources location=&quot;/css/&quot; mapping=&quot;/css/**&quot;/&gt;
+    &lt;mvc:resources location=&quot;/images/&quot; mapping=&quot;/images/**&quot;/&gt;
+    &lt;mvc:resources location=&quot;/js/&quot; mapping=&quot;/js/**&quot;/&gt;
+
+    &lt;!--配置拦截器--&gt;
+    &lt;mvc:interceptors&gt;
+        &lt;!--配置拦截器--&gt;
+        &lt;mvc:interceptor&gt;
+            &lt;!--要拦截的具体的方法--&gt;
+            &lt;mvc:mapping path=&quot;/user/*&quot;/&gt;
+            &lt;!--不要拦截的方法
+            &lt;mvc:exclude-mapping path=&quot;&quot;/&gt;
+            --&gt;
+            &lt;!--配置拦截器对象--&gt;
+            &lt;bean class=&quot;cn.itcast.controller.cn.itcast.interceptor.MyInterceptor1&quot; /&gt;
+        &lt;/mvc:interceptor&gt;
+
+        &lt;!--配置第二个拦截器--&gt;
+        &lt;mvc:interceptor&gt;
+            &lt;!--要拦截的具体的方法--&gt;
+            &lt;mvc:mapping path=&quot;/**&quot;/&gt;
+            &lt;!--不要拦截的方法
+            &lt;mvc:exclude-mapping path=&quot;&quot;/&gt;
+            --&gt;
+            &lt;!--配置拦截器对象--&gt;
+            &lt;bean class=&quot;cn.itcast.controller.cn.itcast.interceptor.MyInterceptor2&quot; /&gt;
+        &lt;/mvc:interceptor&gt;
+    &lt;/mvc:interceptors&gt;
+
+    &lt;!-- 开启SpringMVC框架注解的支持 --&gt;
+    &lt;mvc:annotation-driven /&gt;
+
+&lt;/beans&gt;
+</code></pre><hr>
+<p>error.jsp</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/6
+  Time: 9:35
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; isELIgnored=&quot;false&quot;%&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    ${errorMsg}
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>success.jsp</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/5
+  Time: 22:41
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h3&gt;测试成功&lt;/h3&gt;
+
+&lt;%--这个代表执行的Java脚本--%&gt;
+&lt;% System.out.println(&quot;success.jsp成功执行了...  &quot;); %&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>web.xml</p>
+<pre><code>&lt;!DOCTYPE web-app PUBLIC
+        &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;
+        &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot; &gt;
+
+&lt;web-app&gt;
+  &lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;
+
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+      &lt;param-value&gt;classpath:springmvc.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+  &lt;!--配置解决中文乱码的过滤器--&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;encoding&lt;/param-name&gt;
+      &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+
+&lt;/web-app&gt;
+</code></pre><hr>
+<p>index.jsp</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Administrator
+  Date: 2018/5/5
+  Time: 22:08
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;h3&gt;拦截器&lt;/h3&gt;
+
+    &lt;a href=&quot;user/testInterceptor&quot; &gt;拦截器&lt;/a&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>pom.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;cn.itcast&lt;/groupId&gt;
+  &lt;artifactId&gt;springmvc_day02_04_interceptor&lt;/artifactId&gt;
+  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+  &lt;packaging&gt;war&lt;/packaging&gt;
+
+  &lt;name&gt;springmvc_day02_04_interceptor Maven Webapp&lt;/name&gt;
+  &lt;!-- FIXME change it to the project&apos;s website --&gt;
+  &lt;url&gt;http://www.example.com&lt;/url&gt;
+
+  &lt;properties&gt;
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;
+    &lt;spring.version&gt;5.0.2.RELEASE&lt;/spring.version&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+      &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+      &lt;version&gt;2.5&lt;/version&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;
+      &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;
+      &lt;version&gt;2.0&lt;/version&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;finalName&gt;springmvc_day02_04_interceptor&lt;/finalName&gt;
+    &lt;pluginManagement&gt;&lt;!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) --&gt;
+      &lt;plugins&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-clean-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.0.0&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-resources-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.0.2&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.7.0&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.20.1&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.2.0&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-install-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.5.2&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-deploy-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.8.2&lt;/version&gt;
+        &lt;/plugin&gt;
+      &lt;/plugins&gt;
+    &lt;/pluginManagement&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+</code></pre><hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/24/SpringMVC/" rel="next" title="SpringMVC">
+                <i class="fa fa-chevron-left"></i> SpringMVC
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/06/Oracle使用/" rel="prev" title="Oracle使用">
+                Oracle使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Eric Hunn" />
+            
+              <p class="site-author-name" itemprop="name">Eric Hunn</p>
+              <p class="site-description motion-element" itemprop="description">大数据|动漫迷|科技控</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">116</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/erichunn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:erichunn.me@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/2944687303/home?wvr=5" target="_blank" title="Webibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Webibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一章：相应数据和结果视图"><span class="nav-number">1.</span> <span class="nav-text">第一章：相应数据和结果视图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#响应之返回值是String类型的"><span class="nav-number">1.1.</span> <span class="nav-text">响应之返回值是String类型的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#响应值值返回值是void类型"><span class="nav-number">1.2.</span> <span class="nav-text">响应值值返回值是void类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一种方法：编写请求转发程序跳转到jsp界面"><span class="nav-number">1.2.1.</span> <span class="nav-text">第一种方法：编写请求转发程序跳转到jsp界面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二种方法：重定向"><span class="nav-number">1.2.2.</span> <span class="nav-text">第二种方法：重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三种方法：直接响应"><span class="nav-number">1.2.3.</span> <span class="nav-text">第三种方法：直接响应</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#响应之返回值是ModelAndView类型"><span class="nav-number">1.3.</span> <span class="nav-text">响应之返回值是ModelAndView类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#转发和重定向"><span class="nav-number">1.4.</span> <span class="nav-text">转发和重定向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ResponseBody注解响应json数据"><span class="nav-number">1.5.</span> <span class="nav-text">ResponseBody注解响应json数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#响应json数据之发送ajax请求"><span class="nav-number">1.6.</span> <span class="nav-text">响应json数据之发送ajax请求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么返回的json数据直接封装到对象当中"><span class="nav-number">1.6.1.</span> <span class="nav-text">怎么返回的json数据直接封装到对象当中</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二章：SpringMVC实现文件上传"><span class="nav-number">2.</span> <span class="nav-text">第二章：SpringMVC实现文件上传</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文件上传回顾"><span class="nav-number">2.1.</span> <span class="nav-text">文件上传回顾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#首先环境搭建"><span class="nav-number">2.2.</span> <span class="nav-text">首先环境搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件上传之传统方式上传代码"><span class="nav-number">2.3.</span> <span class="nav-text">文件上传之传统方式上传代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">2.3.1.</span> <span class="nav-text">文件上传</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">2.3.2.</span> <span class="nav-text">上传文件成功</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringMVC上传文件"><span class="nav-number">2.4.</span> <span class="nav-text">SpringMVC上传文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringMVC跨服务器方式的文件上传"><span class="nav-number">2.5.</span> <span class="nav-text">SpringMVC跨服务器方式的文件上传</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第三章SpringMVC异常处理"><span class="nav-number">3.</span> <span class="nav-text">第三章SpringMVC异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringMVC异常处理之处理代码编写"><span class="nav-number">3.1.</span> <span class="nav-text">SpringMVC异常处理之处理代码编写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringMVC中的拦截器"><span class="nav-number">3.2.</span> <span class="nav-text">SpringMVC中的拦截器</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+	  
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eric Hunn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
