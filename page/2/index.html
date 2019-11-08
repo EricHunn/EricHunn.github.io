@@ -328,6 +328,2274 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/10/04/Spring第三天-面向切片编程AOP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/04/Spring第三天-面向切片编程AOP/" itemprop="url">Spring第三天天_面向切片编程AOP</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-04T09:40:21+08:00">
+                2019-10-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpringAOP/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringAOP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="https://i.imgur.com/X6RlFpQ.png" alt=""></p>
+<p><img src="https://i.imgur.com/Bd6rf5q.png" alt=""></p>
+<p>下图：开始配置serviceimpl到容器中，在配置Logger类，然后配置AOP，将logger类配置到AOP中，<br>配置通知类型，建立通知方法和切入点关联，就是用printLog方法执行在AccountServiceimpl.saveAccount()方法前面。也就是每次执行那个saveAccount方法时候，都要通过prinLog方法，也就是使用动态代理完成</p>
+<p><img src="https://i.imgur.com/uN37a9u.png" alt=""></p>
+<hr>
+<hr>
+<hr>
+<pre><code>package com.itheima.service;
+
+/**
+ * @Description 账户的业务层接口
+ * @Author TT Hun
+ * @Data 2019/10/4 17:31
+ */
+public interface IAccountService {
+
+    /**
+     * 模拟保存账户
+     */
+    void saveAccount();
+
+    /**
+     * 模拟更新账户
+     */
+    void updateAccount(int i);
+
+    /**
+     * 模拟删除账户
+     * @return
+     */
+    int deleteAccount();
+}
+</code></pre><hr>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.service.IAccountService;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/10/4 17:35
+ */
+public class accountServiceImpl implements IAccountService {
+    public void saveAccount() {
+        System.out.println(&quot;执行了保存&quot; );
+
+    }
+
+    public void updateAccount(int i) {
+    System.out.println(&quot;执行了更新&quot; + i );
+    }
+
+    public int deleteAccount() {
+        System.out.println(&quot;执行了删除&quot;);
+        return 0;
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.utils;
+
+/**
+ * @Description 用于记录日志的工具类，提供了公共的代码
+ * @Author TT Hun
+ * @Data 2019/10/4 17:37
+ */
+public class Logger {
+    /**
+     * 用于打印日志，计划让其在切入点方法之前执行（切入点方法就是我们的业务层昂法）
+     */
+    public void printLog(){
+        System.out.println(&quot;Logger类中的Printlog方法开始记录日志了&quot;);
+    }
+}
+</code></pre><hr>
+<p>bean.xml文件配置：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;
+
+&lt;!--    配置Springioc把service对象配置进来--&gt;
+    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.accountServiceImpl&quot;&gt;&lt;/bean&gt;
+&lt;!--    spring中基于xml的AOP配置步骤--&gt;
+&lt;!--    1、把通知的bean也交给Spring来管理--&gt;
+&lt;!--    2、使用aopconfig标签表明开始AOP的配置
+        3、使用aop:aspect的标签表明配置切面
+                id属性：是给切面提供一个唯一标识
+                ref属性：指定通知类bean的id
+         4、在aop:aspect标签的内部使用对应的标签来配置通知的类型
+                我们现在示例是让printlog方法在切入点方法之前执行，所以是前置通知
+                使用aop:before标签表示配置前置通知
+                method属性用于指定logger类中哪个方法是前置通知
+                pointcut属性：用于指定切入点表达式，该表达式的含义指的是对业务层中那些方法进行增强
+                切入点表达式的写法：
+                关键字：execution(表达式)
+                表达式写法：
+                访问修饰符   返回值  包名.包名.包名......类名.方法名(参数列表)
+                标准表达式写法：
+                        public void com.itheima.service.impl.AccountServiceImpl.saveAccount()
+                返回值可以使用通配符表示任意返回值
+                        全通配切入点表达式写法、返回值是*然后所有的也是*：
+                            * *..*.*(..)
+                         包名可以使用..表示当前包及其子包。表示所有包下面只要有这个方法的
+                            * *..AccountServiceImpl.saveAccount()
+                         类名和方法名都可以使用*来实现通配
+                         * *..*.*()
+                         参数列表，可以直接写数据类型：
+                                基本类型直接写名称               int
+                                引用类型写包名.类名的方式       java.lang.String
+                                可以使用通配符表示任意类型，但是必须有参数 *
+
+                         实际开发中切入点表达式额通常写法：
+                                切到业务层实现类下的所有方法
+                                * com.itheima.service.impl.*.*(..)
+
+                --&gt;
+&lt;!--    配置logger类--&gt;
+    &lt;bean id=&quot;logger&quot; class=&quot;com.itheima.utils.Logger&quot;&gt;&lt;/bean&gt;
+
+&lt;!--    配置Aop--&gt;
+    &lt;aop:config&gt;
+&lt;!--        配置切面--&gt;
+        &lt;aop:aspect id=&quot;logAdvice&quot; ref=&quot;logger&quot;&gt;
+&lt;!--            配置通知的类型且建立通知方法和切入点方法的关联--&gt;
+            &lt;aop:before method=&quot;printLog&quot; pointcut=&quot;execution(* com.itheima.service.impl.*.*(..))&quot;&gt;&lt;/aop:before&gt;
+        &lt;/aop:aspect&gt;
+    &lt;/aop:config&gt;
+    &lt;/beans&gt;
+</code></pre><hr>
+<hr>
+<hr>
+<p>下面是前置通知、后置通知、异常通知、最终通知在AOP里面的配置</p>
+<p><img src="https://i.imgur.com/SQA6PUp.png" alt=""></p>
+<p><img src="https://i.imgur.com/Bd6rf5q.png" alt=""></p>
+<hr>
+<p><strong>环绕通知的配置</strong>：</p>
+<p>在xml文件里面吧前置、后置、异常、最终都注释掉。然后在Logger类中通过代码控制，实现动态代理，解决前置，后置，异常，最终的问题。也就是除了通过配置xml文件中配置实现这些，也可以靠自己编码实现</p>
+<p>1、实现bean.xml文件只保留环绕的切面配置：</p>
+<p><img src="https://i.imgur.com/ZRoQGKr.png" alt=""></p>
+<p>2、在Logger里面aroundPringLog()方法写前置后置等。</p>
+<pre><code>package com.itheima.utils;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+
+/**
+ * @Description 用于记录日志的工具类，提供了公共的代码
+ * @Author TT Hun
+ * @Data 2019/10/4 17:37
+ */
+public class Logger {
+    /**
+     * 后置通知
+     */
+    public void afterReturningPrintLog() {
+        System.out.println(&quot;后置通知Logger类中的afterReturningPrintLog方法开始记录日志了&quot;);
+    }
+
+    /**
+     * 前置通知
+     */
+    public void beforePrintLog() {
+        System.out.println(&quot;前置通知Logger类中的Printlog方法开始记录日志了&quot;);
+    }
+
+    /**
+     * 异常通知
+     */
+    public void afterThrowingPrintLog() {
+        System.out.println(&quot;异常通知Logger类中的afterThrowingPrintLog方法开始记录日志了&quot;);
+    }
+
+    /**
+     * 最终通知
+     */
+    public void afterPrintLog() {
+        System.out.println(&quot;最终通知Logger类中的afterPrintLog方法开始记录日志了&quot;);
+    }
+
+    /**
+     * 环绕通知
+     * 问题：当我们配置了环绕通知之后切入点方法没有执行，而通知方法执行了。
+     * 分析：通过对比动态代理中的环绕通知代码，发现动态代理中的环绕通知有明确的切入点方法调用，而我们的代码中没有。
+     * 解决：
+     *          Spring框架为我们提供了一个接口：ProceedingJoinPoint。该接口有一个方法叫proceed(),此方法就相当于明确调用切入点方法。
+     *          该接口可以作为环绕通知的方法参数，在程序执行时候，spring框架会为我们提供该接口的实现类供我们使用。
+     *
+     *  Spring中的环绕通知：
+     *          他是spring框架为我们提供的一种方式：可以在代码中手动控制增强方法何时执行的方式。
+     *
+     *
+     *          也就是除了配置在bean.xml文件中，实现动态代理，解决前置，后置，异常，最终的问题
+     *          也可以通过代码控制的方式。
+     */
+    public Object aroundPringLog(ProceedingJoinPoint pjp){
+        Object rtValue = null;
+        try {
+            System.out.println(&quot;Logger类中的afterPrintLog方法开始记录日志了。。。前置&quot;);
+           rtValue = pjp.getArgs();//得到方法执行所需要的参数
+            System.out.println(&quot;Logger类中的afterPrintLog方法开始记录日志了。。。后置&quot;);
+            pjp.proceed();//明确调用业务层方法，也叫切入点方法
+            return rtValue;
+        } catch (Throwable t) {
+            System.out.println(&quot;Logger类中的afterPrintLog方法开始记录日志了。。。异常&quot;);
+            throw  new RuntimeException();
+        }
+        finally {
+            System.out.println(&quot;Logger类中的afterPrintLog方法开始记录日志了。。。最终&quot;);
+
+        }
+    }
+
+}
+</code></pre><hr>
+<h1 id="Spring基于注解的AOP配置"><a href="#Spring基于注解的AOP配置" class="headerlink" title="Spring基于注解的AOP配置"></a>Spring基于注解的AOP配置</h1><p>首先使用注解的AOP配置会有一个问题：就是这几个通知的顺序问题。有可能顺序错乱，这个是Spring自己的问题：</p>
+<p><img src="https://i.imgur.com/eaaNP9W.png" alt=""></p>
+<p>但是使用环绕通知是没有这个问题的：</p>
+<p><img src="https://i.imgur.com/6Ht4ifM.png" alt=""></p>
+<p>所以如果使用注解AOP的话建议使用环绕模式的：</p>
+<p>完整代码如下：</p>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.service.IAccountService;
+import org.springframework.stereotype.Service;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/10/4 17:35
+ */
+@Service(&quot;accountService&quot;)
+public class accountServiceImpl implements IAccountService {
+    public void saveAccount() {
+        System.out.println(&quot;执行了保存&quot; );
+
+    }
+
+    public void updateAccount(int i) {
+    System.out.println(&quot;执行了更新&quot; + i );
+    }
+
+    public int deleteAccount() {
+        System.out.println(&quot;执行了删除&quot;);
+        return 0;
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.service;
+
+/**
+ * @Description 账户的业务层接口
+ * @Author TT Hun
+ * @Data 2019/10/4 17:31
+ */
+public interface IAccountService {
+
+    /**
+     * 模拟保存账户
+     */
+    void saveAccount();
+
+    /**
+     * 模拟更新账户
+     */
+    void updateAccount(int i);
+
+    /**
+     * 模拟删除账户
+     * @return
+     */
+    int deleteAccount();
+}
+</code></pre><hr>
+<pre><code>package com.itheima.utils;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Description 用于记录日志的工具类，提供了公共的代码
+ * @Author TT Hun
+ * @Data 2019/10/4 17:37
+ */
+@Component(&quot;Logger&quot;)
+@Aspect//表示当前类是一个切面类
+public class Logger {
+
+    @Pointcut(&quot;execution(* com.itheima.service.impl.*.*())&quot;)
+    private void pt1(){}
+    /**
+     * 后置通知
+     */
+    @AfterReturning(&quot;pt1()&quot;)
+    public void afterReturningPrintLog() {
+        System.out.println(&quot;后置通知Logger类中的afterReturningPrintLog方法开始记录日志了&quot;);
+    }
+
+    /**
+     * 前置通知
+     */
+    @Before(&quot;pt1()&quot;)
+    public void beforePrintLog() {
+        System.out.println(&quot;前置通知Logger类中的Printlog方法开始记录日志了&quot;);
+    }
+
+    /**
+     * 异常通知
+     */
+    @AfterThrowing(&quot;pt1()&quot;)
+    public void afterThrowingPrintLog() {
+        System.out.println(&quot;异常通知Logger类中的afterThrowingPrintLog方法开始记录日志了&quot;);
+    }
+
+    /**
+     * 最终通知
+     */
+    @After(&quot;pt1()&quot;)
+    public void afterPrintLog() {
+        System.out.println(&quot;最终通知Logger类中的afterPrintLog方法开始记录日志了&quot;);
+    }
+
+    /**
+     * 环绕通知
+     * 问题：当我们配置了环绕通知之后切入点方法没有执行，而通知方法执行了。
+     * 分析：通过对比动态代理中的环绕通知代码，发现动态代理中的环绕通知有明确的切入点方法调用，而我们的代码中没有。
+     * 解决：
+     *          Spring框架为我们提供了一个接口：ProceedingJoinPoint。该接口有一个方法叫proceed(),此方法就相当于明确调用切入点方法。
+     *          该接口可以作为环绕通知的方法参数，在程序执行时候，spring框架会为我们提供该接口的实现类供我们使用。
+     *
+     *  Spring中的环绕通知：
+     *          他是spring框架为我们提供的一种方式：可以在代码中手动控制增强方法何时执行的方式。
+     *
+     *
+     *          也就是除了配置在bean.xml文件中，实现动态代理，解决前置，后置，异常，最终的问题
+     *          也可以通过代码控制的方式。
+     */
+//    @Around(&quot;pt1()&quot;)
+    public Object aroundPringLog(ProceedingJoinPoint pjp){
+        Object rtValue = null;
+        try {
+            System.out.println(&quot;Logger类中的afterPrintLog方法开始记录日志了。。。前置&quot;);
+           rtValue = pjp.getArgs();//得到方法执行所需要的参数
+            System.out.println(&quot;Logger类中的afterPrintLog方法开始记录日志了。。。后置&quot;);
+            pjp.proceed();//明确调用业务层方法，也叫切入点方法
+            return rtValue;
+        } catch (Throwable t) {
+            System.out.println(&quot;Logger类中的afterPrintLog方法开始记录日志了。。。异常&quot;);
+            throw  new RuntimeException();
+        }
+        finally {
+            System.out.println(&quot;Logger类中的afterPrintLog方法开始记录日志了。。。最终&quot;);
+
+        }
+    }
+
+}
+</code></pre><hr>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;!-- 配置spring创建容器时要扫描的包--&gt;
+    &lt;context:component-scan base-package=&quot;com.itheima&quot;&gt;&lt;/context:component-scan&gt;
+
+    &lt;!-- 配置spring开启注解AOP的支持 --&gt;
+    &lt;aop:aspectj-autoproxy&gt;&lt;/aop:aspectj-autoproxy&gt;
+&lt;/beans&gt;
+</code></pre><hr>
+<pre><code>package com.itheima;
+
+import com.itheima.service.IAccountService;
+import javafx.application.Application;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ * @Description 测试AOP的配置
+ * @Author TT Hun
+ * @Data 2019/10/4 18:58
+ */
+public class test {
+    public static void main(String[] args) {
+//        获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、获取对象
+        IAccountService as = (IAccountService)ac.getBean(&quot;accountService&quot;);
+//        3、执行方法
+        as.saveAccount();
+
+}
+}
+</code></pre><hr>
+<hr>
+<hr>
+<p>总结内容：<br>1、从银行转行入手<br>由于加了事务，导致非常麻烦，重复代码非常多，首先：</p>
+<p>第一步是将重复的代码，事务的解决抽取出来，</p>
+<p>然后：是将代码通过动态代理加入到源代码中，动态代理的好处是可以不改变源码的基础上，对已有的代码进行增强。</p>
+<p>然后讲解了两种动态代理方式：一种基于子类的动态代理，一种基于接口的动态代理。</p>
+<p>再后，通过Springaop实现动态代理。这里面有一些术语需要消化。</p>
+<p><img src="https://i.imgur.com/1P9AwN6.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/10/02/Spring第三天-银行转账案例/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/02/Spring第三天-银行转账案例/" itemprop="url">Spring第三天_银行转账案例</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-02T22:39:06+08:00">
+                2019-10-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="https://i.imgur.com/KTxFDiv.png" alt=""></p>
+<p>数据库配置问题：<br>在bean.xml文件里面写配置的时候，中间要加分号图1是正确的图2是错误的<br><img src="https://i.imgur.com/55lCGQC.png" alt=""></p>
+<p><img src="https://i.imgur.com/6fQopwA.png" alt=""></p>
+<hr>
+<pre><code>package com.itheima.dao;
+
+import com.itheima.domain.Account;
+
+import java.util.List;
+
+/**
+ * 账户的持久层接口
+ */
+public interface IAccountDao {
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List&lt;Account&gt; findAllAccount();
+
+    /**
+     * 查询一个
+     * @return
+     */
+    Account findAccountById(Integer accountId);
+
+    /**
+     * 保存
+     * @param account
+     */
+    void saveAccount(Account account);
+
+    /**
+     * 更新
+     * @param account
+     */
+    void updateAccount(Account account);
+
+    /**
+     * 删除
+     * @param acccountId
+     */
+    void deleteAccount(Integer acccountId);
+
+    /**
+     * 根据名称查账户
+     * @param accountName   用户名称
+     * @return      如果有唯一结果就返回，如果没有结果就返回Null,结果集超过一个返回异常
+     */
+    Account findAccountByName(String accountName);
+}
+</code></pre><hr>
+<pre><code>package com.itheima.dao.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.junit.runner.Runner;
+
+import java.util.List;
+
+/**
+ * 账户的持久层实现类
+ */
+public class AccountDaoImpl implements IAccountDao {
+
+    private QueryRunner runner;
+
+    public void setRunner(QueryRunner runner) {
+        this.runner = runner;
+    }
+
+    public List&lt;Account&gt; findAllAccount() {
+        try {
+            return runner.query(&quot;select * from account&quot;, new BeanListHandler&lt;Account&gt;(Account.class));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Account findAccountById(Integer accountId) {
+        try {
+            return runner.query(&quot;select * from account where id = ? &quot;, new BeanHandler&lt;Account&gt;(Account.class), accountId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void saveAccount(Account account) {
+        try {
+            runner.update(&quot;insert into account(name,money)values(?,?)&quot;, account.getName(), account.getMoney());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateAccount(Account account) {
+        try {
+            runner.update(&quot;update account set name=?,money=? where id=?&quot;, account.getName(), account.getMoney(), account.getId());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteAccount(Integer accountId) {
+        try {
+            runner.update(&quot;delete from account where id=?&quot;, accountId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Account findAccountByName(String accountName) {
+        try {
+             List&lt;Account&gt; accounts = runner.query(&quot;select * from account where name= ? &quot;, new BeanListHandler&lt;Account&gt;(Account.class), accountName);
+            if(accounts == null || accounts.size()==0){
+                return null;
+            }
+            if(accounts.size()&gt;1){
+                throw new RuntimeException(&quot;结果不一致&quot;);
+            }
+            return accounts.get(0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.service;
+
+import com.itheima.domain.Account;
+
+import java.util.List;
+
+/**
+ * 账户的业务层接口
+ */
+public interface IAccountService {
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List&lt;Account&gt; findAllAccount();
+
+    /**
+     * 查询一个
+     * @return
+     */
+    Account findAccountById(Integer accountId);
+
+    /**
+     * 保存
+     * @param account
+     */
+    void saveAccount(Account account);
+
+    /**
+     * 更新
+     * @param account
+     */
+    void updateAccount(Account account);
+
+    /**
+     * 删除
+     * @param acccountId
+     */
+    void deleteAccount(Integer acccountId);
+
+    /**
+     *
+     * 转账方法
+     * @param sourceName    转出账户名称
+     * @param targetName    转入账户名称
+     * @param money         转账金额
+     */
+    void transfer(String sourceName,String targetName,Float money);
+</code></pre><p>}</p>
+<hr>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import com.itheima.service.IAccountService;
+
+import java.util.List;
+
+/**
+ * 账户的业务层实现类
+ */
+public class AccountServiceImpl implements IAccountService{
+
+    private IAccountDao accountDao;
+
+    public void setAccountDao(IAccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
+
+    public List&lt;Account&gt; findAllAccount() {
+        return accountDao.findAllAccount();
+    }
+
+    public Account findAccountById(Integer accountId) {
+        return accountDao.findAccountById(accountId);
+    }
+
+    public void saveAccount(Account account) {
+        accountDao.saveAccount(account);
+    }
+
+    public void updateAccount(Account account) {
+        accountDao.updateAccount(account);
+    }
+
+    public void deleteAccount(Integer acccountId) {
+        accountDao.deleteAccount(acccountId);
+    }
+
+    public void transfer(String sourceName, String targetName, Float money) {
+//        1、根据名称查询转出账户
+        Account source = accountDao.findAccountByName(sourceName);
+//        2、根据名称查询转入账户
+        Account target = accountDao.findAccountByName(targetName);
+//        3、转出账户减钱
+        source.setMoney(source.getMoney()- money);
+//        4、转入账户加钱
+        target.setMoney(target.getMoney()+money);
+//        5、更新转出账户
+        accountDao.updateAccount(source);
+//        6、更新转入账户
+        accountDao.updateAccount(target);
+
+    }
+}
+</code></pre><hr>
+<p>bean.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+    &lt;!-- 配置Service --&gt;
+    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;
+        &lt;!-- 注入dao --&gt;
+        &lt;property name=&quot;accountDao&quot; ref=&quot;accountDao&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!--配置Dao对象--&gt;
+    &lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.impl.AccountDaoImpl&quot;&gt;
+        &lt;!-- 注入QueryRunner --&gt;
+        &lt;property name=&quot;runner&quot; ref=&quot;runner&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!--配置QueryRunner--&gt;
+    &lt;bean id=&quot;runner&quot; class=&quot;org.apache.commons.dbutils.QueryRunner&quot; scope=&quot;prototype&quot;&gt;
+        &lt;!--注入数据源--&gt;
+        &lt;constructor-arg name=&quot;ds&quot; ref=&quot;dataSource&quot;&gt;&lt;/constructor-arg&gt;
+    &lt;/bean&gt;
+
+    &lt;!-- 配置数据源 --&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;
+        &lt;!--连接数据库的必备信息--&gt;
+        &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/eesy?characterEncoding=utf8;useSSL=false;serverTimezone=UTCrewriteBatchedStatements=true&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;user&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;password&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre><hr>
+<pre><code>package com.itheima.test;
+
+import com.itheima.domain.Account;
+import com.itheima.service.IAccountService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
+
+/**
+ * 使用Junit单元测试：测试我们的配置
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = &quot;classpath:bean.xml&quot;)
+public class AccountServiceTest {
+
+    @Autowired
+    private  IAccountService as;
+
+    @Test
+    public void testTransfer(){
+        as.transfer(&quot;aaa&quot;,&quot;bbb&quot;,100f);
+    }
+}
+</code></pre><hr>
+<p>但是如果说在serviceimpl里面加入了一个报错的语句，会导致钱转出了， 但是没有转入如下图所示：</p>
+<p><img src="https://i.imgur.com/UOkubon.png" alt=""></p>
+<p><img src="https://i.imgur.com/j07QJUW.png" alt=""></p>
+<h2 id="怎么解决这个事务的问题？"><a href="#怎么解决这个事务的问题？" class="headerlink" title="怎么解决这个事务的问题？"></a>怎么解决这个事务的问题？</h2><p><img src="https://i.imgur.com/9mpJpJq.png" alt=""></p>
+<p>基本上就是每次都是创建一个新的连接，每次都没有任何关系，所以我们要让他们都在一个连接之内，要发生就都发生，要不发生就都不发生。需要对代码进行一定调整。</p>
+<p><strong>事务控制应该都在业务层</strong></p>
+<p>改造代码：修改Service层的代码和bean.xml的注入文件：</p>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import com.itheima.service.IAccountService;
+import com.itheima.utils.TransactionManager;
+
+import java.util.List;
+
+/**
+ * 账户的业务层实现类
+ */
+public class AccountServiceImpl implements IAccountService {
+
+    private IAccountDao accountDao;
+    private TransactionManager txManger;
+
+    public void setTxManger(TransactionManager txManger) {
+        this.txManger = txManger;
+    }
+
+    public void setAccountDao(IAccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
+
+    public List&lt;Account&gt; findAllAccount() {
+        try {
+//            1、开启事务，
+            txManger.beginTransaction();
+//            2、执行操作
+            List&lt;Account&gt; accounts = accountDao.findAllAccount();
+//            3、提交事务
+            txManger.commit();
+//            4、返回结果
+            return accounts;
+        } catch (Exception e) {
+//             5、回滚操作
+            txManger.rollback();
+        } finally {
+//             6、释放资源
+            txManger.release();
+        }
+        return null;
+    }
+
+    public Account findAccountById(Integer accountId)
+    {
+        try {
+//            1、开启事务，
+            txManger.beginTransaction();
+//            2、执行操作
+            Account account = accountDao.findAccountById(accountId);
+//            3、提交事务
+            txManger.commit();
+//            4、返回结果
+            return account;
+        } catch (Exception e) {
+//             5、回滚操作
+            txManger.rollback();
+            throw new RuntimeException();
+        } finally {
+//             6、释放资源
+            txManger.release();
+        }
+    }
+
+    public void saveAccount(Account account) {
+        try {
+//            1、开启事务，
+            txManger.beginTransaction();
+//            2、执行操作
+            accountDao.saveAccount(account);
+//            3、提交事务
+            txManger.commit();
+//            4、返回结果
+        } catch (Exception e) {
+//             5、回滚操作
+            txManger.rollback();
+        } finally {
+//             6、释放资源
+            txManger.release();
+        }
+    }
+
+    public void updateAccount(Account account) {
+        try {
+//            1、开启事务，
+            txManger.beginTransaction();
+//            2、执行操作
+            accountDao.updateAccount(account);
+//            3、提交事务
+            txManger.commit();
+//            4、返回结果
+        } catch (Exception e) {
+//             5、回滚操作
+            txManger.rollback();
+        } finally {
+//             6、释放资源
+            txManger.release();
+        }
+    }
+
+    public void deleteAccount(Integer acccountId) {
+        try {
+//            1、开启事务，
+            txManger.beginTransaction();
+//            2、执行操作
+            accountDao.deleteAccount(acccountId);
+//            3、提交事务
+            txManger.commit();
+//            4、返回结果
+        } catch (Exception e) {
+//             5、回滚操作
+            txManger.rollback();
+        } finally {
+//             6、释放资源
+            txManger.release();
+        }
+    }
+
+    public void transfer(String sourceName, String targetName, Float money) {
+
+        try {
+//            1、开启事务，
+            txManger.beginTransaction();
+//            2、执行操作
+            //       b  1、根据名称查询转出账户
+            Account source = accountDao.findAccountByName(sourceName);
+//        2.1、根据名称查询转入账户
+            Account target = accountDao.findAccountByName(targetName);
+//        2.2、转出账户减钱
+            source.setMoney(source.getMoney()- money);
+//        2.3、转入账户加钱
+            target.setMoney(target.getMoney()+money);
+//        2.4、更新转出账户
+            accountDao.updateAccount(source);
+            int i = 1/0;
+//        2.5、更新转入账户
+            accountDao.updateAccount(target);
+//            3、提交事务
+            txManger.commit();
+//            4、返回结果
+        } catch (Exception e) {
+//             5、回滚操作
+            txManger.rollback();
+        } finally {
+//             6、释放资源
+            txManger.release();
+        }
+    }
+}
+</code></pre><hr>
+<p>bean.xml文件：</p>
+<pre><code>    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+    &lt;!-- 配置Service --&gt;
+    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;
+        &lt;!-- 注入dao --&gt;
+        &lt;property name=&quot;accountDao&quot; ref=&quot;accountDao&quot;&gt;&lt;/property&gt;
+        &lt;!--注入事务管理器--&gt;
+        &lt;property name=&quot;txManger&quot; ref=&quot;txManager&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!--配置Dao对象--&gt;
+    &lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.impl.AccountDaoImpl&quot;&gt;
+        &lt;!-- 注入QueryRunner --&gt;
+        &lt;property name=&quot;runner&quot; ref=&quot;runner&quot;&gt;&lt;/property&gt;
+&lt;!--        注入ConnectionUtils--&gt;
+        &lt;property name=&quot;connectionUtils&quot; ref =&quot;connectionUtils&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!--配置QueryRunner--&gt;
+    &lt;bean id=&quot;runner&quot; class=&quot;org.apache.commons.dbutils.QueryRunner&quot; scope=&quot;prototype&quot;&gt;
+    &lt;/bean&gt;
+
+    &lt;!-- 配置数据源 --&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;
+        &lt;!--连接数据库的必备信息--&gt;
+        &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/eesy?localhost:3306/eesy?characterEncoding=utf-8&amp;amp;serverTimezone=UTC&amp;amp;useSSL=false&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;user&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;password&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+&lt;!--    配置Connection的工具类 ConnectionUtils--&gt;
+    &lt;bean id =&quot;connectionUtils&quot; class =&quot;com.itheima.utils.ConnectionUtils&quot;&gt;
+&lt;!--        注入数据源--&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+&lt;!--    配置事务管理器--&gt;
+    &lt;bean id=&quot;txManager&quot; class=&quot;com.itheima.utils.TransactionManager&quot;&gt;
+&lt;!--        注入ConnectionUtils--&gt;
+        &lt;property name=&quot;connectionUtils&quot; ref=&quot;connectionUtils&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;     
+</code></pre><hr>
+<p>添加Connectionutils类：</p>
+<pre><code>package com.itheima.utils;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+
+/**
+ * @Description 连接的工具类，用于从数据源中获取一个连接，并且实现和线程的绑定
+ * @Author TT Hun
+ * @Data 2019/10/3 11:22
+ */
+public class ConnectionUtils {
+
+    private ThreadLocal&lt;Connection&gt; tl = new ThreadLocal&lt;Connection&gt;();
+    private DataSource dataSource;
+
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    /**
+     * 获取当前线程上的链接
+     *
+     * @return
+     */
+    public Connection getThreadConnection() {
+//        1、先从ThreadLocal上获取
+        Connection conn = tl.get();
+//        2、判断当前线程上是否有链接
+        try {
+            if (conn == null) {
+//        3、从数据源中获取一个连接，并且存入ThreadLocalz中
+                conn = dataSource.getConnection();
+                tl.set(conn);
+            }
+//        4、返回当前线程上的连接
+            return conn;
+        } catch (Exception e) {
+            throw new RuntimeException(&quot;报错了&quot;);
+        }
+    }
+
+    /**
+     * 链接和线程解绑
+     */
+    public void removeConnection(){
+        tl.remove();
+    }
+}
+</code></pre><p>添加TransactionManager类：</p>
+<pre><code>package com.itheima.utils;
+
+/**
+ * @Description 和事务管理相关的工具类，包含了开启事务，提交事务，回滚事务和释放连接的方法
+ * @Author TT Hun
+ * @Data 2019/10/3 11:35
+ */
+public class TransactionManager {
+
+    private ConnectionUtils connectionUtils;
+
+    public void setConnectionUtils(ConnectionUtils connectionUtils) {
+        this.connectionUtils = connectionUtils;
+    }
+
+    /**
+     * 开始事务
+     */
+    public void beginTransaction() {
+        try {
+            connectionUtils.getThreadConnection().setAutoCommit(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 提交事务
+     */
+    public void commit() {
+        try {
+            connectionUtils.getThreadConnection().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 回滚事务
+     */
+    public void rollback() {
+        try {
+            connectionUtils.getThreadConnection().rollback();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 释放连接事务
+     */
+    public void release() {
+        try {
+//            使用服务器也有一个线程池，当tomcat启动时候，会初始化一大堆线程放到一个容器中
+//            每次访问都是线程池中拿出来一个线程给我们使用，调用close方法并不是真正的关闭而是将线程还给线程池
+            connectionUtils.getThreadConnection().close();
+//            所以想要连接和线程解绑，通过这个方法。
+            connectionUtils.removeConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre><hr>
+<p>再使用test类测试：</p>
+<pre><code>package com.itheima.test;
+
+import com.itheima.domain.Account;
+import com.itheima.service.IAccountService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
+
+/**
+ * 使用Junit单元测试：测试我们的配置
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = &quot;classpath:bean.xml&quot;)
+public class AccountServiceTest {
+
+    @Autowired
+    private  IAccountService as;
+
+    @Test
+    public void testTransfer(){
+        as.transfer(&quot;aaa&quot;,&quot;bbb&quot;,100f); 
+    }
+}
+</code></pre><hr>
+<hr>
+<hr>
+<h1 id="基于接口的动态代理回顾"><a href="#基于接口的动态代理回顾" class="headerlink" title="基于接口的动态代理回顾"></a>基于接口的动态代理回顾</h1><pre><code>/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/10/3 17:51
+ */
+public interface IProducer {
+
+
+    public void saleProduct(float money) ;
+
+    public void afterService(float money);
+
+}
+</code></pre><hr>
+<pre><code>/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/10/3 17:48
+ */
+public class Producer  implements IProducer{
+    /**
+     * 销售
+     *
+     * @param money
+     */
+    public void saleProduct(float money) {
+        System.out.println(&quot;销售产品，并且拿到钱&quot; + money);
+
+    }
+
+    /**
+     * 售后
+     *
+     * @param money
+     */
+    public void afterService(float money) {
+        System.out.println(&quot;提供售后服务并拿到钱&quot; + money);
+    }
+}
+</code></pre><hr>
+<pre><code>import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Properties;
+
+/**
+ * @Description 模拟一个消费者
+ * @Author TT Hun
+ * @Data 2019/10/3 17:52
+ */
+public class Client {
+    public static void main(String[] args) {
+        final Producer producer = new Producer();
+
+        /**
+         * 动态代理：
+         *      特点：字节码随用随创建，随用随加载
+         *      作用：不修改源码的基础上对方法进行增强
+         *      分类：基于接口的动态代理
+         *             基于子类的动态代理
+         *
+         *       基于接口的动态代理：涉及的类：Proxy
+         *                           提供者：官方
+         *
+         *        如何创建爱代理对象：使用Porxy类中的newProxyInstance方法
+         *        创建代理对象的要求：被代理类最少实现一个接口，如果没有则不能使用
+         *
+         *        newProxyInstance方法的参数;
+         *        Classloader：用于加载代理对象字节码的。写的是被代理对象使用相同的类加载器。代理谁就写谁的classloader固定写法
+         *        Class[]：是字节码数组，让代理对象和被代理对象有相同的方法。固定写法
+         *        InvocationHandler：用于提供增强的代码。他是让我们写如何代理。我们一般都是写一个该接口的实现类，通常都是匿名内
+         *        部类，但是不必须的。此接口的实现类都是谁用谁写，
+         *
+         */
+         IProducer proxyProducer = (IProducer) Proxy.newProxyInstance(producer.getClass().getClassLoader(), producer.getClass().getInterfaces(), new InvocationHandler() {
+             /**
+              * 作用：执行被代理对象的任何接口方法都会经过该方法，该方法就会有拦截的功能
+              * 方法参数的含义
+              * @param proxy ：代理对象的引用
+              * @param method： 表示当前执行的方法
+              * @param args ：当前执行方法所需要的参数
+              * @return     和被代理对象有相同的返回值
+              * @throws Throwable
+              * 内部类访问外部对象时候要求外部对象是final的
+              */
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+//                提供增强的代码
+                Object returnValue = null;
+//                1、获取方法执行的参数
+                Float money = (Float)args[0];
+//                2、判断当前方法是不是销售方法
+                if(&quot;saleProduct&quot;.equals(method.getName())){
+                   returnValue = method.invoke(producer,money*0.8f);
+                }
+                return returnValue;
+            }
+        });
+         proxyProducer.saleProduct(10000f);
+    }
+}
+</code></pre><hr>
+<p><strong>上述有一个问题：如果类不实现任何接口的时候是不能使用的</strong></p>
+<h1 id="基于子类的动态代理"><a href="#基于子类的动态代理" class="headerlink" title="基于子类的动态代理"></a>基于子类的动态代理</h1><p>要求有第三方jar包的支持 cglib包</p>
+<pre><code>package com.itheima.cglib;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/10/3 17:48
+ */
+public class Producer    {
+    /**
+     * 销售
+     *
+     * @param money
+     */
+    public void saleProduct(float money) {
+        System.out.println(&quot;销售产品，并且拿到钱&quot; + money);
+
+    }
+
+    /**
+     * 售后
+     *
+     * @param money
+     */
+    public void afterService(float money) {
+        System.out.println(&quot;提供售后服务并拿到钱&quot; + money);
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.cglib;
+
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+/**
+ * @Description 模拟一个消费者
+ * @Author TT Hun
+ * @Data 2019/10/3 17:52
+ */
+public class Client {
+    public static void main(String[] args) {
+        final Producer producer = new Producer();
+
+        /**
+         * 动态代理：
+         *      特点：字节码随用随创建，随用随加载
+         *      作用：不修改源码的基础上对方法进行增强
+         *      分类：基于接口的动态代理
+         *             基于子类的动态代理
+         *
+         *       基于子类的动态代理：涉及的类：Enhancer
+         *                           提供者：第三方cglib库
+         *
+         *        如何创建爱代理对象：使用Enhancer类中的create方法
+         *        创建代理对象的要求：被代理不能是最终类
+         *
+         *        create方法的参数;
+         *        class：字节码
+         *              用于指定被代理对象的字节码。
+         *         callback:用于提供增强的代码
+         *                  他是让我们写如何代理，我们一般都是写改接口的子接口实现类：MethodInterceptor
+         *
+         */
+
+       Producer cglibProducer = (Producer) Enhancer.create(producer.getClass(), new MethodInterceptor() {
+//            执行被代理对象任何方法都会经过该方法
+
+            /**
+             *
+             * @param o
+             * @param method
+             * @param args
+             * 以上三个参数和基于接口的对象代理Invoke的代理参数是一样的
+             * @param methodProxy：当前执行方法的代理对象
+             * @return
+             * @throws Throwable
+             */
+            public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+//                提供增强的代码
+                Object returnValue = null;
+//                1、获取方法执行的参数
+                Float money = (Float) args[0];
+//                2、判断当前方法是不是销售方法
+                if (&quot;saleProduct&quot;.equals(method.getName())) {
+                    returnValue = method.invoke(producer, money * 0.8f);
+                }
+                return returnValue;
+            }
+        });
+       cglibProducer.saleProduct(12000f);
+    }
+}
+</code></pre><hr>
+<p>动态代理的作用：</p>
+<pre><code>1、连接池那个地方就是close不能关闭连接，只能将线程放到线程池，可以通过动态代理解决对connection的close()方法进行增强。把它家回到池里面去。
+2、解决全栈中文乱码的问题，对其中的3个方法进行增强。
+</code></pre><p>下面一段代码是通过动态代理但是不通过AOP解决事务的问题、解决重复代码，解决了方法之间的依赖，但是导致配置文件bean.xml里面的配置比较繁琐。以下是标准的使用动态代理控制事务解决银行问题的代码，是标准代码，但是我自己由于数据库问题没有运行成功：</p>
+<pre><code>package com.itheima.dao.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import com.itheima.utils.ConnectionUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+
+import java.util.List;
+
+/**
+ * 账户的持久层实现类
+ */
+public class AccountDaoImpl implements IAccountDao {
+
+    private QueryRunner runner;
+    private ConnectionUtils connectionUtils;
+
+    public void setRunner(QueryRunner runner) {
+        this.runner = runner;
+    }
+
+    public void setConnectionUtils(ConnectionUtils connectionUtils) {
+        this.connectionUtils = connectionUtils;
+    }
+
+    public List&lt;Account&gt; findAllAccount() {
+        try{
+            return runner.query(connectionUtils.getThreadConnection(),&quot;select * from account&quot;,new BeanListHandler&lt;Account&gt;(Account.class));
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Account findAccountById(Integer accountId) {
+        try{
+            return runner.query(connectionUtils.getThreadConnection(),&quot;select * from account where id = ? &quot;,new BeanHandler&lt;Account&gt;(Account.class),accountId);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void saveAccount(Account account) {
+        try{
+            runner.update(connectionUtils.getThreadConnection(),&quot;insert into account(name,money)values(?,?)&quot;,account.getName(),account.getMoney());
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateAccount(Account account) {
+        try{
+            runner.update(connectionUtils.getThreadConnection(),&quot;update account set name=?,money=? where id=?&quot;,account.getName(),account.getMoney(),account.getId());
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteAccount(Integer accountId) {
+        try{
+            runner.update(connectionUtils.getThreadConnection(),&quot;delete from account where id=?&quot;,accountId);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Account findAccountByName(String accountName) {
+        try{
+            List&lt;Account&gt; accounts = runner.query(connectionUtils.getThreadConnection(),&quot;select * from account where name = ? &quot;,new BeanListHandler&lt;Account&gt;(Account.class),accountName);
+            if(accounts == null || accounts.size() == 0){
+                return null;
+            }
+            if(accounts.size() &gt; 1){
+                throw new RuntimeException(&quot;结果集不唯一，数据有问题&quot;);
+            }
+            return accounts.get(0);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.dao;
+
+import com.itheima.domain.Account;
+
+import java.util.List;
+
+/**
+ * 账户的持久层接口
+ */
+public interface IAccountDao {
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List&lt;Account&gt; findAllAccount();
+
+    /**
+     * 查询一个
+     * @return
+     */
+    Account findAccountById(Integer accountId);
+
+    /**
+     * 保存
+     * @param account
+     */
+    void saveAccount(Account account);
+
+    /**
+     * 更新
+     * @param account
+     */
+    void updateAccount(Account account);
+
+    /**
+     * 删除
+     * @param acccountId
+     */
+    void deleteAccount(Integer acccountId);
+
+    /**
+     * 根据名称查询账户
+     * @param accountName
+     * @return  如果有唯一的一个结果就返回，如果没有结果就返回null
+     *          如果结果集超过一个就抛异常
+     */
+    Account findAccountByName(String accountName);
+}
+</code></pre><hr>
+<pre><code>package com.itheima.domain;
+
+import java.io.Serializable;
+
+/**
+ * 账户的实体类
+ */
+public class Account implements Serializable {
+
+    private Integer id;
+    private String name;
+    private Float money;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Float getMoney() {
+        return money;
+    }
+
+    public void setMoney(Float money) {
+        this.money = money;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Account{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +
+                &quot;, money=&quot; + money +
+                &apos;}&apos;;
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.service.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import com.itheima.service.IAccountService;
+
+import java.util.List;
+
+/**
+ * 账户的业务层实现类
+ *
+ * 事务控制应该都是在业务层
+ */
+public class AccountServiceImpl implements IAccountService{
+
+    private IAccountDao accountDao;
+
+    public void setAccountDao(IAccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
+
+    @Override
+    public List&lt;Account&gt; findAllAccount() {
+       return accountDao.findAllAccount();
+    }
+
+    @Override
+    public Account findAccountById(Integer accountId) {
+        return accountDao.findAccountById(accountId);
+
+    }
+
+    @Override
+    public void saveAccount(Account account) {
+        accountDao.saveAccount(account);
+    }
+
+    @Override
+    public void updateAccount(Account account) {
+        accountDao.updateAccount(account);
+    }
+
+    @Override
+    public void deleteAccount(Integer acccountId) {
+        accountDao.deleteAccount(acccountId);
+    }
+
+    @Override
+    public void transfer(String sourceName, String targetName, Float money) {
+        System.out.println(&quot;transfer....&quot;);
+            //2.1根据名称查询转出账户
+            Account source = accountDao.findAccountByName(sourceName);
+            //2.2根据名称查询转入账户
+            Account target = accountDao.findAccountByName(targetName);
+            //2.3转出账户减钱
+            source.setMoney(source.getMoney()-money);
+            //2.4转入账户加钱
+            target.setMoney(target.getMoney()+money);
+            //2.5更新转出账户
+            accountDao.updateAccount(source);
+
+//            int i=1/0;
+
+            //2.6更新转入账户
+            accountDao.updateAccount(target);
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.service;
+
+import com.itheima.domain.Account;
+
+import java.util.List;
+
+/**
+ * 账户的业务层接口
+ */
+public interface IAccountService {
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List&lt;Account&gt; findAllAccount();
+
+    /**
+     * 查询一个
+     * @return
+     */
+    Account findAccountById(Integer accountId);
+
+    /**
+     * 保存
+     * @param account
+     */
+    void saveAccount(Account account);
+
+    /**
+     * 更新
+     * @param account
+     */
+    void updateAccount(Account account);
+
+    /**
+     * 删除
+     * @param acccountId
+     */
+    void deleteAccount(Integer acccountId);
+
+    /**
+     * 转账
+     * @param sourceName        转出账户名称
+     * @param targetName        转入账户名称
+     * @param money             转账金额
+     */
+    void transfer(String sourceName,String targetName,Float money);
+
+    //void test();//它只是连接点，但不是切入点，因为没有被增强
+}
+</code></pre><hr>
+<pre><code>package com.itheima.utils;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+
+/**
+ * 连接的工具类，它用于从数据源中获取一个连接，并且实现和线程的绑定
+ */
+public class ConnectionUtils {
+
+    private ThreadLocal&lt;Connection&gt; tl = new ThreadLocal&lt;Connection&gt;();
+
+    private DataSource dataSource;
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    /**
+     * 获取当前线程上的连接
+     * @return
+     */
+    public Connection getThreadConnection() {
+        try{
+            //1.先从ThreadLocal上获取
+            Connection conn = tl.get();
+            //2.判断当前线程上是否有连接
+            if (conn == null) {
+                //3.从数据源中获取一个连接，并且存入ThreadLocal中
+                conn = dataSource.getConnection();
+                tl.set(conn);
+            }
+            //4.返回当前线程上的连接
+            return conn;
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 把连接和线程解绑
+     */
+    public void removeConnection(){
+        tl.remove();
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.utils;
+
+/**
+ * 和事务管理相关的工具类，它包含了，开启事务，提交事务，回滚事务和释放连接
+ */
+public class TransactionManager {
+
+    private ConnectionUtils connectionUtils;
+
+    public void setConnectionUtils(ConnectionUtils connectionUtils) {
+        this.connectionUtils = connectionUtils;
+    }
+
+    /**
+     * 开启事务
+     */
+    public  void beginTransaction(){
+        try {
+            connectionUtils.getThreadConnection().setAutoCommit(false);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 提交事务
+     */
+    public  void commit(){
+        try {
+            connectionUtils.getThreadConnection().commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 回滚事务
+     */
+    public  void rollback(){
+        try {
+            connectionUtils.getThreadConnection().rollback();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 释放连接
+     */
+    public  void release(){
+        try {
+            connectionUtils.getThreadConnection().close();//还回连接池中
+            connectionUtils.removeConnection();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.factory;
+
+import com.itheima.service.IAccountService;
+import com.itheima.utils.TransactionManager;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+/**
+ * 用于创建Service的代理对象的工厂
+ */
+public class BeanFactory {
+
+    private IAccountService accountService;
+
+    private TransactionManager txManager;
+
+    public void setTxManager(TransactionManager txManager) {
+        this.txManager = txManager;
+    }
+
+
+    public final void setAccountService(IAccountService accountService) {
+        this.accountService = accountService;
+    }
+
+    /**
+     * 获取Service代理对象
+     * @return
+     */
+    public IAccountService getAccountService() {
+        return (IAccountService)Proxy.newProxyInstance(accountService.getClass().getClassLoader(),
+                accountService.getClass().getInterfaces(),
+                new InvocationHandler() {
+                    /**
+                     * 添加事务的支持
+                     *
+                     * @param proxy
+                     * @param method
+                     * @param args
+                     * @return
+                     * @throws Throwable
+                     */
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+//                        if(&quot;test&quot;.equals(method.getName())){
+//                            return method.invoke(accountService,args);
+//                        }
+                        Object rtValue = null;
+                        try {
+                            //1.开启事务
+                            txManager.beginTransaction();
+                            //2.执行操作
+                            rtValue = method.invoke(accountService, args);
+                            //3.提交事务
+                            txManager.commit();
+                            //4.返回结果
+                            return rtValue;
+                        } catch (Exception e) {
+                            //5.回滚操作
+                            txManager.rollback();
+                            throw new RuntimeException(e);
+                        } finally {
+                            //6.释放连接
+                            txManager.release();
+                        }
+                    }
+                });
+
+    }
+}
+</code></pre><hr>
+<p>bean.xml文件</p>
+<pre><code>    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+    &lt;!--配置代理的service--&gt;
+    &lt;bean id=&quot;proxyAccountService&quot; factory-bean=&quot;beanFactory&quot; factory-method=&quot;getAccountService&quot;&gt;&lt;/bean&gt;
+
+    &lt;!--配置beanfactory--&gt;
+    &lt;bean id=&quot;beanFactory&quot; class=&quot;com.itheima.factory.BeanFactory&quot;&gt;
+        &lt;!-- 注入service --&gt;
+        &lt;property name=&quot;accountService&quot; ref=&quot;accountService&quot;&gt;&lt;/property&gt;
+        &lt;!-- 注入事务管理器 --&gt;
+        &lt;property name=&quot;txManager&quot; ref=&quot;txManager&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+     &lt;!-- 配置Service --&gt;
+    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;
+        &lt;!-- 注入dao --&gt;
+        &lt;property name=&quot;accountDao&quot; ref=&quot;accountDao&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!--配置Dao对象--&gt;
+    &lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.impl.AccountDaoImpl&quot;&gt;
+        &lt;!-- 注入QueryRunner --&gt;
+        &lt;property name=&quot;runner&quot; ref=&quot;runner&quot;&gt;&lt;/property&gt;
+        &lt;!-- 注入ConnectionUtils --&gt;
+        &lt;property name=&quot;connectionUtils&quot; ref=&quot;connectionUtils&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!--配置QueryRunner--&gt;
+    &lt;bean id=&quot;runner&quot; class=&quot;org.apache.commons.dbutils.QueryRunner&quot; scope=&quot;prototype&quot;&gt;&lt;/bean&gt;
+
+    &lt;!-- 配置数据源 --&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;
+        &lt;!--连接数据库的必备信息--&gt;
+        &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/eesy?characterEncoding=utf8&amp;amp;serverTimezone=UTC&amp;amp;useSSL=false&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;user&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;password&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!-- 配置Connection的工具类 ConnectionUtils --&gt;
+    &lt;bean id=&quot;connectionUtils&quot; class=&quot;com.itheima.utils.ConnectionUtils&quot;&gt;
+        &lt;!-- 注入数据源--&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!-- 配置事务管理器--&gt;
+    &lt;bean id=&quot;txManager&quot; class=&quot;com.itheima.utils.TransactionManager&quot;&gt;
+        &lt;!-- 注入ConnectionUtils --&gt;
+        &lt;property name=&quot;connectionUtils&quot; ref=&quot;connectionUtils&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre><hr>
+<pre><code>package com.itheima.test;
+
+import com.itheima.service.IAccountService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * 使用Junit单元测试：测试我们的配置
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = &quot;classpath:bean.xml&quot;)
+public class AccountServiceTest {
+
+    @Autowired
+    @Qualifier(&quot;proxyAccountService&quot;)
+    private  IAccountService as;
+
+    @Test
+    public  void testTransfer(){
+        as.transfer(&quot;aaa&quot;,&quot;bbb&quot;,100f);
+    }
+
+}
+</code></pre><hr>
+<p>总结上述的代码；<br>utils.ConnectionUtils：获取当前线程上的连接，通过注入数据源、实例化ThreadLocal，通过ThreadLocal.get方法获取线程上的连接。<br>utils.TransactionManager:里面注入ConnectionUtils，然后写开启事务，提交事务，回滚事务，释放连接的方法<br>BeanFactory：注入Serviceimpl和TransactionManager。然后获取Service代理对象，通过getAccountService方法，并且在匿名内部类中添加事务。<br>然后在bean.xml文件里面写好要添加到各个地方的注入，然后配置代理的Service对象</p>
+<pre><code>&lt;bean id = &quot;proxyAccountService&quot; factory-bean=&quot;beanFactory&quot; factory-method=&quot;getAccountService&quot;&gt; &lt;/bean&gt;
+</code></pre><p>最后在test测试类中，添加注解@Qulifier因为在bean.xml文件中有2个都实现了IAccountService接口，所以要添加Qulifier注解<br><img src="https://i.imgur.com/qT2Rgb7.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/29/Spring第二天03Spring新注解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/29/Spring第二天03Spring新注解/" itemprop="url">Spring第二天03Spring新注解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-29T19:34:41+08:00">
+                2019-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          关于Spring新注解
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/09/29/Spring第二天03Spring新注解/">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/29/Spring第二天02基于XML和使用注解的IOC案例/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2690,686 +4958,11 @@ countByKey()                            //按照key,统计每个key下value的�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/11/Mybatis第二天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/11/Mybatis第二天/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-11T21:32:10+08:00">
-                2019-09-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="https://i.imgur.com/CduGMIo.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/10/Mybatis第一天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/10/Mybatis第一天/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-10T15:05:48+08:00">
-                2019-09-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>mybatis框架<br>共四天<br>第一天：mybatis入门<br>    mybatis的概述<br>    mybatis的环境搭建<br>    mybatis入门案例<br>    自定义mybatis框架（主要的目的是为了让大家了解mybatis中执行细节）<br>第二天：mybatis基本使用<br>    mybatis的单表crud操作<br>    mybatis的参数和返回值<br>    mybatis的dao编写<br>    mybatis配置的细节<br>        几个标签的使用<br>第三天：mybatis的深入和多表<br>    mybatis的连接池<br>    mybatis的事务控制及设计的方法<br>    mybatis的多表查询<br>        一对多（多对一）<br>        多对多<br>第四天：mybatis的缓存和注解开发<br>    mybatis中的加载时机（查询的时机）<br>    mybatis中的一级缓存和二级缓存<br>    mybatis的注解开发<br>        单表CRUD</p>
-<pre><code>多表查询
-</code></pre><hr>
-<p>1、什么是框架？<br>    它是我们软件开发中的一套解决方案，不同的框架解决的是不同的问题。<br>    使用框架的好处：<br>        框架封装了很多的细节，使开发者可以使用极简的方式实现功能。大大提高开发效率。<br>2、三层架构<br>    表现层：<br>        是用于展示数据的<br>    业务层：<br>        是处理业务需求<br>    持久层：<br>        是和数据库交互的<br>3、持久层技术解决方案<br>    JDBC技术：<br>        Connection<br>        PreparedStatement<br>        ResultSet<br>    Spring的JdbcTemplate：<br>        Spring中对jdbc的简单封装<br>    Apache的DBUtils：<br>        它和Spring的JdbcTemplate很像，也是对Jdbc的简单封装</p>
-<pre><code>以上这些都不是框架
-    JDBC是规范
-    Spring的JdbcTemplate和Apache的DBUtils都只是工具类
-</code></pre><p>4、mybatis的概述<br>    mybatis是一个持久层框架，用java编写的。<br>    它封装了jdbc操作的很多细节，使开发者只需要关注sql语句本身，而无需关注注册驱动，创建连接等繁杂过程<br>    它使用了ORM思想实现了结果集的封装。</p>
-<pre><code>ORM：
-    Object Relational Mappging 对象关系映射
-    简单的说：
-        就是把数据库表和实体类及实体类的属性对应起来
-        让我们可以操作实体类就实现操作数据库表。
-
-        user            User
-        id            userId
-        user_name        userName
-今天我们需要做到
-    实体类中的属性和数据库表的字段名称保持一致。
-        user            User
-        id            id
-        user_name        user_name
-</code></pre><p>5、mybatis的入门<br>    mybatis的环境搭建<br>        第一步：创建maven工程并导入坐标<br>        第二步：创建实体类和dao的接口<br>        第三步：创建Mybatis的主配置文件<br>                SqlMapConifg.xml<br>        第四步：创建映射配置文件<br>                IUserDao.xml<br>    环境搭建的注意事项：<br>        第一个：创建IUserDao.xml 和 IUserDao.java时名称是为了和我们之前的知识保持一致。<br>            在Mybatis中它把持久层的操作接口名称和映射文件也叫做：Mapper<br>            所以：IUserDao 和 IUserMapper是一样的<br>        第二个：在idea中创建目录的时候，它和包是不一样的<br>            包在创建时：com.itheima.dao它是三级结构<br>            目录在创建时：com.itheima.dao是一级目录<br>        第三个：mybatis的映射配置文件位置必须和dao接口的包结构相同<br>        第四个：映射配置文件的mapper标签namespace属性的取值必须是dao接口的全限定类名<br>        第五个：映射配置文件的操作配置（select），id属性的取值必须是dao接口的方法名</p>
-<pre><code>    当我们遵从了第三，四，五点之后，我们在开发中就无须再写dao的实现类。
-mybatis的入门案例
-    第一步：读取配置文件
-    第二步：创建SqlSessionFactory工厂
-    第三步：创建SqlSession
-    第四步：创建Dao接口的代理对象
-    第五步：执行dao中的方法
-    第六步：释放资源
-
-    注意事项：
-        不要忘记在映射配置中告知mybatis要封装到哪个实体类中
-        配置的方式：指定实体类的全限定类名
-
-    mybatis基于注解的入门案例：
-        把IUserDao.xml移除，在dao接口的方法上使用@Select注解，并且指定SQL语句
-        同时需要在SqlMapConfig.xml中的mapper配置时，使用class属性指定dao接口的全限定类名。
-明确：
-    我们在实际开发中，都是越简便越好，所以都是采用不写dao实现类的方式。
-    不管使用XML还是注解配置。
-    但是Mybatis它是支持写dao实现类的。
-</code></pre><p>6、自定义Mybatis的分析：<br>    mybatis在使用代理dao的方式实现增删改查时做什么事呢？<br>        只有两件事：<br>            第一：创建代理对象<br>            第二：在代理对象中调用selectList</p>
-<pre><code>自定义mybatis能通过入门案例看到类
-    class Resources
-    class SqlSessionFactoryBuilder
-    interface SqlSessionFactory
-    interface SqlSession
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/07/Spark第一天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/07/Spark第一天/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-07T16:22:05+08:00">
-                2019-09-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="并行"><a href="#并行" class="headerlink" title="并行"></a>并行</h2><pre><code>集群计算。
-并行计算。
-</code></pre><h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><pre><code>并发执行。
-</code></pre><h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><pre><code>Lightning-fast cluster computing。
-快如闪电的集群计算。
-大规模快速通用的计算引擎。
-速度:    比hadoop 100x,磁盘计算快10x
-使用:    java / Scala /R /python
-        提供80+算子(操作符)，容易构建并行应用。
-通用:    组合SQL ，流计算 + 复杂分析。
-
-运行：    Hadoop, Mesos, standalone, or in the cloud,local.
-</code></pre><h2 id="Spark模块"><a href="#Spark模块" class="headerlink" title="Spark模块"></a>Spark模块</h2><pre><code>Spark core        //核心模块
-Spark SQL        //SQL
-Spark Streaming    //流计算
-Spark MLlib        //机器学习
-Spark graph        //图计算
-
-
-
-DAG        //direct acycle graph,有向无环图。
-</code></pre><h2 id="安装Spark"><a href="#安装Spark" class="headerlink" title="安装Spark"></a>安装Spark</h2><pre><code>1.下载spark-2.1.0-bin-hadoop2.7.tgz
-    ..
-2.解压
-    ..
-3.环境变量
-    [/etc/profile]
-    SPARK_HOME=/soft/spark
-    PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
-
-    [source]
-    $&gt;source /etc/profile
-
-4.验证spark
-
-    $&gt;cd /soft/spark
-    $&gt;./spark-shell
-
-5.webui
-    http://s201:4040/
-</code></pre><h2 id="体验spark"><a href="#体验spark" class="headerlink" title="体验spark"></a>体验spark</h2><pre><code>0.sc
-    SparkContext，Spark程序的入口点，封装了整个spark运行环境的信息。
-
-1.进入spark-shell
-    $&gt;spark-shell
-    $scala&gt;sc
-</code></pre><h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><pre><code>[SparkContext]
-    Spark程序的入口点，封装了整个spark运行环境的信息。
-
-[RDD]
-    resilient distributed dataset,弹性分布式数据集。等价于集合。
-</code></pre><h2 id="spark实现word-count"><a href="#spark实现word-count" class="headerlink" title="spark实现word count"></a>spark实现word count</h2><pre><code>//加载文本文件,以换行符方式切割文本.Array(hello  world2,hello world2 ,...)
-val rdd1 = sc.textFile(&quot;/home/centos/test.txt&quot;);
-
-//单词统计1
-$scala&gt;val rdd1 = sc.textFile(&quot;/home/centos/test.txt&quot;)
-$scala&gt;val rdd2 = rdd1.flatMap(line=&gt;line.split(&quot; &quot;))
-$scala&gt;val rdd3 = rdd2.map(word = &gt; (word,1))
-$scala&gt;val rdd4 = rdd3.reduceByKey(_ + _)
-$scala&gt;rdd4.collect
-
-//单词统计2
-sc.textFile(&quot;/home/centos/test.txt&quot;).flatMap(_.split(&quot; &quot;)).map((_,1)).reduceByKey(_ + _).collect
-
-//统计所有含有wor字样到单词个数。filter
-
-//过滤单词
-sc.textFile(&quot;/home/centos/test.txt&quot;).flatMap(_.split(&quot; &quot;)).filter(_.contains(&quot;wor&quot;)).map((_,1)).reduceByKey(_ + _).collect
-</code></pre><p>[API]<br>    SparkContext:<br>        Spark功能的主要入口点。代表到Spark集群的连接，可以创建RDD、累加器和广播变量.<br>        每个JVM只能激活一个SparkContext对象，在创建sc之前需要stop掉active的sc。</p>
-<pre><code>SparkConf:
-    spark配置对象，设置Spark应用各种参数，kv形式。
-</code></pre><h2 id="编写scala程序，引入spark类库，完成wordcount"><a href="#编写scala程序，引入spark类库，完成wordcount" class="headerlink" title="编写scala程序，引入spark类库，完成wordcount"></a>编写scala程序，引入spark类库，完成wordcount</h2><pre><code>1.创建Scala模块,并添加pom.xml
-    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-        &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-        &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-        &lt;artifactId&gt;SparkDemo1&lt;/artifactId&gt;
-        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.apache.spark&lt;/groupId&gt;
-                &lt;artifactId&gt;spark-core_2.11&lt;/artifactId&gt;
-                &lt;version&gt;2.1.0&lt;/version&gt;
-            &lt;/dependency&gt;
-        &lt;/dependencies&gt;
-    &lt;/project&gt;
-
-2.编写scala文件
-    import org.apache.spark.{SparkConf, SparkContext}
-
-    /**
-      * Created by Administrator on 2017/4/20.
-      */
-    object WordCountDemo {
-        def main(args: Array[String]): Unit = {
-            //创建Spark配置对象
-            val conf = new SparkConf();
-            conf.setAppName(&quot;WordCountSpark&quot;)
-            //设置master属性
-            conf.setMaster(&quot;local&quot;) ;
-
-            //通过conf创建sc
-            val sc = new SparkContext(conf);
-
-            //加载文本文件
-            val rdd1 = sc.textFile(&quot;d:/scala/test.txt&quot;);
-            //压扁
-            val rdd2 = rdd1.flatMap(line =&gt; line.split(&quot; &quot;)) ;
-            //映射w =&gt; (w,1)
-            val rdd3 = rdd2.map((_,1))
-            val rdd4 = rdd3.reduceByKey(_ + _)
-            val r = rdd4.collect()
-            r.foreach(println)
-        }
-    }
-</code></pre><h2 id="java版单词统计"><a href="#java版单词统计" class="headerlink" title="java版单词统计"></a>java版单词统计</h2><pre><code>import org.apache.spark.SparkConf;
-import org.apache.spark.SparkContext;
-import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.Function2;
-import org.apache.spark.api.java.function.PairFunction;
-import scala.Tuple2;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-/**
- * java版
- */
-public class WordCountJava2 {
-    public static void main(String[] args) {
-        //创建SparkConf对象
-        SparkConf conf = new SparkConf();
-        conf.setAppName(&quot;WordCountJava2&quot;);
-        conf.setMaster(&quot;local&quot;);
-
-        //创建java sc
-        JavaSparkContext sc = new JavaSparkContext(conf);
-        //加载文本文件
-        JavaRDD&lt;String&gt; rdd1 = sc.textFile(&quot;d:/scala//test.txt&quot;);
-
-        //压扁
-        JavaRDD&lt;String&gt; rdd2 = rdd1.flatMap(new FlatMapFunction&lt;String, String&gt;() {
-            public Iterator&lt;String&gt; call(String s) throws Exception {
-                List&lt;String&gt; list = new ArrayList&lt;String&gt;();
-                String[] arr = s.split(&quot; &quot;);
-                for(String ss :arr){
-                    list.add(ss);
-                }
-                return list.iterator();
-            }
-        });
-
-        //映射,word -&gt; (word,1)
-        JavaPairRDD&lt;String,Integer&gt; rdd3 = rdd2.mapToPair(new PairFunction&lt;String, String, Integer&gt;() {
-            public Tuple2&lt;String, Integer&gt; call(String s) throws Exception {
-                return new Tuple2&lt;String, Integer&gt;(s,1);
-            }
-        });
-
-        //reduce化简
-        JavaPairRDD&lt;String,Integer&gt; rdd4 = rdd3.reduceByKey(new Function2&lt;Integer, Integer, Integer&gt;() {
-            public Integer call(Integer v1, Integer v2) throws Exception {
-                return v1 + v2;
-            }
-        });
-
-        //
-        List&lt;Tuple2&lt;String,Integer&gt;&gt; list = rdd4.collect();
-        for(Tuple2&lt;String, Integer&gt; t : list){
-            System.out.println(t._1() + &quot; : &quot; + t._2());
-        }
-    }
-}
-</code></pre><p>Spark2.1.0最新版是基于Scala2.11.8版本，因此安装scala2.11.8版本，</p>
-<h2 id="否则如果基于2-12-0版本编译会出现找不到包的问题。"><a href="#否则如果基于2-12-0版本编译会出现找不到包的问题。" class="headerlink" title="否则如果基于2.12.0版本编译会出现找不到包的问题。"></a>否则如果基于2.12.0版本编译会出现找不到包的问题。</h2><pre><code>1.卸载原来的scala.
-2.重新安装scala2.11.8版本
-3.配置idea的全局库
-    project settings -&gt; global library -&gt; 删除原来的scala sdk
-    project settings -&gt; global library -&gt; 添加sdk -&gt; browser -&gt; 定位scala安装目录 -&gt;选中scala-compiler.jar + 
-                                                                                        scala-library.jar + 
-                                                                                        scala-reflect.jar
-
-4.在模块中添加scala sdk 2.11.8版本
-
-5.重新编译项目 -&gt; 导入jar -&gt;丢到集群运行。
-</code></pre><h2 id="提交作业到spark集群运行"><a href="#提交作业到spark集群运行" class="headerlink" title="提交作业到spark集群运行"></a>提交作业到spark集群运行</h2><pre><code>1.导出jar包
-2.spark-submit提交命令运行job
-    //Scala版本
-    $&gt;spark-submit --master local --name MyWordCount --class com.it18zhang.spark.scala.WordCountScala SparkDemo1-1.0-SNAPSHOT.jar /home/centos/test.txt
-    //java版
-    $&gt;spark-submit --master local --name MyWordCount --class com.it18zhang.spark.java.WordCountJava SparkDemo1-1.0-SNAPSHOT.jar /home/centos/test.txt
-</code></pre><h2 id="Spark集群模式"><a href="#Spark集群模式" class="headerlink" title="Spark集群模式"></a>Spark集群模式</h2><pre><code>1.local
-    nothing!
-    spark-shell --master local;        //默认
-
-2.standalone
-    独立模式。
-    a)复制spark安装目录到其他几个主机
-    b)配置其他主机的所有环境变量
-        [/etc/profile]
-        SPARK_HOME
-        PATH
-
-    c)配置master节点的slaves
-        [/soft/spark/conf/slaves]文件中添加下面的
-        s202
-        s203
-        s204
-
-    d)启动spark集群，和hadoop一样，但是要指定目录下即可。这个是独立模式和没有关系
-        /soft/spark/sbin/start-all.sh
-
-    e)查看进程
-        $&gt;xcall.jps jps
-            master        //s201
-            worker        //s202
-            worker        //s203
-            worker        //s204
-    e)webui，然后验证webui，8080端口。本地模式是4040端口
-        http://s201:8080/
-</code></pre><h2 id="提交作业jar到完全分布式spark集群"><a href="#提交作业jar到完全分布式spark集群" class="headerlink" title="提交作业jar到完全分布式spark集群"></a>提交作业jar到完全分布式spark集群</h2><pre><code>1.需要启动hadoop集群(只需要hdfs，是standalone模式，不需要yarn调度)
-    $&gt;start-dfs.sh
-2.put文件到hdfs.
-
-3.运行spark-submit
-    $&gt;spark-submit 
-                --master spark://s201:7077 
-                --name MyWordCount 
-                --class com.it18zhang.spark.scala.WordCountScala 
-                SparkDemo1-1.0-SNAPSHOT.jar 
-                hdfs://s201:8020/user/centos/test.txt
-</code></pre><h2 id="脚本分析"><a href="#脚本分析" class="headerlink" title="脚本分析"></a>脚本分析</h2><pre><code>[start-all.sh]
-    sbin/spark-config.sh
-    sbin/spark-master.sh        //启动master进程
-    sbin/spark-slaves.sh        //启动worker进程
-
-[start-master.sh]
-    sbin/spark-config.sh
-    org.apache.spark.deploy.master.Master
-    spark-daemon.sh start org.apache.spark.deploy.master.Master --host --port --webui-port ...
-
-[spark-slaves.sh]
-    sbin/spark-config.sh
-    slaves.sh                //主要循环这个文件conf/slaves
-
-[slaves.sh]
-    for conf/slaves{
-        ssh host start-slave.sh ...
-    }
-
-[start-slave.sh]
-</code></pre><p>先找到这个work类<br>        CLASS=”org.apache.spark.deploy.worker.Worker”<br>        sbin/spark-config.sh 走这个配置<br>        for ((  .. )) ; do<br>            start_instance $(( 1 + $i )) “$@”<br>        done </p>
-<pre><code>$&gt;cd /soft/spark/sbin
-$&gt;./stop-all.sh                //停掉整个spark集群.
-$&gt;./start-master.sh            //停掉整个spark集群.
-$&gt;./start-master.sh            //启动master节点
-$&gt;./start-slaves.sh            //启动所有worker节点
-从s204里面启动某一个slave ./start-slave.sh spark://s201:7077
-
-
-对上面几个命令了解可以通过 start-master.sh --help来查询，其他类似
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -3419,7 +5012,7 @@ $&gt;./start-slaves.sh            //启动所有worker节点
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-count">81</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

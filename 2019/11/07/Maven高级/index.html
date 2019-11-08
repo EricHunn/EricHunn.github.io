@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="无心是一首歌" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="执行SQL文件导入进去了一个表和内容供这章节学习使用：   Maven导入Jar包时候依赖冲突的解决  Maven工程要导入Jar包的坐标，就必须考虑解决jar包的冲突 解决jar包冲突的方式一：        第一声明优先原则：哪个Jar包的坐标靠上的位置，这个Jar包就是先声明的。        先声明的jar包坐标下的依赖，可以有优先进入到项目当中，也就是说spring-context">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven高级">
+<meta property="og:url" content="http://erichunn.github.io/2019/11/07/Maven高级/index.html">
+<meta property="og:site_name" content="无心是一首歌">
+<meta property="og:description" content="执行SQL文件导入进去了一个表和内容供这章节学习使用：   Maven导入Jar包时候依赖冲突的解决  Maven工程要导入Jar包的坐标，就必须考虑解决jar包的冲突 解决jar包冲突的方式一：        第一声明优先原则：哪个Jar包的坐标靠上的位置，这个Jar包就是先声明的。        先声明的jar包坐标下的依赖，可以有优先进入到项目当中，也就是说spring-context">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.imgur.com/zEkvEtg.png">
+<meta property="og:image" content="https://i.imgur.com/dwXen5E.png">
+<meta property="og:image" content="https://i.imgur.com/ttwZWen.png">
+<meta property="og:image" content="https://i.imgur.com/CYuGZuM.png">
+<meta property="og:image" content="https://i.imgur.com/nKKeTY6.png">
+<meta property="og:image" content="https://i.imgur.com/3X7Lzg4.png">
+<meta property="og:image" content="https://i.imgur.com/Z1yB0PQ.png">
+<meta property="og:image" content="https://i.imgur.com/dzfAU9e.png">
+<meta property="og:updated_time" content="2019-11-08T15:34:17.482Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Maven高级">
+<meta name="twitter:description" content="执行SQL文件导入进去了一个表和内容供这章节学习使用：   Maven导入Jar包时候依赖冲突的解决  Maven工程要导入Jar包的坐标，就必须考虑解决jar包的冲突 解决jar包冲突的方式一：        第一声明优先原则：哪个Jar包的坐标靠上的位置，这个Jar包就是先声明的。        先声明的jar包坐标下的依赖，可以有优先进入到项目当中，也就是说spring-context">
+<meta name="twitter:image" content="https://i.imgur.com/zEkvEtg.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://erichunn.github.io/2019/11/07/Maven高级/"/>
+
+
+
+
+
+  <title>Maven高级 | 无心是一首歌</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?02fe19ac065353167cab1b453f2909ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">无心是一首歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于我">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-站点地图">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-腾讯公益">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            腾讯公益
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/11/07/Maven高级/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Maven高级</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-07T14:29:01+08:00">
+                2019-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://i.imgur.com/zEkvEtg.png" alt=""></p>
+<p><img src="https://i.imgur.com/dwXen5E.png" alt=""></p>
+<p><img src="https://i.imgur.com/ttwZWen.png" alt=""></p>
+<p>执行SQL文件导入进去了一个表和内容供这章节学习使用：</p>
+<p><img src="https://i.imgur.com/CYuGZuM.png" alt=""></p>
+<hr>
+<h1 id="Maven导入Jar包时候依赖冲突的解决"><a href="#Maven导入Jar包时候依赖冲突的解决" class="headerlink" title="Maven导入Jar包时候依赖冲突的解决"></a>Maven导入Jar包时候依赖冲突的解决</h1><blockquote>
+</blockquote>
+<pre><code>Maven工程要导入Jar包的坐标，就必须考虑解决jar包的冲突
+解决jar包冲突的方式一：
+       第一声明优先原则：哪个Jar包的坐标靠上的位置，这个Jar包就是先声明的。
+       先声明的jar包坐标下的依赖，可以有优先进入到项目当中，也就是说spring-context和spring-bean都依赖于spring-core这个，
+       但是content和bean版本不同
+       所以就会优先使用前面的
+   解决jar包冲突的方式二：
+   maven导入jar包的一些概念：
+       直接依赖：项目中直接导入的jar包就是该项目的直接依赖包。
+       传递依赖：项目中并没有直接导入jar包，可以通过项目直接依赖jar包传递到项目当中去
+       如果有传递依赖，也有直接依赖，那么就是用最近的直接依赖
+    解决jar包冲突的方式三：【推荐使用】
+     直接排除法：
+       当我们要排除某个依赖包下面的依赖包的时候，在配置exclusion标签的时候，内部可以不写版本号，
+       因为此时依赖包使用的版本号默认和jar包一样的
+</code></pre><p>在我们平时公司中使用的时候一般是复制别人的依赖包，不用在这个上面纠结太久，一旦说可能出现冲突问题，解决办法就是使用Exclusion标签做排除法，可以查看一下依赖关系，在IDEA中使用这个按钮查看</p>
+<p><img src="https://i.imgur.com/nKKeTY6.png" alt=""></p>
+<p><img src="https://i.imgur.com/3X7Lzg4.png" alt=""></p>
+<hr>
+<p>下面是常用的SSM使用的Pom文件。一般使用这些依赖包就够用了：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.itheima&lt;/groupId&gt;
+  &lt;artifactId&gt;maven_day02_1&lt;/artifactId&gt;
+  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+  &lt;packaging&gt;war&lt;/packaging&gt;
+
+  &lt;!-- 统一管理jar包版本 --&gt;
+  &lt;properties&gt;
+    &lt;spring.version&gt;5.0.2.RELEASE&lt;/spring.version&gt;
+    &lt;slf4j.version&gt;1.6.6&lt;/slf4j.version&gt;
+    &lt;log4j.version&gt;1.2.12&lt;/log4j.version&gt;
+    &lt;shiro.version&gt;1.2.3&lt;/shiro.version&gt;
+    &lt;mysql.version&gt;5.1.6&lt;/mysql.version&gt;
+    &lt;mybatis.version&gt;3.4.5&lt;/mybatis.version&gt;
+    &lt;spring.security.version&gt;5.0.1.RELEASE&lt;/spring.security.version&gt;
+  &lt;/properties&gt;
+
+  &lt;!--
+  maven工程是可以分父子依赖关系的。
+  凡是依赖别的项目后，拿到的别的项目的依赖包，都属于传递依赖。
+  比如：当前A项目，被B项目依赖。那么我们A项目中所有jar包都会传递到B项目中。
+  B项目开发者，如果再在B项目中导入一套ssm框架的jar包，对于B项目是直接依赖。
+  那么直接依赖的jar包就会把我们A项目传递过去的jar包覆盖掉。
+  为了防止以上情况的出现。我们可以把A项目中主要jar包的坐标锁住，那么其他依赖该项目的项目中，
+  即便是有同名jar包直接依赖，也无法覆盖。
+  --&gt;
+  &lt;!-- 锁定jar包版本 --&gt;
+  &lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+      &lt;/dependency&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+      &lt;/dependency&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+      &lt;/dependency&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+      &lt;/dependency&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+      &lt;/dependency&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+        &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+        &lt;version&gt;${mybatis.version}&lt;/version&gt;
+      &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+  &lt;/dependencyManagement&gt;
+
+  &lt;!-- 项目依赖jar包 --&gt;
+  &lt;dependencies&gt;
+    &lt;!-- spring --&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
+      &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
+      &lt;version&gt;1.6.8&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-orm&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;junit&lt;/groupId&gt;
+      &lt;artifactId&gt;junit&lt;/artifactId&gt;
+      &lt;version&gt;4.12&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;mysql&lt;/groupId&gt;
+      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+      &lt;version&gt;${mysql.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+      &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+      &lt;version&gt;3.1.0&lt;/version&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;
+      &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;
+      &lt;version&gt;2.0&lt;/version&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;jstl&lt;/groupId&gt;
+      &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+      &lt;version&gt;1.2&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- log start --&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;log4j&lt;/groupId&gt;
+      &lt;artifactId&gt;log4j&lt;/artifactId&gt;
+      &lt;version&gt;${log4j.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+      &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+      &lt;version&gt;${slf4j.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+      &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+      &lt;version&gt;${slf4j.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- log end --&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+      &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+      &lt;version&gt;${mybatis.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+      &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+      &lt;version&gt;1.3.0&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;c3p0&lt;/groupId&gt;
+      &lt;artifactId&gt;c3p0&lt;/artifactId&gt;
+      &lt;version&gt;0.9.1.2&lt;/version&gt;
+      &lt;type&gt;jar&lt;/type&gt;
+      &lt;scope&gt;compile&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;com.github.pagehelper&lt;/groupId&gt;
+      &lt;artifactId&gt;pagehelper&lt;/artifactId&gt;
+      &lt;version&gt;5.1.2&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-security-web&lt;/artifactId&gt;
+      &lt;version&gt;${spring.security.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-security-config&lt;/artifactId&gt;
+      &lt;version&gt;${spring.security.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-security-core&lt;/artifactId&gt;
+      &lt;version&gt;${spring.security.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-security-taglibs&lt;/artifactId&gt;
+      &lt;version&gt;${spring.security.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+      &lt;artifactId&gt;druid&lt;/artifactId&gt;
+      &lt;version&gt;1.0.9&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;junit&lt;/groupId&gt;
+      &lt;artifactId&gt;junit&lt;/artifactId&gt;
+      &lt;version&gt;4.12&lt;/version&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+  &lt;!-- 添加tomcat7插件 --&gt;
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.apache.tomcat.maven&lt;/groupId&gt;
+        &lt;artifactId&gt;tomcat7-maven-plugin&lt;/artifactId&gt;
+        &lt;version&gt;2.2&lt;/version&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+</code></pre><hr>
+<p>maven工程是可以分成父子关系的，一个项目可以依赖另外一个项目，凡事依赖别人的项目后，拿到的别人的I项目依赖之后都属于传递依赖。</p>
+<p>比如当前A项目被B项目依赖，那么我们A项目中所有的Jar包都会传递到B项目中。B项目中得到的项目依赖都属于传递依赖。可能A项目是比较新的项目，但是B项目用的是比较老的依赖。B项目开发者如果再在B项目中导入一套SSM框架的依赖包，对于B项目就是直接依赖。那么直接依赖的jar包就会把我们A项目传递过去的jar包覆盖掉。为了防止这种情况出现，我们可以把A项目中的主要jar包的坐标锁定住，那么其他依赖该项目的项目中即便是有同名jar包直接依赖也无法覆盖。</p>
+<dependencymanagement></dependencymanagement>这个标签起到了一个锁定的作用。但是仅仅是锁定作用，没有导入坐标作用，还是得需要<denpenedies>解决导入jar包。<br><br>上面这段SSM的依赖通过EL表达式，把配置文件都卸载上面来统一管理jar包版本。<br><br><strong>*<br># 案例一整套SSM的编写 #<br><br>    package com.itheima.controller;<br><br>    import com.itheima.domain.Items;<br>    import com.itheima.service.ItemService;<br>    import org.springframework.beans.factory.annotation.Autowired;<br>    import org.springframework.stereotype.Controller;<br>    import org.springframework.ui.Model;<br>    import org.springframework.web.bind.annotation.RequestMapping;<br><br>    /</strong><br>     <em> @Description TODO
+     </em> @Author TT Hun<br>     <em> @Data 2019/11/7 21:36
+     </em>/<br>    @Controller<br>    @RequestMapping(“/items”)<br>    public class ItemController {<br>        @Autowired<br>        private ItemService itemsService;<br><br>        @RequestMapping(“/findDetail”)<br>        public String findDetail(Model model){<br>            Items items = itemsService.findById(1);<br>    //        这个addAttribute里面参数，结合看Pages下面的jsp来看都是item.price，item.detail，说明都是用这个key来取值的。，那么就配置即可<br>            model.addAttribute(“item”,items);<br>            return “itemDetail”;<br>        }<br>    }<br><strong>*<br>    package com.itheima.dao;<br><br>    import com.itheima.domain.Items;<br><br>    /</strong><br>     <em> @Description TODO
+     </em> @Author TT Hun<br>     <em> @Data 2019/11/7 17:17
+     </em>/<br>    public interface ItemsDao {<br>        /<strong><br>         <em> 根据ID查找Items
+         </em> @param id<br>         <em> @return
+         </em>/<br>        public Items findById(Integer id);<br>    }<br><br>*</strong><br>    package com.itheima.domain;<br><br>    import java.util.Date;<br><br>    /<strong><br>     <em> @Description TODO
+     </em> @Author TT Hun<br>     <em> @Data 2019/11/7 17:15
+     </em>/<br>    public class Items {<br>        private Integer id;<br>        private String name;<br>        private Double price;<br>        private String prc;<br>        private Date createtime;<br>        private String detail;<br><br>        public Integer getId() {<br>            return id;<br>        }<br><br>        public void setId(Integer id) {<br>            this.id = id;<br>        }<br><br>        public String getName() {<br>            return name;<br>        }<br><br>        public void setName(String name) {<br>            this.name = name;<br>        }<br><br>        public Double getPrice() {<br>            return price;<br>        }<br><br>        public void setPrice(Double price) {<br>            this.price = price;<br>        }<br><br>        public String getPrc() {<br>            return prc;<br>        }<br><br>        public void setPrc(String prc) {<br>            this.prc = prc;<br>        }<br><br>        public Date getCreatetime() {<br>            return createtime;<br>        }<br><br>        public void setCreatetime(Date createtime) {<br>            this.createtime = createtime;<br>        }<br><br>        public String getDetail() {<br>            return detail;<br>        }<br><br>        public void setDetail(String detail) {<br>            this.detail = detail;<br>        }<br><br>        @Override<br>        public String toString() {<br>            return “items{“ +<br>                    “id=” + id +<br>                    “, name=’” + name + ‘\’’ +<br>                    “, price=” + price +<br>                    “, prc=’” + prc + ‘\’’ +<br>                    “, createtime=” + createtime +<br>                    “, detail=’” + detail + ‘\’’ +<br>                    ‘}’;<br>        }<br>    }<br>*</strong><br>    package com.itheima.service.impl;<br><br>    import com.itheima.dao.ItemsDao;<br>    import com.itheima.domain.Items;<br>    import com.itheima.service.ItemService;<br>    import org.springframework.beans.factory.annotation.Autowired;<br>    import org.springframework.stereotype.Service;<br><br>    /<strong><br>     <em> 有一个公司开发的常用原则，自己写的类尽量使用注解，如果是框架使用的类，尽量使用配置文件
+     </em> @Description TODO<br>     <em> @Author TT Hun
+     </em> @Data 2019/11/7 20:46<br>     <em>/<br>    @Service<br>    public class ItemServiceImpl implements ItemService {<br>        @Autowired<br>        private ItemsDao itemsDao;<br><br>        public Items findById(Integer id) {<br>            return itemsDao.findById(id);<br>        }<br>    }
+</em></strong><br>    package com.itheima.service;<br><br>    import com.itheima.domain.Items;<br><br>    /<strong><br>     <em> @Description TODO
+     </em> @Author TT Hun<br>     <em> @Data 2019/11/7 20:45
+     </em>/<br>    public interface ItemService {<br>        public Items findById(Integer id);<br>    }<br>*</strong><br>    &lt;?xml version=”1.0” encoding=”UTF-8” ?&gt;<br>    &lt;!DOCTYPE mapper<br>            PUBLIC “-//mybatis.org//DTD Mapper 3.0//EN”<br>            “<a href="http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;" target="_blank" rel="noopener">http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;</a><br><br>    <mapper namespace="com.itheima.dao.ItemsDao"><br>    <!--    返回值是resulttype，因为我们事先已经把实体类中所有的属性和我们数据库中的列保持一致了
+    所以我们只需要写resultType就可以了，如果不一致可以写resultMap
+    这个地方已经改成了小写的i，这个地方既然已经写了别名了，写配置文件的时候切记要扫描POJO这个包的路径--><br>        <select id="findById" parametertype="int" resulttype="items"><br>            select <em> from items  where id = #{id}<br>        </em></select><br>    </mapper><br>**<br>applicationContext.xml<br><br>    &lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>    <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc" xsi:schemalocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans.xsd
+                    http://www.springframework.org/schema/context
+                    http://www.springframework.org/schema/context/spring-context.xsd
+                    http://www.springframework.org/schema/aop
+                    http://www.springframework.org/schema/aop/spring-aop.xsd
+                    http://www.springframework.org/schema/tx
+                    http://www.springframework.org/schema/tx/spring-tx.xsd
+                    http://www.springframework.org/schema/mvc
+                    http://www.springframework.org/schema/mvc/spring-mvc.xsd"><br>        <!--dao层配置文件开始--><br>        <!--配置连接池--><br>        <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"><br>            <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"><br>            <property name="url" value="jdbc:mysql://localhost:3306/maven?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"><br>            <property name="username" value="root"><br>            <property name="password" value="root"><br>        </property></property></property></property></bean><br><br>        <!--配置生产SqlSession对象的工厂--><br>        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"><br>            <property name="dataSource" ref="dataSource"><br>            <!--扫描pojo包，给包下所有pojo对象起别名--><br>            <property name="typeAliasesPackage" value="com.itheima.domain"><br>        </property></property></bean><br><br>        <!--扫描接口包路径，生成包下所有接口的代理对象，并且放入spring容器中--><br>        <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"><br>            <property name="basePackage" value="com.itheima.dao"><br>        </property></bean><br>        <!--dao层配置文件结束--><br><br><br>        <!--service层配置文件开始--><br><br>        <!--组件扫描配置--><br>        &lt;context:component-scan base-package=”com.itheima.service”/&gt;<br><br>        <!--aop面向切面编程，切面就是切入点和通知的组合--><br>        <!--配置事务管理器--><br>        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"><br>            <property name="dataSource" ref="dataSource"><br>        </property></bean><br>        <!--配置事务的通知--><br>        &lt;tx:advice id=”advice”&gt;<br>            <a href="tx:attributes" target="_blank" rel="noopener">tx:attributes</a><br>                &lt;tx:method name=”save<em>“ propagation=”REQUIRED”/&gt;<br>                &lt;tx:method name=”update</em>“ propagation=”REQUIRED”/&gt;<br>                &lt;tx:method name=”delete<em>“ propagation=”REQUIRED”/&gt;<br>                &lt;tx:method name=”find</em>“ read-only=”true”/&gt;<br>                &lt;tx:method name=”<em>“ propagation=”REQUIRED”/&gt;<br>            &lt;/tx:attributes&gt;<br>        &lt;/tx:advice&gt;<br><br>        <!--配置切面--><br>        <a href="aop:config" target="_blank" rel="noopener">aop:config</a><br>            &lt;aop:pointcut id=”pointcut” expression=”execution(</em> com.itheima.service.impl.<em>.</em>(..))”/&gt;<br>            &lt;aop:advisor advice-ref=”advice” pointcut-ref=”pointcut”/&gt;<br>        &lt;/aop:config&gt;<br>        <!--service层配置文件结束--><br>    </beans><br><strong><em><br>log4j.properties<br><br>    # Set root category priority to INFO and its only appender to CONSOLE.<br>    #log4j.rootCategory=INFO, CONSOLE            debug   info   warn error fatal<br>    log4j.rootCategory=debug, CONSOLE, LOGFILE<br><br>    # Set the enterprise logger category to FATAL and its only appender to CONSOLE.<br>    log4j.logger.org.apache.axis.enterprise=FATAL, CONSOLE<br><br>    # CONSOLE is set to be a ConsoleAppender using a PatternLayout.<br>    log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender<br>    log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout<br>    log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} %-6r [%15.15t] %-5p %30.30c %x - %m\n<br><br>    # LOGFILE is set to be a File appender using a PatternLayout.<br>    log4j.appender.LOGFILE=org.apache.log4j.FileAppender<br>    log4j.appender.LOGFILE.File=d:\axis.log<br>    log4j.appender.LOGFILE.Append=true<br>    log4j.appender.LOGFILE.layout=org.apache.log4j.PatternLayout<br>    log4j.appender.LOGFILE.layout.ConversionPattern=%d{ISO8601} %-6r [%15.15t] %-5p %30.30c %x - %m\n
+</em></strong><br>springmvc.xml<br><br>    &lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>    <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc" xsi:schemalocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans.xsd
+                    http://www.springframework.org/schema/context
+                    http://www.springframework.org/schema/context/spring-context.xsd
+                    http://www.springframework.org/schema/aop
+                    http://www.springframework.org/schema/aop/spring-aop.xsd
+                    http://www.springframework.org/schema/tx
+                    http://www.springframework.org/schema/tx/spring-tx.xsd
+                    http://www.springframework.org/schema/mvc
+                    http://www.springframework.org/schema/mvc/spring-mvc.xsd"><br>    <!--    配置组件扫描--><br>        &lt;context:component-scan base-package=”com.itheima.controller”/&gt;<br>    <!--    处理器映射器，处理器适配器--><br>        <a href="mvc:annotation-driven/" target="_blank" rel="noopener">mvc:annotation-driven/</a><br>    <!--    配置视图解析器--><br>        <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"><br>            <property name="prefix" value="/WEB-INF/pages/"><br>            <property name="suffix" value=".jsp"><br>        </property></property></bean><br><br>    <!--    释放静态资源 凡事遇到静态资源就会默认交给deafault去处理，也就是之前写的httpservlet而不是现在的动态--><br>        <a href="mvc:default-servlet-handler/" target="_blank" rel="noopener">mvc:default-servlet-handler/</a><br><br>    </beans><br><strong><em><br>itemDetail.jsp<br><br>    &lt;%@ page language=”java” contentType=”text/html; charset=UTF-8”<br>        pageEncoding=”UTF-8”%&gt;<br>    &lt;%@ taglib uri=”<a href="http://java.sun.com/jsp/jstl/core&quot;" target="_blank" rel="noopener">http://java.sun.com/jsp/jstl/core&quot;</a> prefix=”c” %&gt;<br>    &lt;%@ taglib uri=”<a href="http://java.sun.com/jsp/jstl/fmt&quot;" target="_blank" rel="noopener">http://java.sun.com/jsp/jstl/fmt&quot;</a>  prefix=”fmt”%&gt;<br><br>    &lt;!DOCTYPE html PUBLIC “-//W3C//DTD HTML 4.01 Transitional//EN” “<a href="http://www.w3.org/TR/html4/loose.dtd&quot;&gt;" target="_blank" rel="noopener">http://www.w3.org/TR/html4/loose.dtd&quot;&gt;</a><br>    <html><br>    <head><br>    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><br>    <title>Insert title here</title><br>    </head><br>    <body><br>        <form><br>            <table width="100%" border="1"><br>                <tr><br>                    <td>商品名称</td><br>                    <td> ${item.name } </td><br>                </tr><br>                <tr><br>                    <td>商品价格</td><br>                    <td> ${item.price } </td><br>                </tr><br>                <tr><br>                    <td>生成日期</td><br>                    <td> &lt;fmt:formatDate value=”${item.createtime}” pattern=”yyyy-MM-dd HH:mm:ss”/&gt; </td><br>                </tr><br>                <tr><br>                    <td>商品简介</td><br>                    <td>${item.detail} </td><br>                </tr><br>            </table><br>        </form><br>    </body><br>    </html>
+</em></strong><br>web.xml<br><br>    &lt;!DOCTYPE web-app<br>            PUBLIC “-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN”<br>            “<a href="http://java.sun.com/dtd/web-app_2_3.dtd&quot;&gt;" target="_blank" rel="noopener">http://java.sun.com/dtd/web-app_2_3.dtd&quot;&gt;</a><br><br>    <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://java.sun.com/xml/ns/javaee
+              http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0"><br><br><br>        <!--    首先配置编码过滤器--><br><br>        <filter><br>            <filter-name>encoding</filter-name><br>            <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class><br>            <init-param><br>                <param-name>encoding</param-name><br>                <param-value>UTF-8</param-value><br>            </init-param><br>            <init-param><br>                <param-name>forceEncoding</param-name><br>                <param-value>true</param-value><br>            </init-param><br>        </filter><br>        <filter-mapping><br>            <filter-name>encoding</filter-name><br>            <url-pattern>/<em></em></url-pattern><br>        </filter-mapping><br><br>        <!--    配置Spring核心监听器--><br>        <listener><br>            <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class><br>        </listener><br>        <!--    spring默认监听器只能监听WEB_INF路径下的名字叫applicationContext.xml的spring配置文件，我们的文件名称可以对上但是路径对不上
+        所以我们重新指定spring配置路径--><br>        <context-param><br>            <param-name>contextConfigLocation</param-name><br>            <param-value>classpath:applicationContext.xml</param-value><br>        </context-param><br><br><br>        <!--    配置springmvc的核心servlet--><br>        <servlet><br>            <servlet-name>springmvc</servlet-name><br>            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class><br>            <init-param><br>                <param-name>contextConfigLocation</param-name><br>                <!--            classpath的默认路径就是这个resources--><br>                <param-value>classpath:springmvc.xml</param-value><br>            </init-param><br>            <load-on-startup>1</load-on-startup><br>        </servlet><br>        <servlet-mapping><br>            <servlet-name>springmvc</servlet-name><br>            <url-pattern>/</url-pattern><br>        </servlet-mapping><br><br>    </web-app><br>**<br>ItemTest<br><br>    package com.itheima.test;<br><br>    import com.itheima.dao.ItemsDao;<br>    import com.itheima.domain.Items;<br>    import com.itheima.service.ItemService;<br>    import org.junit.Test;<br>    import org.springframework.context.ApplicationContext;<br>    import org.springframework.context.support.ClassPathXmlApplicationContext;<br><br>    /<strong><br>     <em> @Description TODO
+     </em> @Author TT Hun<br>     <em> @Data 2019/11/7 20:12
+     </em>/<br>    public class ItemsTest {<br><br>        @Test<br>        public void findById(){<br>    //        获取Spring容器<br>            ApplicationContext ac = new ClassPathXmlApplicationContext(“applicationContext.xml”);<br>    //        从容器中直接拿到dao的代理对象<br>            ItemsDao itemsDao = ac.getBean(ItemsDao.class);<br>    //        调用方法<br>            Items items = itemsDao.findById(1);<br>            System.out.println(items.getName());<br>        }<br><br>        /</strong><br>         <em> service测试
+         </em>/<br>        @Test<br>        public void findById1(){<br>    //        获取Spring容器<br>            ApplicationContext ac = new ClassPathXmlApplicationContext(“applicationContext.xml”);<br>            ItemService itemService = ac.getBean(ItemService.class);<br>    //        拿到Service之后直接去调用方法<br>            Items items = itemService.findById(1);<br>            System.out.println(items.getName());<br>        }<br>    }<br>***<br>pom文件：<br><br>    &lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br><br>    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"><br>        <modelversion>4.0.0</modelversion><br><br>        <groupid>com.itheima</groupid><br>        <artifactid>maven_day02_1</artifactid><br>        <version>1.0-SNAPSHOT</version><br>        <packaging>war</packaging><br><br><br>        <!--maven工程要导入jar包的坐标，就必须要考虑解决jar包冲突。
+            解决jar包冲突的方式一：
+            第一声明优先原则：哪个jar包的坐标在靠上的位置，这个jar包就是先声明的。
+            先声明的jar包坐标下的依赖包，可以优先进入项目中。
+
+            maven导入jar包中的一些概念：
+            直接依赖：项目中直接导入的jar包，就是该项目的直接依赖包。
+            传递依赖：项目中没有直接导入的jar包，可以通过项目直接依赖jar包传递到项目中去。
+
+            解决jar包冲突的方式二：
+            路径近者优先原则。直接依赖路径比传递依赖路径近，那么最终项目进入的jar包会是路径近的直接依赖包。
+
+            解决jar包冲突的方式三【推荐使用】：
+            直接排除法。
+            当我们要排除某个jar包下依赖包，在配置exclusions标签的时候，内部可以不写版本号。
+            因为此时依赖包使用的版本和默认和本jar包一样。
+            --><br>        <!-- 统一管理jar包版本 --><br>        <properties><br>            &lt;spring.version&gt;5.0.2.RELEASE&lt;/spring.version&gt;<br>            &lt;slf4j.version&gt;1.6.6&lt;/slf4j.version&gt;<br>            &lt;log4j.version&gt;1.2.12&lt;/log4j.version&gt;<br>            &lt;shiro.version&gt;1.2.3&lt;/shiro.version&gt;<br>            &lt;mysql.version&gt;8.0.11&lt;/mysql.version&gt;<br>            &lt;mybatis.version&gt;3.4.5&lt;/mybatis.version&gt;<br>            &lt;spring.security.version&gt;5.0.1.RELEASE&lt;/spring.security.version&gt;<br>        </properties><br><br>        <!--
+        maven工程是可以分父子依赖关系的。
+        凡是依赖别的项目后，拿到的别的项目的依赖包，都属于传递依赖。
+        比如：当前A项目，被B项目依赖。那么我们A项目中所有jar包都会传递到B项目中。
+        B项目开发者，如果再在B项目中导入一套ssm框架的jar包，对于B项目是直接依赖。
+        那么直接依赖的jar包就会把我们A项目传递过去的jar包覆盖掉。
+        为了防止以上情况的出现。我们可以把A项目中主要jar包的坐标锁住，那么其他依赖该项目的项目中，
+        即便是有同名jar包直接依赖，也无法覆盖。
+        --><br>        <!-- 锁定jar包版本 --><br>        <dependencymanagement><br>            <dependencies><br>                <dependency><br>                    <groupid>org.springframework</groupid><br>                    <artifactid>spring-context</artifactid><br>                    <version>${spring.version}</version><br>                </dependency><br>                <dependency><br>                    <groupid>org.springframework</groupid><br>                    <artifactid>spring-web</artifactid><br>                    <version>${spring.version}</version><br>                </dependency><br>                <dependency><br>                    <groupid>org.springframework</groupid><br>                    <artifactid>spring-webmvc</artifactid><br>                    <version>${spring.version}</version><br>                </dependency><br>                <dependency><br>                    <groupid>org.springframework</groupid><br>                    <artifactid>spring-tx</artifactid><br>                    <version>${spring.version}</version><br>                </dependency><br>                <dependency><br>                    <groupid>org.springframework</groupid><br>                    <artifactid>spring-test</artifactid><br>                    <version>${spring.version}</version><br>                </dependency><br>                <dependency><br>                    <groupid>org.mybatis</groupid><br>                    <artifactid>mybatis</artifactid><br>                    <version>${mybatis.version}</version><br>                </dependency><br>            </dependencies><br>        </dependencymanagement>
+
+<pre><code>    &lt;!-- 项目依赖jar包 --&gt;
+    &lt;dependencies&gt;
+        &lt;!-- spring --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
+            &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
+            &lt;version&gt;1.6.8&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-orm&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.12&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;mysql&lt;/groupId&gt;
+            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+            &lt;version&gt;${mysql.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+            &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+            &lt;version&gt;3.1.0&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;
+            &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;
+            &lt;version&gt;2.0&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;jstl&lt;/groupId&gt;
+            &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+            &lt;version&gt;1.2&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;!-- log start --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;log4j&lt;/groupId&gt;
+            &lt;artifactId&gt;log4j&lt;/artifactId&gt;
+            &lt;version&gt;${log4j.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+            &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+            &lt;version&gt;${slf4j.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+            &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+            &lt;version&gt;${slf4j.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;!-- log end --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+            &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+            &lt;version&gt;${mybatis.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+            &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+            &lt;version&gt;1.3.0&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;c3p0&lt;/groupId&gt;
+            &lt;artifactId&gt;c3p0&lt;/artifactId&gt;
+            &lt;version&gt;0.9.1.2&lt;/version&gt;
+            &lt;type&gt;jar&lt;/type&gt;
+            &lt;scope&gt;compile&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.github.pagehelper&lt;/groupId&gt;
+            &lt;artifactId&gt;pagehelper&lt;/artifactId&gt;
+            &lt;version&gt;5.1.2&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-security-web&lt;/artifactId&gt;
+            &lt;version&gt;${spring.security.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-security-config&lt;/artifactId&gt;
+            &lt;version&gt;${spring.security.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-security-core&lt;/artifactId&gt;
+            &lt;version&gt;${spring.security.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-security-taglibs&lt;/artifactId&gt;
+            &lt;version&gt;${spring.security.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+            &lt;artifactId&gt;druid&lt;/artifactId&gt;
+            &lt;version&gt;1.0.9&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.12&lt;/version&gt;
+        &lt;/dependency&gt;
+
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.tomcat.maven&lt;/groupId&gt;
+                &lt;artifactId&gt;tomcat7-maven-plugin&lt;/artifactId&gt;
+                &lt;version&gt;2.2&lt;/version&gt;
+            &lt;/plugin&gt;
+
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;
+</code></pre><hr>
+<hr>
+<hr>
+<h1 id="Maven工程拆分与聚合的思想"><a href="#Maven工程拆分与聚合的思想" class="headerlink" title="Maven工程拆分与聚合的思想"></a>Maven工程拆分与聚合的思想</h1><p><img src="https://i.imgur.com/Z1yB0PQ.png" alt=""></p>
+<p>#Maven父子工程的创建#<br>首先父工程的pom：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+&lt;!--    工程和模块的区别：
+        工程不等于完整的项目，模块也不等于完整的项目，一个完整的项目看的是代码，代码完整就可以说是一个完整的项目，和工程和
+        项目没关系的。--&gt;
+
+&lt;!--    那么工程和模块啥区别呢？工程天生只能使用自己的内部资源，工程是天生独立的，后天可以和其他模块建立关联关系，模块天生是属于
+父工程的，也就是模块一旦创建，所有父工程的资源都可以使用--&gt;
+
+&lt;!--    子模块天生继承父工程，可以使用付工程所有资源，
+        子模块之间天生没任何关系--&gt;
+
+&lt;!--    父子工程之间不用建立关系，继承关系是先天的，不需要手动建立
+
+         平级之间的关系叫依赖关系。依赖不是先天的，是需要后天建立的--&gt;
+    &lt;groupId&gt;com.itheima&lt;/groupId&gt;
+    &lt;artifactId&gt;maven_day02_parent&lt;/artifactId&gt;
+    &lt;packaging&gt;pom&lt;/packaging&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+&lt;!--    下面有几个字模块会显示到这里--&gt;
+    &lt;modules&gt;
+        &lt;module&gt;maven_day02_dao&lt;/module&gt;
+        &lt;module&gt;maven_day02_service&lt;/module&gt;
+        &lt;module&gt;maven_day02_web&lt;/module&gt;
+    &lt;/modules&gt;
+
+        &lt;!--maven工程要导入jar包的坐标，就必须要考虑解决jar包冲突。
+            解决jar包冲突的方式一：
+            第一声明优先原则：哪个jar包的坐标在靠上的位置，这个jar包就是先声明的。
+            先声明的jar包坐标下的依赖包，可以优先进入项目中。
+
+            maven导入jar包中的一些概念：
+            直接依赖：项目中直接导入的jar包，就是该项目的直接依赖包。
+            传递依赖：项目中没有直接导入的jar包，可以通过项目直接依赖jar包传递到项目中去。
+
+            解决jar包冲突的方式二：
+            路径近者优先原则。直接依赖路径比传递依赖路径近，那么最终项目进入的jar包会是路径近的直接依赖包。
+
+            解决jar包冲突的方式三【推荐使用】：
+            直接排除法。
+            当我们要排除某个jar包下依赖包，在配置exclusions标签的时候，内部可以不写版本号。
+            因为此时依赖包使用的版本和默认和本jar包一样。
+            --&gt;
+        &lt;!-- 统一管理jar包版本 --&gt;
+        &lt;properties&gt;
+            &lt;spring.version&gt;5.0.2.RELEASE&lt;/spring.version&gt;
+            &lt;slf4j.version&gt;1.6.6&lt;/slf4j.version&gt;
+            &lt;log4j.version&gt;1.2.12&lt;/log4j.version&gt;
+            &lt;shiro.version&gt;1.2.3&lt;/shiro.version&gt;
+            &lt;mysql.version&gt;8.0.11&lt;/mysql.version&gt;
+            &lt;mybatis.version&gt;3.4.5&lt;/mybatis.version&gt;
+            &lt;spring.security.version&gt;5.0.1.RELEASE&lt;/spring.security.version&gt;
+        &lt;/properties&gt;
+
+        &lt;!--
+        maven工程是可以分父子依赖关系的。
+        凡是依赖别的项目后，拿到的别的项目的依赖包，都属于传递依赖。
+        比如：当前A项目，被B项目依赖。那么我们A项目中所有jar包都会传递到B项目中。
+        B项目开发者，如果再在B项目中导入一套ssm框架的jar包，对于B项目是直接依赖。
+        那么直接依赖的jar包就会把我们A项目传递过去的jar包覆盖掉。
+        为了防止以上情况的出现。我们可以把A项目中主要jar包的坐标锁住，那么其他依赖该项目的项目中，
+        即便是有同名jar包直接依赖，也无法覆盖。
+        --&gt;
+        &lt;!-- 锁定jar包版本 --&gt;
+        &lt;dependencyManagement&gt;
+            &lt;dependencies&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                    &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+                    &lt;version&gt;${spring.version}&lt;/version&gt;
+                &lt;/dependency&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                    &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+                    &lt;version&gt;${spring.version}&lt;/version&gt;
+                &lt;/dependency&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                    &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+                    &lt;version&gt;${spring.version}&lt;/version&gt;
+                &lt;/dependency&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                    &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+                    &lt;version&gt;${spring.version}&lt;/version&gt;
+                &lt;/dependency&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                    &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+                    &lt;version&gt;${spring.version}&lt;/version&gt;
+                &lt;/dependency&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+                    &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+                    &lt;version&gt;${mybatis.version}&lt;/version&gt;
+                &lt;/dependency&gt;
+            &lt;/dependencies&gt;
+        &lt;/dependencyManagement&gt;
+
+        &lt;!-- 项目依赖jar包 --&gt;
+        &lt;dependencies&gt;
+            &lt;!-- spring --&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
+                &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
+                &lt;version&gt;1.6.8&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+                &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+                &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+                &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+                &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-orm&lt;/artifactId&gt;
+                &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;
+                &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+                &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+                &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+                &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+                &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;junit&lt;/groupId&gt;
+                &lt;artifactId&gt;junit&lt;/artifactId&gt;
+                &lt;version&gt;4.12&lt;/version&gt;
+                &lt;scope&gt;test&lt;/scope&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;mysql&lt;/groupId&gt;
+                &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+                &lt;version&gt;${mysql.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+                &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+                &lt;version&gt;3.1.0&lt;/version&gt;
+                &lt;scope&gt;provided&lt;/scope&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;
+                &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;
+                &lt;version&gt;2.0&lt;/version&gt;
+                &lt;scope&gt;provided&lt;/scope&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;jstl&lt;/groupId&gt;
+                &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+                &lt;version&gt;1.2&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;!-- log start --&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;log4j&lt;/groupId&gt;
+                &lt;artifactId&gt;log4j&lt;/artifactId&gt;
+                &lt;version&gt;${log4j.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+                &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+                &lt;version&gt;${slf4j.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+                &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+                &lt;version&gt;${slf4j.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;!-- log end --&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+                &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+                &lt;version&gt;${mybatis.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+                &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+                &lt;version&gt;1.3.0&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;c3p0&lt;/groupId&gt;
+                &lt;artifactId&gt;c3p0&lt;/artifactId&gt;
+                &lt;version&gt;0.9.1.2&lt;/version&gt;
+                &lt;type&gt;jar&lt;/type&gt;
+                &lt;scope&gt;compile&lt;/scope&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;com.github.pagehelper&lt;/groupId&gt;
+                &lt;artifactId&gt;pagehelper&lt;/artifactId&gt;
+                &lt;version&gt;5.1.2&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-security-web&lt;/artifactId&gt;
+                &lt;version&gt;${spring.security.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-security-config&lt;/artifactId&gt;
+                &lt;version&gt;${spring.security.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-security-core&lt;/artifactId&gt;
+                &lt;version&gt;${spring.security.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-security-taglibs&lt;/artifactId&gt;
+                &lt;version&gt;${spring.security.version}&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+                &lt;artifactId&gt;druid&lt;/artifactId&gt;
+                &lt;version&gt;1.0.9&lt;/version&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;junit&lt;/groupId&gt;
+                &lt;artifactId&gt;junit&lt;/artifactId&gt;
+                &lt;version&gt;4.12&lt;/version&gt;
+            &lt;/dependency&gt;
+
+        &lt;/dependencies&gt;
+        &lt;build&gt;
+            &lt;plugins&gt;
+                &lt;plugin&gt;
+                    &lt;groupId&gt;org.apache.tomcat.maven&lt;/groupId&gt;
+                    &lt;artifactId&gt;tomcat7-maven-plugin&lt;/artifactId&gt;
+                    &lt;version&gt;2.2&lt;/version&gt;
+                &lt;/plugin&gt;
+
+            &lt;/plugins&gt;
+        &lt;/build&gt;
+    &lt;/project&gt;
+</code></pre><p>service层的pom:<br>    &lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"><br>        <parent><br>            <artifactid>maven_day02_parent</artifactid><br>            <groupid>com.itheima</groupid><br>            <version>1.0-SNAPSHOT</version><br>        </parent><br>        <modelversion>4.0.0</modelversion></project></p>
+<pre><code>    &lt;artifactId&gt;maven_day02_service&lt;/artifactId&gt;
+
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.itheima&lt;/groupId&gt;
+        &lt;artifactId&gt;maven_day02_dao&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+&lt;/project&gt;
+</code></pre><hr>
+<p>dao层类似。</p>
+<hr>
+<h1 id="传递下来的包是否能用"><a href="#传递下来的包是否能用" class="headerlink" title="传递下来的包是否能用"></a>传递下来的包是否能用</h1><p>如果说在parent使用了scope这个作用域的标签就不一定在子工程可以使用：</p>
+<p><img src="https://i.imgur.com/dzfAU9e.png" alt=""></p>
+<hr>
+<h1 id="Maven工程打开SSM项目的三种启动方式（包括完整代码）"><a href="#Maven工程打开SSM项目的三种启动方式（包括完整代码）" class="headerlink" title="Maven工程打开SSM项目的三种启动方式（包括完整代码）"></a>Maven工程打开SSM项目的三种启动方式（包括完整代码）</h1><p>首先看一下目录结构，目录结构是父工程结合子工程的</p>
+</project></denpenedies>
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Eric Hunn wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫描二维码订阅无心大数据笔记</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechatpay.png" alt="Eric Hunn WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay.png" alt="Eric Hunn Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/07/SSM整合案例/" rel="next" title="SSM整合案例">
+                <i class="fa fa-chevron-left"></i> SSM整合案例
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/08/Maven高级之父子工程SSM案例/" rel="prev" title="Maven高级之父子工程SSM案例">
+                Maven高级之父子工程SSM案例 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTIxMS8xNTczOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Eric Hunn" />
+            
+              <p class="site-author-name" itemprop="name">Eric Hunn</p>
+              <p class="site-description motion-element" itemprop="description">大数据|动漫迷|科技控</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">116</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/erichunn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:erichunn.me@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/2944687303/home?wvr=5" target="_blank" title="Webibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Webibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://github.com/drakeet/" title="Drakeet" target="_blank">Drakeet</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Maven导入Jar包时候依赖冲突的解决"><span class="nav-number">1.</span> <span class="nav-text">Maven导入Jar包时候依赖冲突的解决</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Maven工程拆分与聚合的思想"><span class="nav-number">2.</span> <span class="nav-text">Maven工程拆分与聚合的思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#传递下来的包是否能用"><span class="nav-number">3.</span> <span class="nav-text">传递下来的包是否能用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Maven工程打开SSM项目的三种启动方式（包括完整代码）"><span class="nav-number">4.</span> <span class="nav-text">Maven工程打开SSM项目的三种启动方式（包括完整代码）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+	  
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1311545319&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eric Hunn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
