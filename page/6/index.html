@@ -328,6 +328,161 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/11/笔记重点总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/11/笔记重点总结/" itemprop="url">笔记重点总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-11T19:51:41+08:00">
+                2018-11-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/笔记总结/" itemprop="url" rel="index">
+                    <span itemprop="name">笔记总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Hadoop中重点是，全排序，二次排序。<br>在视频的最后有一天是讲解一个二次排序的实例，我没有细看。</p>
+<p>在Hive中我认为重点的是关于查询的内容，因为在hive中一般都是加载数据然后查询，查询之后有一个自定义函数UDF的内容，这部分的内容看的不是很清晰。</p>
+<p>在avro和Protoc里面主要讲解2中反编译的方法，主要是一个面向对象开发的一个过程，还是java编程不熟悉，然后代码跟着走了一遍但是肯定还是有问题，视频里面的老师是在一遍看外文的书籍，根据里面的代码模板来写的。在自己敲的过程中protoc的代码引入maven依赖包之后，还是没有能够将编译好的文件识别出来，不知道什么问题，但是avo就引入maven之后解决了这个问题。</p>
+<p>在讲解zookeeper的时候我觉得在选举算法的时候他没有细致的讲解，<br>然后这边主要是zookeeper部署在hadoop集群和使用API控制zookeeper。在集群部署高可用的时候是201202203部署zk202203204部署journalnode节点，（journalnode节点已经快忘记了）。</p>
+<p>容灾管理器进程ZKFC在配置的时候后来跟着yarn启动了起来。下面图是整个的进程图：</p>
+<p><img src="https://i.imgur.com/osWW4ZM.png" alt=""></p>
+<p>这个zookeeper的地方看的比较快，对于每个目录做什么的比较忘记，然后在配置的时候没有细究配置的意义。就是跟着走了一遍。但是最后配置了起来了。配置hdfs高可用的时候比较费时费力，配置内容比较多，配置yarn的时候比较简单，配置一下即可。</p>
+<hr>
+<p>在hbase安装的过程中，由于开始的时候设置了zookeeper的HA自动容灾，所以最开始的时候s206自动设置为active模式，要把s206设置为<br>standby模式才能在s201里面设置s201为HMaster。</p>
+<p>也就是说要杀死掉s206里面的namenode或者说通过转换吧他变成standby然后s201设置为active模式。不然会导致出错</p>
+<hr>
+<p>几个端口2181 8080 50070  8020 16010</p>
+<hr>
+<p>在讲解hbase 第二天的动态遍历的那个三层For循环并没有看明白，也就是说Java的基础还是很薄弱的。讲解hbase一个三层循环嵌套来scan的没有弄明白。hbase的时候讲解的重点在于协处理器的理解和那个电信的一个calllogs的rowkey的设计。利用了一个二级索引的方式。这个地方的原理很重要。然后最后有一个平时用于生产的工具叫phoenix的工具，可以用类sql的语句写出来，避免了自己设二次索引。里面有大量协处理器的封装，可以直接用sql语句。这边又讲了一个hive和hbase集成的一个问题，这个直接在hive中直接写语句即可。注意看一下phoenix和hive集成的区别。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/09/人为什么要努力？——2018-11-09/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -5412,232 +5567,6 @@ public void readMapfile() throws Exception {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/05/Hadoop第五天01之hdfs写入剖析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/05/Hadoop第五天01之hdfs写入剖析/" itemprop="url">Hadoop第五天01之hdfs写入剖析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-05T16:31:19+08:00">
-                2018-10-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>一段HDFS写入流源码分析。</p>
-<p><img src="https://i.imgur.com/17cBkFO.png" alt=""></p>
-<p>首先这个得到了一个抽象类，这个FileSystemm是一个抽象类。</p>
-<p><img src="https://i.imgur.com/Rlbd5VC.png" alt=""></p>
-<p>这个抽象类有子类，左边有一个箭头，点击得到了一个这个抽象类的所有的子类，简单看下，因为Hadoop包类的hadfs这个，得到的子类是DistributedFileSystem这个分布式文件系统。</p>
-<p><img src="https://i.imgur.com/bzQ91XF.png" alt=""></p>
-<p>也可以吧鼠标放到fs上会显示返回的类</p>
-<p><img src="https://i.imgur.com/JOfPZvk.png" alt=""></p>
-<p>也可以在IDEA的右下角的类标签里面找到：</p>
-<p><img src="https://i.imgur.com/WSz2duV.png" alt=""></p>
-<p>也就是说返回了一个DistributedFIleSystem,</p>
-<p>然后文件系统fs.create调用了create方法返回了一个FSDataOutputStream流，这个是一个HDFS数据输出流</p>
-<p><img src="https://i.imgur.com/SKFBqkH.png" alt=""></p>
-<p><img src="https://i.imgur.com/0aIVTzf.png" alt=""></p>
-<p>单机F5单部进入第一个：</p>
-<p><img src="https://i.imgur.com/nnxWOri.png" alt=""></p>
-<p><img src="https://i.imgur.com/f434RJR.png" alt=""></p>
-<p><img src="https://i.imgur.com/4Cf1ljy.png" alt=""></p>
-<p>看这个，进到下一步，调用checkClosed()，方法，这个方法其实是继承FSOutput流里面的东西。  </p>
-<p><img src="https://i.imgur.com/lHPzWs4.png" alt=""><br>看到这个里面out=DFSOutputStream。这个是被装饰的流。调用这个流的write方法</p>
-<p>HDFS流是对DFS输出流的包装</p>
-<p>进去这个是装饰模式。</p>
-<p>在这个构造模式中也声明了字段。</p>
-<p><img src="https://i.imgur.com/8CsurDw.png" alt=""></p>
-<p>下一步：</p>
-<p><img src="https://i.imgur.com/0f1RcbV.png" alt=""></p>
-<p>调用了Close方法因为是继承    都是FSoutput流的子类。一个检查的方法，判断是否数组越界。</p>
-<p>下面这个for是个循环，循环写入，。 </p>
-<p><img src="https://i.imgur.com/MTsauqO.png" alt=""></p>
-<p>然后下一步，进入到write1方法。</p>
-<p><img src="https://i.imgur.com/nAIKdn5.png" alt=""></p>
-<p>里面的buf是一个缓冲区，count是一个成员常量</p>
-<p><img src="https://i.imgur.com/aLCcnkl.png" alt=""></p>
-<p>上图的buf看注释，是一个缓冲区用哦过来存储数据，在他被checksum校验和之前</p>
-<p>校验和就是检查是否是比之前设置的最小块大小大，而且还必须是512字节的倍数</p>
-<p><img src="https://i.imgur.com/pAFducf.png" alt=""></p>
-<p>上图点击进入到一个校验和类的里面看注释，校验和用于数据传输之前。</p>
-<p><img src="https://i.imgur.com/E8qEJy0.png" alt=""></p>
-<p>上图这两行，通过一个算法来实现校验和。通过CRC32算法类似于哈希算法。</p>
-<p><img src="https://i.imgur.com/RJ1vXHv.png" alt=""></p>
-<p>不管他，回到buf缓冲这个地方，单部进入</p>
-<p><img src="https://i.imgur.com/RKkQGry.png" alt=""></p>
-<p>首先在缓冲区进行一个判定</p>
-<p><img src="https://i.imgur.com/qfwP1Yn.png" alt=""></p>
-<p>拷贝本地数据到本地的一个buf，显示Localbuffer=4608,count=0.要拷贝的字节是4608。<br>如果拷贝的内容没有缓冲区大就考数据内容，要是比缓冲区大的话，就拷贝缓冲区大小的内容。</p>
-<p><img src="https://i.imgur.com/rk8wX6W.png" alt=""></p>
-<p>在单部进入到上图。</p>
-<p><img src="https://i.imgur.com/PjqlOXa.png" alt=""></p>
-<p>返回到代码。进入到源代码中，如上图</p>
-<p>在单部进入到这个Close里面：如下图：<br><img src="https://i.imgur.com/97VYh5X.png" alt=""></p>
-<p>这个close是out.close。out是调用父类的close方法，而且父类还是一个包装类，所以进入了包装的列的close方法。<br>再进入到close()方法。如下图：</p>
-<p><img src="https://i.imgur.com/2ExMNXU.png" alt=""></p>
-<p>out的本类HDFSOutputStream，然后这个又是一个装饰类，本质上是DFSOutputStream这个类的方法。</p>
-<p>单部进入到Out里面，看一下调用的到底是谁的out。再单部进入到Out里面</p>
-<p><img src="https://i.imgur.com/RG98Z9F.png" alt=""></p>
-<p>看注释，关闭输出流并且    释放与之相关联的系统资源。<br>上图最终进入到了DFSOutputstream的close()方法里面了。</p>
-<p><img src="https://i.imgur.com/dDhSzjg.png" alt=""></p>
-<p>接上图，看到在这个close(）方法里面有一个closeImp（)方法。调用自己的关闭实现方法<br>还在这个类里面执行呢：继续在这个类里面往下走:如下图：</p>
-<p><img src="https://i.imgur.com/7Vkorih.png" alt=""></p>
-<p>这个里面有一个flushbuffer()方法， 在单部进入到这个方法里面。如下图：</p>
-<p><img src="https://i.imgur.com/YSCeFmf.png" alt=""></p>
-<p>看到这个图里面this和当前类不太一样说明这两个东西也是继承关系。</p>
-<p>清理缓冲区两个参数，看注释：强制任何输出流字节被校验和并且被写入底层的输出流。</p>
-<p>再单步进入：</p>
-<p><img src="https://i.imgur.com/jfWYEI1.png" alt=""></p>
-<p><img src="https://i.imgur.com/4iqESya.png" alt=""></p>
-<p>看到如上图的内容。然后到了writeChecksumChunks这个方法里面，单部进入到这个里面：</p>
-<p><img src="https://i.imgur.com/FM0MpyT.png" alt=""></p>
-<p>对给定的数据小块来生成校验和，并且根据小块和校验和给底层的数据输出流。 </p>
-<p>单部进入到这个sum.calculateChunckedSum方法里面。</p>
-<p><img src="https://i.imgur.com/EVQOpOL.png" alt=""></p>
-<p><img src="https://i.imgur.com/UKsSHTO.png" alt=""></p>
-<p>下一步</p>
-<p><img src="https://i.imgur.com/ifq7oZR.png" alt=""></p>
-<p>上图吧数据写入了底层里面去了。</p>
-<p>下一步</p>
-<p><img src="https://i.imgur.com/WLEldHU.png" alt=""></p>
-<p>下一步</p>
-<p><img src="https://i.imgur.com/TN0fU7T.png" alt=""></p>
-<p>下一步</p>
-<p><img src="https://i.imgur.com/X3dHeJt.png" alt=""></p>
-<p><img src="https://i.imgur.com/W5NCoWA.png" alt=""></p>
-<p>上图就是将底层的内容打成包，再去通过网络传输。在包里面加编号和序号，也就是加顺序。</p>
-<p><img src="https://i.imgur.com/INeugMK.png" alt=""></p>
-<p>往下不写了太多了。现在的视频位置是hdfs写入剖析2的开头。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -5692,7 +5621,7 @@ public void readMapfile() throws Exception {
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-count">82</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

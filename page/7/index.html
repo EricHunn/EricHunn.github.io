@@ -328,6 +328,232 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/05/Hadoop第五天01之hdfs写入剖析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/05/Hadoop第五天01之hdfs写入剖析/" itemprop="url">Hadoop第五天01之hdfs写入剖析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-05T16:31:19+08:00">
+                2018-10-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一段HDFS写入流源码分析。</p>
+<p><img src="https://i.imgur.com/17cBkFO.png" alt=""></p>
+<p>首先这个得到了一个抽象类，这个FileSystemm是一个抽象类。</p>
+<p><img src="https://i.imgur.com/Rlbd5VC.png" alt=""></p>
+<p>这个抽象类有子类，左边有一个箭头，点击得到了一个这个抽象类的所有的子类，简单看下，因为Hadoop包类的hadfs这个，得到的子类是DistributedFileSystem这个分布式文件系统。</p>
+<p><img src="https://i.imgur.com/bzQ91XF.png" alt=""></p>
+<p>也可以吧鼠标放到fs上会显示返回的类</p>
+<p><img src="https://i.imgur.com/JOfPZvk.png" alt=""></p>
+<p>也可以在IDEA的右下角的类标签里面找到：</p>
+<p><img src="https://i.imgur.com/WSz2duV.png" alt=""></p>
+<p>也就是说返回了一个DistributedFIleSystem,</p>
+<p>然后文件系统fs.create调用了create方法返回了一个FSDataOutputStream流，这个是一个HDFS数据输出流</p>
+<p><img src="https://i.imgur.com/SKFBqkH.png" alt=""></p>
+<p><img src="https://i.imgur.com/0aIVTzf.png" alt=""></p>
+<p>单机F5单部进入第一个：</p>
+<p><img src="https://i.imgur.com/nnxWOri.png" alt=""></p>
+<p><img src="https://i.imgur.com/f434RJR.png" alt=""></p>
+<p><img src="https://i.imgur.com/4Cf1ljy.png" alt=""></p>
+<p>看这个，进到下一步，调用checkClosed()，方法，这个方法其实是继承FSOutput流里面的东西。  </p>
+<p><img src="https://i.imgur.com/lHPzWs4.png" alt=""><br>看到这个里面out=DFSOutputStream。这个是被装饰的流。调用这个流的write方法</p>
+<p>HDFS流是对DFS输出流的包装</p>
+<p>进去这个是装饰模式。</p>
+<p>在这个构造模式中也声明了字段。</p>
+<p><img src="https://i.imgur.com/8CsurDw.png" alt=""></p>
+<p>下一步：</p>
+<p><img src="https://i.imgur.com/0f1RcbV.png" alt=""></p>
+<p>调用了Close方法因为是继承    都是FSoutput流的子类。一个检查的方法，判断是否数组越界。</p>
+<p>下面这个for是个循环，循环写入，。 </p>
+<p><img src="https://i.imgur.com/MTsauqO.png" alt=""></p>
+<p>然后下一步，进入到write1方法。</p>
+<p><img src="https://i.imgur.com/nAIKdn5.png" alt=""></p>
+<p>里面的buf是一个缓冲区，count是一个成员常量</p>
+<p><img src="https://i.imgur.com/aLCcnkl.png" alt=""></p>
+<p>上图的buf看注释，是一个缓冲区用哦过来存储数据，在他被checksum校验和之前</p>
+<p>校验和就是检查是否是比之前设置的最小块大小大，而且还必须是512字节的倍数</p>
+<p><img src="https://i.imgur.com/pAFducf.png" alt=""></p>
+<p>上图点击进入到一个校验和类的里面看注释，校验和用于数据传输之前。</p>
+<p><img src="https://i.imgur.com/E8qEJy0.png" alt=""></p>
+<p>上图这两行，通过一个算法来实现校验和。通过CRC32算法类似于哈希算法。</p>
+<p><img src="https://i.imgur.com/RJ1vXHv.png" alt=""></p>
+<p>不管他，回到buf缓冲这个地方，单部进入</p>
+<p><img src="https://i.imgur.com/RKkQGry.png" alt=""></p>
+<p>首先在缓冲区进行一个判定</p>
+<p><img src="https://i.imgur.com/qfwP1Yn.png" alt=""></p>
+<p>拷贝本地数据到本地的一个buf，显示Localbuffer=4608,count=0.要拷贝的字节是4608。<br>如果拷贝的内容没有缓冲区大就考数据内容，要是比缓冲区大的话，就拷贝缓冲区大小的内容。</p>
+<p><img src="https://i.imgur.com/rk8wX6W.png" alt=""></p>
+<p>在单部进入到上图。</p>
+<p><img src="https://i.imgur.com/PjqlOXa.png" alt=""></p>
+<p>返回到代码。进入到源代码中，如上图</p>
+<p>在单部进入到这个Close里面：如下图：<br><img src="https://i.imgur.com/97VYh5X.png" alt=""></p>
+<p>这个close是out.close。out是调用父类的close方法，而且父类还是一个包装类，所以进入了包装的列的close方法。<br>再进入到close()方法。如下图：</p>
+<p><img src="https://i.imgur.com/2ExMNXU.png" alt=""></p>
+<p>out的本类HDFSOutputStream，然后这个又是一个装饰类，本质上是DFSOutputStream这个类的方法。</p>
+<p>单部进入到Out里面，看一下调用的到底是谁的out。再单部进入到Out里面</p>
+<p><img src="https://i.imgur.com/RG98Z9F.png" alt=""></p>
+<p>看注释，关闭输出流并且    释放与之相关联的系统资源。<br>上图最终进入到了DFSOutputstream的close()方法里面了。</p>
+<p><img src="https://i.imgur.com/dDhSzjg.png" alt=""></p>
+<p>接上图，看到在这个close(）方法里面有一个closeImp（)方法。调用自己的关闭实现方法<br>还在这个类里面执行呢：继续在这个类里面往下走:如下图：</p>
+<p><img src="https://i.imgur.com/7Vkorih.png" alt=""></p>
+<p>这个里面有一个flushbuffer()方法， 在单部进入到这个方法里面。如下图：</p>
+<p><img src="https://i.imgur.com/YSCeFmf.png" alt=""></p>
+<p>看到这个图里面this和当前类不太一样说明这两个东西也是继承关系。</p>
+<p>清理缓冲区两个参数，看注释：强制任何输出流字节被校验和并且被写入底层的输出流。</p>
+<p>再单步进入：</p>
+<p><img src="https://i.imgur.com/jfWYEI1.png" alt=""></p>
+<p><img src="https://i.imgur.com/4iqESya.png" alt=""></p>
+<p>看到如上图的内容。然后到了writeChecksumChunks这个方法里面，单部进入到这个里面：</p>
+<p><img src="https://i.imgur.com/FM0MpyT.png" alt=""></p>
+<p>对给定的数据小块来生成校验和，并且根据小块和校验和给底层的数据输出流。 </p>
+<p>单部进入到这个sum.calculateChunckedSum方法里面。</p>
+<p><img src="https://i.imgur.com/EVQOpOL.png" alt=""></p>
+<p><img src="https://i.imgur.com/UKsSHTO.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/ifq7oZR.png" alt=""></p>
+<p>上图吧数据写入了底层里面去了。</p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/WLEldHU.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/TN0fU7T.png" alt=""></p>
+<p>下一步</p>
+<p><img src="https://i.imgur.com/X3dHeJt.png" alt=""></p>
+<p><img src="https://i.imgur.com/W5NCoWA.png" alt=""></p>
+<p>上图就是将底层的内容打成包，再去通过网络传输。在包里面加编号和序号，也就是加顺序。</p>
+<p><img src="https://i.imgur.com/INeugMK.png" alt=""></p>
+<p>往下不写了太多了。现在的视频位置是hdfs写入剖析2的开头。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/10/04/Hadoop第四天之滚动日志-安全模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2179,189 +2405,6 @@ $&gt;userdel -r centos2        //用户所在组目录也会被删除.在删除�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/09/18/Linux基础之进程查看/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/18/Linux基础之进程查看/" itemprop="url">Linux基础之进程查看</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T20:10:44+08:00">
-                2018-09-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="job"><a href="#job" class="headerlink" title="job"></a>job</h2><hr>
-<p>放到后台运行的进程.<br>1.将程序放到后台运行,以&amp;结尾.</p>
-<pre><code>$&gt;nano b.txt &amp;
-</code></pre><p>2.查看后台运行的jobs数</p>
-<pre><code>$&gt;jobs
-</code></pre><p>3.切换后台作业到前台来.</p>
-<pre><code>$&gt;fg %n                //n是job编号.
-</code></pre><p>4.前台正在的进程，放到后台。</p>
-<pre><code>ctrl + z
-</code></pre><p>5.让后作业运行</p>
-<pre><code>$&gt;bg %1        //
-</code></pre><p>6.杀死作业</p>
-<pre><code>$&gt;kill %1    //
-</code></pre><hr>
-<pre><code>man + 命令    ：查看该命令详细帮助
-</code></pre><hr>
-<h2 id="进程查看-prcess-show"><a href="#进程查看-prcess-show" class="headerlink" title="进程查看,prcess show"></a>进程查看,prcess show</h2><hr>
-<pre><code>$&gt;ps -Af |grep gnome        //-A:所有进程  -f:所有列格式.
-
-$&gt;top                        //动态显示进程信息。含有cpu、内存的使用情况.
-                            //q,按照q退出。
-</code></pre><h2 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h2><pre><code>剪切显示文件的每一行。
-$&gt;cut -c 1-5 a.txt                    //从第一个字符开始,下标从1开始。
-$&gt;ps -Af | cut -c 45-80 | more        //吧PS里面获得的内容剪切显示，显示没一行的45-80，翻页查看
-</code></pre><h2 id="查看帮助"><a href="#查看帮助" class="headerlink" title="查看帮助"></a>查看帮助</h2><pre><code>$&gt;help            //查看os内置的命令
-
-$&gt;man ifcon fig    //查看特定命令
-
-$&gt;ifconfig --help
-$&gt;ifconfig -h
-
-$&gt;info ifconfig    //
-</code></pre><h2 id="磁盘分区使用"><a href="#磁盘分区使用" class="headerlink" title="磁盘分区使用"></a>磁盘分区使用</h2><pre><code>$&gt;fdisk -l /dev/sda
-</code></pre><p>里面的中括号是可选的，尖括号是必须要写的</p>
-<p><img src="https://i.imgur.com/kxOQiFw.png" alt=""></p>
-<p>里面sad是磁盘，sda1是分区。sd1，sd2，sd3是磁盘的三个分区。</p>
-<p><img src="https://i.imgur.com/OuJzwf1.png" alt=""></p>
-<p><img src="https://i.imgur.com/dfgfkKL.png" alt=""></p>
-<h2 id="查看磁盘使用情况-disk-free"><a href="#查看磁盘使用情况-disk-free" class="headerlink" title="查看磁盘使用情况(disk free)"></a>查看磁盘使用情况(disk free)</h2><pre><code>$&gt;df -ah /home/centos        //查看
-</code></pre><p><img src="https://i.imgur.com/JcXk8Fl.png" alt=""></p>
-<p><img src="https://i.imgur.com/KuqoyN5.png" alt=""></p>
-<p><img src="https://i.imgur.com/aibzJWn.png" alt=""></p>
-<h2 id="dirname"><a href="#dirname" class="headerlink" title="dirname"></a>dirname</h2><p>取出指定地址的上级目录.</p>
-<pre><code>$&gt;dirname /a/b/c/d
-$&gt;/a/b/c
-</code></pre><h2 id="basename"><a href="#basename" class="headerlink" title="basename"></a>basename</h2><p>取出当前地址的上级目录.</p>
-<pre><code>$&gt;dirname /a/b/c/d
-$&gt;d
-</code></pre><h2 id="主机名"><a href="#主机名" class="headerlink" title="主机名"></a>主机名</h2><pre><code>$&gt;hostname        //显式主机名
-
-$&gt;修改主机名(sudo)
-    [/etc/hostname]
-    s200
-</code></pre><h2 id="关机重启命令"><a href="#关机重启命令" class="headerlink" title="关机重启命令"></a>关机重启命令</h2><pre><code>$&gt;reboot        //重启
-$&gt;halt            //停止,黑屏
-                //halt -p  === poweroff
-                //halt -r  === reboot
-
-$&gt;poweroff        //关机
-$&gt;shutdown        //shutdown now,    
-</code></pre><h2 id="命令嵌套"><a href="#命令嵌套" class="headerlink" title="命令嵌套"></a>命令嵌套</h2><p>1.使用<code></code></p>
-<pre><code>$&gt;echo `cat b.txt`    //命令解析,无法嵌套
-$&gt;$(... $())        //支持命令的嵌套
-</code></pre><p>2.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2416,7 +2459,7 @@ $&gt;$(... $())        //支持命令的嵌套
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-count">82</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

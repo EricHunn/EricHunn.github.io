@@ -328,6 +328,447 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/10/05/Spring第四天_JdbcTemplate的基本使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/05/Spring第四天_JdbcTemplate的基本使用/" itemprop="url">Spring第四天_JdbcTemplate的基本使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-05T11:14:07+08:00">
+                2019-10-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>类似于dbutils</p>
+<p><img src="https://i.imgur.com/QDvo9Qn.png" alt=""></p>
+<p><img src="https://i.imgur.com/pnXb7t8.png" alt=""></p>
+<p><img src="https://i.imgur.com/dSH5jGy.png" alt=""></p>
+<p>下面是代码，我们可以通过IOC和AOP动态代理来简化这些代码。使代码更加灵活</p>
+<p><img src="https://i.imgur.com/kdScX2O.png" alt=""></p>
+<hr>
+<p><strong>小tips：</strong></p>
+<p>在使用query找到哪个是需要的方法：比如下面的这段，要找的是使用query带哪个参数的方法，先看有的返回void的有的返回List的，也就是Spring的Template是靠不同的query返回不同类型的东西，而dbUtils的query方法是靠ResultSetHandler的返回值来决定返回的内容的，</p>
+<p>下面这个方法有这么多重载的方法，如何去定位：</p>
+<p><img src="https://i.imgur.com/KGA79w8.png" alt=""></p>
+<p>1、我们有什么：我们有SQL语句，语句的参数，</p>
+<p>2、我们要什么：我们要一个返回的List集合</p>
+<p>T类型和void类型直接就排除，然后第一个参数不是SQL语句的直接排除，然后RowMapper没有参数直接排除，一般参数就是可变参数和数组</p>
+<p>所以最后剩下如下下图所示：<br><img src="https://i.imgur.com/lzCNz0V.png" alt=""></p>
+<p>dbUtils的和Spring的对比：</p>
+<p><img src="https://i.imgur.com/WmJnhQn.png" alt=""></p>
+<hr>
+<p>然后讲解一下JdbcTemplate的基本用法：</p>
+<p>首先是bean.xml文件：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:util=&quot;http://www.springframework.org/schema/util&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd&quot;&gt;
+
+
+&lt;!--    配置jdbctemplate--&gt;
+    &lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+&lt;!--    配置数据源--&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306_eesy&quot;&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;username&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;password&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre><p>然后是定义的domain文件：</p>
+<pre><code>package com.itheima.domain;
+
+import java.io.Serializable;
+
+/**
+ * @Description 账户的实体类
+ * @Author TT Hun
+ * @Data 2019/10/5 11:28
+ */
+public class Account implements Serializable {
+    private Integer id;
+    private String name;
+    private Float money;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Float getMoney() {
+        return money;
+    }
+
+    public void setMoney(Float money) {
+        this.money = money;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Account{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +
+                &quot;, money=&quot; + money +
+                &apos;}&apos;;
+    }
+}
+</code></pre><p>然后是几个JdbcTemplate的Demo</p>
+<pre><code>package com.itheima.jdbctemplate;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+/**
+ * @Description JDBCTemplate最基本用法
+ * @Author TT Hun
+ * @Data 2019/10/5 11:30
+ */
+public class JdbcTemplateDemo1 {
+    public static void main(String[] args) {
+
+//        准备数据源，Spring的内置数据源不通过Spring容器，来设置内置数据源。
+        DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setDriverClassName(&quot;com.mysql.jdbc.Driver&quot;);
+        ds.setUrl(&quot;jdbc:mysql://localhost:3306/eesy&quot;);
+        ds.setUsername(&quot;root&quot;);
+        ds.setPassword(&quot;root&quot;);
+//        1、创建JDBCTemplate对象
+        JdbcTemplate jt = new JdbcTemplate();
+//        给jt设置数据源
+        jt.setDataSource(ds);
+//         2、执行操作
+        jt.execute(&quot;insert into account(name,money) values(&apos;ccc&apos;,1000f)&quot;);
+
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.jdbctemplate;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+/**
+ * @Description JDBCTemplate最基本用法，通过Spring容器IOC，来获取对象。
+ * @Author TT Hun
+ * @Data 2019/10/5 11:30
+ */
+public class JdbcTemplateDemo2 {
+    public static void main(String[] args) {
+
+//        1、获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、获取对象
+        JdbcTemplate jt = ac.getBean(&quot;jdbcTemplate&quot;, JdbcTemplate.class);
+//        3、添加操作
+        jt.execute(&quot;insert into account(name,money) values(&apos;ddd&apos;,222f)&quot;);
+
+
+
+
+    }
+}
+</code></pre><hr>
+<pre><code>package com.itheima.jdbctemplate;
+
+import com.itheima.domain.Account;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+/**
+ * @Description JDBCTemplate的CRUD用法
+ * @Author TT Hun
+ * @Data 2019/10/5 11:30
+ */
+public class JdbcTemplateDemo3 {
+    public static void main(String[] args) {
+
+//        1、获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、获取对象
+        JdbcTemplate jt = ac.getBean(&quot;jdbcTemplate&quot;, JdbcTemplate.class);
+//        3、执行操作
+//        保存操作
+        jt.update(&quot;insert into account(name,money)values(?,?)&quot;,&quot;eee&quot;,3333f);
+//        更新操作
+        jt.update(&quot;update acocunt set name = ?,money = ?,where id=?&quot;,&quot;test&quot;,4567,7);
+//        删除操作
+        jt.update(&quot;delete from account where id=?&quot;,8);
+//        查询所有
+//        List&lt;Account&gt; accounts = jt.query(&quot;select * from account where money &gt;?&quot;, new AccountRowMapper() , 1000f);
+//        下面这种方法不使用自己定义的结果集，而使用Spring自带的结果集即可。
+        List&lt;Account&gt; accounts = jt.query(&quot;select * from account where money&gt;?&quot;, new BeanPropertyRowMapper&lt;Account&gt;(Account.class) , 1000f);
+        for (Account account:accounts){
+            System.out.println(account);
+        }
+
+//        查询一个
+        List&lt;Account&gt; account = jt.query(&quot;select * from account where id=?&quot;, new BeanPropertyRowMapper&lt;Account&gt;(Account.class) , 1);
+        System.out.println(accounts.isEmpty()? &quot;没有内容&quot;:accounts.get(0));
+//        查询返回一行一列(使用聚合函数但是不加groupby字句)
+        List&lt;Long&gt; count = jt.queryForList(&quot;select count(*) from account where money &gt; ? &quot;, Long.class, 100000f);
+        System.out.println(count);
+    }
+}
+
+/**
+ * 定义Account的封装策略的
+ */
+class AccountRowMapper implements RowMapper&lt;Account&gt; {
+
+    /**
+     * 把结果集中的数据封装到Account中然后由Spring把每个Account加到集合中
+     * @param rs
+     * @param rowNum
+     * @return
+     * @throws SQLException
+     */
+    public Account mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Account account = new Account();
+        account.setId(rs.getInt(&quot;id&quot;));
+        account.setName(rs.getString(&quot;name&quot;));
+        account.setMoney(rs.getFloat(&quot;money&quot;));
+        return account;
+    }
+}
+</code></pre><hr>
+<p>测试类使用Dao层的操作：</p>
+<pre><code>import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+/**
+ * @Description JDBCTemplate最基本用法，通过Spring容器IOC，来获取对象。
+ * @Author TT Hun
+ * @Data 2019/10/5 11:30
+ */
+public class test {
+    public static void main(String[] args) {
+
+//        1、获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);
+//        2、获取对象
+//        JdbcTemplate accountDao = ac.getBean(&quot;jdbcTemplate&quot;, JdbcTemplate.class);
+//        3、添加操作
+//        jt.execute(&quot;insert into account(name,money) values(&apos;ddd&apos;,222f)&quot;);
+        IAccountDao ad = ac.getBean(&quot;accountDao&quot;, IAccountDao.class);
+        Account account = ad.findAccountById(1);
+        System.out.println(account);
+
+    }
+}
+</code></pre><p>和上面测试类一起的</p>
+<pre><code>package com.itheima.dao.impl;
+
+import com.itheima.dao.IAccountDao;
+import com.itheima.domain.Account;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.List;
+
+/**
+ * @Description 账户的持久层实现类
+ * @Author TT Hun
+ * @Data 2019/10/8 21:05
+ */
+public class AccountDaoImpl implements IAccountDao {
+
+
+    private JdbcTemplate jdbcTemplate;
+
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Account findAccountById(Integer accountId) {
+         List&lt;Account&gt; accounts = jdbcTemplate.query(&quot;select * from account where id = ? &quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountId);
+         return accounts.isEmpty()? null:accounts.get(0);
+    }
+
+    public Account findAccountByName(String accountName) {
+        List&lt;Account&gt; accounts = jdbcTemplate.query(&quot;select * from account where name = ? &quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountName);
+        if(accounts.isEmpty()){
+            return null;
+        }
+        if(accounts.size()&gt;1){
+            throw new RuntimeException(&quot;结果集不唯一&quot;);
+        }
+        return accounts.get(0);
+    }
+
+    public void updateAccount(Account account) {
+        jdbcTemplate.update(&quot;update account set name=?,money = ? where id = ?&quot;,account.getName(),account.getMoney(),account.getId());
+
+
+    }
+}
+</code></pre><hr>
+<hr>
+<hr>
+<p>通常情况下，不仅仅有一个AccountDaoImpl，还会有有一些其他的impl，比如用户的。。之类的。<br>所以需要把重复代码抽取出来也就是让他们继承一个父类，父类中写好了重复代码即可：</p>
+<p><img src="https://i.imgur.com/uoAnOLH.png" alt=""></p>
+<p>也就是通过继承的方式实现重复代码的抽取，一种是注入dataSource一种是注入JdbcTemplate</p>
+<p><img src="https://i.imgur.com/7ukvCYs.png" alt=""></p>
+<p>除了字节写继承父类的方式解决这个问题，还可以通过Spring自带的一个类来解决，直接继承jdbcDaoSupport类即可。<br><img src="https://i.imgur.com/939epiM.png" alt=""></p>
+<p>也就是说根本不需要自己写这个父类，直接继承Spring自带的父类即可。</p>
+<p>所以，现在有2种写法，一种是继承父类，一种是成员变量，区别是：<br>继承的方法适合用xml文件配置的方式来写，而写成员变量适合用注解的方式来开发；<br>而继承父类因为父类在jar包里面，所以不能注入。<br><img src="https://i.imgur.com/lGpsHsd.png" alt=""><br><img src="https://i.imgur.com/QH8Ltnm.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/10/04/Spring第三天-面向切片编程AOP/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -4639,325 +5080,6 @@ public class BeanFactory {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/09/12/Spark第二天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/12/Spark第二天/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-12T20:37:10+08:00">
-                2019-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><pre><code>通用性。
-</code></pre><h2 id="Spark模块"><a href="#Spark模块" class="headerlink" title="Spark模块"></a>Spark模块</h2><pre><code>Spark Core            //核心库
-Spark SQL            //SQL
-Spark Streaming        //准实时计算。
-Spark MLlib            //机器学习库
-Spark graph            //图计算
-</code></pre><h2 id="Spark集群运行"><a href="#Spark集群运行" class="headerlink" title="Spark集群运行"></a>Spark集群运行</h2><pre><code>1.local            //本地模式
-2.standalone    //独立模式
-3.yarn            //yarn模式
-4.mesos            //mesos
-</code></pre><h2 id="start-all-sh"><a href="#start-all-sh" class="headerlink" title="start-all.sh"></a>start-all.sh</h2><pre><code>start-master.sh    //RPC端口 7077
-start-slave.sh    spark://s201:7077
-</code></pre><h2 id="webui"><a href="#webui" class="headerlink" title="webui"></a>webui</h2><pre><code>http://s201:8080
-</code></pre><h2 id="添加针对scala文件的编译插件"><a href="#添加针对scala文件的编译插件" class="headerlink" title="添加针对scala文件的编译插件"></a>添加针对scala文件的编译插件</h2><p>在IDEA的settings里面没有设置自动编译的情况下，需要记入scala编译插件，所以打包不含scala的类。</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-    &lt;groupId&gt;com.it18zhang&lt;/groupId&gt;
-    &lt;artifactId&gt;SparkDemo1&lt;/artifactId&gt;
-    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-
-    &lt;build&gt;
-        &lt;sourceDirectory&gt;src/main/java&lt;/sourceDirectory&gt;
-        &lt;plugins&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
-                &lt;configuration&gt;
-                    &lt;source&gt;1.8&lt;/source&gt;
-                    &lt;target&gt;1.8&lt;/target&gt;
-                &lt;/configuration&gt;
-            &lt;/plugin&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;net.alchim31.maven&lt;/groupId&gt;
-                &lt;artifactId&gt;scala-maven-plugin&lt;/artifactId&gt;
-                &lt;version&gt;3.2.2&lt;/version&gt;
-                &lt;configuration&gt;
-                    &lt;recompileMode&gt;incremental&lt;/recompileMode&gt;
-                &lt;/configuration&gt;
-                &lt;executions&gt;
-                    &lt;execution&gt;
-                        &lt;goals&gt;
-                            &lt;goal&gt;compile&lt;/goal&gt;
-                            &lt;goal&gt;testCompile&lt;/goal&gt;
-                        &lt;/goals&gt;
-                    &lt;/execution&gt;
-                &lt;/executions&gt;
-            &lt;/plugin&gt;
-        &lt;/plugins&gt;
-    &lt;/build&gt;
-
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.apache.spark&lt;/groupId&gt;
-            &lt;artifactId&gt;spark-core_2.11&lt;/artifactId&gt;
-            &lt;version&gt;2.1.0&lt;/version&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/project&gt;
-</code></pre><p>C:\Users\Administrator.m2\repository\net<br>C:\Users\Administrator.m2\repository\net\alchim31\maven...</p>
-<h2 id="SparkContext"><a href="#SparkContext" class="headerlink" title="SparkContext:"></a>SparkContext:</h2><pre><code>Spark集群的连接。主要入口点。
-SparkConf = new ();
-conf.setApp(&quot;&quot;)
-conf.setMaster(&quot;local&quot;) ;
-sc = new SparkContext(conf);
-//RDD : Resilient distributed dataset,弹性分布式数据集。
-val rdd1 = sc.textFile(&quot;d:/scala/test.txt&quot;);
-val rdd2 = rdd1.flatMap(line=&gt;line.split(&quot; &quot;));
-val rdd3 = rdd2.map(word=&gt;(word,1));
-val rdd4 = rdd3.reduceByKey(_ + _) ;
-val list = rdd4.collect()
-list.foreach(e=&gt;println(e));
-
-
-//
-sc.textFile(&quot;d:/scala&quot;).flatMap(_.split(&quot; &quot;)).map((_1)).reduceByKey(_ + _).collect().foreach(println)
-</code></pre><h2 id="spark"><a href="#spark" class="headerlink" title="spark"></a>spark</h2><pre><code>基于hadoop的mr，扩展MR模型高效使用MR模型，内存型集群计算，提高app处理速度。
-</code></pre><h2 id="spark特点"><a href="#spark特点" class="headerlink" title="spark特点"></a>spark特点</h2><pre><code>速度:在内存中存储中间结果。
-支持多种语言.
-内置了80+的算子.
-高级分析:MR，SQL/ Streamming /mllib / graph
-</code></pre><p>spark模块<br>    core        //通用执行引擎，提供内存计算和对外部数据集的引用。<br>    SQL            //构建在core之上，引入新的抽象SchemaRDD，提供了结构化和半结构化支持。</p>
-<pre><code>Streaming    //小批量计算，用的是RDD.
-
-MLlib        //机器学习库。core在。
-Graphx        //图计算。
-</code></pre><h2 id="RDD"><a href="#RDD" class="headerlink" title="RDD:"></a>RDD:</h2><pre><code>是spark的基本数据结构，是不可变数据集。RDD中的数据集进行逻辑分区，每个分区可以单独在集群节点
-进行计算。可以包含任何java,scala，python和自定义类型。
-
-RDD是只读的记录分区集合。RDD具有容错机制。
-
-创建RDD方式，一、并行化一个现有集合。
-
-hadoop 花费90%时间用户rw。、但是也不一定，如果是一次ｍｒ可能就不进入到磁盘里面，如果多次ｍｒ肯定进入到磁盘里面了。要等到数据都写入才可以，收到磁盘Ｉｏ影响严重
-
-内存处理计算。在job间进行数据共享。内存的IO速率高于网络和disk的10 ~ 100之间。
-
-内部包含5个主要属性
------------------------
-1.分区列表
-2.针对每个split的计算函数。
-3.对其他rdd的依赖列表
-4.可选，如果是KeyValueRDD的话，可以带分区类。
-5.可选，首选块位置列表(hdfs block location);
-
-//默认并发度下面从下往上面看是sc.textFile的源码过程
-这边确定一下，这个textFile里面的defaultMinPartitions指的是分区个数。
-然后在代码里面conf.setMaster(&quot;local[2]&quot;)这个里面的2指的才是线程个数才是并发度。这个线程就类似于我们完全分布下的节点
-
-local.backend.defaultParallelism() = scheduler.conf.getInt(&quot;spark.default.parallelism&quot;, totalCores)
-taskScheduler.defaultParallelism = backend.defaultParallelism()
-sc.defaultParallelism =...; taskScheduler.defaultParallelism
-defaultMinPartitions = math.min(defaultParallelism, 2)
-sc.textFile(path,defaultMinPartitions)            //1,2
-</code></pre><p>先说一下mapreduce里面的Map和reduce可以和spark里面的Map和reduce相结合看一下：</p>
-<p>Map过程：并行读取文本，对读取的单词进行map操作，每个词都以&lt;key,value&gt;形式生成。</p>
-<pre><code>　　一个有三行文本的文件进行MapReduce操作。
-　　读取第一行Hello World Bye World ，分割单词形成Map。
-　　&lt;Hello,1&gt; &lt;World,1&gt; &lt;Bye,1&gt; &lt;World,1&gt;
-　　读取第二行Hello Hadoop Bye Hadoop ，分割单词形成Map。
-　　&lt;Hello,1&gt; &lt;Hadoop,1&gt; &lt;Bye,1&gt; &lt;Hadoop,1&gt;
-　　读取第三行Bye Hadoop Hello Hadoop，分割单词形成Map。
-　　&lt;Bye,1&gt; &lt;Hadoop,1&gt; &lt;Hello,1&gt; &lt;Hadoop,1&gt;
-</code></pre><p>Reduce操作是对map的结果进行排序，合并，最后得出词频。<br>我的理解：</p>
-<pre><code>　　经过进一步处理(combiner),将形成的Map根据相同的key组合成value数组。
-
-　　&lt;Bye,1,1,1&gt; &lt;Hadoop,1,1,1,1&gt; &lt;Hello,1,1,1&gt; &lt;World,1,1&gt;
-
-　　循环执行Reduce(K,V[])，分别统计每个单词出现的次数。
-
-　　&lt;Bye,3&gt; &lt;Hadoop,4&gt; &lt;Hello,3&gt; &lt;World,2&gt;
-</code></pre><h2 id="RDD变换"><a href="#RDD变换" class="headerlink" title="RDD变换"></a>RDD变换</h2><pre><code>返回指向新rdd的指针，在rdd之间创建依赖关系。每个rdd都有计算函数和指向父RDD的指针。
-
-map()                                    //对每个元素进行变换，应用变换函数
-                                        //(T)=&gt;V
-
-
-filter()                                //过滤器,(T)=&gt;Boolean
-flatMap()                                //压扁,T =&gt; TraversableOnce[U]
-
-mapPartitions()                            //对每个分区进行应用变换，输入的Iterator,返回新的迭代器，可以对分区进行函数处理。
-                                        //Iterator&lt;T&gt; =&gt; Iterator&lt;U&gt;
-
-mapPartitionsWithIndex(func)            //同上，(Int, Iterator&lt;T&gt;) =&gt; Iterator&lt;U&gt;
-
-sample(withReplacement, fraction, seed)    //采样返回采样的RDD子集。
-                                        //withReplacement 元素是否可以多次采样.
-                                        //fraction : 期望采样数量.[0,1]
-
-union()                                    //类似于mysql union操作。
-                                        //select * from persons where id &lt; 10 
-                                        //union select * from id persons where id &gt; 29 ;
-
-intersection                            //交集,提取两个rdd中都含有的元素。
-distinct([numTasks]))                    //去重,去除重复的元素。
-
-groupByKey()                            //(K,V) =&gt; (K,Iterable&lt;V&gt;)
-
-reduceByKey(*)                            //按key聚合。 
-
-aggregateByKey(zeroValue)(seqOp, combOp, [numTasks])
-                                        //按照key进行聚合
-key:String U:Int = 0
-
-sortByKey                                //排序
-
-join(otherDataset, [numTasks])            //连接,(K,V).join(K,W) =&gt;(K,(V,W)) 
-
-cogroup                                    //协分组
-                                        //(K,V).cogroup(K,W) =&gt;(K,(Iterable&lt;V&gt;,Iterable&lt;!-- &lt;W&gt; --&gt;)) 
-cartesian(otherDataset)                    //笛卡尔积,RR[T] RDD[U] =&gt; RDD[(T,U)]
-
-pipe                                    //将rdd的元素传递给脚本或者命令，执行结果返回形成新的RDD
-coalesce(numPartitions)                    //减少分区
-repartition                                //可增可减
-repartitionAndSortWithinPartitions(partitioner)
-                                        //再分区并在分区内进行排序
-</code></pre><h2 id="RDD-Action"><a href="#RDD-Action" class="headerlink" title="RDD Action"></a>RDD Action</h2><pre><code>collect()                                //收集rdd元素形成数组.
-count()                                    //统计rdd元素的个数
-reduce()                                //聚合,返回一个值。
-first                                    //取出第一个元素take(1)
-take                                    //
-takeSample (withReplacement,num, [seed])
-takeOrdered(n, [ordering])
-
-saveAsTextFile(path)                    //保存到文件
-saveAsSequenceFile(path)                //保存成序列文件
-
-saveAsObjectFile(path) (Java and Scala)
-
-countByKey()                            //按照key,统计每个key下value的个数.
-</code></pre><h2 id="spark集成hadoop-ha"><a href="#spark集成hadoop-ha" class="headerlink" title="spark集成hadoop ha"></a>spark集成hadoop ha</h2><pre><code>1.复制core-site.xml + hdfs-site.xml到spark/conf目录下
-2.分发文件到spark所有work节点
-3.启动spark集群
-4.启动spark-shell,连接spark集群上
-    $&gt;spark-shell --master spark://s201:7077
-    $scala&gt;sc.textFile(&quot;hdfs://mycluster/user/centos/test.txt&quot;).collect();    
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -5012,7 +5134,7 @@ countByKey()                            //按照key,统计每个key下value的�
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-count">82</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

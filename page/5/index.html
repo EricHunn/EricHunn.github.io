@@ -328,6 +328,280 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/22/Hbase第四天/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/22/Hbase第四天/" itemprop="url">Hbase第四天</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-22T09:26:56+08:00">
+                2018-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="hbase"><a href="#hbase" class="headerlink" title="hbase"></a>hbase</h2><pre><code>协处理器.
+Observer            //触发器,基于事件激活的。
+Endpoint            //存储过程,客户端调用。
+
+RegionObserver        //system --&gt; user[加载顺序]
+
+100
+
+00-99
+
+callerId - 201703 : hashcode % 100 = 00-99
+
+01,139xxxx,138yyy,....
+</code></pre><h2 id="热点"><a href="#热点" class="headerlink" title="热点"></a>热点</h2><pre><code>让数据均匀分散。
+</code></pre><p>create ‘ns1:calllogs’ , SPLITS=&gt;[01,02,03,,…99,]</p>
+<h2 id="rowkey"><a href="#rowkey" class="headerlink" title="rowkey"></a>rowkey</h2><pre><code>按照byte排序。
+</code></pre><p>create table xxx(){</p>
+<p>}</p>
+<h2 id="rowkey-1"><a href="#rowkey-1" class="headerlink" title="rowkey"></a>rowkey</h2><pre><code>分区编号
+xx,callerId,callTime,calleeId
+
+startkey = xx,19626675332,
+startkey = xx,19626675333,
+</code></pre><h1 id="对通话记录表的设计：（具体在HBase的设计原则2）"><a href="#对通话记录表的设计：（具体在HBase的设计原则2）" class="headerlink" title="对通话记录表的设计：（具体在HBase的设计原则2）"></a>对通话记录表的设计：（具体在HBase的设计原则2）</h1><p><img src="https://i.imgur.com/Zt5A1OI.png" alt=""></p>
+<p>对于首先创建的主叫的表是上面这张表，在查询主叫的时候只需要指定xx，主叫时间,时间片。即可。但是查询被叫的时候就不行了。几乎要全表扫描。用00,138xx,2017010101,139xxx这样查询。所以每次向这个表写记录的时候，我们都知道被叫是谁，如果知道被叫的话。我们可以在设计一张表，叫calleeLog,他的rowkey有calleid，time,callerid构成。被叫表存的value存的是主叫表rowkey里面的被叫。然后根据这个查到主叫表后面的内容。但是如果只想知道谁给你打的电话，所以在被叫表的rowkey里面加了一个callerid，如果想查询谁给你打了电话，就在被叫表rowkey里面加了一个callerid。主叫表的rowkey里面都是作为主叫出现的，被叫表里面的数据都是作为被叫出现的。主叫表的内容被叫表里没有，被叫表的内容主叫表也没有的。而且应该吧时长duration也放在里面。也就是说要把最经常使用的信息都编入rowkey里面去，能不查具体的value就尽量不查询具体的value，但是如果要查询具体的数据，什么基站，那个口啊，就是要查询主叫表里面的value的值。这个下图所示的也就是叫二次索引。在写入主叫表的时候也在往被叫表里面写入，用什么写入？也就是用协处理器来处理，怎么处理呢，就是在你写入主叫表的时候，协处理器立刻截获，然后重写里面的方法，往被叫表里面写入就可以了。所以这个就是一个电信HBase的设计原则。    </p>
+<p><img src="https://i.imgur.com/QLxuFNg.png" alt=""></p>
+<h2 id="通化记录"><a href="#通化记录" class="headerlink" title="通化记录"></a>通化记录</h2><pre><code>1.创建表
+    create &apos;ns1:calllogs&apos;,&apos;f1&apos;
+
+2.创建单元测试
+    @Test
+    public void put() throws Exception {
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        TableName tname = TableName.valueOf(&quot;ns1:calllogs&quot;);
+        Table table = conn.getTable(tname);
+
+        String callerId = &quot;13845456767&quot; ;
+        String calleeId = &quot;139898987878&quot; ;
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern(&quot;yyyyMMddHHmmss&quot;);
+        String callTime = sdf.format(new Date());
+        int duration = 100 ;
+        DecimalFormat dff = new DecimalFormat();
+        dff.applyPattern(&quot;00000&quot;);
+        String durStr = dff.format(duration);
+
+        //区域00-99
+        int hash = (callerId + callTime.substring(0, 6)).hashCode();
+        hash = (hash &amp; Integer.MAX_VALUE) % 100 ;
+
+        //hash区域号
+        DecimalFormat df = new DecimalFormat();
+        df.applyPattern(&quot;00&quot;);
+        String regNo = df.format(hash);
+
+        //拼接rowkey
+        //xx , callerid , time ,  direction, calleid  ,duration
+        String rowkey = regNo + &quot;,&quot; + callerId + &quot;,&quot; + callTime + &quot;,&quot; + &quot;0,&quot; + calleeId + &quot;,&quot; + durStr  ;
+        byte[] rowid = Bytes.toBytes(rowkey);
+        Put put = new Put(rowid);
+        put.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;callerPos&quot;),Bytes.toBytes(&quot;河北&quot;));
+        put.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;calleePos&quot;),Bytes.toBytes(&quot;河南&quot;));
+        //执行插入
+        table.put(put);
+        System.out.println(&quot;over&quot;);
+    }
+
+3.创建协处理器
+    public class CalleeLogRegionObserver extends BaseRegionObserver{
+
+        public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+            super.postPut(e, put, edit, durability);
+            //
+            TableName callLogs = TableName.valueOf(&quot;calllogs&quot;);
+            //得到当前的TableName对象
+            TableName tableName = e.getEnvironment().getRegion().getRegionInfo().getTable();
+            if(!callLogs.equals(tableName)){
+                return  ;
+            }
+
+            //得到主叫的rowkey
+            //xx , callerid , time ,  direction, calleid  ,duration
+            //被叫:calleid,time,
+
+            String rowkey = Bytes.toString(put.getRow());
+            String[] arr = rowkey.split(&quot;,&quot;);
+
+            String hash = Util.getRegNo(arr[4],arr[2]);
+            //hash
+
+            String newRowKey = hash + &quot;,&quot; + arr[4] + &quot;,&quot; + arr[2] + &quot;,1,&quot; + arr[1] + &quot;,&quot; +  arr[5] ;
+            Put newPut = new Put(Bytes.toBytes(newRowKey));
+
+            Table t = e.getEnvironment().getTable(tableName);
+
+            t.put(newPut);
+        }
+    }
+
+4.配置hbase-site.xml并分发分发jar包。
+    &lt;property&gt;
+        &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
+        &lt;value&gt;com.it18zhang.hbasedemo.coprocessor.CalleeLogRegionObserver&lt;/value&gt;
+    &lt;/property&gt;
+
+5.启动hbase集群.
+</code></pre><h2 id="BloomFilter"><a href="#BloomFilter" class="headerlink" title="BloomFilter"></a>BloomFilter</h2><pre><code>布隆过滤器。
+</code></pre><p><img src="https://i.imgur.com/c0wLF4w.png" alt=""></p>
+<p>代码如下:</p>
+<p><img src="https://i.imgur.com/Za6Pcr1.png" alt=""></p>
+<h2 id="phonix"><a href="#phonix" class="headerlink" title="phonix"></a>phonix</h2><pre><code>1.安装phonix
+    a)下载apache-phoenix-4.10.0-HBase-1.2-bin.tar.gz
+    b)tar
+    c)复制xxx-server.jar到hbase的lib目录，并且分发,删除以前的phonixjar包。
+    d)重启hbase
+
+2.使用phonix的命令行程序
+    $&gt;phonix/bin/.sqlline.py s202    //连接的是zk服务器
+    $phonix&gt;!tables
+    $phonix&gt;!help                    //查看帮助
+</code></pre><p>phoenix在创建表的时候要使用大量的协处理器，他是在建表时候不区分大小写的，而且hbase不可以识别得出来他的表，但是hbase shell里面建的表他能识别。</p>
+<pre><code>2.SQL Client安装
+    a)下载squirrel-sql-3.7.1-standard.jar
+        该文件是安装文件，执行的安装程序。
+        $&gt;jar -jar squirrel-sql-3.7.1-standard.jar
+        $&gt;下一步...
+
+    b)复制phoenix-4.10.0-HBase-1.2-client.jar到SQuerrel安装目录的lib下(c:\myprograms\squirrel)。
+
+    c)启动SQuirrel(GUI)
+        定位安装目录-&gt;执行squirrel-sql.bat
+
+    d)打开GUI界面
+
+    d)在左侧的边栏选中&quot;Drivers&quot;选项卡，
+        点击 &quot;+&quot; -&gt;
+        URL                : jdbc:phoenix:192.168.231.202
+        Driverclass        : org.apache.phoenix.jdbc.PhoenixDriver    
+        jdbc:phoenix: s202
+
+    d)测试。
+
+3.SQLLine客户端操作
+    //建表
+    $jdbc:phoenix&gt;create table IF NOT EXISTS test.Person (IDCardNum INTEGER not null primary key, Name varchar(20),Age INTEGER);
+
+    //插入数据
+    $jdbc:phoenix&gt;UPSERT INTO test.PERSON(IDCardNum , Name,Age) VALUES (1,&apos;tom&apos;,12);
+
+    //删除数据
+    $jdbc:phoenix&gt;delete from test.persion where idcardnum = 1 ;
+
+    //更新数据
+    //upsert into test.PERSON(IDCardNum , Name,Age) VALUES (1,&apos;tom&apos;,12);
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/21/Flume/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -4151,161 +4425,6 @@ $hive&gt;SET hive.groupby.skewindata=true;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/11/笔记重点总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/11/笔记重点总结/" itemprop="url">笔记重点总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-11T19:51:41+08:00">
-                2018-11-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/笔记总结/" itemprop="url" rel="index">
-                    <span itemprop="name">笔记总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在Hadoop中重点是，全排序，二次排序。<br>在视频的最后有一天是讲解一个二次排序的实例，我没有细看。</p>
-<p>在Hive中我认为重点的是关于查询的内容，因为在hive中一般都是加载数据然后查询，查询之后有一个自定义函数UDF的内容，这部分的内容看的不是很清晰。</p>
-<p>在avro和Protoc里面主要讲解2中反编译的方法，主要是一个面向对象开发的一个过程，还是java编程不熟悉，然后代码跟着走了一遍但是肯定还是有问题，视频里面的老师是在一遍看外文的书籍，根据里面的代码模板来写的。在自己敲的过程中protoc的代码引入maven依赖包之后，还是没有能够将编译好的文件识别出来，不知道什么问题，但是avo就引入maven之后解决了这个问题。</p>
-<p>在讲解zookeeper的时候我觉得在选举算法的时候他没有细致的讲解，<br>然后这边主要是zookeeper部署在hadoop集群和使用API控制zookeeper。在集群部署高可用的时候是201202203部署zk202203204部署journalnode节点，（journalnode节点已经快忘记了）。</p>
-<p>容灾管理器进程ZKFC在配置的时候后来跟着yarn启动了起来。下面图是整个的进程图：</p>
-<p><img src="https://i.imgur.com/osWW4ZM.png" alt=""></p>
-<p>这个zookeeper的地方看的比较快，对于每个目录做什么的比较忘记，然后在配置的时候没有细究配置的意义。就是跟着走了一遍。但是最后配置了起来了。配置hdfs高可用的时候比较费时费力，配置内容比较多，配置yarn的时候比较简单，配置一下即可。</p>
-<hr>
-<p>在hbase安装的过程中，由于开始的时候设置了zookeeper的HA自动容灾，所以最开始的时候s206自动设置为active模式，要把s206设置为<br>standby模式才能在s201里面设置s201为HMaster。</p>
-<p>也就是说要杀死掉s206里面的namenode或者说通过转换吧他变成standby然后s201设置为active模式。不然会导致出错</p>
-<hr>
-<p>几个端口2181 8080 50070  8020 16010</p>
-<hr>
-<p>在讲解hbase 第二天的动态遍历的那个三层For循环并没有看明白，也就是说Java的基础还是很薄弱的。讲解hbase一个三层循环嵌套来scan的没有弄明白。hbase的时候讲解的重点在于协处理器的理解和那个电信的一个calllogs的rowkey的设计。利用了一个二级索引的方式。这个地方的原理很重要。然后最后有一个平时用于生产的工具叫phoenix的工具，可以用类sql的语句写出来，避免了自己设二次索引。里面有大量协处理器的封装，可以直接用sql语句。这边又讲了一个hive和hbase集成的一个问题，这个直接在hive中直接写语句即可。注意看一下phoenix和hive集成的区别。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -4360,7 +4479,7 @@ $hive&gt;SET hive.groupby.skewindata=true;
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-count">82</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

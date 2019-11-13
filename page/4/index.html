@@ -328,6 +328,525 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/实战大数据电信项目（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/11/实战大数据电信项目（一）/" itemprop="url">实战大数据电信项目（一）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-11T15:56:21+08:00">
+                2019-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>0.rowkey的设计<br>因为通过rowkey查询，吧尽可能多的数据放到rowkey里面去。</p>
+<p>考虑的问题：</p>
+<p>从通话记录整个来考虑，记录量比较大。让记录分散，吧主叫被叫编写进去时间编进去，就是一个rowkey的构成，如果用主叫被叫时间做rowkey的话。 </p>
+<p>每个服务器承载的数据量。hbase没经过10G就切割成2个区域，分成2个区域服务器，一条记录是1k10G是多少行可以算出来，可以设计出来区间。要知道rowkey的范围 。</p>
+<p>如果数据都在一台服务器吧请求都发送给一台服务器，压力很大。</p>
+<p>对于服务器来说，每个服务器应该多少数据量的问题。怎么衡量？</p>
+<p>对于单张表是10G就切割。切割出来的区域分成2个区域服务器上去了是10G的数据量。可以算一下一条记录是1K那么10G的数据量是多少行，根据这个法则设定空间，要知道rowkey的范围。加入1个区域存放10G要是有10个区域存放10G是100G。存放就是10G、1k=1亿数据量。</p>
+<p>rowkey是排序的，所以排序最好是等长度的，因为如果从1-10000情况下8是大于10000的。</p>
+<p> 可以通过预切割避免切割风暴。<br> 139。。。。<br>137.。。。<br>切割成区域，如果定了10个区域，要把所有的数据分散到10个区域里面去就是00-09，所以在编写rowkey里面，139，137的都有很多，所以在前面加一个前缀，也就是说盐析。</p>
+<p>rowkey设计的长度原则。一般是定长，越短越好，不超过1个字节：因为目前都是64位系统，内存是8字节对其，控制在16字节8字节的整数倍利用了操作系统的最佳特性。</p>
+<p>建议用rowkey的高位进行散列处理，由程序随机生成，低位放时间字段，这样提高数据均衡分布在每个regionServer来实现负载均衡。</p>
+<p>如果不进行散列，如果用时间片编写开头。起始的Rowkey的弊端就会集中在一个regionserver上，光是交换机写入就已经爆掉hbase了。因为数据量太大了。</p>
+<p>以电话号码编写开头的话，所有数据都在</p>
+<p>rowkey设计原则由于rowkey是字典排序的所以要将常用的放到一个region但是又不能量太大。</p>
+<p>热点：<br><img src="https://i.imgur.com/fYWGFDr.png" alt=""></p>
+<p>总结来说就是在整个数据rowkey前面加个2位数的随机数也就是通过盐析的方式避免热点问题。2位数的随机数是通过一个hash算法实现0-100散列。分布在0-100的不通的region里面。协处理器相当于一个区域观察期，类似于zookeeper的观察者。也就是插入了一条数据他就观察的到通过该preput 和postput重写这些方法来实现在插入前和插入后的动作，和插入的时候类似，通过哈希算法实现前面的随机数。完成新的rowkey的重组。这个地方根据业务场景的需要，每次查询的时候主叫和被叫都要查询出来，所以他的设计是将两个电话的主叫和被叫同时分布在一个区域里面。使得查询的效率更加高效分布更加合理。通过在协处理器哈希算法的时候通过被叫号码+时间片来哈希，主动插入的时候通过主叫号码+时间片来哈希。就可以实现主叫和被叫一个号码的都在同一个区域里面。</p>
+<p>在查询几月到几月的通话详单的时候，通过设置scan.startKey和scan.stopRow查询到开始日期和结束日期。打印是通过resultscanner</p>
+<p>如果查询某一个号码作为被叫的信息，我们可以在设计一张表calleelog被叫记录日志。rowkey设计：呼叫时间吧calltime和calleeid作为rowkey的设计什么时候被叫的但是他的value就是之前设计的callerlog表的rowkey的值，然后通过被叫表的value，这个value就是主叫表的rowkey通过这个也就是通过被叫表查询到了主叫表。这个场景还有2中可能，一种是设计2张表，然后查询，要是不设计2张表的话就是通过上文说过的通过设计一个被叫表指向主叫表的rowkey来完成这个业务场景。</p>
+<p>主叫表查询的rowkey设计：因为主要查询的时候都是通过主叫电话号码和时间来查询通过清单的，所以rowkey设计为hash,callerid,time,0,calleeid，然后value里面放一些其他诸如基站，手机信息等等其他无关紧要的信息，吧主要要查询的内容放到rowkey里面可以增加效率，直接查询rowkey就可以查询到所需要的内容。</p>
+<p>被叫表rowkey设计：设计一个另外一个表。calleeid,callertime里面的value放主叫表的rowkey即可。是为了避免第二张表大量冗余。</p>
+<p>1.按照时间段查询通话记录</p>
+<p><img src="https://i.imgur.com/2vxKcC0.png" alt=""><br>    1.hbase交互<br>        Scan : 设置startRow + endRow<br>        rowkey : hashcode , + callerid , + callTime, 0 , callee , duration.</p>
+<p>2.<br>3.</p>
+<h2 id="编写CallLogController-java"><a href="#编写CallLogController-java" class="headerlink" title="编写CallLogController.java"></a>编写CallLogController.java</h2><pre><code>/**
+ * 进入查询通话记录的页面,form
+ */
+
+
+@RequestMapping(&quot;/callLog/toFindCallLogPage&quot;)
+public String toFindCallLogPage(){
+    return &quot;callLog/findCallLog&quot; ;
+}
+
+
+@RequestMapping(value = &quot;/callLog/findCallLog&quot;,method = RequestMethod.POST)
+public String findCallLog(@RequestParam(&quot;caller&quot;) String caller, @RequestParam(&quot;startTime&quot;) String startTime, @RequestParam(&quot;endTime&quot;) String endTime){
+    Calendar startCalendar = Calendar.getInstance();
+    Calendar endCalendar = Calendar.getInstance();
+
+    return &quot;callLog/callLogList&quot; ;
+}
+</code></pre><h2 id="编写jsp界面"><a href="#编写jsp界面" class="headerlink" title="编写jsp界面"></a>编写jsp界面</h2><pre><code>&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;查询通话记录&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;../css/my.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&apos;&lt;c:url value=&quot;/callLog/findCallLog&quot; /&gt;&apos; method=&quot;post&quot;&gt;
+    &lt;table&gt;
+        &lt;tr&gt;
+            &lt;td&gt;电话号码 :&lt;/td&gt;
+            &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;caller&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;起始时间 :&lt;/td&gt;
+            &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;startTime&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;结束时间:&lt;/td&gt;
+            &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;endTime&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot;&gt;
+                &lt;input type=&quot;submit&quot; value=&quot;查询&quot;/&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h2 id="实现时间段查询"><a href="#实现时间段查询" class="headerlink" title="实现时间段查询"></a>实现时间段查询</h2><pre><code>1.提取时间范围
+    [CallLogUtil.java]
+    /**
+     * 起始时间
+     */
+    public static String getStartRowkey(String caller, String startTime, int partitions){
+        String hashcode = getHashcode(caller, startTime,partitions);
+        return hashcode + &quot;,&quot; + caller + &quot;,&quot; + startTime ;
+    }
+
+    /**
+     * 结束时间
+     */
+    public static String getStopRowkey(String caller, String startTime,String endTime, int partitions){
+        String hashcode = getHashcode(caller, startTime,partitions);
+        return hashcode + &quot;,&quot; + caller + &quot;,&quot; + endTime ;
+    }
+
+    /**
+     * 计算查询时间范围
+     */
+    public static List&lt;CallLogRange&gt; getCallLogRanges(String startStr ,String endStr){
+        try{
+            SimpleDateFormat sdfYMD = new SimpleDateFormat(&quot;yyyyMMdd&quot;);
+            SimpleDateFormat sdfYM = new SimpleDateFormat(&quot;yyyyMM&quot;);
+            DecimalFormat df00 = new DecimalFormat(&quot;00&quot;);
+
+            //
+            List&lt;CallLogRange&gt; list = new ArrayList&lt;CallLogRange&gt;();
+            //字符串时间
+            String startPrefix = startStr.substring(0, 6);
+
+            String endPrefix = endStr.substring(0, 6);
+            int endDay = Integer.parseInt(endStr.substring(6, 8));
+            //结束点
+            String endPoint = endPrefix + df00.format(endDay + 1);
+
+            //日历对象
+            Calendar c = Calendar.getInstance();
+
+            //同年月
+            if (startPrefix.equals(endPrefix)) {
+                CallLogRange range = new CallLogRange();
+                range.setStartPoint(startStr);          //设置起始点
+
+                range.setEndPoint(endPoint);            //设置结束点
+                list.add(range);
+            } else {
+                //1.起始月
+                CallLogRange range = new CallLogRange();
+                range.setStartPoint(startStr);
+
+                //设置日历的时间对象
+                c.setTime(sdfYMD.parse(startStr));
+                c.add(Calendar.MONTH, 1);
+                range.setEndPoint(sdfYM.format(c.getTime()));
+                list.add(range);
+
+                //是否是最后一月
+                while (true) {
+                    //到了结束月份
+                    if (endStr.startsWith(sdfYM.format(c.getTime()))) {
+                        range = new CallLogRange();
+                        range.setStartPoint(sdfYM.format(c.getTime()));
+                        range.setEndPoint(endPoint);
+                        list.add(range);
+                        break;
+                    } else {
+                        range = new CallLogRange();
+                        //起始时间
+                        range.setStartPoint(sdfYM.format(c.getTime()));
+
+                        //增加月份
+                        c.add(Calendar.MONTH, 1);
+                        range.setEndPoint(sdfYM.format(c.getTime()));
+                        list.add(range);
+                    }
+                }
+            }
+            return list ;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null ;
+    }
+
+2.编写service.
+
+3.
+4.
+</code></pre><h2 id="实现hbase的协处理器"><a href="#实现hbase的协处理器" class="headerlink" title="实现hbase的协处理器"></a>实现hbase的协处理器</h2><pre><code>0.说明
+    HBaseConsumer put的数据都是主叫，被叫数据在Coprossor中完成。
+
+1.创建协处理器
+    package com.it18zhang.calllog.coprossor;
+
+    import org.apache.hadoop.hbase.TableName;
+    import org.apache.hadoop.hbase.client.Durability;
+    import org.apache.hadoop.hbase.client.Put;
+    import org.apache.hadoop.hbase.client.Table;
+    import org.apache.hadoop.hbase.coprocessor.BaseRegionObserver;
+    import org.apache.hadoop.hbase.coprocessor.ObserverContext;
+    import org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;
+    import org.apache.hadoop.hbase.regionserver.wal.WALEdit;
+    import org.apache.hadoop.hbase.util.Bytes;
+
+    import java.io.IOException;
+
+    /**
+     * 协处理器,
+     */
+    public class CallLogRegionObserver extends BaseRegionObserver {
+
+        /**
+         * Put后处理
+         */
+        public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+            super.postPut(e, put, edit, durability);
+            //
+            String tableName0 = TableName.valueOf(&quot;ns1:calllogs&quot;).getNameAsString();
+
+            //得到当前的TableName对象
+            String tableName1 = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+            //判断是否是ns1:calllogs表
+            if (!tableName0.equals(tableName1)) {
+                return;
+            }
+
+            //得到主叫的rowkey,
+            String rowkey = Bytes.toString(put.getRow());
+
+            //如果被叫就放行
+            String[] arr = rowkey.split(&quot;,&quot;);
+            if (arr[3].equals(&quot;1&quot;)) {
+                return;
+            }
+            //hashcode,caller,time,flag,callee,duration
+            String caller = arr[1] ;        //主叫
+            String callTime = arr[2] ;      //通话时间
+            String callee = arr[4] ;        //被叫
+            String callDuration = arr[5] ;  //通话时长
+
+            //被叫hashcode
+            String hashcode = CallLogUtil.getHashcode(callee,callTime,100);
+            //被叫rowkey
+            String calleeRowKey = hashcode + &quot;,&quot; + callee + &quot;,&quot; + callTime + &quot;,1,&quot; + caller + &quot;,&quot; + callDuration;
+            Put newPut = new Put(Bytes.toBytes(calleeRowKey));
+            newPut.addColumn(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(&quot;refrowid&quot;), Bytes.toBytes(rowkey));
+            TableName tn = TableName.valueOf(&quot;ns1:calllogs&quot;);
+            Table t = e.getEnvironment().getTable(tn);
+            t.put(newPut);
+        }
+    }
+
+2.注册协处理器
+    a)导出jar包,分到集群.
+        ...
+    b)修改hbase配置文件并分发.
+        [hbase-site.xml]
+        &lt;property&gt;
+                &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
+                &lt;value&gt;com.it18zhang.calllog.coprossor.CallLogRegionObserver&lt;/value&gt;
+        &lt;/property&gt;
+
+    c)停止hbase集群
+
+    d)重新启动
+        ...
+    e)进入hbase shell,重建ns1:calllogs
+        $hbase&gt;create &apos;ns1:calllogs&apos; , &apos;f1&apos;,&apos;f2&apos;
+</code></pre><h2 id="主叫"><a href="#主叫" class="headerlink" title="主叫"></a>主叫</h2><pre><code>rowkey:
+12,1234,xxx,0,5678,60,.,.,.,.,
+</code></pre><h2 id="被叫"><a href="#被叫" class="headerlink" title="被叫"></a>被叫</h2><pre><code>rowkey:                        f2:refrowkey
+98,5678,xxxx,1,1234,60   --&gt; 12,1234,xxx,0,5678,60,.
+</code></pre><h2 id="重写RegionObserver的postGetOp方法-完成被叫查询时，直接返回主叫的记录"><a href="#重写RegionObserver的postGetOp方法-完成被叫查询时，直接返回主叫的记录" class="headerlink" title="重写RegionObserver的postGetOp方法,完成被叫查询时，直接返回主叫的记录"></a>重写RegionObserver的postGetOp方法,完成被叫查询时，直接返回主叫的记录</h2><pre><code>1.重写
+[CallLogRegionObserver.java]
+package com.it18zhang.calllog.coprossor;
+
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.coprocessor.BaseRegionObserver;
+import org.apache.hadoop.hbase.coprocessor.ObserverContext;
+import org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;
+import org.apache.hadoop.hbase.regionserver.InternalScanner;
+import org.apache.hadoop.hbase.regionserver.wal.WALEdit;
+import org.apache.hadoop.hbase.util.Bytes;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 协处理器,
+ */
+public class CallLogRegionObserver extends BaseRegionObserver {
+
+    //被叫引用id
+    private static final String REF_ROW_ID = &quot;refrowid&quot; ;
+    //通话记录表名
+    private static final String CALL_LOG_TABLE_NAME = &quot;ns1:calllogs&quot; ;
+
+    /**
+     * Put后处理
+     */
+    public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
+        super.postPut(e, put, edit, durability);
+        //
+        String tableName0 = TableName.valueOf(CALL_LOG_TABLE_NAME).getNameAsString();
+
+        //得到当前的TableName对象
+        String tableName1 = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+        //判断是否是ns1:calllogs表
+        if (!tableName0.equals(tableName1)) {
+            return;
+        }
+
+        //得到主叫的rowkey,
+        String rowkey = Bytes.toString(put.getRow());
+
+        //如果被叫就放行
+        String[] arr = rowkey.split(&quot;,&quot;);
+        if (arr[3].equals(&quot;1&quot;)) {
+            return;
+        }
+        //hashcode,caller,time,flag,callee,duration
+        String caller = arr[1] ;        //主叫
+        String callTime = arr[2] ;      //通话时间
+        String callee = arr[4] ;        //被叫
+        String callDuration = arr[5] ;  //通话时长
+
+        //被叫hashcode
+        String hashcode = CallLogUtil.getHashcode(callee,callTime,100);
+        //被叫rowkey
+        String calleeRowKey = hashcode + &quot;,&quot; + callee + &quot;,&quot; + callTime + &quot;,1,&quot; + caller + &quot;,&quot; + callDuration;
+        Put newPut = new Put(Bytes.toBytes(calleeRowKey));
+        newPut.addColumn(Bytes.toBytes(&quot;f2&quot;), Bytes.toBytes(REF_ROW_ID), Bytes.toBytes(rowkey));
+        TableName tn = TableName.valueOf(CALL_LOG_TABLE_NAME);
+        Table t = e.getEnvironment().getTable(tn);
+        t.put(newPut);
+    }
+
+    /**
+     * 重写方法，完成被叫查询，返回主叫结果。
+     */
+    public void postGetOp(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Get get, List&lt;Cell&gt; results) throws IOException {
+        //获得表名
+        String tableName = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+
+        //判断表名是否是ns1:calllogs
+        if(!tableName.equals(CALL_LOG_TABLE_NAME)){
+            super.preGetOp(e, get, results);
+        }
+        else{
+            //得到rowkey
+            String rowkey = Bytes.toString(get.getRow());
+            //
+            String[] arr = rowkey.split(&quot;,&quot;);
+            //主叫
+            if(arr[3].equals(&quot;0&quot;)){
+                super.postGetOp(e, get, results);
+            }
+            //被叫
+            else{
+                //得到主叫方的rowkey
+                String refrowid = Bytes.toString(CellUtil.cloneValue(results.get(0)));
+                //
+                Table tt = e.getEnvironment().getTable(TableName.valueOf(CALL_LOG_TABLE_NAME));
+                Get g = new Get(Bytes.toBytes(refrowid));
+                Result r = tt.get(g);
+                List&lt;Cell&gt; newList = r.listCells();
+                results.clear();
+                results.addAll(newList);
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    public boolean postScannerNext(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, InternalScanner s, List&lt;Result&gt; results, int limit, boolean hasMore) throws IOException {
+        boolean b = super.postScannerNext(e, s, results, limit, hasMore);
+
+        //新集合
+        List&lt;Result&gt; newList = new ArrayList&lt;Result&gt;();
+
+        //获得表名
+        String tableName = e.getEnvironment().getRegion().getRegionInfo().getTable().getNameAsString();
+
+        //判断表名是否是ns1:calllogs
+        if (tableName.equals(CALL_LOG_TABLE_NAME)) {
+            Table tt = e.getEnvironment().getTable(TableName.valueOf(CALL_LOG_TABLE_NAME));
+            for(Result r : results){
+                //rowkey
+                String rowkey = Bytes.toString(r.getRow());
+                String flag = rowkey.split(&quot;,&quot;)[3] ;
+                //主叫
+                if(flag.equals(&quot;0&quot;)){
+                    newList.add(r) ;
+                }
+                //被叫
+                else{
+                    //取出主叫号码
+                    byte[] refrowkey = r.getValue(Bytes.toBytes(&quot;f2&quot;),Bytes.toBytes(REF_ROW_ID)) ;
+                    Get newGet = new Get(refrowkey);
+                    newList.add(tt.get(newGet));
+                }
+            }
+            results.clear();
+            results.addAll(newList);
+        }
+        return b ;
+    }
+}
+
+1&apos;.修改jsp页面
+    [callLogList.jsp]
+    &lt;c:if test=&quot;${log.caller == param.caller}&quot;&gt;主叫&lt;/c:if&gt;
+    &lt;c:if test=&quot;${log.caller != param.caller}&quot;&gt;被叫&lt;/c:if&gt;
+
+2.部署jar包
+
+3.测试
+    ...
+
+4.
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2019/01/11/Spring笔记/Spring第二天_01Spring常用注解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1853,169 +2372,6 @@ Class Dog{
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/12/01/剑指offer面试题Java版/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/01/剑指offer面试题Java版/" itemprop="url">剑指offer面试题Java版</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T16:56:56+08:00">
-                2018-12-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/面试/" itemprop="url" rel="index">
-                    <span itemprop="name">面试</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/面试/剑指offer/" itemprop="url" rel="index">
-                    <span itemprop="name">剑指offer</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/12/01/剑指offer面试题Java版(一)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2299,6 +2655,169 @@ public boolean find(int[][] array, int target) {
 }
 </code></pre><p>第二个算法：<br>将一个字符串中的空格替换成“%20”。</p>
 
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/12/01/剑指offer面试题Java版/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Eric Hunn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="无心是一首歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/01/剑指offer面试题Java版/" itemprop="url">剑指offer面试题Java版</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T16:56:56+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/面试/" itemprop="url" rel="index">
+                    <span itemprop="name">面试</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/面试/剑指offer/" itemprop="url" rel="index">
+                    <span itemprop="name">剑指offer</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
           
         
       
@@ -3404,280 +3923,6 @@ public void testConumser(){
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://erichunn.github.io/2018/11/22/Hbase第四天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Eric Hunn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="无心是一首歌">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/22/Hbase第四天/" itemprop="url">Hbase第四天</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-22T09:26:56+08:00">
-                2018-11-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="hbase"><a href="#hbase" class="headerlink" title="hbase"></a>hbase</h2><pre><code>协处理器.
-Observer            //触发器,基于事件激活的。
-Endpoint            //存储过程,客户端调用。
-
-RegionObserver        //system --&gt; user[加载顺序]
-
-100
-
-00-99
-
-callerId - 201703 : hashcode % 100 = 00-99
-
-01,139xxxx,138yyy,....
-</code></pre><h2 id="热点"><a href="#热点" class="headerlink" title="热点"></a>热点</h2><pre><code>让数据均匀分散。
-</code></pre><p>create ‘ns1:calllogs’ , SPLITS=&gt;[01,02,03,,…99,]</p>
-<h2 id="rowkey"><a href="#rowkey" class="headerlink" title="rowkey"></a>rowkey</h2><pre><code>按照byte排序。
-</code></pre><p>create table xxx(){</p>
-<p>}</p>
-<h2 id="rowkey-1"><a href="#rowkey-1" class="headerlink" title="rowkey"></a>rowkey</h2><pre><code>分区编号
-xx,callerId,callTime,calleeId
-
-startkey = xx,19626675332,
-startkey = xx,19626675333,
-</code></pre><h1 id="对通话记录表的设计：（具体在HBase的设计原则2）"><a href="#对通话记录表的设计：（具体在HBase的设计原则2）" class="headerlink" title="对通话记录表的设计：（具体在HBase的设计原则2）"></a>对通话记录表的设计：（具体在HBase的设计原则2）</h1><p><img src="https://i.imgur.com/Zt5A1OI.png" alt=""></p>
-<p>对于首先创建的主叫的表是上面这张表，在查询主叫的时候只需要指定xx，主叫时间,时间片。即可。但是查询被叫的时候就不行了。几乎要全表扫描。用00,138xx,2017010101,139xxx这样查询。所以每次向这个表写记录的时候，我们都知道被叫是谁，如果知道被叫的话。我们可以在设计一张表，叫calleeLog,他的rowkey有calleid，time,callerid构成。被叫表存的value存的是主叫表rowkey里面的被叫。然后根据这个查到主叫表后面的内容。但是如果只想知道谁给你打的电话，所以在被叫表的rowkey里面加了一个callerid，如果想查询谁给你打了电话，就在被叫表rowkey里面加了一个callerid。主叫表的rowkey里面都是作为主叫出现的，被叫表里面的数据都是作为被叫出现的。主叫表的内容被叫表里没有，被叫表的内容主叫表也没有的。而且应该吧时长duration也放在里面。也就是说要把最经常使用的信息都编入rowkey里面去，能不查具体的value就尽量不查询具体的value，但是如果要查询具体的数据，什么基站，那个口啊，就是要查询主叫表里面的value的值。这个下图所示的也就是叫二次索引。在写入主叫表的时候也在往被叫表里面写入，用什么写入？也就是用协处理器来处理，怎么处理呢，就是在你写入主叫表的时候，协处理器立刻截获，然后重写里面的方法，往被叫表里面写入就可以了。所以这个就是一个电信HBase的设计原则。    </p>
-<p><img src="https://i.imgur.com/QLxuFNg.png" alt=""></p>
-<h2 id="通化记录"><a href="#通化记录" class="headerlink" title="通化记录"></a>通化记录</h2><pre><code>1.创建表
-    create &apos;ns1:calllogs&apos;,&apos;f1&apos;
-
-2.创建单元测试
-    @Test
-    public void put() throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
-        TableName tname = TableName.valueOf(&quot;ns1:calllogs&quot;);
-        Table table = conn.getTable(tname);
-
-        String callerId = &quot;13845456767&quot; ;
-        String calleeId = &quot;139898987878&quot; ;
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.applyPattern(&quot;yyyyMMddHHmmss&quot;);
-        String callTime = sdf.format(new Date());
-        int duration = 100 ;
-        DecimalFormat dff = new DecimalFormat();
-        dff.applyPattern(&quot;00000&quot;);
-        String durStr = dff.format(duration);
-
-        //区域00-99
-        int hash = (callerId + callTime.substring(0, 6)).hashCode();
-        hash = (hash &amp; Integer.MAX_VALUE) % 100 ;
-
-        //hash区域号
-        DecimalFormat df = new DecimalFormat();
-        df.applyPattern(&quot;00&quot;);
-        String regNo = df.format(hash);
-
-        //拼接rowkey
-        //xx , callerid , time ,  direction, calleid  ,duration
-        String rowkey = regNo + &quot;,&quot; + callerId + &quot;,&quot; + callTime + &quot;,&quot; + &quot;0,&quot; + calleeId + &quot;,&quot; + durStr  ;
-        byte[] rowid = Bytes.toBytes(rowkey);
-        Put put = new Put(rowid);
-        put.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;callerPos&quot;),Bytes.toBytes(&quot;河北&quot;));
-        put.addColumn(Bytes.toBytes(&quot;f1&quot;),Bytes.toBytes(&quot;calleePos&quot;),Bytes.toBytes(&quot;河南&quot;));
-        //执行插入
-        table.put(put);
-        System.out.println(&quot;over&quot;);
-    }
-
-3.创建协处理器
-    public class CalleeLogRegionObserver extends BaseRegionObserver{
-
-        public void postPut(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability) throws IOException {
-            super.postPut(e, put, edit, durability);
-            //
-            TableName callLogs = TableName.valueOf(&quot;calllogs&quot;);
-            //得到当前的TableName对象
-            TableName tableName = e.getEnvironment().getRegion().getRegionInfo().getTable();
-            if(!callLogs.equals(tableName)){
-                return  ;
-            }
-
-            //得到主叫的rowkey
-            //xx , callerid , time ,  direction, calleid  ,duration
-            //被叫:calleid,time,
-
-            String rowkey = Bytes.toString(put.getRow());
-            String[] arr = rowkey.split(&quot;,&quot;);
-
-            String hash = Util.getRegNo(arr[4],arr[2]);
-            //hash
-
-            String newRowKey = hash + &quot;,&quot; + arr[4] + &quot;,&quot; + arr[2] + &quot;,1,&quot; + arr[1] + &quot;,&quot; +  arr[5] ;
-            Put newPut = new Put(Bytes.toBytes(newRowKey));
-
-            Table t = e.getEnvironment().getTable(tableName);
-
-            t.put(newPut);
-        }
-    }
-
-4.配置hbase-site.xml并分发分发jar包。
-    &lt;property&gt;
-        &lt;name&gt;hbase.coprocessor.region.classes&lt;/name&gt;
-        &lt;value&gt;com.it18zhang.hbasedemo.coprocessor.CalleeLogRegionObserver&lt;/value&gt;
-    &lt;/property&gt;
-
-5.启动hbase集群.
-</code></pre><h2 id="BloomFilter"><a href="#BloomFilter" class="headerlink" title="BloomFilter"></a>BloomFilter</h2><pre><code>布隆过滤器。
-</code></pre><p><img src="https://i.imgur.com/c0wLF4w.png" alt=""></p>
-<p>代码如下:</p>
-<p><img src="https://i.imgur.com/Za6Pcr1.png" alt=""></p>
-<h2 id="phonix"><a href="#phonix" class="headerlink" title="phonix"></a>phonix</h2><pre><code>1.安装phonix
-    a)下载apache-phoenix-4.10.0-HBase-1.2-bin.tar.gz
-    b)tar
-    c)复制xxx-server.jar到hbase的lib目录，并且分发,删除以前的phonixjar包。
-    d)重启hbase
-
-2.使用phonix的命令行程序
-    $&gt;phonix/bin/.sqlline.py s202    //连接的是zk服务器
-    $phonix&gt;!tables
-    $phonix&gt;!help                    //查看帮助
-</code></pre><p>phoenix在创建表的时候要使用大量的协处理器，他是在建表时候不区分大小写的，而且hbase不可以识别得出来他的表，但是hbase shell里面建的表他能识别。</p>
-<pre><code>2.SQL Client安装
-    a)下载squirrel-sql-3.7.1-standard.jar
-        该文件是安装文件，执行的安装程序。
-        $&gt;jar -jar squirrel-sql-3.7.1-standard.jar
-        $&gt;下一步...
-
-    b)复制phoenix-4.10.0-HBase-1.2-client.jar到SQuerrel安装目录的lib下(c:\myprograms\squirrel)。
-
-    c)启动SQuirrel(GUI)
-        定位安装目录-&gt;执行squirrel-sql.bat
-
-    d)打开GUI界面
-
-    d)在左侧的边栏选中&quot;Drivers&quot;选项卡，
-        点击 &quot;+&quot; -&gt;
-        URL                : jdbc:phoenix:192.168.231.202
-        Driverclass        : org.apache.phoenix.jdbc.PhoenixDriver    
-        jdbc:phoenix: s202
-
-    d)测试。
-
-3.SQLLine客户端操作
-    //建表
-    $jdbc:phoenix&gt;create table IF NOT EXISTS test.Person (IDCardNum INTEGER not null primary key, Name varchar(20),Age INTEGER);
-
-    //插入数据
-    $jdbc:phoenix&gt;UPSERT INTO test.PERSON(IDCardNum , Name,Age) VALUES (1,&apos;tom&apos;,12);
-
-    //删除数据
-    $jdbc:phoenix&gt;delete from test.persion where idcardnum = 1 ;
-
-    //更新数据
-    //upsert into test.PERSON(IDCardNum , Name,Age) VALUES (1,&apos;tom&apos;,12);
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3732,7 +3977,7 @@ startkey = xx,19626675333,
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-count">82</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

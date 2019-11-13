@@ -81,17 +81,19 @@
 
 
 
-<meta name="description" content="大数据|动漫迷|科技控">
+<meta name="description" content="SSM：就是springmvc,spring,ssm 首先整合一下spring框架里面的东西。 以下是目录结构  首先是写spring里面的结构，不包括springmvc和mybatis: package cn.itcast.controller;  /**  * @Description 账户web  * @Author TT Hun  * @Data 2019/11/9 16:04  */ p">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SSM整合案例">
 <meta property="og:url" content="http://erichunn.github.io/2019/11/07/SSM整合案例/index.html">
 <meta property="og:site_name" content="无心是一首歌">
-<meta property="og:description" content="大数据|动漫迷|科技控">
+<meta property="og:description" content="SSM：就是springmvc,spring,ssm 首先整合一下spring框架里面的东西。 以下是目录结构  首先是写spring里面的结构，不包括springmvc和mybatis: package cn.itcast.controller;  /**  * @Description 账户web  * @Author TT Hun  * @Data 2019/11/9 16:04  */ p">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-07T06:27:39.524Z">
+<meta property="og:image" content="https://i.imgur.com/3nhqu4F.png">
+<meta property="og:updated_time" content="2019-11-09T13:48:35.085Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SSM整合案例">
-<meta name="twitter:description" content="大数据|动漫迷|科技控">
+<meta name="twitter:description" content="SSM：就是springmvc,spring,ssm 首先整合一下spring框架里面的东西。 以下是目录结构  首先是写spring里面的结构，不包括springmvc和mybatis: package cn.itcast.controller;  /**  * @Description 账户web  * @Author TT Hun  * @Data 2019/11/9 16:04  */ p">
+<meta name="twitter:image" content="https://i.imgur.com/3nhqu4F.png">
 
 
 
@@ -395,7 +397,337 @@
       
 
       
-        
+        <p>SSM：就是springmvc,spring,ssm</p>
+<p>首先整合一下spring框架里面的东西。</p>
+<p>以下是目录结构</p>
+<p><img src="https://i.imgur.com/3nhqu4F.png" alt=""></p>
+<p>首先是写spring里面的结构，不包括springmvc和mybatis:</p>
+<pre><code>package cn.itcast.controller;
+
+/**
+ * @Description 账户web
+ * @Author TT Hun
+ * @Data 2019/11/9 16:04
+ */
+public class AccountController {
+
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.dao;
+
+import java.util.List;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/9 15:54
+ */
+public interface Account {
+
+    /**
+     * 查询所有账户
+     * @return
+     */
+    public List&lt;Account&gt; findAll();
+
+    /**
+     * 保存账户信息
+     * @param account
+     */
+    public void saveAccount(Account account);
+
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.domain;
+
+import java.io.Serializable;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/9 15:52
+ */
+public class Account implements Serializable {
+    private Integer id;
+    private String name;
+    private Double money;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getMoney() {
+        return money;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Account{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +
+                &quot;, money=&quot; + money +
+                &apos;}&apos;;
+    }
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.service.impl;
+
+import cn.itcast.dao.Account;
+import cn.itcast.service.AccountService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/9 16:02
+ */
+@Service(&quot;accountService&quot;)
+public class AccountServiceImpl implements AccountService {
+    @Override
+    public List&lt;Account&gt; findAll() {
+        System.out.println(&quot;业务层查询所有账户信息&quot;);
+        return null;
+    }
+
+    @Override
+    public void saveAccount(Account account) {
+        System.out.println(&quot;业务层保存账户&quot;);
+
+    }
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.service;
+
+import cn.itcast.dao.Account;
+
+import java.util.List;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/9 15:58
+ */
+public interface AccountService {
+    /**
+     * 查询所有账户
+     * @return
+     */
+    public List&lt;Account&gt; findAll();
+
+    /**
+     * 保存账户信息
+     * @param account
+     */
+    public void saveAccount(Account account);
+}
+</code></pre><hr>
+<pre><code>package cn.itcast.test;
+
+import cn.itcast.service.AccountService;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/9 16:21
+ */
+public class testSpring {
+    @Test
+    public void run1(){
+//        加载配置文件
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;classpath:applicationContext.xml&quot;);
+//        获取对象
+        AccountService as = (AccountService)ac.getBean(&quot;accountService&quot;);
+//        调用方法
+        as.findAll();
+
+    }
+}
+</code></pre><hr>
+<p>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</p>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xsi:schemalocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+<pre><code>&lt;!--开启注解的扫描，希望处理service和dao，controller不需要Spring框架去处理--&gt;
+&lt;context:component-scan base-package=&quot;cn.itcast&quot; &gt;
+    &lt;!--配置哪些注解不扫描--&gt;
+    &lt;context:exclude-filter type=&quot;annotation&quot; expression=&quot;org.springframework.stereotype.Controller&quot; /&gt;
+&lt;/context:component-scan&gt;
+
+&lt;/beans&gt;
+</code></pre><p>web.xml和index.jsp先不动</p>
+<hr>
+<hr>
+<hr>
+<p>然后再看这个springmvc怎么写：</p>
+<pre><code>package cn.itcast.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @Description 账户web
+ * @Author TT Hun
+ * @Data 2019/11/9 16:04
+ */
+@Controller
+@RequestMapping(&quot;/account&quot;)
+public class AccountController {
+    @RequestMapping(&quot;/findAll&quot;)
+    public String findAll(){
+        System.out.println(&quot;查询所有帐户信息&quot;);
+        return &quot;list&quot;;
+    }
+
+}
+</code></pre><hr>
+<p>testSpring类</p>
+<pre><code>package cn.itcast.test;
+
+import cn.itcast.service.AccountService;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ * @Description TODO
+ * @Author TT Hun
+ * @Data 2019/11/9 16:21
+ */
+public class testSpring {
+    @Test
+    public void run1(){
+//        加载配置文件
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;classpath:applicationContext.xml&quot;);
+//        获取对象
+        AccountService as = (AccountService)ac.getBean(&quot;accountService&quot;);
+//        调用方法
+        as.findAll();
+
+    }
+}
+</code></pre><hr>
+<p>springmvc.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot; xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;!--开启注解扫描，只扫描Controller注解--&gt;
+    &lt;context:component-scan base-package=&quot;cn.itcast&quot;&gt;
+        &lt;context:include-filter type=&quot;annotation&quot; expression=&quot;org.springframework.stereotype.Controller&quot; /&gt;
+    &lt;/context:component-scan&gt;
+
+    &lt;!--配置的视图解析器对象--&gt;
+    &lt;bean id=&quot;internalResourceViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;!--过滤静态资源--&gt;
+    &lt;mvc:resources location=&quot;/css/&quot; mapping=&quot;/css/**&quot; /&gt;
+    &lt;mvc:resources location=&quot;/images/&quot; mapping=&quot;/images/**&quot; /&gt;
+    &lt;mvc:resources location=&quot;/js/&quot; mapping=&quot;/js/**&quot; /&gt;
+
+    &lt;!--开启SpringMVC注解的支持--&gt;
+    &lt;mvc:annotation-driven/&gt;
+
+&lt;/beans&gt;
+</code></pre><hr>
+<p>list.jsp</p>
+<pre><code>&lt;%--
+  Created by IntelliJ IDEA.
+  User: Hun
+  Date: 2019/11/9
+  Time: 17:27
+  To change this template use File | Settings | File Templates.
+--%&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;h2&gt;查询所有账户信息&lt;/h2&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><hr>
+<p>web.xml</p>
+<pre><code>&lt;!DOCTYPE web-app PUBLIC
+        &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;
+        &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot; &gt;
+
+&lt;web-app&gt;
+  &lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;
+
+  &lt;!--配置前端控制器--&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;!--加载springmvc.xml配置文件--&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+      &lt;param-value&gt;classpath:springmvc.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;!--启动服务器，创建该servlet--&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+  &lt;!--解决中文乱码的过滤器--&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;encoding&lt;/param-name&gt;
+      &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+
+&lt;/web-app&gt;
+</code></pre><hr>
+</beans>
       
     </div>
     
@@ -545,7 +877,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-count">82</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
